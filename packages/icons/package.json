@@ -1,0 +1,9 @@
+{
+  "name": "icons",
+  "private": true,
+  "version": "0.0.0",
+  "devDependencies": {
+    "@svgr/cli": "^8.1.0",
+    "svgo": "^4.0.1"
+  }
+}
