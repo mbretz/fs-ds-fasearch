@@ -1,0 +1,8 @@
+{
+  "name": "tokens",
+  "private": true,
+  "version": "0.0.0",
+  "devDependencies": {
+    "style-dictionary": "^5.4.4"
+  }
+}
