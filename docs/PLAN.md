@@ -122,10 +122,13 @@ You'll normalize each of the three Figma libraries once, before its first export
 **In the Styles library (tokens):**
 - **Variable names** — slash-delimited (Figma's native group separator), semantic-first: `color/bg/primary`, `color/text/muted`, `density/padding/sm`, `density/height/md`. Avoid spaces, ampersands, or marketing names. Style Dictionary transforms slashes to dashes in CSS output (`--color-bg-primary`, `--density-padding-sm`).
 - **Collections & modes:**
-  - `color` collection — modes: `light` (primary), `dark`. Color tokens only.
-  - `density` collection — modes: `roomy` (default), `condensed`. Sizing/spacing tokens only.
+  - `primitives` collection — single default mode. Raw values only: color scales (`blue.500`, `gray.100`), size, space, border-radius, font, and shadow primitives. Nothing in this collection is consumed directly by components.
+  - `semantic` collection — single default mode. Role-based aliases onto primitives (`content.text-color.default` → `{primitives.color.neutral.100}`, typography and spacing roles, etc.). Not tied to any single component.
+  - `component` collection — single default mode. Component-specific aliases onto semantic (and occasionally primitive) tokens, one group per component (`button.background-color.primary.default`, `card.border-radius`, etc.). Components should reference `component` tokens first, falling back to `semantic` where no component-specific override exists.
+  - `color` collection — modes: `light` (primary), `dark`. Color-only tokens, referenced by the `semantic`/`component` tiers wherever a value needs to flip with the theme.
+  - `density` collection — modes: `roomy` (default), `condensed`. Sizing/spacing-only tokens, referenced by the `semantic`/`component` tiers wherever a value needs to flip with density.
   - Mode names are lowercase bare words (no "Mode" suffix) so they map cleanly to `data-theme` and `data-density` attribute values.
-- **Semantic vs primitive layers** — split into two collections within color: `primitives` (raw values: `blue.500`, `gray.100`) and `semantic` (aliases: `color.bg.primary` → `{primitives.blue.500}`). Components only reference semantic tokens. This is the load-bearing decision that makes future dark mode and rebranding trivial.
+- **Three-tier alias chain** — `primitives` → `semantic` → `component`. This is the load-bearing decision that makes future dark mode, density theming, and rebranding trivial: swapping a primitive or a `color`/`density` mode value cascades up through semantic and component aliases without touching component code.
 - **Density values** — unitless numbers in Figma (px unit attached by Style Dictionary transform).
 
 **In the Icons library:**
