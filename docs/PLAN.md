@@ -103,7 +103,7 @@ Consumers import from each package directly (`@scope/tokens`, `@scope/icons`, `@
 
 Tokens are authored as native Figma Variables. The pipeline is entirely one-way (Figma → code); no Tokens Studio is required.
 
-1. **Author in Figma "Styles" library** — tokens live as native Figma variables, organized into collections (`color`, `density`). The `color` collection has two modes: `light` (primary) and `dark`. The `density` collection has two modes: `roomy` (default) and `condensed`. See §1.2 for naming conventions and §1.4 for the density system.
+1. **Author in Figma "Styles" library** — tokens live as native Figma variables, organized into collections (`color`, `density`), with names slash-delimited to match Figma's group separator (`color/bg/primary`, `density/padding/sm`). The `color` collection has two modes: `light` (primary) and `dark`. The `density` collection has two modes: `roomy` (default) and `condensed`. See §1.2 for naming conventions and §1.4 for the density system.
 2. **Export from Figma** — use a free Figma community plugin to export all native Variables with all modes to `packages/tokens/source/`. The exact plugin is selected at first export by inspecting output quality (candidates: "Export/Import Variables", "Variables to JSON"). The export is a single command producing one JSON file (or separate files per mode if the plugin outputs that way — both are handled by the Style Dictionary config).
 3. **Transform with Style Dictionary** — `packages/tokens` runs Style Dictionary (`sd.config.ts`) to emit four CSS files. The config includes a lightweight custom `parser` that normalizes Figma's export format (written once after inspecting the actual plugin output):
    - `build/css/tokens.css` — color CSS custom properties on `:root` (light mode)
@@ -120,7 +120,7 @@ Tokens are authored as native Figma Variables. The pipeline is entirely one-way 
 You'll normalize each of the three Figma libraries once, before its first export. Subsequent edits inherit the naming.
 
 **In the Styles library (tokens):**
-- **Variable names** — dot-delimited, semantic-first: `color.bg.primary`, `color.text.muted`, `density.padding.sm`, `density.height.md`. Avoid spaces, ampersands, or marketing names.
+- **Variable names** — slash-delimited (Figma's native group separator), semantic-first: `color/bg/primary`, `color/text/muted`, `density/padding/sm`, `density/height/md`. Avoid spaces, ampersands, or marketing names. Style Dictionary transforms slashes to dashes in CSS output (`--color-bg-primary`, `--density-padding-sm`).
 - **Collections & modes:**
   - `color` collection — modes: `light` (primary), `dark`. Color tokens only.
   - `density` collection — modes: `roomy` (default), `condensed`. Sizing/spacing tokens only.
