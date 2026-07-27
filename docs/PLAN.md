@@ -19,9 +19,11 @@ Constraint: the showcase has to boot quickly on StackBlitz WebContainers for rev
 | Styling | Tailwind + CSS custom properties (shadcn-style) |
 | Primitives layer | Radix UI Primitives (the unstyled component lib) |
 | Variant API | `class-variance-authority` (cva) + `tailwind-merge` + `clsx` |
-| Token source | Native Figma variables (Pro plan — no REST API access) |
+| Token source | Native Figma Variables (Pro plan — no Variables REST API access) |
+| Token export | Free Figma community plugin (Figma-native only — no Tokens Studio) |
 | Figma source structure | Three libraries: **Styles** (tokens), **Icons**, **Components** — mirrored 1:1 in code as three packages |
-| Theming | **Light mode only** at launch; architecture keeps dark mode a token-mode addition (no rewrites) |
+| Color theming | Light mode primary; partial dark mode already authored in Figma; full dark mode is additive later |
+| Density theming | **Roomy** (default) and **Condensed** — two modes, per-element override supported |
 | Monorepo | pnpm workspaces + Turborepo |
 | DS docs | Storybook 8 |
 | Locator UX | Map + list side-by-side, pin popovers, list↔map sync, search/filter |
@@ -55,7 +57,7 @@ fs-ds-fasearch/
 │   └── locator/                # Vite + React store-locator app
 ├── packages/
 │   ├── tokens/                 # Mirrors Figma "Styles" library
-│   │   ├── source/             # Raw export from Figma plugin (tokens.json)
+│   │   ├── source/             # Raw export from Figma plugin
 │   │   ├── build/              # Style Dictionary outputs (CSS, TS, Tailwind theme)
 │   │   ├── sd.config.ts
 │   │   └── package.json
@@ -99,29 +101,32 @@ Consumers import from each package directly (`@scope/tokens`, `@scope/icons`, `@
 
 ### 1.1 Token Pipeline (Figma "Styles" library → code)
 
-Since you're on a Pro plan (no Variables REST API), the pipeline is:
+Tokens are authored as native Figma Variables. The pipeline is entirely one-way (Figma → code); no Tokens Studio is required.
 
-1. **Author in Figma "Styles" library** — tokens live as native Figma variables, organized into collections (`color`, `space`, `radius`, `font`, `shadow`, etc.). **A single mode for now** (call it `default`), but author with the two-layer split below so adding a `dark` mode later is purely an additive change in Figma.
-2. **Export from Figma** — use the free **Tokens Studio for Figma** plugin in *variable sync* mode. It reads native Figma variables and exports W3C-spec design tokens JSON. Commit the JSON to `packages/tokens/source/tokens.json`.
-3. **Transform with Style Dictionary** — `packages/tokens` runs Style Dictionary to emit:
-   - `build/css/tokens.css` — CSS custom properties on `:root`. (No `[data-theme="dark"]` block yet — added later by re-running the pipeline once a dark mode exists in Figma.)
-   - `build/ts/tokens.ts` — typed token object (optional, for non-Tailwind consumers).
-   - `build/tailwind/theme.ts` — partial Tailwind theme extension that references the CSS vars (e.g. `colors: { bg: { primary: 'hsl(var(--color-bg-primary) / <alpha-value>)' } }`). Using `hsl(var(--...))` syntax now means dark mode lights up later with zero component changes.
-4. **Consume in DS** — `packages/ds/tailwind.preset.ts` imports the generated Tailwind theme extension. Components reference Tailwind classes that resolve to CSS vars.
-5. **Refresh loop** — `pnpm tokens:build` re-runs the pipeline. Document the sync as a manual two-step (`export from plugin` → `pnpm tokens:build`); automate later if desired.
+1. **Author in Figma "Styles" library** — tokens live as native Figma variables, organized into collections (`color`, `density`). The `color` collection has two modes: `light` (primary) and `dark`. The `density` collection has two modes: `roomy` (default) and `condensed`. See §1.2 for naming conventions and §1.4 for the density system.
+2. **Export from Figma** — use a free Figma community plugin to export all native Variables with all modes to `packages/tokens/source/`. The exact plugin is selected at first export by inspecting output quality (candidates: "Export/Import Variables", "Variables to JSON"). The export is a single command producing one JSON file (or separate files per mode if the plugin outputs that way — both are handled by the Style Dictionary config).
+3. **Transform with Style Dictionary** — `packages/tokens` runs Style Dictionary (`sd.config.ts`) to emit four CSS files. The config includes a lightweight custom `parser` that normalizes Figma's export format (written once after inspecting the actual plugin output):
+   - `build/css/tokens.css` — color CSS custom properties on `:root` (light mode)
+   - `build/css/dark.css` — color overrides on `[data-theme="dark"]` (sparse — only tokens that differ from light)
+   - `build/css/density.css` — density vars on `[data-density="roomy"]` and `[data-density="condensed"]`
+   - `build/ts/tokens.ts` — typed token object (optional, for non-Tailwind consumers)
+4. **Consume in DS** — `packages/ds/tailwind.preset.ts` imports all three CSS files. Components reference Tailwind classes that resolve to CSS vars. Color classes use `hsl(var(--...))` syntax so dark mode lights up later with zero component changes.
+5. **Refresh loop** — `pnpm tokens:build` re-runs the pipeline. Document the sync as a manual two-step (`export from Figma plugin` → `pnpm tokens:build`).
 
-**Why Tokens Studio for the export step (not Variables2CSS or similar):** it speaks W3C design-tokens spec, which is what Style Dictionary v4 ingests natively. It also supports the reverse direction (code → Figma variables), which sets up §1.4 without a tooling swap.
-
-**Dark mode readiness without dark mode work:** the key decisions that make later dark-mode trivial are (a) the primitive/semantic split in §1.3, (b) CSS-var-based color references in Tailwind theme, and (c) component code that never hardcodes color values. None of these cost anything today.
+**Dark mode readiness without dark mode work:** The key decisions that make later dark-mode trivial are (a) the primitive/semantic split in §1.3, (b) CSS-var-based color references in Tailwind theme, and (c) component code that never hardcodes color values. The partial dark mode already authored in Figma is handled by the sparse `[data-theme="dark"]` block — only tokens with actual overrides appear there.
 
 ### 1.2 Figma Hygiene: Layer & Prop Naming to Streamline Import
 
 You'll normalize each of the three Figma libraries once, before its first export. Subsequent edits inherit the naming.
 
 **In the Styles library (tokens):**
-- **Variable names** — dot-delimited, semantic-first: `color.bg.primary`, `color.text.muted`, `space.4`, `radius.md`. Avoid spaces, ampersands, or marketing names. Style Dictionary preserves this hierarchy.
-- **Collections & modes** — one collection per token category. A single mode (`default`) for now; when dark mode is added later, the mode is named `dark` (lowercase, no "Mode" suffix) so it maps cleanly to `data-theme="dark"`.
-- **Semantic vs primitive layers** — split into two collections: `primitives` (raw values: `blue.500`, `gray.100`) and `semantic` (aliases: `color.bg.primary` → `{primitives.blue.500}`). Components only reference semantic tokens. This is the load-bearing decision that makes future dark mode and rebranding trivial.
+- **Variable names** — dot-delimited, semantic-first: `color.bg.primary`, `color.text.muted`, `density.padding.sm`, `density.height.md`. Avoid spaces, ampersands, or marketing names.
+- **Collections & modes:**
+  - `color` collection — modes: `light` (primary), `dark`. Color tokens only.
+  - `density` collection — modes: `roomy` (default), `condensed`. Sizing/spacing tokens only.
+  - Mode names are lowercase bare words (no "Mode" suffix) so they map cleanly to `data-theme` and `data-density` attribute values.
+- **Semantic vs primitive layers** — split into two collections within color: `primitives` (raw values: `blue.500`, `gray.100`) and `semantic` (aliases: `color.bg.primary` → `{primitives.blue.500}`). Components only reference semantic tokens. This is the load-bearing decision that makes future dark mode and rebranding trivial.
+- **Density values** — unitless numbers in Figma (px unit attached by Style Dictionary transform).
 
 **In the Icons library:**
 - **Icon names** — kebab-case (`chevron-right`, `map-pin`). SVGR will PascalCase these on export (`ChevronRight`, `MapPin`).
@@ -153,25 +158,60 @@ The Icons library gets its own package (`packages/icons`) and its own one-way pi
 - The locator can import icons without dragging in the DS bundle.
 - The icon pipeline (SVGR + SVGO) has no overlap with the DS build, so isolating it keeps `packages/ds`'s build config simple.
 
-### 1.4 Future: Code as Source of Truth, Figma as Output
+### 1.4 Density System
 
-When you flip the direction later, the pipeline reverses cleanly because Tokens Studio is bidirectional:
+The design system supports two density modes — **Roomy** (default) and **Condensed** — as an orthogonal dimension to color theming. Density controls the physical scale of components (padding, height, gap, icon size within components). It does not affect color, radius, font family, or font weight.
 
-1. Tokens are edited in `packages/tokens/source/tokens.json` (or in a typed `tokens.ts` that emits the JSON via a build step).
-2. Style Dictionary builds runtime artifacts as before.
-3. **Tokens Studio plugin pulls the JSON** and *writes* to Figma variables (the plugin supports this on free tier).
-4. Designers see updates in Figma's Styles library; no native REST API needed.
+**Architecture:** CSS `data-density` attribute on ancestor elements. CSS custom properties cascade from the nearest `data-density` ancestor, so the full React component tree needs no changes for inheritance.
 
-To prepare now without doing the work:
-- Keep `packages/tokens/source/tokens.json` the only token input — never let CSS vars be edited by hand.
+```
+<html data-density="roomy">          ← global default
+  …
+  <aside data-density="condensed">   ← per-element override
+    <List>…</List>                   ← inherits condensed from aside
+    <Button size="sm" />             ← inherits condensed from aside
+  </aside>
+```
+
+**Global default:** `<html data-density="roomy">` is set in both `apps/locator/index.html` and Storybook's `preview.ts`. Components never need to know the default — they just read CSS vars, which always resolve because `<html>` always carries one of the two values.
+
+**Component `density` prop:** Every component with density-sensitive sizing accepts:
+```ts
+density?: 'roomy' | 'condensed'
+```
+When provided, the component sets `data-density={density}` on its root element. When omitted, the component inherits from its ancestor via CSS cascade.
+
+**cva integration:** Density does **not** drive cva variants (that would require JS density awareness). Instead, density is purely CSS-var-driven. The `size` cva variant (`sm | md | lg`) selects which CSS vars a component references; the density mode controls what those vars resolve to:
+
+```ts
+const buttonVariants = cva({
+  base: 'inline-flex items-center',
+  variants: {
+    size: {
+      sm: 'h-[var(--density-height-sm)] px-[var(--density-padding-sm)] gap-[var(--density-gap-sm)]',
+      md: 'h-[var(--density-height-md)] px-[var(--density-padding-md)] gap-[var(--density-gap-md)]',
+    }
+  }
+})
+```
+
+**Portal caveat:** Radix overlays (Dialog, Tooltip, Popover) render into a portal outside the DOM tree, breaking CSS cascade inheritance. Pass the `density` prop explicitly to these components — the component sets `data-density` directly on the portal content root.
+
+**`useDensity` hook (optional):** A thin hook reading the nearest `data-density` ancestor via attribute walk. Only needed in rare cases where JS must know the current density value (e.g., conditionally rendering different icon sizes). Not required for core functionality.
+
+### 1.5 Future: Code as Source of Truth, Figma as Output
+
+When the direction reverses later, the pipeline reverses by updating Figma Variables directly via a plugin that supports bidirectional variable sync (several free and paid options exist). To prepare now without doing the work:
+
+- Keep `packages/tokens/source/` the only token input — never edit CSS vars by hand.
 - Treat the JSON schema as a contract; document field shapes in `packages/tokens/README.md`.
-- Avoid Tailwind-specific token names in Figma (no `xs`, `2xl` arbitraries) so the JSON stays platform-neutral.
+- Avoid platform-specific token names in Figma (no `xs`, `2xl` Tailwind arbitraries) so the JSON stays platform-neutral.
 
-This means the eventual flip is a workflow change, not a code rewrite. (Icons stay one-directional Figma → code — SVGs are visual source material that doesn't have a meaningful code-as-source story.)
+This means the eventual flip is a workflow change, not a code rewrite. (Icons stay one-directional Figma → code — SVGs are visual source material.)
 
-### 1.5 Component Scope
+### 1.6 Component Scope
 
-All four levels, built in this order (atoms before composites). Icons are not in this list — they live in `packages/icons` and are consumed by DS components where needed (e.g. Button can render a leading/trailing icon via children or a dedicated slot).
+All four levels, built in this order (atoms before composites). Icons are not in this list — they live in `packages/icons` and are consumed by DS components where needed.
 
 | Level | Components | Notes |
 |---|---|---|
@@ -183,25 +223,35 @@ All four levels, built in this order (atoms before composites). Icons are not in
 **Authoring conventions for every component:**
 - Forward refs.
 - Accept `className` + `asChild` where meaningful.
+- Accept `density?: 'roomy' | 'condensed'`; when provided, set `data-density` on the component root.
 - Variant API via `cva` exported alongside the component for product-level extension.
+- All sizing (padding, height, gap) uses CSS vars from the density system — no hardcoded values.
 - Compound components use dot-notation exports (`Card.Root`, `Dialog.Trigger`) to mirror Radix anatomy and Figma slot naming.
 - Each component exports its props type for product consumption.
 - **No hardcoded color, spacing, or radius values** — always reference Tailwind classes backed by tokens, so dark mode lights up later without component edits.
+- Portal-rendered components (Dialog, Popover, Tooltip) set `data-density` on their content root when `density` prop is provided.
 
-### 1.6 Storybook 8 Setup
+### 1.7 Storybook 8 Setup
 
 - Hosted as `apps/storybook` so it's an independent workspace; reviewers can boot it without launching the locator.
 - Vite builder (Storybook 8 default) for the closest match to the rest of the stack.
 - Stories in CSF3 format, co-located in `packages/ds/src/components/<Name>/<Name>.stories.tsx`.
 - A separate "Icons" section in the Storybook sidebar shows every icon in `packages/icons` with its name and click-to-copy import — turns the icon library into a browsable catalog.
-- Addons: `@storybook/addon-essentials`, `@storybook/addon-a11y` (a11y is a strong DS portfolio signal). **No `addon-themes` yet** — single light mode at launch. Wire it in when dark mode tokens land; the rest of Storybook needs zero changes.
+- Addons: `@storybook/addon-essentials`, `@storybook/addon-a11y` (a11y is a strong DS portfolio signal).
+- **Density toolbar control** in `preview.ts` — a global toggle that sets `data-density` on the story root, letting reviewers switch roomy/condensed for any story without editing props.
+- Each component story includes a **"Density comparison"** story that renders the component in both densities side-by-side.
+- At least one story (Layout or Data Display section) demonstrates the per-element override pattern (e.g., a roomy Card containing a condensed List).
 - One `Overview.mdx` page per category (Primitives, Layout, Overlays, Data display) documenting the design philosophy. Heavy on showing composition examples.
 - **StackBlitz caveat:** Storybook 8 cold-boots in 60–120s in WebContainers. Mention this in the README so reviewers expect it. If it becomes a real bottleneck, Ladle is a drop-in CSF-compatible swap.
 
-### 1.7 Phase 1 Exit Criteria
+### 1.8 Phase 1 Exit Criteria
 
 - All 17 DS components shipped with stories, variants, and prop types.
 - Every icon in `packages/icons` is importable and renders in the Storybook Icons catalog.
+- Every DS component renders correctly under both `roomy` and `condensed` in Storybook.
+- The Storybook density toolbar toggle visibly resizes components between the two modes.
+- At least one story demonstrates a per-element density override.
+- Changing a density token value in the source JSON, re-running `pnpm tokens:build`, and reloading Storybook resizes affected components — confirms the density pipeline is connected end-to-end.
 - `pnpm tokens:build && pnpm icons:build && pnpm --filter ds build && pnpm --filter storybook dev` boots cleanly.
 - Tokens documented in `packages/tokens/README.md`; icon authoring/export steps documented in `packages/icons/README.md`.
 
@@ -256,22 +306,26 @@ The locator is the proof that the DS composes well. Make sure each of these is v
 pnpm-workspace.yaml                              # workspace globs
 turbo.json                                       # task pipeline
 package.json                                     # root scripts
-packages/tokens/source/tokens.json               # Figma "Styles" export target
-packages/tokens/sd.config.ts                     # Style Dictionary config
+packages/tokens/source/                          # Figma plugin export target (one file or per-mode files)
+packages/tokens/sd.config.ts                     # Style Dictionary config + custom Figma format parser
+packages/tokens/build/css/tokens.css             # SD output: :root color vars (light)
+packages/tokens/build/css/dark.css               # SD output: [data-theme="dark"] color overrides
+packages/tokens/build/css/density.css            # SD output: [data-density="roomy"] + [data-density="condensed"]
 packages/icons/source/*.svg                      # Figma "Icons" export target
 packages/icons/svgr.config.cjs                   # SVGR config
 packages/icons/src/index.ts                      # icon barrel
-packages/ds/tailwind.preset.ts                   # shared Tailwind preset
+packages/ds/tailwind.preset.ts                   # shared Tailwind preset reading CSS vars (all three CSS files)
 packages/ds/src/index.ts                         # component barrel
 packages/ds/src/utils/cn.ts                      # clsx + tailwind-merge helper
 packages/ds/src/components/<Name>/<Name>.tsx     # one per component
 packages/ds/src/components/<Name>/<Name>.stories.tsx
 apps/storybook/.storybook/main.ts                # Storybook 8 config
-apps/storybook/.storybook/preview.ts             # global decorators
+apps/storybook/.storybook/preview.ts             # global decorators + density toolbar + data-density="roomy"
+apps/locator/index.html                          # data-density="roomy" on <html>
 apps/locator/src/data/locations.ts               # static location data
 apps/locator/src/components/Map/Map.tsx          # MapLibre wrapper
-apps/locator/src/components/LocationCard.tsx    # DS composition example
-apps/locator/src/components/FilterBar.tsx       # DS composition example
+apps/locator/src/components/LocationCard.tsx     # DS composition example
+apps/locator/src/components/FilterBar.tsx        # DS composition example
 docs/PLAN.md                                     # this file
 README.md                                        # StackBlitz pitch
 ```
@@ -287,7 +341,10 @@ End-to-end smoke when each phase completes:
 - Every DS component renders in Storybook with its variants.
 - Every icon appears in the Storybook Icons catalog with a working import snippet.
 - a11y addon shows zero critical violations on every story.
-- Changing a semantic color in `packages/tokens/source/tokens.json`, re-running `pnpm tokens:build`, and re-loading Storybook re-skins components — proves the token pipeline is connected.
+- Storybook density toolbar switches all components between roomy and condensed.
+- At least one story shows a per-element density override.
+- Changing a semantic color in the token source JSON, re-running `pnpm tokens:build`, and re-loading Storybook re-skins components — proves the color token pipeline is connected.
+- Changing a density value in the token source JSON, re-running `pnpm tokens:build`, and re-loading Storybook resizes affected components — proves the density pipeline is connected.
 - Open the same flow on a fresh StackBlitz fork of the repo — confirm boot completes under 3 minutes (Storybook is the long pole).
 
 **Phase 2 (Locator):**
@@ -296,7 +353,7 @@ End-to-end smoke when each phase completes:
 - Click each map pin → list row highlights and scrolls into view.
 - Type in search box → list + pins filter together.
 - Toggle category dropdown and open-now badge → filters compose.
-- Changing a semantic color in `packages/tokens/source/tokens.json` and re-running the token build re-skins the locator UI — same proof as in Phase 1, now across the package boundary.
+- Changing a semantic color in the token source JSON and re-running the token build re-skins the locator UI — same proof as in Phase 1, now across the package boundary.
 - Open on a fresh StackBlitz fork — confirm full interaction works in WebContainers.
 
 ---
