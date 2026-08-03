@@ -2,6 +2,13 @@
   "name": "tokens",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "import:tokens-studio": "node scripts/tokens-studio-adapter.ts",
+    "build:css": "node scripts/build-tokens.ts",
+    "build:dtcg": "node scripts/build-dtcg.ts",
+    "build": "pnpm build:css && pnpm build:dtcg"
+  },
   "devDependencies": {
     "style-dictionary": "^5.4.4"
   }
