@@ -1,4 +1,382 @@
 {
+  "density": {
+    "surface": {
+      "padding": {
+        "block": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface padding block."
+        },
+        "inline": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface padding inline."
+        },
+        "all": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface padding all."
+        },
+        "gap": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface padding gap."
+        }
+      },
+      "med": {
+        "padding": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface med padding."
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface med gap."
+        }
+      },
+      "large": {
+        "padding": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface large padding."
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface large gap."
+        }
+      },
+      "x-large": {
+        "padding": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface x large padding."
+        },
+        "gap": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface x large gap."
+        }
+      },
+      "small": {
+        "padding": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface small padding."
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface small gap."
+        }
+      }
+    },
+    "control": {
+      "action": {
+        "minWidth": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for control action min width."
+        },
+        "minHeight": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for control action min height."
+        },
+        "padding": {
+          "block": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control action padding block."
+          },
+          "inline": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control action padding inline."
+          }
+        }
+      },
+      "selection": {
+        "fill": {
+          "small": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection fill small."
+          },
+          "large": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection fill large."
+          }
+        },
+        "width": {
+          "small": {
+            "$value": "24px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection width small."
+          },
+          "large": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection width large."
+          }
+        },
+        "height": {
+          "small": {
+            "$value": "24px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection height small."
+          },
+          "large": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection height large."
+          }
+        },
+        "padding": {
+          "block": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection padding block."
+          },
+          "inline": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection padding inline."
+          }
+        }
+      },
+      "input": {
+        "small": {
+          "minWidth": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input small min width."
+          },
+          "minHeight": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input small min height."
+          }
+        },
+        "large": {
+          "minWidth": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input large min width."
+          },
+          "minHeight": {
+            "$value": "112px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input large min height."
+          }
+        },
+        "padding": {
+          "block": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input padding block."
+          },
+          "inline": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input padding inline."
+          }
+        }
+      },
+      "margin": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Condensed-mode density value for control margin."
+      }
+    },
+    "action": {
+      "target": {
+        "padding": {
+          "block": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for action target padding block."
+          },
+          "inline": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for action target padding inline."
+          }
+        }
+      },
+      "control": {
+        "size": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for action control size."
+        }
+      }
+    },
+    "spacing": {
+      "dynamic": {
+        "x-small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic x small."
+        },
+        "xx-small": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic xx small."
+        },
+        "small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic small."
+        },
+        "med": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic med."
+        },
+        "large": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic large."
+        },
+        "x-large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic x large."
+        },
+        "xx-large": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic xx large."
+        }
+      },
+      "fixed": {
+        "xx-small": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed xx small."
+        },
+        "x-small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed x small."
+        },
+        "small": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed small."
+        },
+        "med": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed med."
+        },
+        "large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed large."
+        },
+        "x-large": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed x large."
+        },
+        "xx-large": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed xx large."
+        }
+      }
+    },
+    "sizing": {
+      "dynamic": {
+        "hairline": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic hairline."
+        },
+        "x-small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic x small."
+        },
+        "small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic small."
+        },
+        "med": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic med."
+        },
+        "large": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic large."
+        },
+        "x-large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic x large."
+        },
+        "xx-large": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic xx large."
+        },
+        "xx-small": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic xx small."
+        }
+      },
+      "fixed": {
+        "hairline": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed hairline."
+        },
+        "x-small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed x small."
+        },
+        "small": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed small."
+        },
+        "med": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed med."
+        },
+        "large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed large."
+        },
+        "x-large": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed x large."
+        },
+        "xx-large": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed xx large."
+        },
+        "xx-small": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed xx small."
+        }
+      }
+    }
+  },
   "primitives": {
     "ref": {
       "color": {
@@ -722,7 +1100,7 @@
             "$description": "Primitive value for ref color umbra tier 3."
           },
           "tier-4": {
-            "$value": "#0d0d0db2",
+            "$value": "#0d0d0db3",
             "$type": "color",
             "$description": "Primitive value for ref color umbra tier 4."
           },
@@ -745,165 +1123,6 @@
             "$type": "color",
             "$description": "Primitive value for ref color miscellaneous separator."
           }
-        }
-      },
-      "size": {
-        "10": {
-          "$value": "44px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 10."
-        },
-        "11": {
-          "$value": "48px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 11."
-        },
-        "12": {
-          "$value": "64px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 12."
-        },
-        "13": {
-          "$value": "80px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 13."
-        },
-        "14": {
-          "$value": "96px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 14."
-        },
-        "15": {
-          "$value": "112px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 15."
-        },
-        "16": {
-          "$value": "128px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 16."
-        },
-        "17": {
-          "$value": "144px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 17."
-        },
-        "01": {
-          "$value": "2px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 01."
-        },
-        "02": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 02."
-        },
-        "03": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 03."
-        },
-        "04": {
-          "$value": "12px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 04."
-        },
-        "05": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 05."
-        },
-        "06": {
-          "$value": "20px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 06."
-        },
-        "07": {
-          "$value": "24px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 07."
-        },
-        "08": {
-          "$value": "32px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 08."
-        },
-        "09": {
-          "$value": "40px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size 09."
-        },
-        "base": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size base."
-        },
-        "hairline": {
-          "$value": "1px",
-          "$type": "dimension",
-          "$description": "Primitive value for ref size hairline."
-        }
-      },
-      "space": {
-        "10": {
-          "$value": 44,
-          "$type": "number",
-          "$description": "Primitive value for ref space 10."
-        },
-        "11": {
-          "$value": 48,
-          "$type": "number",
-          "$description": "Primitive value for ref space 11."
-        },
-        "12": {
-          "$value": 64,
-          "$type": "number",
-          "$description": "Primitive value for ref space 12."
-        },
-        "01": {
-          "$value": 2,
-          "$type": "number",
-          "$description": "Primitive value for ref space 01."
-        },
-        "02": {
-          "$value": 4,
-          "$type": "number",
-          "$description": "Primitive value for ref space 02."
-        },
-        "03": {
-          "$value": 8,
-          "$type": "number",
-          "$description": "Primitive value for ref space 03."
-        },
-        "04": {
-          "$value": 12,
-          "$type": "number",
-          "$description": "Primitive value for ref space 04."
-        },
-        "05": {
-          "$value": 16,
-          "$type": "number",
-          "$description": "Primitive value for ref space 05."
-        },
-        "06": {
-          "$value": 20,
-          "$type": "number",
-          "$description": "Primitive value for ref space 06."
-        },
-        "07": {
-          "$value": 24,
-          "$type": "number",
-          "$description": "Primitive value for ref space 07."
-        },
-        "08": {
-          "$value": 32,
-          "$type": "number",
-          "$description": "Primitive value for ref space 08."
-        },
-        "09": {
-          "$value": 40,
-          "$type": "number",
-          "$description": "Primitive value for ref space 09."
         }
       },
       "font": {
@@ -1056,204 +1275,363 @@
           }
         }
       },
+      "size": {
+        "10": {
+          "$value": "44px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 10."
+        },
+        "11": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 11."
+        },
+        "12": {
+          "$value": "64px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 12."
+        },
+        "13": {
+          "$value": "80px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 13."
+        },
+        "14": {
+          "$value": "96px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 14."
+        },
+        "15": {
+          "$value": "112px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 15."
+        },
+        "16": {
+          "$value": "128px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 16."
+        },
+        "17": {
+          "$value": "144px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 17."
+        },
+        "01": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 01."
+        },
+        "02": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 02."
+        },
+        "03": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 03."
+        },
+        "04": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 04."
+        },
+        "05": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 05."
+        },
+        "06": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 06."
+        },
+        "07": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 07."
+        },
+        "08": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 08."
+        },
+        "09": {
+          "$value": "40px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 09."
+        },
+        "base": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size base."
+        },
+        "hairline": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size hairline."
+        }
+      },
+      "space": {
+        "10": {
+          "$value": "44px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 10."
+        },
+        "11": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 11."
+        },
+        "12": {
+          "$value": "64px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 12."
+        },
+        "01": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 01."
+        },
+        "02": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 02."
+        },
+        "03": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 03."
+        },
+        "04": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 04."
+        },
+        "05": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 05."
+        },
+        "06": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 06."
+        },
+        "07": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 07."
+        },
+        "08": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 08."
+        },
+        "09": {
+          "$value": "40px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref space 09."
+        }
+      },
       "shadows": {
         "x": {
           "tier-1": {
-            "$value": 0,
-            "$type": "number",
+            "$value": "0px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows x tier 1."
           }
         },
         "y": {
           "tier-1": {
-            "$value": 1,
-            "$type": "number",
+            "$value": "1px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 1."
           },
           "tier-2": {
-            "$value": 2,
-            "$type": "number",
+            "$value": "2px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 2."
           },
           "tier-3": {
-            "$value": 3,
-            "$type": "number",
+            "$value": "3px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 3."
           },
           "tier-4": {
-            "$value": 4,
-            "$type": "number",
+            "$value": "4px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 4."
           },
           "tier-5": {
-            "$value": 5,
-            "$type": "number",
+            "$value": "5px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 5."
           },
           "tier-6": {
-            "$value": 6,
-            "$type": "number",
+            "$value": "6px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 6."
           },
           "tier-7": {
-            "$value": 8,
-            "$type": "number",
+            "$value": "8px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 7."
           },
           "tier-8": {
-            "$value": 9,
-            "$type": "number",
+            "$value": "9px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 8."
           },
           "tier-9": {
-            "$value": 13,
-            "$type": "number",
+            "$value": "13px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 9."
           },
           "tier-10": {
-            "$value": 14,
-            "$type": "number",
+            "$value": "14px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 10."
           },
           "tier-11": {
-            "$value": 21,
-            "$type": "number",
+            "$value": "21px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 11."
           },
           "tier-12": {
-            "$value": 22,
-            "$type": "number",
+            "$value": "22px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows y tier 12."
           }
         },
         "blur": {
           "tier-1": {
-            "$value": 1,
-            "$type": "number",
+            "$value": "1px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 1."
           },
           "tier-2": {
-            "$value": 2,
-            "$type": "number",
+            "$value": "2px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 2."
           },
           "tier-3": {
-            "$value": 3,
-            "$type": "number",
+            "$value": "3px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 3."
           },
           "tier-4": {
-            "$value": 4,
-            "$type": "number",
+            "$value": "4px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 4."
           },
           "tier-5": {
-            "$value": 5,
-            "$type": "number",
+            "$value": "5px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 5."
           },
           "tier-6": {
-            "$value": 6,
-            "$type": "number",
+            "$value": "6px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 6."
           },
           "tier-7": {
-            "$value": 8,
-            "$type": "number",
+            "$value": "8px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 7."
           },
           "tier-8": {
-            "$value": 10,
-            "$type": "number",
+            "$value": "10px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 8."
           },
           "tier-9": {
-            "$value": 13,
-            "$type": "number",
+            "$value": "13px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 9."
           },
           "tier-10": {
-            "$value": 16,
-            "$type": "number",
+            "$value": "16px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 10."
           },
           "tier-11": {
-            "$value": 21,
-            "$type": "number",
+            "$value": "21px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 11."
           },
           "tier-12": {
-            "$value": 26,
-            "$type": "number",
+            "$value": "26px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 12."
           },
           "tier-13": {
-            "$value": 42,
-            "$type": "number",
+            "$value": "42px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows blur tier 13."
           }
         },
         "spread": {
           "tier-1": {
-            "$value": 0,
-            "$type": "number",
+            "$value": "0px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows spread tier 1."
           },
           "tier-2": {
-            "$value": -1,
-            "$type": "number",
+            "$value": "-1px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows spread tier 2."
           },
           "tier-3": {
-            "$value": -2,
-            "$type": "number",
+            "$value": "-2px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows spread tier 3."
           },
           "tier-4": {
-            "$value": -3,
-            "$type": "number",
+            "$value": "-3px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows spread tier 4."
           },
           "tier-5": {
-            "$value": -5,
-            "$type": "number",
+            "$value": "-5px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows spread tier 5."
           },
           "tier-6": {
-            "$value": -7,
-            "$type": "number",
+            "$value": "-7px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows spread tier 6."
           },
           "tier-7": {
-            "$value": -11,
-            "$type": "number",
+            "$value": "-11px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows spread tier 7."
           }
         },
         "alpha": {
           "tier-1": {
-            "$value": 80,
-            "$type": "number",
+            "$value": "80px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows alpha tier 1."
           },
           "tier-2": {
-            "$value": 70,
-            "$type": "number",
+            "$value": "70px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows alpha tier 2."
           },
           "tier-3": {
-            "$value": 55,
-            "$type": "number",
+            "$value": "55px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows alpha tier 3."
           },
           "tier-4": {
-            "$value": 25,
-            "$type": "number",
+            "$value": "25px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows alpha tier 4."
           },
           "tier-5": {
-            "$value": 20,
-            "$type": "number",
+            "$value": "20px",
+            "$type": "dimension",
             "$description": "Primitive value for ref shadows alpha tier 5."
           }
         }
@@ -1262,29 +1640,7 @@
   },
   "semantic": {
     "content": {
-      "heavy": {
-        "fontWeight": {
-          "$value": 600,
-          "$type": "fontWeight",
-          "$description": "Semantic token for content heavy font weight."
-        },
-        "fontSize": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Semantic token for content heavy font size."
-        },
-        "lineHeight": {
-          "$value": "24px",
-          "$type": "dimension",
-          "$description": "Semantic token for content heavy line height."
-        }
-      },
       "common": {
-        "fontSize": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Semantic token for content common font size."
-        },
         "textColor": {
           "default": {
             "$value": "#191a1a",
@@ -1302,6 +1658,11 @@
             "$description": "Semantic token for content common text color disabled."
           }
         },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Semantic token for content common font size."
+        },
         "lineHeight": {
           "$value": "24px",
           "$type": "dimension",
@@ -1314,6 +1675,11 @@
         }
       },
       "hero": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for content hero color."
+        },
         "fontSize": {
           "$value": "64px",
           "$type": "dimension",
@@ -1323,11 +1689,6 @@
           "$value": 300,
           "$type": "fontWeight",
           "$description": "Semantic token for content hero font weight."
-        },
-        "color": {
-          "$value": "#191a1a",
-          "$type": "color",
-          "$description": "Semantic token for content hero color."
         },
         "lineHeight": {
           "$value": "96px",
@@ -1538,6 +1899,23 @@
         "$type": "fontFamily",
         "$description": "Semantic token for content font family."
       },
+      "heavy": {
+        "fontWeight": {
+          "$value": 600,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content heavy font weight."
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Semantic token for content heavy font size."
+        },
+        "lineHeight": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Semantic token for content heavy line height."
+        }
+      },
       "error": {
         "fontWeight": {
           "$value": 700,
@@ -1657,18 +2035,6 @@
       }
     },
     "control": {
-      "borderWidth": {
-        "active": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Semantic token for control border width active."
-        },
-        "default": {
-          "$value": "1px",
-          "$type": "dimension",
-          "$description": "Semantic token for control border width default."
-        }
-      },
       "color": {
         "accent": {
           "active": {
@@ -1722,18 +2088,13 @@
           }
         }
       },
-      "borderRadius": {
-        "$value": "4px",
-        "$type": "dimension",
-        "$description": "Semantic token for control border radius."
-      },
       "action": {
-        "borderRadius": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Semantic token for control action border radius."
-        },
         "color": {
+          "default": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Semantic token for control action color default."
+          },
           "hover": {
             "default": {
               "$value": "#004b70",
@@ -1762,12 +2123,12 @@
               "$type": "color",
               "$description": "Semantic token for control action color disabled tertiary."
             }
-          },
-          "default": {
-            "$value": "#006da3",
-            "$type": "color",
-            "$description": "Semantic token for control action color default."
           }
+        },
+        "borderRadius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for control action border radius."
         }
       },
       "navigation": {
@@ -1803,24 +2164,7 @@
           }
         }
       },
-      "input": {
-        "borderRadius": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Semantic token for control input border radius."
-        }
-      },
-      "lineHeight": {
-        "$value": "21px",
-        "$type": "dimension",
-        "$description": "Semantic token for control line height."
-      },
       "selection": {
-        "borderRadius": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Semantic token for control selection border radius."
-        },
         "borderColor": {
           "$value": "#cbcccd",
           "$type": "color",
@@ -1832,7 +2176,41 @@
             "$type": "color",
             "$description": "Semantic token for control selection background color inactive."
           }
+        },
+        "borderRadius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for control selection border radius."
         }
+      },
+      "borderWidth": {
+        "active": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for control border width active."
+        },
+        "default": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Semantic token for control border width default."
+        }
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Semantic token for control border radius."
+      },
+      "input": {
+        "borderRadius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for control input border radius."
+        }
+      },
+      "lineHeight": {
+        "$value": "21px",
+        "$type": "dimension",
+        "$description": "Semantic token for control line height."
       }
     },
     "layout": {
@@ -1881,23 +2259,6 @@
       }
     },
     "brand": {
-      "secondary": {
-        "cerulean": {
-          "$value": "#006da3",
-          "$type": "color",
-          "$description": "Semantic token for brand secondary cerulean."
-        },
-        "darkCerulean": {
-          "$value": "#003a57",
-          "$type": "color",
-          "$description": "Semantic token for brand secondary dark cerulean."
-        },
-        "lightGold": {
-          "$value": "#fde272",
-          "$type": "color",
-          "$description": "Semantic token for brand secondary light gold."
-        }
-      },
       "primary": {
         "gold": {
           "$value": "#fad141",
@@ -1914,55 +2275,70 @@
           "$type": "color",
           "$description": "Semantic token for brand primary white."
         }
+      },
+      "secondary": {
+        "cerulean": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Semantic token for brand secondary cerulean."
+        },
+        "darkCerulean": {
+          "$value": "#003a57",
+          "$type": "color",
+          "$description": "Semantic token for brand secondary dark cerulean."
+        },
+        "lightGold": {
+          "$value": "#fde272",
+          "$type": "color",
+          "$description": "Semantic token for brand secondary light gold."
+        }
       }
     },
-    "border": {
-      "radius": {
-        "default": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Semantic token for border radius default."
-        },
-        "subtle": {
-          "$value": "2px",
-          "$type": "dimension",
-          "$description": "Semantic token for border radius subtle."
-        },
-        "moderate": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Semantic token for border radius moderate."
-        },
-        "generous": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Semantic token for border radius generous."
-        },
-        "ample": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Semantic token for border radius ample."
-        },
-        "large": {
-          "$value": "24px",
-          "$type": "dimension",
-          "$description": "Semantic token for border radius large."
-        },
-        "x-large": {
-          "$value": "32px",
-          "$type": "dimension",
-          "$description": "Semantic token for border radius x large."
-        },
-        "xx-large": {
-          "$value": "48px",
-          "$type": "dimension",
-          "$description": "Semantic token for border radius xx large."
-        },
-        "xxx-large": {
-          "$value": "80px",
-          "$type": "dimension",
-          "$description": "Semantic token for border radius xxx large."
-        }
+    "borderRadius": {
+      "default": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Semantic token for border radius default."
+      },
+      "subtle": {
+        "$value": "2px",
+        "$type": "dimension",
+        "$description": "Semantic token for border radius subtle."
+      },
+      "moderate": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Semantic token for border radius moderate."
+      },
+      "generous": {
+        "$value": "8px",
+        "$type": "dimension",
+        "$description": "Semantic token for border radius generous."
+      },
+      "ample": {
+        "$value": "16px",
+        "$type": "dimension",
+        "$description": "Semantic token for border radius ample."
+      },
+      "large": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$description": "Semantic token for border radius large."
+      },
+      "x-large": {
+        "$value": "32px",
+        "$type": "dimension",
+        "$description": "Semantic token for border radius x large."
+      },
+      "xx-large": {
+        "$value": "48px",
+        "$type": "dimension",
+        "$description": "Semantic token for border radius xx large."
+      },
+      "xxx-large": {
+        "$value": "80px",
+        "$type": "dimension",
+        "$description": "Semantic token for border radius xxx large."
       }
     }
   },
@@ -1986,32 +2362,28 @@
         }
       }
     },
+    "barchart": {
+      "bar": {
+        "backgroundColor": {
+          "primary": {
+            "$value": "#00293d",
+            "$type": "color",
+            "$description": "Component token for barchart bar background color primary."
+          },
+          "secondary": {
+            "$value": "#c08d16",
+            "$type": "color",
+            "$description": "Component token for barchart bar background color secondary."
+          },
+          "tertiary": {
+            "$value": "#514396",
+            "$type": "color",
+            "$description": "Component token for barchart bar background color tertiary."
+          }
+        }
+      }
+    },
     "button": {
-      "borderRadius": {
-        "$value": "4px",
-        "$type": "dimension",
-        "$description": "Component token for button border radius."
-      },
-      "fontSize": {
-        "$value": "16px",
-        "$type": "dimension",
-        "$description": "Component token for button font size."
-      },
-      "fontWeight": {
-        "$value": 400,
-        "$type": "fontWeight",
-        "$description": "Component token for button font weight."
-      },
-      "minHeight": {
-        "$value": "32px",
-        "$type": "dimension",
-        "$description": "Component token for button min height."
-      },
-      "minWidth": {
-        "$value": "32px",
-        "$type": "dimension",
-        "$description": "Component token for button min width."
-      },
       "backgroundColor": {
         "primary": {
           "default": {
@@ -2112,6 +2484,31 @@
           }
         }
       },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for button border radius."
+      },
+      "fontSize": {
+        "$value": "16px",
+        "$type": "dimension",
+        "$description": "Component token for button font size."
+      },
+      "fontWeight": {
+        "$value": 400,
+        "$type": "fontWeight",
+        "$description": "Component token for button font weight."
+      },
+      "minHeight": {
+        "$value": "32px",
+        "$type": "dimension",
+        "$description": "Component token for button min height."
+      },
+      "minWidth": {
+        "$value": "32px",
+        "$type": "dimension",
+        "$description": "Component token for button min width."
+      },
       "padding": {
         "inline": {
           "$value": "12px",
@@ -2126,11 +2523,6 @@
       }
     },
     "card": {
-      "borderRadius": {
-        "$value": "4px",
-        "$type": "dimension",
-        "$description": "Component token for card border radius."
-      },
       "backgroundColor": {
         "$value": "#ffffff",
         "$type": "color",
@@ -2141,17 +2533,19 @@
         "$type": "color",
         "$description": "Component token for card border color."
       },
-      "borderWidth": {
-        "$value": "1px",
-        "$type": "dimension",
-        "$description": "Component token for card border width."
-      },
-      "minWidth": {
-        "$value": "320px",
-        "$type": "dimension",
-        "$description": "Component token for card min width."
-      },
       "header": {
+        "border": {
+          "borderColor": {
+            "$value": "#7d8082",
+            "$type": "color",
+            "$description": "Component token for card header border border color."
+          },
+          "borderWidth": {
+            "$value": "1px",
+            "$type": "dimension",
+            "$description": "Component token for card header border border width."
+          }
+        },
         "title": {
           "fontSize": {
             "$value": "20px",
@@ -2162,18 +2556,6 @@
             "$value": 525,
             "$type": "fontWeight",
             "$description": "Component token for card header title font weight."
-          }
-        },
-        "border": {
-          "borderWidth": {
-            "$value": "1px",
-            "$type": "dimension",
-            "$description": "Component token for card header border border width."
-          },
-          "borderColor": {
-            "$value": "#7d8082",
-            "$type": "color",
-            "$description": "Component token for card header border border color."
           }
         },
         "description": {
@@ -2188,6 +2570,21 @@
             "$description": "Component token for card header description font weight."
           }
         }
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for card border radius."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for card border width."
+      },
+      "minWidth": {
+        "$value": "320px",
+        "$type": "dimension",
+        "$description": "Component token for card min width."
       }
     },
     "checkbox": {
@@ -2206,11 +2603,6 @@
         "$type": "color",
         "$description": "Component token for checkbox text color."
       },
-      "borderRadius": {
-        "$value": "4px",
-        "$type": "dimension",
-        "$description": "Component token for checkbox border radius."
-      },
       "backgroundColor": {
         "default": {
           "$value": "#ffffff",
@@ -2228,6 +2620,23 @@
           "$description": "Component token for checkbox background color selected."
         }
       },
+      "inputValue": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for checkbox input value color."
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for checkbox input value font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for checkbox input value font weight."
+        }
+      },
       "checkmark": {
         "selected": {
           "$value": "#ffffff",
@@ -2240,22 +2649,10 @@
           "$description": "Component token for checkbox checkmark disabled."
         }
       },
-      "valueGroup": {
-        "color": {
-          "$value": "#191a1a",
-          "$type": "color",
-          "$description": "Component token for checkbox value group color."
-        },
-        "fontSize": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Component token for checkbox value group font size."
-        },
-        "fontWeight": {
-          "$value": 400,
-          "$type": "fontWeight",
-          "$description": "Component token for checkbox value group font weight."
-        }
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for checkbox border radius."
       }
     },
     "dialog": {
@@ -2289,13 +2686,6 @@
         "$type": "dimension",
         "$description": "Component token for dialog max width."
       },
-      "spacing": {
-        "padding": {
-          "$value": "20px",
-          "$type": "dimension",
-          "$description": "Component token for dialog spacing padding."
-        }
-      },
       "title": {
         "fontSize": {
           "$value": "16px",
@@ -2319,9 +2709,157 @@
           "$type": "fontWeight",
           "$description": "Component token for dialog description font weight."
         }
+      },
+      "spacing": {
+        "padding": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Component token for dialog spacing padding."
+        }
+      }
+    },
+    "donutchart": {
+      "backgroundColor": {
+        "category-1": {
+          "$value": "#00293d",
+          "$type": "color",
+          "$description": "Component token for donutchart background color category 1."
+        },
+        "category-2": {
+          "$value": "#c08d16",
+          "$type": "color",
+          "$description": "Component token for donutchart background color category 2."
+        },
+        "category-3": {
+          "$value": "#9f2b04",
+          "$type": "color",
+          "$description": "Component token for donutchart background color category 3."
+        },
+        "category-4": {
+          "$value": "#2bab81",
+          "$type": "color",
+          "$description": "Component token for donutchart background color category 4."
+        },
+        "category-5": {
+          "$value": "#1588c1",
+          "$type": "color",
+          "$description": "Component token for donutchart background color category 5."
+        },
+        "category-6": {
+          "$value": "#550213",
+          "$type": "color",
+          "$description": "Component token for donutchart background color category 6."
+        },
+        "category-7": {
+          "$value": "#514396",
+          "$type": "color",
+          "$description": "Component token for donutchart background color category 7."
+        },
+        "category-8": {
+          "$value": "#891420",
+          "$type": "color",
+          "$description": "Component token for donutchart background color category 8."
+        }
+      }
+    },
+    "inlineNotification": {
+      "backgroundColor": {
+        "neutral": {
+          "$value": "#f7f7f7",
+          "$type": "color",
+          "$description": "Component token for inline notification background color neutral."
+        },
+        "critical": {
+          "$value": "#fff0f3",
+          "$type": "color",
+          "$description": "Component token for inline notification background color critical."
+        },
+        "warning": {
+          "$value": "#fff4f0",
+          "$type": "color",
+          "$description": "Component token for inline notification background color warning."
+        },
+        "success": {
+          "$value": "#f2fcf9",
+          "$type": "color",
+          "$description": "Component token for inline notification background color success."
+        }
+      },
+      "borderColor": {
+        "neutral": {
+          "$value": "#4b4d4e",
+          "$type": "color",
+          "$description": "Component token for inline notification border color neutral."
+        },
+        "critical": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for inline notification border color critical."
+        },
+        "warning": {
+          "$value": "#d13805",
+          "$type": "color",
+          "$description": "Component token for inline notification border color warning."
+        },
+        "success": {
+          "$value": "#247e58",
+          "$type": "color",
+          "$description": "Component token for inline notification border color success."
+        }
+      },
+      "fontSize": {
+        "$value": "16px",
+        "$type": "dimension",
+        "$description": "Component token for inline notification font size."
+      },
+      "fontWeight": {
+        "$value": 400,
+        "$type": "fontWeight",
+        "$description": "Component token for inline notification font weight."
+      },
+      "minHeight": {
+        "$value": "48px",
+        "$type": "dimension",
+        "$description": "Component token for inline notification min height."
+      },
+      "borderRadius": {
+        "default": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for inline notification border radius default."
+        }
+      },
+      "borderWidth": {
+        "default": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Component token for inline notification border width default."
+        },
+        "inline-start": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for inline notification border width inline start."
+        }
       }
     },
     "link": {
+      "textColor": {
+        "default": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for link text color default."
+        },
+        "hover": {
+          "$value": "#004b70",
+          "$type": "color",
+          "$description": "Component token for link text color hover."
+        },
+        "visited": {
+          "$value": "#8a4691",
+          "$type": "color",
+          "$description": "Component token for link text color visited."
+        }
+      },
       "fontSize": {
         "default": {
           "$value": "16px",
@@ -2345,23 +2883,6 @@
           "$type": "fontWeight",
           "$description": "Component token for link font weight help."
         }
-      },
-      "textColor": {
-        "default": {
-          "$value": "#006da3",
-          "$type": "color",
-          "$description": "Component token for link text color default."
-        },
-        "hover": {
-          "$value": "#004b70",
-          "$type": "color",
-          "$description": "Component token for link text color hover."
-        },
-        "visited": {
-          "$value": "#8a4691",
-          "$type": "color",
-          "$description": "Component token for link text color visited."
-        }
       }
     },
     "tab": {
@@ -2374,6 +2895,32 @@
         "$value": "#191a1a",
         "$type": "color",
         "$description": "Component token for tab text color."
+      },
+      "backgroundColor": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for tab background color default."
+        },
+        "hover": {
+          "$value": "#f0faff",
+          "$type": "color",
+          "$description": "Component token for tab background color hover."
+        }
+      },
+      "borderColor": {
+        "block-end": {
+          "active": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Component token for tab border color block end active."
+          },
+          "inactive": {
+            "$value": "#7d8082",
+            "$type": "color",
+            "$description": "Component token for tab border color block end inactive."
+          }
+        }
       },
       "fontSize": {
         "default": {
@@ -2394,18 +2941,6 @@
           "$description": "Component token for tab font weight active."
         }
       },
-      "backgroundColor": {
-        "default": {
-          "$value": "#ffffff",
-          "$type": "color",
-          "$description": "Component token for tab background color default."
-        },
-        "hover": {
-          "$value": "#f0faff",
-          "$type": "color",
-          "$description": "Component token for tab background color hover."
-        }
-      },
       "borderWidth": {
         "inactive": {
           "$value": "1px",
@@ -2424,19 +2959,58 @@
           "$type": "dimension",
           "$description": "Component token for tab padding inline."
         }
+      }
+    },
+    "progressStepper": {
+      "backgroundColor": {
+        "$value": "#ffffff",
+        "$type": "color",
+        "$description": "Component token for progress stepper background color."
       },
-      "borderColor": {
-        "block-end": {
-          "active": {
-            "$value": "#006da3",
-            "$type": "color",
-            "$description": "Component token for tab border color block end active."
-          },
-          "inactive": {
-            "$value": "#7d8082",
-            "$type": "color",
-            "$description": "Component token for tab border color block end inactive."
-          }
+      "currentStep": {
+        "borderWidth": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Component token for progress stepper current step border width."
+        },
+        "fontSize": {
+          "$value": "14px",
+          "$type": "dimension",
+          "$description": "Component token for progress stepper current step font size."
+        },
+        "fontWeight": {
+          "$value": 700,
+          "$type": "fontWeight",
+          "$description": "Component token for progress stepper current step font weight."
+        }
+      },
+      "futureStep": {
+        "borderWidth": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Component token for progress stepper future step border width."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for progress stepper future step font weight."
+        },
+        "fontSize": {
+          "$value": "14px",
+          "$type": "dimension",
+          "$description": "Component token for progress stepper future step font size."
+        }
+      },
+      "pastStep": {
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for progress stepper past step font weight."
+        },
+        "fontSize": {
+          "$value": "14px",
+          "$type": "dimension",
+          "$description": "Component token for progress stepper past step font size."
         }
       }
     },
@@ -2513,11 +3087,6 @@
       }
     },
     "searchInput": {
-      "borderRadius": {
-        "$value": "24px",
-        "$type": "dimension",
-        "$description": "Component token for search input border radius."
-      },
       "label": {
         "microcopy": {
           "textColor": {
@@ -2537,6 +3106,23 @@
           }
         }
       },
+      "borderRadius": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$description": "Component token for search input border radius."
+      },
+      "inputValue": {
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for search input input value font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for search input input value font weight."
+        }
+      },
       "button": {
         "fontSize": {
           "$value": "16px",
@@ -2553,18 +3139,6 @@
           "$type": "dimension",
           "$description": "Component token for search input button border radius."
         }
-      },
-      "valueGroup": {
-        "fontSize": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Component token for search input value group font size."
-        },
-        "fontWeight": {
-          "$value": 400,
-          "$type": "fontWeight",
-          "$description": "Component token for search input value group font weight."
-        }
       }
     },
     "segmentedControl": {
@@ -2572,26 +3146,6 @@
         "$value": "#e5e6e6",
         "$type": "color",
         "$description": "Component token for segmented control background color."
-      },
-      "fontSize": {
-        "$value": "16px",
-        "$type": "dimension",
-        "$description": "Component token for segmented control font size."
-      },
-      "borderRadius": {
-        "$value": "32px",
-        "$type": "dimension",
-        "$description": "Component token for segmented control border radius."
-      },
-      "padding": {
-        "$value": "4px",
-        "$type": "dimension",
-        "$description": "Component token for segmented control padding."
-      },
-      "minHeight": {
-        "$value": "60px",
-        "$type": "dimension",
-        "$description": "Component token for segmented control min height."
       },
       "button": {
         "backgroundColor": {
@@ -2647,6 +3201,26 @@
           "$type": "dimension",
           "$description": "Component token for segmented control button border radius."
         }
+      },
+      "fontSize": {
+        "$value": "16px",
+        "$type": "dimension",
+        "$description": "Component token for segmented control font size."
+      },
+      "borderRadius": {
+        "$value": "32px",
+        "$type": "dimension",
+        "$description": "Component token for segmented control border radius."
+      },
+      "padding": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for segmented control padding."
+      },
+      "minHeight": {
+        "$value": "60px",
+        "$type": "dimension",
+        "$description": "Component token for segmented control min height."
       }
     },
     "selectInput": {
@@ -2654,20 +3228,6 @@
         "$value": "#7d8082",
         "$type": "color",
         "$description": "Component token for select input border color."
-      },
-      "dropdown": {
-        "minWidth": {
-          "$value": "88px",
-          "$type": "dimension",
-          "$description": "Component token for select input dropdown min width."
-        }
-      },
-      "inputField": {
-        "minWidth": {
-          "$value": "120px",
-          "$type": "dimension",
-          "$description": "Component token for select input input field min width."
-        }
       },
       "backgroundColor": {
         "default": {
@@ -2682,6 +3242,23 @@
         }
       },
       "label": {
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for select input label text color default."
+          },
+          "microcopy": {
+            "$value": "#646768",
+            "$type": "color",
+            "$description": "Component token for select input label text color microcopy."
+          },
+          "error": {
+            "$value": "#cb0b31",
+            "$type": "color",
+            "$description": "Component token for select input label text color error."
+          }
+        },
         "fontSize": {
           "default": {
             "$value": "14px",
@@ -2710,64 +3287,41 @@
             "$type": "fontWeight",
             "$description": "Component token for select input label font weight error."
           }
-        },
-        "textColor": {
-          "default": {
-            "$value": "#191a1a",
-            "$type": "color",
-            "$description": "Component token for select input label text color default."
-          },
-          "microcopy": {
-            "$value": "#646768",
-            "$type": "color",
-            "$description": "Component token for select input label text color microcopy."
-          },
-          "error": {
-            "$value": "#cb0b31",
-            "$type": "color",
-            "$description": "Component token for select input label text color error."
-          }
         }
       },
-      "valueGroup": {
+      "inputValue": {
         "textColor": {
           "$value": "#191a1a",
           "$type": "color",
-          "$description": "Component token for select input value group text color."
+          "$description": "Component token for select input input value text color."
         },
         "fontSize": {
           "$value": "16px",
           "$type": "dimension",
-          "$description": "Component token for select input value group font size."
+          "$description": "Component token for select input input value font size."
         },
         "fontWeight": {
           "$value": 400,
           "$type": "fontWeight",
-          "$description": "Component token for select input value group font weight."
+          "$description": "Component token for select input input value font weight."
+        }
+      },
+      "dropdown": {
+        "minWidth": {
+          "$value": "88px",
+          "$type": "dimension",
+          "$description": "Component token for select input dropdown min width."
+        }
+      },
+      "inputField": {
+        "minWidth": {
+          "$value": "120px",
+          "$type": "dimension",
+          "$description": "Component token for select input input field min width."
         }
       }
     },
     "tag": {
-      "fontSize": {
-        "$value": "12px",
-        "$type": "dimension",
-        "$description": "Component token for tag font size."
-      },
-      "fontWeight": {
-        "$value": 450,
-        "$type": "fontWeight",
-        "$description": "Component token for tag font weight."
-      },
-      "borderRadius": {
-        "$value": "24px",
-        "$type": "dimension",
-        "$description": "Component token for tag border radius."
-      },
-      "borderWidth": {
-        "$value": "2px",
-        "$type": "dimension",
-        "$description": "Component token for tag border width."
-      },
       "backgroundColor": {
         "generic": {
           "$value": "#f7f7f7",
@@ -2789,6 +3343,48 @@
           "$type": "color",
           "$description": "Component token for tag background color gold."
         }
+      },
+      "borderColor": {
+        "generic": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for tag border color generic."
+        },
+        "teal": {
+          "$value": "#247e58",
+          "$type": "color",
+          "$description": "Component token for tag border color teal."
+        },
+        "red": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for tag border color red."
+        },
+        "gold": {
+          "$value": "#dfb22c",
+          "$type": "color",
+          "$description": "Component token for tag border color gold."
+        }
+      },
+      "fontSize": {
+        "$value": "12px",
+        "$type": "dimension",
+        "$description": "Component token for tag font size."
+      },
+      "fontWeight": {
+        "$value": 450,
+        "$type": "fontWeight",
+        "$description": "Component token for tag font weight."
+      },
+      "borderRadius": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$description": "Component token for tag border radius."
+      },
+      "borderWidth": {
+        "$value": "2px",
+        "$type": "dimension",
+        "$description": "Component token for tag border width."
       },
       "padding": {
         "inline": {
@@ -2815,28 +3411,6 @@
             "$description": "Component token for tag padding block small."
           }
         }
-      },
-      "borderColor": {
-        "generic": {
-          "$value": "#7d8082",
-          "$type": "color",
-          "$description": "Component token for tag border color generic."
-        },
-        "teal": {
-          "$value": "#247e58",
-          "$type": "color",
-          "$description": "Component token for tag border color teal."
-        },
-        "red": {
-          "$value": "#cb0b31",
-          "$type": "color",
-          "$description": "Component token for tag border color red."
-        },
-        "gold": {
-          "$value": "#dfb22c",
-          "$type": "color",
-          "$description": "Component token for tag border color gold."
-        }
       }
     },
     "textArea": {
@@ -2847,17 +3421,24 @@
           "$description": "Component token for text area border color default."
         }
       },
-      "borderRadius": {
-        "$value": "4px",
-        "$type": "dimension",
-        "$description": "Component token for text area border radius."
-      },
-      "borderWidth": {
-        "$value": "1px",
-        "$type": "dimension",
-        "$description": "Component token for text area border width."
-      },
       "label": {
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for text area label text color default."
+          },
+          "microcopy": {
+            "$value": "#646768",
+            "$type": "color",
+            "$description": "Component token for text area label text color microcopy."
+          },
+          "error": {
+            "$value": "#cb0b31",
+            "$type": "color",
+            "$description": "Component token for text area label text color error."
+          }
+        },
         "fontWeight": {
           "default": {
             "$value": 400,
@@ -2886,23 +3467,6 @@
             "$type": "dimension",
             "$description": "Component token for text area label font size microcopy."
           }
-        },
-        "textColor": {
-          "default": {
-            "$value": "#191a1a",
-            "$type": "color",
-            "$description": "Component token for text area label text color default."
-          },
-          "microcopy": {
-            "$value": "#646768",
-            "$type": "color",
-            "$description": "Component token for text area label text color microcopy."
-          },
-          "error": {
-            "$value": "#cb0b31",
-            "$type": "color",
-            "$description": "Component token for text area label text color error."
-          }
         }
       },
       "backgroundColor": {
@@ -2917,16 +3481,26 @@
           "$description": "Component token for text area background color error."
         }
       },
-      "valueGroup": {
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for text area border radius."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for text area border width."
+      },
+      "inputValue": {
         "fontWeight": {
           "$value": 400,
           "$type": "fontWeight",
-          "$description": "Component token for text area value group font weight."
+          "$description": "Component token for text area input value font weight."
         },
         "fontSize": {
           "$value": "16px",
           "$type": "dimension",
-          "$description": "Component token for text area value group font size."
+          "$description": "Component token for text area input value font size."
         }
       }
     },
@@ -2945,16 +3519,6 @@
           "$description": "Component token for text input text color default."
         }
       },
-      "borderRadius": {
-        "$value": "4px",
-        "$type": "dimension",
-        "$description": "Component token for text input border radius."
-      },
-      "borderWidth": {
-        "$value": "1px",
-        "$type": "dimension",
-        "$description": "Component token for text input border width."
-      },
       "backgroundColor": {
         "default": {
           "$value": "#ffffff",
@@ -2967,32 +3531,30 @@
           "$description": "Component token for text input background color error."
         }
       },
-      "valueGroup": {
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for text input border radius."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for text input border width."
+      },
+      "inputValue": {
         "fontSize": {
           "$value": "16px",
           "$type": "dimension",
-          "$description": "Component token for text input value group font size."
+          "$description": "Component token for text input input value font size."
         },
         "fontWeight": {
           "$value": 400,
           "$type": "fontWeight",
-          "$description": "Component token for text input value group font weight."
+          "$description": "Component token for text input input value font weight."
         }
       }
     },
     "toggle": {
-      "borderRadius": {
-        "$value": "4px",
-        "$type": "dimension",
-        "$description": "Component token for toggle border radius."
-      },
-      "padding": {
-        "default": {
-          "$value": "2px",
-          "$type": "dimension",
-          "$description": "Component token for toggle padding default."
-        }
-      },
       "backgroundColor": {
         "active": {
           "$value": "#006da3",
@@ -3013,31 +3575,17 @@
             "$description": "Component token for toggle control background color default."
           }
         }
-      }
-    },
-    "tooltip": {
-      "title": {
-        "fontSize": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Component token for tooltip title font size."
-        },
-        "fontWeight": {
-          "$value": 600,
-          "$type": "fontWeight",
-          "$description": "Component token for tooltip title font weight."
-        }
       },
-      "description": {
-        "fontSize": {
-          "$value": "14px",
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for toggle border radius."
+      },
+      "padding": {
+        "default": {
+          "$value": "2px",
           "$type": "dimension",
-          "$description": "Component token for tooltip description font size."
-        },
-        "fontWeight": {
-          "$value": 400,
-          "$type": "fontWeight",
-          "$description": "Component token for tooltip description font weight."
+          "$description": "Component token for toggle padding default."
         }
       }
     },
@@ -3165,6 +3713,23 @@
       }
     },
     "label": {
+      "textColor": {
+        "default": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for label text color default."
+        },
+        "microcopy": {
+          "$value": "#646768",
+          "$type": "color",
+          "$description": "Component token for label text color microcopy."
+        },
+        "error": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for label text color error."
+        }
+      },
       "fontSize": {
         "default": {
           "$value": "14px",
@@ -3193,400 +3758,106 @@
           "$type": "fontWeight",
           "$description": "Component token for label font weight error."
         }
-      },
-      "textColor": {
-        "default": {
-          "$value": "#191a1a",
-          "$type": "color",
-          "$description": "Component token for label text color default."
-        },
-        "microcopy": {
-          "$value": "#646768",
-          "$type": "color",
-          "$description": "Component token for label text color microcopy."
-        },
-        "error": {
-          "$value": "#cb0b31",
-          "$type": "color",
-          "$description": "Component token for label text color error."
-        }
       }
-    }
-  },
-  "density": {
-    "surface": {
-      "padding": {
-        "block": {
-          "$value": "4px",
+    },
+    "accountTree": {
+      "title": {
+        "fontSize": {
+          "$value": "16px",
           "$type": "dimension",
-          "$description": "Condensed-mode density value for surface padding block."
-        },
-        "inline": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface padding inline."
-        },
-        "all": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface padding all."
-        },
-        "gap": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface padding gap."
+          "$description": "Component token for account tree title font size."
         }
       },
-      "small": {
-        "padding": {
-          "$value": "2px",
+      "description": {
+        "fontSize": {
+          "$value": "14px",
           "$type": "dimension",
-          "$description": "Condensed-mode density value for surface small padding."
-        },
-        "gap": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface small gap."
-        }
-      },
-      "med": {
-        "padding": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface med padding."
-        },
-        "gap": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface med gap."
-        }
-      },
-      "large": {
-        "padding": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface large padding."
-        },
-        "gap": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface large gap."
-        }
-      },
-      "x-large": {
-        "padding": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface x large padding."
-        },
-        "gap": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for surface x large gap."
+          "$description": "Component token for account tree description font size."
         }
       }
     },
-    "spacing": {
-      "dynamic": {
-        "xx-small": {
-          "$value": "2px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing dynamic xx small."
-        },
-        "x-small": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing dynamic x small."
-        },
-        "small": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing dynamic small."
-        },
-        "med": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing dynamic med."
-        },
-        "large": {
-          "$value": "12px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing dynamic large."
-        },
-        "x-large": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing dynamic x large."
-        },
-        "xx-large": {
-          "$value": "20px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing dynamic xx large."
-        }
-      },
-      "fixed": {
-        "xx-small": {
-          "$value": "2px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing fixed xx small."
-        },
-        "x-small": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing fixed x small."
-        },
-        "small": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing fixed small."
-        },
-        "med": {
-          "$value": "12px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing fixed med."
-        },
-        "large": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing fixed large."
-        },
-        "x-large": {
-          "$value": "20px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing fixed x large."
-        },
-        "xx-large": {
-          "$value": "24px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for spacing fixed xx large."
-        }
-      }
-    },
-    "sizing": {
-      "dynamic": {
-        "hairline": {
-          "$value": "1px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing dynamic hairline."
-        },
-        "xx-small": {
-          "$value": "2px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing dynamic xx small."
-        },
-        "x-small": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing dynamic x small."
-        },
-        "small": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing dynamic small."
-        },
-        "med": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing dynamic med."
-        },
-        "large": {
-          "$value": "12px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing dynamic large."
-        },
-        "x-large": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing dynamic x large."
-        },
-        "xx-large": {
-          "$value": "20px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing dynamic xx large."
-        }
-      },
-      "fixed": {
-        "hairline": {
-          "$value": "1px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing fixed hairline."
-        },
-        "xx-small": {
-          "$value": "2px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing fixed xx small."
-        },
-        "x-small": {
-          "$value": "4px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing fixed x small."
-        },
-        "small": {
-          "$value": "8px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing fixed small."
-        },
-        "med": {
-          "$value": "12px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing fixed med."
-        },
-        "large": {
-          "$value": "16px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing fixed large."
-        },
-        "x-large": {
-          "$value": "20px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing fixed x large."
-        },
-        "xx-large": {
-          "$value": "24px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for sizing fixed xx large."
-        }
-      }
-    },
-    "control": {
-      "margin": {
-        "$value": "4px",
+    "fileUpload": {
+      "maxWidth": {
+        "$value": "600px",
         "$type": "dimension",
-        "$description": "Condensed-mode density value for control margin."
+        "$description": "Component token for file upload max width."
       },
-      "input": {
-        "padding": {
-          "block": {
-            "$value": "8px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control input padding block."
-          },
-          "inline": {
-            "$value": "12px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control input padding inline."
-          }
+      "title": {
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for file upload title font size."
         },
-        "small": {
-          "minWidth": {
-            "$value": "32px",
+        "fontWeight": {
+          "$value": 600,
+          "$type": "fontWeight",
+          "$description": "Component token for file upload title font weight."
+        }
+      },
+      "dropzone": {
+        "label": {
+          "fontSize": {
+            "$value": "14px",
             "$type": "dimension",
-            "$description": "Condensed-mode density value for control input small min width."
+            "$description": "Component token for file upload dropzone label font size."
           },
-          "minHeight": {
-            "$value": "32px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control input small min height."
-          }
-        },
-        "large": {
-          "minWidth": {
-            "$value": "32px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control input large min width."
-          },
-          "minHeight": {
-            "$value": "112px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control input large min height."
+          "fontWeight": {
+            "$value": 400,
+            "$type": "fontWeight",
+            "$description": "Component token for file upload dropzone label font weight."
           }
         }
       },
-      "action": {
-        "minWidth": {
-          "$value": "32px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for control action min width."
-        },
-        "minHeight": {
-          "$value": "32px",
-          "$type": "dimension",
-          "$description": "Condensed-mode density value for control action min height."
-        },
-        "padding": {
-          "block": {
-            "$value": "8px",
+      "file": {
+        "fileName": {
+          "fontSize": {
+            "$value": "14px",
             "$type": "dimension",
-            "$description": "Condensed-mode density value for control action padding block."
+            "$description": "Component token for file upload file file name font size."
           },
-          "inline": {
+          "fontWeight": {
+            "$value": 400,
+            "$type": "fontWeight",
+            "$description": "Component token for file upload file file name font weight."
+          }
+        },
+        "uploadStatus": {
+          "fontWeight": {
+            "$value": 500,
+            "$type": "fontWeight",
+            "$description": "Component token for file upload file upload status font weight."
+          },
+          "fontSize": {
             "$value": "12px",
             "$type": "dimension",
-            "$description": "Condensed-mode density value for control action padding inline."
-          }
-        }
-      },
-      "selection": {
-        "padding": {
-          "block": {
-            "$value": "8px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control selection padding block."
-          },
-          "inline": {
-            "$value": "12px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control selection padding inline."
-          }
-        },
-        "fill": {
-          "small": {
-            "$value": "12px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control selection fill small."
-          },
-          "large": {
-            "$value": "20px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control selection fill large."
-          }
-        },
-        "width": {
-          "small": {
-            "$value": "24px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control selection width small."
-          },
-          "large": {
-            "$value": "32px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control selection width large."
-          }
-        },
-        "height": {
-          "small": {
-            "$value": "24px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control selection height small."
-          },
-          "large": {
-            "$value": "32px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for control selection height large."
+            "$description": "Component token for file upload file upload status font size."
           }
         }
       }
     },
-    "action": {
-      "target": {
-        "padding": {
-          "block": {
-            "$value": "8px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for action target padding block."
-          },
-          "inline": {
-            "$value": "12px",
-            "$type": "dimension",
-            "$description": "Condensed-mode density value for action target padding inline."
-          }
+    "tooltip": {
+      "title": {
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for tooltip title font size."
+        },
+        "fontWeight": {
+          "$value": 600,
+          "$type": "fontWeight",
+          "$description": "Component token for tooltip title font weight."
         }
       },
-      "control": {
-        "size": {
-          "$value": "24px",
+      "description": {
+        "fontSize": {
+          "$value": "14px",
           "$type": "dimension",
-          "$description": "Condensed-mode density value for action control size."
+          "$description": "Component token for tooltip description font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for tooltip description font weight."
         }
       }
     }
@@ -3689,25 +3960,25 @@
           "$type": "color",
           "$description": "Dark-mode color value for intent primary base."
         },
-        "on-base": {
-          "$value": "#ffffff",
-          "$type": "color",
-          "$description": "Dark-mode color value for intent primary on base."
-        },
         "strong": {
           "$value": "#004b70",
           "$type": "color",
           "$description": "Dark-mode color value for intent primary strong."
         },
-        "subtle": {
-          "$value": "#b5daed",
-          "$type": "color",
-          "$description": "Dark-mode color value for intent primary subtle."
-        },
         "text": {
           "$value": "#006da3",
           "$type": "color",
           "$description": "Dark-mode color value for intent primary text."
+        },
+        "on-base": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent primary on base."
+        },
+        "subtle": {
+          "$value": "#b5daed",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent primary subtle."
         },
         "border": {
           "$value": "#006da3",
@@ -3895,11 +4166,6 @@
           "$type": "color",
           "$description": "Dark-mode color value for surface background color neutral 1."
         },
-        "neutral-2": {
-          "$value": "#e5e6e6",
-          "$type": "color",
-          "$description": "Dark-mode color value for surface background color neutral 2."
-        },
         "red": {
           "$value": "#fff0f3",
           "$type": "color",
@@ -3939,429 +4205,11 @@
           "$value": "#fffcf0",
           "$type": "color",
           "$description": "Dark-mode color value for surface background color gold."
-        }
-      }
-    },
-    "elevation": {
-      "carved": {
-        "umbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation carved umbra x."
-          },
-          "y": {
-            "$value": 1,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation carved umbra y."
-          },
-          "blur": {
-            "$value": 1,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation carved umbra blur."
-          },
-          "spread": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation carved umbra spread."
-          },
-          "alpha": {
-            "$value": 80,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation carved umbra alpha."
-          }
-        }
-      },
-      "settled": {
-        "umbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled umbra x."
-          },
-          "y": {
-            "$value": 1,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled umbra y."
-          },
-          "blur": {
-            "$value": 1,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled umbra blur."
-          },
-          "spread": {
-            "$value": -1,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled umbra spread."
-          },
-          "alpha": {
-            "$value": 20,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled umbra alpha."
-          }
         },
-        "penumbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled penumbra x."
-          },
-          "y": {
-            "$value": 2,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled penumbra y."
-          },
-          "blur": {
-            "$value": 2,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled penumbra blur."
-          },
-          "spread": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled penumbra spread."
-          },
-          "alpha": {
-            "$value": 20,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation settled penumbra alpha."
-          }
-        }
-      },
-      "resting": {
-        "umbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting umbra x."
-          },
-          "y": {
-            "$value": 2,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting umbra y."
-          },
-          "blur": {
-            "$value": 2,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting umbra blur."
-          },
-          "spread": {
-            "$value": -2,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting umbra spread."
-          },
-          "alpha": {
-            "$value": 70,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting umbra alpha."
-          }
-        },
-        "penumbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting penumbra x."
-          },
-          "y": {
-            "$value": 3,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting penumbra y."
-          },
-          "blur": {
-            "$value": 4,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting penumbra blur."
-          },
-          "spread": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting penumbra spread."
-          },
-          "alpha": {
-            "$value": 20,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation resting penumbra alpha."
-          }
-        }
-      },
-      "raised": {
-        "umbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised umbra x."
-          },
-          "y": {
-            "$value": 3,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised umbra y."
-          },
-          "blur": {
-            "$value": 3,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised umbra blur."
-          },
-          "spread": {
-            "$value": -2,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised umbra spread."
-          },
-          "alpha": {
-            "$value": 25,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised umbra alpha."
-          }
-        },
-        "penumbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised penumbra x."
-          },
-          "y": {
-            "$value": 4,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised penumbra y."
-          },
-          "blur": {
-            "$value": 6,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised penumbra blur."
-          },
-          "spread": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised penumbra spread."
-          },
-          "alpha": {
-            "$value": 20,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation raised penumbra alpha."
-          }
-        }
-      },
-      "suspended": {
-        "umbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended umbra x."
-          },
-          "y": {
-            "$value": 5,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended umbra y."
-          },
-          "blur": {
-            "$value": 5,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended umbra blur."
-          },
-          "spread": {
-            "$value": -3,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended umbra spread."
-          },
-          "alpha": {
-            "$value": 55,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended umbra alpha."
-          }
-        },
-        "penumbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended penumbra x."
-          },
-          "y": {
-            "$value": 6,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended penumbra y."
-          },
-          "blur": {
-            "$value": 10,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended penumbra blur."
-          },
-          "spread": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended penumbra spread."
-          },
-          "alpha": {
-            "$value": 20,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation suspended penumbra alpha."
-          }
-        }
-      },
-      "levitating": {
-        "umbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating umbra x."
-          },
-          "y": {
-            "$value": 8,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating umbra y."
-          },
-          "blur": {
-            "$value": 8,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating umbra blur."
-          },
-          "spread": {
-            "$value": -5,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating umbra spread."
-          },
-          "alpha": {
-            "$value": 55,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating umbra alpha."
-          }
-        },
-        "penumbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating penumbra x."
-          },
-          "y": {
-            "$value": 9,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating penumbra y."
-          },
-          "blur": {
-            "$value": 16,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating penumbra blur."
-          },
-          "spread": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating penumbra spread."
-          },
-          "alpha": {
-            "$value": 20,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation levitating penumbra alpha."
-          }
-        }
-      },
-      "floating": {
-        "umbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating umbra x."
-          },
-          "y": {
-            "$value": 13,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating umbra y."
-          },
-          "blur": {
-            "$value": 13,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating umbra blur."
-          },
-          "spread": {
-            "$value": -7,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating umbra spread."
-          },
-          "alpha": {
-            "$value": 55,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating umbra alpha."
-          }
-        },
-        "penumbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating penumbra x."
-          },
-          "y": {
-            "$value": 14,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating penumbra y."
-          },
-          "blur": {
-            "$value": 26,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating penumbra blur."
-          },
-          "spread": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating penumbra spread."
-          },
-          "alpha": {
-            "$value": 20,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation floating penumbra alpha."
-          }
-        }
-      },
-      "transcending": {
-        "umbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending umbra x."
-          },
-          "y": {
-            "$value": 21,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending umbra y."
-          },
-          "blur": {
-            "$value": 21,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending umbra blur."
-          },
-          "spread": {
-            "$value": -11,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending umbra spread."
-          },
-          "alpha": {
-            "$value": 55,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending umbra alpha."
-          }
-        },
-        "penumbra": {
-          "x": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending penumbra x."
-          },
-          "y": {
-            "$value": 22,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending penumbra y."
-          },
-          "blur": {
-            "$value": 42,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending penumbra blur."
-          },
-          "spread": {
-            "$value": 0,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending penumbra spread."
-          },
-          "alpha": {
-            "$value": 20,
-            "$type": "number",
-            "$description": "Dark-mode color value for elevation transcending penumbra alpha."
-          }
+        "neutral-2": {
+          "$value": "#e5e6e6",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color neutral 2."
         }
       }
     },
@@ -4431,6 +4279,429 @@
             "$value": "#005c8a",
             "$type": "color",
             "$description": "Dark-mode color value for layout background color secondary level 3."
+          }
+        }
+      }
+    },
+    "elevation": {
+      "carved": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation carved umbra x."
+          },
+          "y": {
+            "$value": "1px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation carved umbra y."
+          },
+          "blur": {
+            "$value": "1px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation carved umbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation carved umbra spread."
+          },
+          "alpha": {
+            "$value": "80px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation carved umbra alpha."
+          }
+        }
+      },
+      "settled": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled umbra x."
+          },
+          "y": {
+            "$value": "1px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled umbra y."
+          },
+          "blur": {
+            "$value": "1px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled umbra blur."
+          },
+          "spread": {
+            "$value": "-1px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled umbra spread."
+          },
+          "alpha": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled penumbra x."
+          },
+          "y": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled penumbra y."
+          },
+          "blur": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled penumbra spread."
+          },
+          "alpha": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation settled penumbra alpha."
+          }
+        }
+      },
+      "resting": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting umbra x."
+          },
+          "y": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting umbra y."
+          },
+          "blur": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting umbra blur."
+          },
+          "spread": {
+            "$value": "-2px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting umbra spread."
+          },
+          "alpha": {
+            "$value": "70px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting penumbra x."
+          },
+          "y": {
+            "$value": "3px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting penumbra y."
+          },
+          "blur": {
+            "$value": "4px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting penumbra spread."
+          },
+          "alpha": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation resting penumbra alpha."
+          }
+        }
+      },
+      "raised": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised umbra x."
+          },
+          "y": {
+            "$value": "3px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised umbra y."
+          },
+          "blur": {
+            "$value": "3px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised umbra blur."
+          },
+          "spread": {
+            "$value": "-2px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised umbra spread."
+          },
+          "alpha": {
+            "$value": "25px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised penumbra x."
+          },
+          "y": {
+            "$value": "4px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised penumbra y."
+          },
+          "blur": {
+            "$value": "6px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised penumbra spread."
+          },
+          "alpha": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation raised penumbra alpha."
+          }
+        }
+      },
+      "suspended": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended umbra x."
+          },
+          "y": {
+            "$value": "5px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended umbra y."
+          },
+          "blur": {
+            "$value": "5px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended umbra blur."
+          },
+          "spread": {
+            "$value": "-3px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended umbra spread."
+          },
+          "alpha": {
+            "$value": "55px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended penumbra x."
+          },
+          "y": {
+            "$value": "6px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended penumbra y."
+          },
+          "blur": {
+            "$value": "10px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended penumbra spread."
+          },
+          "alpha": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation suspended penumbra alpha."
+          }
+        }
+      },
+      "levitating": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating umbra x."
+          },
+          "y": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating umbra y."
+          },
+          "blur": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating umbra blur."
+          },
+          "spread": {
+            "$value": "-5px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating umbra spread."
+          },
+          "alpha": {
+            "$value": "55px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating penumbra x."
+          },
+          "y": {
+            "$value": "9px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating penumbra y."
+          },
+          "blur": {
+            "$value": "16px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating penumbra spread."
+          },
+          "alpha": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation levitating penumbra alpha."
+          }
+        }
+      },
+      "floating": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating umbra x."
+          },
+          "y": {
+            "$value": "13px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating umbra y."
+          },
+          "blur": {
+            "$value": "13px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating umbra blur."
+          },
+          "spread": {
+            "$value": "-7px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating umbra spread."
+          },
+          "alpha": {
+            "$value": "55px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating penumbra x."
+          },
+          "y": {
+            "$value": "14px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating penumbra y."
+          },
+          "blur": {
+            "$value": "26px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating penumbra spread."
+          },
+          "alpha": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation floating penumbra alpha."
+          }
+        }
+      },
+      "transcending": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending umbra x."
+          },
+          "y": {
+            "$value": "21px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending umbra y."
+          },
+          "blur": {
+            "$value": "21px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending umbra blur."
+          },
+          "spread": {
+            "$value": "-11px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending umbra spread."
+          },
+          "alpha": {
+            "$value": "55px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending penumbra x."
+          },
+          "y": {
+            "$value": "22px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending penumbra y."
+          },
+          "blur": {
+            "$value": "42px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending penumbra spread."
+          },
+          "alpha": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Dark-mode color value for elevation transcending penumbra alpha."
           }
         }
       }
