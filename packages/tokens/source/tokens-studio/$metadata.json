@@ -1,0 +1,11 @@
+{
+  "tokenSetOrder": [
+    "primitives/primitives",
+    "semantic/semantic",
+    "component/component",
+    "color/light",
+    "color/dark",
+    "density/condensed",
+    "density/roomy"
+  ]
+}

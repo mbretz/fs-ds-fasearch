@@ -20,7 +20,7 @@ Constraint: the showcase has to boot quickly on StackBlitz WebContainers for rev
 | Primitives layer | Radix UI Primitives (the unstyled component lib) |
 | Variant API | `class-variance-authority` (cva) + `tailwind-merge` + `clsx` |
 | Token source | Native Figma Variables (Pro plan — no Variables REST API access) |
-| Token export | Free Figma community plugin (Figma-native only — no Tokens Studio) |
+| Token export | Tokens Studio Pro, one-time multi-file DTCG export (superseded the original "free plugin only" decision — see §1.1) |
 | Figma source structure | Three libraries: **Styles** (tokens), **Icons**, **Components** — mirrored 1:1 in code as three packages |
 | Color theming | Light mode primary; partial dark mode already authored in Figma; full dark mode is additive later |
 | Density theming | **Roomy** (default) and **Condensed** — two modes, per-element override supported |
@@ -101,19 +101,24 @@ Consumers import from each package directly (`@scope/tokens`, `@scope/icons`, `@
 
 ### 1.1 Token Pipeline (Figma "Styles" library → code)
 
-Tokens are authored as native Figma Variables. The pipeline is entirely one-way (Figma → code); no Tokens Studio is required.
+Tokens are authored as native Figma Variables. The pipeline was originally scoped as free-plugin-only (see history note below), but is now a **one-time Tokens Studio Pro export**: Figma Variables were imported into Tokens Studio, cleaned up there (naming, typing, the `value`-as-token-name collision fixed — see §1.2), and exported once as a multi-file DTCG set. There is no live sync provider configured — re-syncing later means re-running the same manual export + adapter steps below, not an automatic pull.
 
 1. **Author in Figma "Styles" library** — tokens live as native Figma variables, organized into collections (`color`, `density`), with names slash-delimited to match Figma's group separator (`color/bg/primary`, `density/padding/sm`). The `color` collection has two modes: `light` (primary) and `dark`. The `density` collection has two modes: `roomy` (default) and `condensed`. See §1.2 for naming conventions and §1.4 for the density system.
-2. **Export from Figma** — use a free Figma community plugin to export all native Variables with all modes to `packages/tokens/source/`. The exact plugin is selected at first export by inspecting output quality (candidates: "Export/Import Variables", "Variables to JSON"). The export is a single command producing one JSON file (or separate files per mode if the plugin outputs that way — both are handled by the Style Dictionary config).
-3. **Transform with Style Dictionary** — `packages/tokens` runs Style Dictionary (`sd.config.ts`) to emit four CSS files. The config includes a lightweight custom `parser` that normalizes Figma's export format (written once after inspecting the actual plugin output):
-   - `build/css/tokens.css` — color CSS custom properties on `:root` (light mode)
-   - `build/css/dark.css` — color overrides on `[data-theme="dark"]` (sparse — only tokens that differ from light)
-   - `build/css/density.css` — density vars on `[data-density="roomy"]` and `[data-density="condensed"]`
-   - `build/ts/tokens.ts` — typed token object (optional, for non-Tailwind consumers)
-4. **Consume in DS** — `packages/ds/tailwind.preset.ts` imports all three CSS files. Components reference Tailwind classes that resolve to CSS vars. Color classes use `hsl(var(--...))` syntax so dark mode lights up later with zero component changes.
-5. **Refresh loop** — `pnpm tokens:build` re-runs the pipeline. Document the sync as a manual two-step (`export from Figma plugin` → `pnpm tokens:build`).
+2. **Export from Tokens Studio Pro** — Figma Variables are imported into Tokens Studio, where each Figma Variable Collection becomes a Theme Group and each mode a Theme. Exporting via "Export file/folder" → "Multiple files" produces one JSON file per token set (`primitives/primitives.json`, `semantic/semantic.json`, `component/component.json`, `color/light.json`, `color/dark.json`, `density/condensed.json`, `density/roomy.json`), plus `$themes.json` (which sets compose into which Theme) and `$metadata.json` (`tokenSetOrder`, the merge precedence across sets). All committed as-is to `packages/tokens/source/tokens-studio/`.
+3. **Merge with the Tokens Studio adapter** — `packages/tokens/scripts/tokens-studio-adapter.ts` reads `$themes.json`/`$metadata.json` to derive the group→mode→set mapping (not hardcoded to the current 7 file names), merges the sets into a single tree matching the collection/mode shape below, and normalizes each leaf from DTCG's `$value`/`$type`/`$description` to this project's `value`/`type`/`description` convention. Output replaces `packages/tokens/source/tokens.json`, which downstream tooling still consumes unchanged.
+4. **Transform with Style Dictionary** — `packages/tokens/sd.preprocessors.ts` (rename the `value`-as-token-name collision, remap collection-relative aliases to full paths, resolving mode-relative references against each leaf's own enclosing mode) and `sd.transforms.ts` (path-based dimension/fontWeight/number classification, since even Tokens Studio's declared types don't fully disambiguate — see §1.2) feed into two build scripts:
+   - `packages/tokens/scripts/build-tokens.ts` — multi-mode build (light+roomy / dark+roomy / light+condensed), diffed to produce:
+     - `build/css/tokens.css` — base values on `:root` (light/roomy), including canonical mode-collection passthrough variables (e.g. `layout.*` colors, the raw density scale) that aren't yet referenced by any component
+     - `build/css/dark.css` — sparse `[data-theme="dark"]` overrides (only tokens that actually differ from light)
+     - `build/css/density.css` — `[data-density="roomy"]` and `[data-density="condensed"]` blocks, full in both (no single implicit default to diff against)
+   - `packages/tokens/scripts/build-dtcg.ts` — `build/dtcg/tokens.{color}-{density}.json`, one fully-resolved, spec-compliant DTCG file per mode combination (no aliases, auto-generated `$description`s), for consumers outside this codebase (other tools, agents) that just need a self-contained token set.
+   - `build/ts/tokens.ts` — typed token object (optional, for non-Tailwind consumers) — not yet built.
+5. **Consume in DS** — `packages/ds/tailwind.preset.ts` imports the `build/css/*.css` files. Components reference Tailwind classes that resolve to CSS vars. Color classes use `hsl(var(--...))` syntax so dark mode lights up later with zero component changes.
+6. **Validate** — the `tokens-json-review` skill (`.claude/skills/tokens-json-review/`) checks `packages/tokens/source/tokens.json` for double-encoding, unit-suffix correctness (type-aware: a unit is only wrong on a non-`dimension`-typed token), mode key-parity, and alias resolution before it's trusted as a build input.
 
-**Dark mode readiness without dark mode work:** The key decisions that make later dark-mode trivial are (a) the primitive/semantic split in §1.3, (b) CSS-var-based color references in Tailwind theme, and (c) component code that never hardcodes color values. The partial dark mode already authored in Figma is handled by the sparse `[data-theme="dark"]` block — only tokens with actual overrides appear there.
+**Pipeline history:** the original plan locked in "free Figma community plugin only, no Tokens Studio" to keep the showcase reproducible on a free plan. Several free plugins produced structurally broken exports (double-encoded JSON, no real aliasing, ambiguous `"value"`-as-token-name collisions, inconsistent unit handling), which is what motivated purchasing Tokens Studio Pro and doing a one-time, non-reproducible export instead — an explicit, conscious tradeoff for this proof-of-concept, not a reproducibility guarantee reviewers can expect to re-run from a fresh Figma file.
+
+**Dark mode readiness without dark mode work:** The key decisions that make later dark-mode trivial are (a) the primitive/semantic split in §1.3, (b) CSS-var-based color references in Tailwind theme, and (c) component code that never hardcodes color values. The partial dark mode already authored in Figma is handled by the sparse `[data-theme="dark"]` block — only tokens with actual overrides appear there. As of the Tokens Studio export, that's exactly 12 tokens, all under `layout.backgroundColor.*`; no component currently references that part of the color tree, so dark mode is wired end-to-end but not yet visibly different from light for any shipped component.
 
 ### 1.2 Figma Hygiene: Layer & Prop Naming to Streamline Import
 
@@ -309,11 +314,17 @@ The locator is the proof that the DS composes well. Make sure each of these is v
 pnpm-workspace.yaml                              # workspace globs
 turbo.json                                       # task pipeline
 package.json                                     # root scripts
-packages/tokens/source/                          # Figma plugin export target (one file or per-mode files)
-packages/tokens/sd.config.ts                     # Style Dictionary config + custom Figma format parser
-packages/tokens/build/css/tokens.css             # SD output: :root color vars (light)
-packages/tokens/build/css/dark.css               # SD output: [data-theme="dark"] color overrides
-packages/tokens/build/css/density.css            # SD output: [data-density="roomy"] + [data-density="condensed"]
+packages/tokens/source/tokens-studio/            # Raw multi-file Tokens Studio Pro export (committed as-is)
+packages/tokens/source/tokens.json               # Merged output of the adapter; what the build pipeline reads
+packages/tokens/scripts/tokens-studio-adapter.ts # Merges source/tokens-studio/* into source/tokens.json
+packages/tokens/sd.preprocessors.ts              # value-collision rename + self-mode-aware alias remapping
+packages/tokens/sd.transforms.ts                 # path-based dimension/fontWeight/number classification
+packages/tokens/scripts/build-tokens.ts          # multi-mode CSS build (tokens.css/dark.css/density.css)
+packages/tokens/scripts/build-dtcg.ts            # resolved DTCG JSON per color x density combination
+packages/tokens/build/css/tokens.css             # :root color + base vars (light/roomy)
+packages/tokens/build/css/dark.css               # [data-theme="dark"] sparse color overrides
+packages/tokens/build/css/density.css            # [data-density="roomy"] + [data-density="condensed"]
+packages/tokens/build/dtcg/tokens.{color}-{density}.json  # fully-resolved DTCG export, one per mode combo
 packages/icons/source/*.svg                      # Figma "Icons" export target
 packages/icons/svgr.config.cjs                   # SVGR config
 packages/icons/src/index.ts                      # icon barrel
