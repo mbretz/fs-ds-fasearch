@@ -1,0 +1,4439 @@
+{
+  "primitives": {
+    "ref": {
+      "color": {
+        "gold": {
+          "50": {
+            "$value": "#241700",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 50."
+          },
+          "100": {
+            "$value": "#3d2800",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 100."
+          },
+          "150": {
+            "$value": "#573800",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 150."
+          },
+          "200": {
+            "$value": "#704900",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 200."
+          },
+          "250": {
+            "$value": "#8a5a00",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 250."
+          },
+          "300": {
+            "$value": "#94650f",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 300."
+          },
+          "400": {
+            "$value": "#c08d16",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 400."
+          },
+          "500": {
+            "$value": "#dfb22c",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 500."
+          },
+          "600": {
+            "$value": "#fad141",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 600."
+          },
+          "700": {
+            "$value": "#fde272",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 700."
+          },
+          "800": {
+            "$value": "#ffeea3",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 800."
+          },
+          "850": {
+            "$value": "#fff2bd",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 850."
+          },
+          "900": {
+            "$value": "#fff7d6",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 900."
+          },
+          "950": {
+            "$value": "#fffae5",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 950."
+          },
+          "970": {
+            "$value": "#fffcf0",
+            "$type": "color",
+            "$description": "Primitive value for ref color gold 970."
+          }
+        },
+        "green": {
+          "50": {
+            "$value": "#121c08",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 50."
+          },
+          "100": {
+            "$value": "#1f2f0e",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 100."
+          },
+          "150": {
+            "$value": "#2b4314",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 150."
+          },
+          "200": {
+            "$value": "#385719",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 200."
+          },
+          "250": {
+            "$value": "#456b1f",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 250."
+          },
+          "300": {
+            "$value": "#517e24",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 300."
+          },
+          "400": {
+            "$value": "#6bab2b",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 400."
+          },
+          "500": {
+            "$value": "#85c841",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 500."
+          },
+          "600": {
+            "$value": "#9ed369",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 600."
+          },
+          "700": {
+            "$value": "#b8e689",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 700."
+          },
+          "800": {
+            "$value": "#d1f1b1",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 800."
+          },
+          "850": {
+            "$value": "#def5c7",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 850."
+          },
+          "900": {
+            "$value": "#ebf8dd",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 900."
+          },
+          "950": {
+            "$value": "#f2fbea",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 950."
+          },
+          "970": {
+            "$value": "#f7fcf2",
+            "$type": "color",
+            "$description": "Primitive value for ref color green 970."
+          }
+        },
+        "teal": {
+          "50": {
+            "$value": "#081c13",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 50."
+          },
+          "100": {
+            "$value": "#0e2f21",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 100."
+          },
+          "150": {
+            "$value": "#14432f",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 150."
+          },
+          "200": {
+            "$value": "#19573d",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 200."
+          },
+          "250": {
+            "$value": "#1f6b4b",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 250."
+          },
+          "300": {
+            "$value": "#247e58",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 300."
+          },
+          "400": {
+            "$value": "#2bab81",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 400."
+          },
+          "500": {
+            "$value": "#41c89b",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 500."
+          },
+          "600": {
+            "$value": "#69d3b0",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 600."
+          },
+          "700": {
+            "$value": "#82edca",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 700."
+          },
+          "800": {
+            "$value": "#b1f1dc",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 800."
+          },
+          "850": {
+            "$value": "#c7f5e6",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 850."
+          },
+          "900": {
+            "$value": "#ddf8ef",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 900."
+          },
+          "950": {
+            "$value": "#eafbf5",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 950."
+          },
+          "970": {
+            "$value": "#f2fcf9",
+            "$type": "color",
+            "$description": "Primitive value for ref color teal 970."
+          }
+        },
+        "blue": {
+          "50": {
+            "$value": "#001824",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 50."
+          },
+          "100": {
+            "$value": "#00293d",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 100."
+          },
+          "150": {
+            "$value": "#003a57",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 150."
+          },
+          "200": {
+            "$value": "#004b70",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 200."
+          },
+          "250": {
+            "$value": "#005c8a",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 250."
+          },
+          "300": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 300."
+          },
+          "400": {
+            "$value": "#1588c1",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 400."
+          },
+          "500": {
+            "$value": "#28a4e2",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 500."
+          },
+          "600": {
+            "$value": "#5ab8e7",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 600."
+          },
+          "700": {
+            "$value": "#7bccf4",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 700."
+          },
+          "800": {
+            "$value": "#b5daed",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 800."
+          },
+          "850": {
+            "$value": "#cae5f2",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 850."
+          },
+          "900": {
+            "$value": "#d6f1ff",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 900."
+          },
+          "950": {
+            "$value": "#e5f6ff",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 950."
+          },
+          "970": {
+            "$value": "#f0faff",
+            "$type": "color",
+            "$description": "Primitive value for ref color blue 970."
+          }
+        },
+        "purple": {
+          "50": {
+            "$value": "#0e0a1a",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 50."
+          },
+          "100": {
+            "$value": "#18112d",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 100."
+          },
+          "150": {
+            "$value": "#1f1344",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 150."
+          },
+          "200": {
+            "$value": "#2b1f51",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 200."
+          },
+          "250": {
+            "$value": "#3e2b78",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 250."
+          },
+          "300": {
+            "$value": "#514396",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 300."
+          },
+          "400": {
+            "$value": "#6f5aaf",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 400."
+          },
+          "500": {
+            "$value": "#8872ca",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 500."
+          },
+          "600": {
+            "$value": "#a490df",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 600."
+          },
+          "700": {
+            "$value": "#b4a4e5",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 700."
+          },
+          "800": {
+            "$value": "#c6bae8",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 800."
+          },
+          "850": {
+            "$value": "#d6cdee",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 850."
+          },
+          "900": {
+            "$value": "#e0d6ff",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 900."
+          },
+          "950": {
+            "$value": "#ece5ff",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 950."
+          },
+          "970": {
+            "$value": "#f4f0ff",
+            "$type": "color",
+            "$description": "Primitive value for ref color purple 970."
+          }
+        },
+        "violet": {
+          "50": {
+            "$value": "#190a1a",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 50."
+          },
+          "100": {
+            "$value": "#2a112d",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 100."
+          },
+          "150": {
+            "$value": "#401344",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 150."
+          },
+          "200": {
+            "$value": "#4d1f51",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 200."
+          },
+          "250": {
+            "$value": "#5f2664",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 250."
+          },
+          "300": {
+            "$value": "#6c3271",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 300."
+          },
+          "400": {
+            "$value": "#8a4691",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 400."
+          },
+          "500": {
+            "$value": "#b34ebc",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 500."
+          },
+          "600": {
+            "$value": "#cb69d3",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 600."
+          },
+          "700": {
+            "$value": "#de89e6",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 700."
+          },
+          "800": {
+            "$value": "#ecb1f1",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 800."
+          },
+          "850": {
+            "$value": "#f1c7f5",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 850."
+          },
+          "900": {
+            "$value": "#f7dcf9",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 900."
+          },
+          "950": {
+            "$value": "#f8ecf9",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 950."
+          },
+          "970": {
+            "$value": "#fbf3fc",
+            "$type": "color",
+            "$description": "Primitive value for ref color violet 970."
+          }
+        },
+        "red": {
+          "50": {
+            "$value": "#230108",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 50."
+          },
+          "100": {
+            "$value": "#3c020d",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 100."
+          },
+          "150": {
+            "$value": "#550213",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 150."
+          },
+          "200": {
+            "$value": "#650b1d",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 200."
+          },
+          "250": {
+            "$value": "#891420",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 250."
+          },
+          "300": {
+            "$value": "#9f0423",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 300."
+          },
+          "400": {
+            "$value": "#cb0b31",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 400."
+          },
+          "500": {
+            "$value": "#ea1f48",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 500."
+          },
+          "600": {
+            "$value": "#fa4267",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 600."
+          },
+          "700": {
+            "$value": "#fb748f",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 700."
+          },
+          "800": {
+            "$value": "#ffa3b6",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 800."
+          },
+          "850": {
+            "$value": "#ffbdca",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 850."
+          },
+          "900": {
+            "$value": "#ffd6de",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 900."
+          },
+          "950": {
+            "$value": "#ffe5eb",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 950."
+          },
+          "970": {
+            "$value": "#fff0f3",
+            "$type": "color",
+            "$description": "Primitive value for ref color red 970."
+          }
+        },
+        "orange": {
+          "50": {
+            "$value": "#230901",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 50."
+          },
+          "100": {
+            "$value": "#3c1002",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 100."
+          },
+          "150": {
+            "$value": "#551702",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 150."
+          },
+          "200": {
+            "$value": "#6d1d03",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 200."
+          },
+          "250": {
+            "$value": "#862403",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 250."
+          },
+          "300": {
+            "$value": "#9f2b04",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 300."
+          },
+          "400": {
+            "$value": "#d13805",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 400."
+          },
+          "500": {
+            "$value": "#f94a10",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 500."
+          },
+          "600": {
+            "$value": "#fa784c",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 600."
+          },
+          "700": {
+            "$value": "#fb8e6a",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 700."
+          },
+          "800": {
+            "$value": "#ffbaa3",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 800."
+          },
+          "850": {
+            "$value": "#ffcdbd",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 850."
+          },
+          "900": {
+            "$value": "#fee1d7",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 900."
+          },
+          "950": {
+            "$value": "#feece6",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 950."
+          },
+          "970": {
+            "$value": "#fff4f0",
+            "$type": "color",
+            "$description": "Primitive value for ref color orange 970."
+          }
+        },
+        "neutral": {
+          "0": {
+            "$value": "#000000",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 0."
+          },
+          "50": {
+            "$value": "#0d0d0d",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 50."
+          },
+          "100": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 100."
+          },
+          "150": {
+            "$value": "#262727",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 150."
+          },
+          "200": {
+            "$value": "#323334",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 200."
+          },
+          "250": {
+            "$value": "#3f4041",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 250."
+          },
+          "300": {
+            "$value": "#4b4d4e",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 300."
+          },
+          "400": {
+            "$value": "#646768",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 400."
+          },
+          "500": {
+            "$value": "#7d8082",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 500."
+          },
+          "600": {
+            "$value": "#979a9b",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 600."
+          },
+          "700": {
+            "$value": "#b1b3b4",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 700."
+          },
+          "800": {
+            "$value": "#cbcccd",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 800."
+          },
+          "850": {
+            "$value": "#d8d9d9",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 850."
+          },
+          "900": {
+            "$value": "#e5e6e6",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 900."
+          },
+          "950": {
+            "$value": "#f2f2f2",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 950."
+          },
+          "970": {
+            "$value": "#f7f7f7",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 970."
+          },
+          "1000": {
+            "$value": "#ffffff",
+            "$type": "color",
+            "$description": "Primitive value for ref color neutral 1000."
+          }
+        },
+        "umbra": {
+          "tier-1": {
+            "$value": "#0d0d0d33",
+            "$type": "color",
+            "$description": "Primitive value for ref color umbra tier 1."
+          },
+          "tier-2": {
+            "$value": "#0d0d0d40",
+            "$type": "color",
+            "$description": "Primitive value for ref color umbra tier 2."
+          },
+          "tier-3": {
+            "$value": "#0d0d0d8c",
+            "$type": "color",
+            "$description": "Primitive value for ref color umbra tier 3."
+          },
+          "tier-4": {
+            "$value": "#0d0d0db2",
+            "$type": "color",
+            "$description": "Primitive value for ref color umbra tier 4."
+          },
+          "tier-5": {
+            "$value": "#0d0d0dcc",
+            "$type": "color",
+            "$description": "Primitive value for ref color umbra tier 5."
+          }
+        },
+        "penumbra": {
+          "tier-1": {
+            "$value": "#4b4d4e33",
+            "$type": "color",
+            "$description": "Primitive value for ref color penumbra tier 1."
+          }
+        },
+        "miscellaneous": {
+          "separator": {
+            "$value": "#ffffff",
+            "$type": "color",
+            "$description": "Primitive value for ref color miscellaneous separator."
+          }
+        }
+      },
+      "size": {
+        "10": {
+          "$value": "44px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 10."
+        },
+        "11": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 11."
+        },
+        "12": {
+          "$value": "64px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 12."
+        },
+        "13": {
+          "$value": "80px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 13."
+        },
+        "14": {
+          "$value": "96px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 14."
+        },
+        "15": {
+          "$value": "112px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 15."
+        },
+        "16": {
+          "$value": "128px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 16."
+        },
+        "17": {
+          "$value": "144px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 17."
+        },
+        "01": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 01."
+        },
+        "02": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 02."
+        },
+        "03": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 03."
+        },
+        "04": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 04."
+        },
+        "05": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 05."
+        },
+        "06": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 06."
+        },
+        "07": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 07."
+        },
+        "08": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 08."
+        },
+        "09": {
+          "$value": "40px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size 09."
+        },
+        "base": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size base."
+        },
+        "hairline": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Primitive value for ref size hairline."
+        }
+      },
+      "space": {
+        "10": {
+          "$value": 44,
+          "$type": "number",
+          "$description": "Primitive value for ref space 10."
+        },
+        "11": {
+          "$value": 48,
+          "$type": "number",
+          "$description": "Primitive value for ref space 11."
+        },
+        "12": {
+          "$value": 64,
+          "$type": "number",
+          "$description": "Primitive value for ref space 12."
+        },
+        "01": {
+          "$value": 2,
+          "$type": "number",
+          "$description": "Primitive value for ref space 01."
+        },
+        "02": {
+          "$value": 4,
+          "$type": "number",
+          "$description": "Primitive value for ref space 02."
+        },
+        "03": {
+          "$value": 8,
+          "$type": "number",
+          "$description": "Primitive value for ref space 03."
+        },
+        "04": {
+          "$value": 12,
+          "$type": "number",
+          "$description": "Primitive value for ref space 04."
+        },
+        "05": {
+          "$value": 16,
+          "$type": "number",
+          "$description": "Primitive value for ref space 05."
+        },
+        "06": {
+          "$value": 20,
+          "$type": "number",
+          "$description": "Primitive value for ref space 06."
+        },
+        "07": {
+          "$value": 24,
+          "$type": "number",
+          "$description": "Primitive value for ref space 07."
+        },
+        "08": {
+          "$value": 32,
+          "$type": "number",
+          "$description": "Primitive value for ref space 08."
+        },
+        "09": {
+          "$value": 40,
+          "$type": "number",
+          "$description": "Primitive value for ref space 09."
+        }
+      },
+      "font": {
+        "family": {
+          "text": {
+            "$value": "EJ Sans Text Var",
+            "$type": "fontFamily",
+            "$description": "Primitive value for ref font family text."
+          }
+        },
+        "size": {
+          "ginormous": {
+            "$value": "64px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font size ginormous."
+          },
+          "huge": {
+            "$value": "50px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font size huge."
+          },
+          "xx-large": {
+            "$value": "36px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font size xx large."
+          },
+          "x-large": {
+            "$value": "30px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font size x large."
+          },
+          "large": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font size large."
+          },
+          "medium": {
+            "$value": "16px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font size medium."
+          },
+          "small": {
+            "$value": "14px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font size small."
+          },
+          "x-small": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font size x small."
+          },
+          "xx-small": {
+            "$value": "10px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font size xx small."
+          }
+        },
+        "weight": {
+          "default": {
+            "$value": 400,
+            "$type": "number",
+            "$description": "Primitive value for ref font weight default."
+          },
+          "light": {
+            "$value": 300,
+            "$type": "number",
+            "$description": "Primitive value for ref font weight light."
+          },
+          "regular": {
+            "$value": 400,
+            "$type": "number",
+            "$description": "Primitive value for ref font weight regular."
+          },
+          "regular-medium": {
+            "$value": 450,
+            "$type": "number",
+            "$description": "Primitive value for ref font weight regular medium."
+          },
+          "medium": {
+            "$value": 500,
+            "$type": "number",
+            "$description": "Primitive value for ref font weight medium."
+          },
+          "medium-plus": {
+            "$value": 525,
+            "$type": "number",
+            "$description": "Primitive value for ref font weight medium plus."
+          },
+          "medium-semibold": {
+            "$value": 575,
+            "$type": "number",
+            "$description": "Primitive value for ref font weight medium semibold."
+          },
+          "semibold": {
+            "$value": 600,
+            "$type": "number",
+            "$description": "Primitive value for ref font weight semibold."
+          },
+          "bold": {
+            "$value": 700,
+            "$type": "number",
+            "$description": "Primitive value for ref font weight bold."
+          }
+        },
+        "lineHeight": {
+          "xx-small": {
+            "$value": "15px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font line height xx small."
+          },
+          "x-small": {
+            "$value": "18px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font line height x small."
+          },
+          "small": {
+            "$value": "21px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font line height small."
+          },
+          "medium": {
+            "$value": "24px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font line height medium."
+          },
+          "large": {
+            "$value": "30px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font line height large."
+          },
+          "x-large": {
+            "$value": "45px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font line height x large."
+          },
+          "xx-large": {
+            "$value": "54px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font line height xx large."
+          },
+          "huge": {
+            "$value": "75px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font line height huge."
+          },
+          "ginormous": {
+            "$value": "96px",
+            "$type": "dimension",
+            "$description": "Primitive value for ref font line height ginormous."
+          }
+        }
+      },
+      "shadows": {
+        "x": {
+          "tier-1": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows x tier 1."
+          }
+        },
+        "y": {
+          "tier-1": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 1."
+          },
+          "tier-2": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 2."
+          },
+          "tier-3": {
+            "$value": 3,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 3."
+          },
+          "tier-4": {
+            "$value": 4,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 4."
+          },
+          "tier-5": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 5."
+          },
+          "tier-6": {
+            "$value": 6,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 6."
+          },
+          "tier-7": {
+            "$value": 8,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 7."
+          },
+          "tier-8": {
+            "$value": 9,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 8."
+          },
+          "tier-9": {
+            "$value": 13,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 9."
+          },
+          "tier-10": {
+            "$value": 14,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 10."
+          },
+          "tier-11": {
+            "$value": 21,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 11."
+          },
+          "tier-12": {
+            "$value": 22,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows y tier 12."
+          }
+        },
+        "blur": {
+          "tier-1": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 1."
+          },
+          "tier-2": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 2."
+          },
+          "tier-3": {
+            "$value": 3,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 3."
+          },
+          "tier-4": {
+            "$value": 4,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 4."
+          },
+          "tier-5": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 5."
+          },
+          "tier-6": {
+            "$value": 6,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 6."
+          },
+          "tier-7": {
+            "$value": 8,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 7."
+          },
+          "tier-8": {
+            "$value": 10,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 8."
+          },
+          "tier-9": {
+            "$value": 13,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 9."
+          },
+          "tier-10": {
+            "$value": 16,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 10."
+          },
+          "tier-11": {
+            "$value": 21,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 11."
+          },
+          "tier-12": {
+            "$value": 26,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 12."
+          },
+          "tier-13": {
+            "$value": 42,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows blur tier 13."
+          }
+        },
+        "spread": {
+          "tier-1": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows spread tier 1."
+          },
+          "tier-2": {
+            "$value": -1,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows spread tier 2."
+          },
+          "tier-3": {
+            "$value": -2,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows spread tier 3."
+          },
+          "tier-4": {
+            "$value": -3,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows spread tier 4."
+          },
+          "tier-5": {
+            "$value": -5,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows spread tier 5."
+          },
+          "tier-6": {
+            "$value": -7,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows spread tier 6."
+          },
+          "tier-7": {
+            "$value": -11,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows spread tier 7."
+          }
+        },
+        "alpha": {
+          "tier-1": {
+            "$value": 80,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows alpha tier 1."
+          },
+          "tier-2": {
+            "$value": 70,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows alpha tier 2."
+          },
+          "tier-3": {
+            "$value": 55,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows alpha tier 3."
+          },
+          "tier-4": {
+            "$value": 25,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows alpha tier 4."
+          },
+          "tier-5": {
+            "$value": 20,
+            "$type": "number",
+            "$description": "Primitive value for ref shadows alpha tier 5."
+          }
+        }
+      }
+    }
+  },
+  "semantic": {
+    "content": {
+      "heavy": {
+        "fontWeight": {
+          "$value": 600,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content heavy font weight."
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Semantic token for content heavy font size."
+        },
+        "lineHeight": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Semantic token for content heavy line height."
+        }
+      },
+      "common": {
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Semantic token for content common font size."
+        },
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Semantic token for content common text color default."
+          },
+          "reverse": {
+            "$value": "#ffffff",
+            "$type": "color",
+            "$description": "Semantic token for content common text color reverse."
+          },
+          "disabled": {
+            "$value": "#4b4d4e",
+            "$type": "color",
+            "$description": "Semantic token for content common text color disabled."
+          }
+        },
+        "lineHeight": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Semantic token for content common line height."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content common font weight."
+        }
+      },
+      "hero": {
+        "fontSize": {
+          "$value": "64px",
+          "$type": "dimension",
+          "$description": "Semantic token for content hero font size."
+        },
+        "fontWeight": {
+          "$value": 300,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content hero font weight."
+        },
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for content hero color."
+        },
+        "lineHeight": {
+          "$value": "96px",
+          "$type": "dimension",
+          "$description": "Semantic token for content hero line height."
+        }
+      },
+      "pageTitle": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for content page title color."
+        },
+        "fontSize": {
+          "$value": "50px",
+          "$type": "dimension",
+          "$description": "Semantic token for content page title font size."
+        },
+        "fontWeight": {
+          "$value": 600,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content page title font weight."
+        },
+        "lineHeight": {
+          "$value": "75px",
+          "$type": "dimension",
+          "$description": "Semantic token for content page title line height."
+        }
+      },
+      "headingLarge": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for content heading large color."
+        },
+        "fontSize": {
+          "$value": "36px",
+          "$type": "dimension",
+          "$description": "Semantic token for content heading large font size."
+        },
+        "fontWeight": {
+          "$value": 600,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content heading large font weight."
+        },
+        "lineHeight": {
+          "$value": "54px",
+          "$type": "dimension",
+          "$description": "Semantic token for content heading large line height."
+        }
+      },
+      "heading": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for content heading color."
+        },
+        "fontSize": {
+          "$value": "30px",
+          "$type": "dimension",
+          "$description": "Semantic token for content heading font size."
+        },
+        "fontWeight": {
+          "$value": 500,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content heading font weight."
+        },
+        "lineHeight": {
+          "$value": "45px",
+          "$type": "dimension",
+          "$description": "Semantic token for content heading line height."
+        }
+      },
+      "subheading": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for content subheading color."
+        },
+        "fontSize": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Semantic token for content subheading font size."
+        },
+        "fontWeight": {
+          "$value": 525,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content subheading font weight."
+        },
+        "lineHeight": {
+          "$value": "30px",
+          "$type": "dimension",
+          "$description": "Semantic token for content subheading line height."
+        }
+      },
+      "paragraph": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for content paragraph color."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content paragraph font weight."
+        },
+        "lineHeight": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Semantic token for content paragraph line height."
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Semantic token for content paragraph font size."
+        }
+      },
+      "microcopy": {
+        "color": {
+          "$value": "#646768",
+          "$type": "color",
+          "$description": "Semantic token for content microcopy color."
+        },
+        "fontSize": {
+          "$value": "14px",
+          "$type": "dimension",
+          "$description": "Semantic token for content microcopy font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content microcopy font weight."
+        },
+        "lineHeight": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Semantic token for content microcopy line height."
+        }
+      },
+      "nanoheading": {
+        "color": {
+          "$value": "#646768",
+          "$type": "color",
+          "$description": "Semantic token for content nanoheading color."
+        },
+        "fontSize": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Semantic token for content nanoheading font size."
+        },
+        "fontWeight": {
+          "$value": 575,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content nanoheading font weight."
+        },
+        "lineHeight": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Semantic token for content nanoheading line height."
+        }
+      },
+      "nanocopy": {
+        "color": {
+          "$value": "#646768",
+          "$type": "color",
+          "$description": "Semantic token for content nanocopy color."
+        },
+        "fontSize": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Semantic token for content nanocopy font size."
+        },
+        "fontWeight": {
+          "$value": 450,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content nanocopy font weight."
+        },
+        "lineHeight": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Semantic token for content nanocopy line height."
+        }
+      },
+      "disclaimer": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for content disclaimer color."
+        },
+        "fontSize": {
+          "$value": "10px",
+          "$type": "dimension",
+          "$description": "Semantic token for content disclaimer font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content disclaimer font weight."
+        },
+        "lineHeight": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Semantic token for content disclaimer line height."
+        }
+      },
+      "fontFamily": {
+        "$value": "EJ Sans Text Var",
+        "$type": "fontFamily",
+        "$description": "Semantic token for content font family."
+      },
+      "error": {
+        "fontWeight": {
+          "$value": 700,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content error font weight."
+        }
+      },
+      "size": {
+        "ginormous": {
+          "fontSize": {
+            "$value": "64px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size ginormous font size."
+          },
+          "lineHeight": {
+            "$value": "96px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size ginormous line height."
+          }
+        },
+        "huge": {
+          "fontSize": {
+            "$value": "50px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size huge font size."
+          },
+          "lineHeight": {
+            "$value": "75px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size huge line height."
+          }
+        },
+        "xx-large": {
+          "fontSize": {
+            "$value": "36px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size xx large font size."
+          },
+          "lineHeight": {
+            "$value": "54px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size xx large line height."
+          }
+        },
+        "x-large": {
+          "fontSize": {
+            "$value": "30px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size x large font size."
+          },
+          "lineHeight": {
+            "$value": "45px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size x large line height."
+          }
+        },
+        "large": {
+          "fontSize": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size large font size."
+          },
+          "lineHeight": {
+            "$value": "30px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size large line height."
+          }
+        },
+        "medium": {
+          "fontSize": {
+            "$value": "16px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size medium font size."
+          },
+          "lineHeight": {
+            "$value": "24px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size medium line height."
+          }
+        },
+        "small": {
+          "fontSize": {
+            "$value": "14px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size small font size."
+          },
+          "lineHeight": {
+            "$value": "21px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size small line height."
+          }
+        },
+        "x-small": {
+          "fontSize": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size x small font size."
+          },
+          "lineHeight": {
+            "$value": "18px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size x small line height."
+          }
+        },
+        "xx-small": {
+          "fontSize": {
+            "$value": "10px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size xx small font size."
+          },
+          "lineHeight": {
+            "$value": "15px",
+            "$type": "dimension",
+            "$description": "Semantic token for content size xx small line height."
+          }
+        }
+      }
+    },
+    "control": {
+      "borderWidth": {
+        "active": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for control border width active."
+        },
+        "default": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Semantic token for control border width default."
+        }
+      },
+      "color": {
+        "accent": {
+          "active": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Semantic token for control color accent active."
+          },
+          "inactive": {
+            "$value": "#7d8082",
+            "$type": "color",
+            "$description": "Semantic token for control color accent inactive."
+          }
+        },
+        "disabled": {
+          "primary": {
+            "$value": "#7d8082",
+            "$type": "color",
+            "$description": "Semantic token for control color disabled primary."
+          },
+          "secondary": {
+            "$value": "#cbcccd",
+            "$type": "color",
+            "$description": "Semantic token for control color disabled secondary."
+          },
+          "tertiary": {
+            "$value": "#4b4d4e",
+            "$type": "color",
+            "$description": "Semantic token for control color disabled tertiary."
+          }
+        },
+        "backgroundColor": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Semantic token for control color background color."
+        },
+        "borderColor": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Semantic token for control color border color."
+        },
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Semantic token for control color text color default."
+          },
+          "inactive": {
+            "$value": "#0d0d0d",
+            "$type": "color",
+            "$description": "Semantic token for control color text color inactive."
+          }
+        }
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Semantic token for control border radius."
+      },
+      "action": {
+        "borderRadius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for control action border radius."
+        },
+        "color": {
+          "hover": {
+            "default": {
+              "$value": "#004b70",
+              "$type": "color",
+              "$description": "Semantic token for control action color hover default."
+            },
+            "secondary": {
+              "$value": "#f0faff",
+              "$type": "color",
+              "$description": "Semantic token for control action color hover secondary."
+            }
+          },
+          "disabled": {
+            "primary": {
+              "$value": "#cbcccd",
+              "$type": "color",
+              "$description": "Semantic token for control action color disabled primary."
+            },
+            "secondary": {
+              "$value": "#7d8082",
+              "$type": "color",
+              "$description": "Semantic token for control action color disabled secondary."
+            },
+            "tertiary": {
+              "$value": "#4b4d4e",
+              "$type": "color",
+              "$description": "Semantic token for control action color disabled tertiary."
+            }
+          },
+          "default": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Semantic token for control action color default."
+          }
+        }
+      },
+      "navigation": {
+        "default": {
+          "textColor": {
+            "idle": {
+              "$value": "#006da3",
+              "$type": "color",
+              "$description": "Semantic token for control navigation default text color idle."
+            },
+            "hover": {
+              "$value": "#004b70",
+              "$type": "color",
+              "$description": "Semantic token for control navigation default text color hover."
+            }
+          },
+          "backgroundColor": {
+            "$value": "#f0faff",
+            "$type": "color",
+            "$description": "Semantic token for control navigation default background color."
+          }
+        },
+        "visited": {
+          "textColor": {
+            "$value": "#8a4691",
+            "$type": "color",
+            "$description": "Semantic token for control navigation visited text color."
+          },
+          "backgroundColor": {
+            "$value": "#f0faff",
+            "$type": "color",
+            "$description": "Semantic token for control navigation visited background color."
+          }
+        }
+      },
+      "input": {
+        "borderRadius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for control input border radius."
+        }
+      },
+      "lineHeight": {
+        "$value": "21px",
+        "$type": "dimension",
+        "$description": "Semantic token for control line height."
+      },
+      "selection": {
+        "borderRadius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for control selection border radius."
+        },
+        "borderColor": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Semantic token for control selection border color."
+        },
+        "backgroundColor": {
+          "inactive": {
+            "$value": "#d8d9d9",
+            "$type": "color",
+            "$description": "Semantic token for control selection background color inactive."
+          }
+        }
+      }
+    },
+    "layout": {
+      "backgroundColor": {
+        "primary": {
+          "$value": "#e5f6ff",
+          "$type": "color",
+          "$description": "Semantic token for layout background color primary."
+        },
+        "secondary": {
+          "$value": "#f2f2f2",
+          "$type": "color",
+          "$description": "Semantic token for layout background color secondary."
+        },
+        "tertiary": {
+          "$value": "#fffae5",
+          "$type": "color",
+          "$description": "Semantic token for layout background color tertiary."
+        }
+      }
+    },
+    "surface": {
+      "base": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Semantic token for surface base default."
+        }
+      },
+      "borderColor": {
+        "default": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Semantic token for surface border color default."
+        }
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Semantic token for surface border radius."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Semantic token for surface border width."
+      }
+    },
+    "brand": {
+      "secondary": {
+        "cerulean": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Semantic token for brand secondary cerulean."
+        },
+        "darkCerulean": {
+          "$value": "#003a57",
+          "$type": "color",
+          "$description": "Semantic token for brand secondary dark cerulean."
+        },
+        "lightGold": {
+          "$value": "#fde272",
+          "$type": "color",
+          "$description": "Semantic token for brand secondary light gold."
+        }
+      },
+      "primary": {
+        "gold": {
+          "$value": "#fad141",
+          "$type": "color",
+          "$description": "Semantic token for brand primary gold."
+        },
+        "charcoal": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for brand primary charcoal."
+        },
+        "white": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Semantic token for brand primary white."
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "default": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for border radius default."
+        },
+        "subtle": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Semantic token for border radius subtle."
+        },
+        "moderate": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for border radius moderate."
+        },
+        "generous": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Semantic token for border radius generous."
+        },
+        "ample": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Semantic token for border radius ample."
+        },
+        "large": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Semantic token for border radius large."
+        },
+        "x-large": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Semantic token for border radius x large."
+        },
+        "xx-large": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Semantic token for border radius xx large."
+        },
+        "xxx-large": {
+          "$value": "80px",
+          "$type": "dimension",
+          "$description": "Semantic token for border radius xxx large."
+        }
+      }
+    }
+  },
+  "component": {
+    "avatar": {
+      "backgroundColor": {
+        "$value": "#fad141",
+        "$type": "color",
+        "$description": "Component token for avatar background color."
+      },
+      "borderRadius": {
+        "entity": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for avatar border radius entity."
+        },
+        "associate": {
+          "$value": "80px",
+          "$type": "dimension",
+          "$description": "Component token for avatar border radius associate."
+        }
+      }
+    },
+    "button": {
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for button border radius."
+      },
+      "fontSize": {
+        "$value": "16px",
+        "$type": "dimension",
+        "$description": "Component token for button font size."
+      },
+      "fontWeight": {
+        "$value": 400,
+        "$type": "fontWeight",
+        "$description": "Component token for button font weight."
+      },
+      "minHeight": {
+        "$value": "32px",
+        "$type": "dimension",
+        "$description": "Component token for button min height."
+      },
+      "minWidth": {
+        "$value": "32px",
+        "$type": "dimension",
+        "$description": "Component token for button min width."
+      },
+      "backgroundColor": {
+        "primary": {
+          "default": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Component token for button background color primary default."
+          },
+          "hover": {
+            "$value": "#004b70",
+            "$type": "color",
+            "$description": "Component token for button background color primary hover."
+          }
+        },
+        "destructive": {
+          "default": {
+            "$value": "#cb0b31",
+            "$type": "color",
+            "$description": "Component token for button background color destructive default."
+          },
+          "hover": {
+            "$value": "#9f0423",
+            "$type": "color",
+            "$description": "Component token for button background color destructive hover."
+          }
+        },
+        "secondary": {
+          "default": {
+            "$value": "#ffffff",
+            "$type": "color",
+            "$description": "Component token for button background color secondary default."
+          },
+          "hover": {
+            "$value": "#f0faff",
+            "$type": "color",
+            "$description": "Component token for button background color secondary hover."
+          }
+        },
+        "tertiary": {
+          "default": {
+            "$value": "#ffffff",
+            "$type": "color",
+            "$description": "Component token for button background color tertiary default."
+          },
+          "hover": {
+            "$value": "#f0faff",
+            "$type": "color",
+            "$description": "Component token for button background color tertiary hover."
+          }
+        }
+      },
+      "borderColor": {
+        "primary": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for button border color primary."
+        },
+        "secondary": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for button border color secondary."
+        },
+        "tertiary": {
+          "$value": "#ffffff00",
+          "$type": "color",
+          "$description": "Component token for button border color tertiary."
+        }
+      },
+      "textColor": {
+        "primary": {
+          "default": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Component token for button text color primary default."
+          }
+        },
+        "secondary": {
+          "default": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Component token for button text color secondary default."
+          },
+          "hover": {
+            "$value": "#004b70",
+            "$type": "color",
+            "$description": "Component token for button text color secondary hover."
+          }
+        },
+        "tertiary": {
+          "default": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Component token for button text color tertiary default."
+          },
+          "hover": {
+            "$value": "#004b70",
+            "$type": "color",
+            "$description": "Component token for button text color tertiary hover."
+          }
+        }
+      },
+      "padding": {
+        "inline": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Component token for button padding inline."
+        },
+        "block": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for button padding block."
+        }
+      }
+    },
+    "card": {
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for card border radius."
+      },
+      "backgroundColor": {
+        "$value": "#ffffff",
+        "$type": "color",
+        "$description": "Component token for card background color."
+      },
+      "borderColor": {
+        "$value": "#7d8082",
+        "$type": "color",
+        "$description": "Component token for card border color."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for card border width."
+      },
+      "minWidth": {
+        "$value": "320px",
+        "$type": "dimension",
+        "$description": "Component token for card min width."
+      },
+      "header": {
+        "title": {
+          "fontSize": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Component token for card header title font size."
+          },
+          "fontWeight": {
+            "$value": 525,
+            "$type": "fontWeight",
+            "$description": "Component token for card header title font weight."
+          }
+        },
+        "border": {
+          "borderWidth": {
+            "$value": "1px",
+            "$type": "dimension",
+            "$description": "Component token for card header border border width."
+          },
+          "borderColor": {
+            "$value": "#7d8082",
+            "$type": "color",
+            "$description": "Component token for card header border border color."
+          }
+        },
+        "description": {
+          "fontSize": {
+            "$value": "16px",
+            "$type": "dimension",
+            "$description": "Component token for card header description font size."
+          },
+          "fontWeight": {
+            "$value": 400,
+            "$type": "fontWeight",
+            "$description": "Component token for card header description font weight."
+          }
+        }
+      }
+    },
+    "checkbox": {
+      "selectedColor": {
+        "$value": "#006da3",
+        "$type": "color",
+        "$description": "Component token for checkbox selected color."
+      },
+      "borderColor": {
+        "$value": "#7d8082",
+        "$type": "color",
+        "$description": "Component token for checkbox border color."
+      },
+      "textColor": {
+        "$value": "#191a1a",
+        "$type": "color",
+        "$description": "Component token for checkbox text color."
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for checkbox border radius."
+      },
+      "backgroundColor": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for checkbox background color default."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for checkbox background color disabled."
+        },
+        "selected": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for checkbox background color selected."
+        }
+      },
+      "checkmark": {
+        "selected": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for checkbox checkmark selected."
+        },
+        "disabled": {
+          "$value": "#4b4d4e",
+          "$type": "color",
+          "$description": "Component token for checkbox checkmark disabled."
+        }
+      },
+      "valueGroup": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for checkbox value group color."
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for checkbox value group font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for checkbox value group font weight."
+        }
+      }
+    },
+    "dialog": {
+      "backgroundColor": {
+        "$value": "#ffffff",
+        "$type": "color",
+        "$description": "Component token for dialog background color."
+      },
+      "borderColor": {
+        "$value": "#7d8082",
+        "$type": "color",
+        "$description": "Component token for dialog border color."
+      },
+      "textColor": {
+        "$value": "#191a1a",
+        "$type": "color",
+        "$description": "Component token for dialog text color."
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for dialog border radius."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for dialog border width."
+      },
+      "maxWidth": {
+        "$value": "480px",
+        "$type": "dimension",
+        "$description": "Component token for dialog max width."
+      },
+      "spacing": {
+        "padding": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Component token for dialog spacing padding."
+        }
+      },
+      "title": {
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for dialog title font size."
+        },
+        "fontWeight": {
+          "$value": 600,
+          "$type": "fontWeight",
+          "$description": "Component token for dialog title font weight."
+        }
+      },
+      "description": {
+        "fontSize": {
+          "$value": "14px",
+          "$type": "dimension",
+          "$description": "Component token for dialog description font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for dialog description font weight."
+        }
+      }
+    },
+    "link": {
+      "fontSize": {
+        "default": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for link font size default."
+        },
+        "help": {
+          "$value": "14px",
+          "$type": "dimension",
+          "$description": "Component token for link font size help."
+        }
+      },
+      "fontWeight": {
+        "default": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for link font weight default."
+        },
+        "help": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for link font weight help."
+        }
+      },
+      "textColor": {
+        "default": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for link text color default."
+        },
+        "hover": {
+          "$value": "#004b70",
+          "$type": "color",
+          "$description": "Component token for link text color hover."
+        },
+        "visited": {
+          "$value": "#8a4691",
+          "$type": "color",
+          "$description": "Component token for link text color visited."
+        }
+      }
+    },
+    "tab": {
+      "accentColor": {
+        "$value": "#006da3",
+        "$type": "color",
+        "$description": "Component token for tab accent color."
+      },
+      "textColor": {
+        "$value": "#191a1a",
+        "$type": "color",
+        "$description": "Component token for tab text color."
+      },
+      "fontSize": {
+        "default": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for tab font size default."
+        }
+      },
+      "fontWeight": {
+        "default": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for tab font weight default."
+        },
+        "active": {
+          "$value": 600,
+          "$type": "fontWeight",
+          "$description": "Component token for tab font weight active."
+        }
+      },
+      "backgroundColor": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for tab background color default."
+        },
+        "hover": {
+          "$value": "#f0faff",
+          "$type": "color",
+          "$description": "Component token for tab background color hover."
+        }
+      },
+      "borderWidth": {
+        "inactive": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Component token for tab border width inactive."
+        },
+        "active": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for tab border width active."
+        }
+      },
+      "padding": {
+        "inline": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for tab padding inline."
+        }
+      },
+      "borderColor": {
+        "block-end": {
+          "active": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Component token for tab border color block end active."
+          },
+          "inactive": {
+            "$value": "#7d8082",
+            "$type": "color",
+            "$description": "Component token for tab border color block end inactive."
+          }
+        }
+      }
+    },
+    "radio": {
+      "indicator": {
+        "active": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for radio indicator active."
+        },
+        "inactive": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for radio indicator inactive."
+        },
+        "disabled": {
+          "$value": "#4b4d4e",
+          "$type": "color",
+          "$description": "Component token for radio indicator disabled."
+        }
+      },
+      "borderColor": {
+        "active": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for radio border color active."
+        },
+        "inactive": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for radio border color inactive."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for radio border color disabled."
+        }
+      },
+      "backgroundColor": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for radio background color default."
+        },
+        "disabled": {
+          "$value": "#f7f7f7",
+          "$type": "color",
+          "$description": "Component token for radio background color disabled."
+        }
+      },
+      "label": {
+        "textColor": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for radio label text color."
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for radio label font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for radio label font weight."
+        }
+      }
+    },
+    "scrim": {
+      "backgroundColor": {
+        "$value": "#373843bf",
+        "$type": "color",
+        "$description": "Component token for scrim background color."
+      }
+    },
+    "searchInput": {
+      "borderRadius": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$description": "Component token for search input border radius."
+      },
+      "label": {
+        "microcopy": {
+          "textColor": {
+            "$value": "#646768",
+            "$type": "color",
+            "$description": "Component token for search input label microcopy text color."
+          },
+          "fontSize": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Component token for search input label microcopy font size."
+          },
+          "fontWeight": {
+            "$value": 450,
+            "$type": "fontWeight",
+            "$description": "Component token for search input label microcopy font weight."
+          }
+        }
+      },
+      "button": {
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for search input button font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for search input button font weight."
+        },
+        "borderRadius": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Component token for search input button border radius."
+        }
+      },
+      "valueGroup": {
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for search input value group font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for search input value group font weight."
+        }
+      }
+    },
+    "segmentedControl": {
+      "backgroundColor": {
+        "$value": "#e5e6e6",
+        "$type": "color",
+        "$description": "Component token for segmented control background color."
+      },
+      "fontSize": {
+        "$value": "16px",
+        "$type": "dimension",
+        "$description": "Component token for segmented control font size."
+      },
+      "borderRadius": {
+        "$value": "32px",
+        "$type": "dimension",
+        "$description": "Component token for segmented control border radius."
+      },
+      "padding": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for segmented control padding."
+      },
+      "minHeight": {
+        "$value": "60px",
+        "$type": "dimension",
+        "$description": "Component token for segmented control min height."
+      },
+      "button": {
+        "backgroundColor": {
+          "active": {
+            "$value": "#ffffff",
+            "$type": "color",
+            "$description": "Component token for segmented control button background color active."
+          },
+          "inactive": {
+            "$value": "#e5e6e6",
+            "$type": "color",
+            "$description": "Component token for segmented control button background color inactive."
+          }
+        },
+        "borderColor": {
+          "active": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Component token for segmented control button border color active."
+          },
+          "inactive": {
+            "$value": "#e5e6e6",
+            "$type": "color",
+            "$description": "Component token for segmented control button border color inactive."
+          }
+        },
+        "textColor": {
+          "active": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Component token for segmented control button text color active."
+          },
+          "inactive": {
+            "$value": "#0d0d0d",
+            "$type": "color",
+            "$description": "Component token for segmented control button text color inactive."
+          }
+        },
+        "fontWeight": {
+          "active": {
+            "$value": 600,
+            "$type": "fontWeight",
+            "$description": "Component token for segmented control button font weight active."
+          },
+          "inactive": {
+            "$value": 400,
+            "$type": "fontWeight",
+            "$description": "Component token for segmented control button font weight inactive."
+          }
+        },
+        "borderRadius": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Component token for segmented control button border radius."
+        }
+      }
+    },
+    "selectInput": {
+      "borderColor": {
+        "$value": "#7d8082",
+        "$type": "color",
+        "$description": "Component token for select input border color."
+      },
+      "dropdown": {
+        "minWidth": {
+          "$value": "88px",
+          "$type": "dimension",
+          "$description": "Component token for select input dropdown min width."
+        }
+      },
+      "inputField": {
+        "minWidth": {
+          "$value": "120px",
+          "$type": "dimension",
+          "$description": "Component token for select input input field min width."
+        }
+      },
+      "backgroundColor": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for select input background color default."
+        },
+        "error": {
+          "$value": "#fff0f3",
+          "$type": "color",
+          "$description": "Component token for select input background color error."
+        }
+      },
+      "label": {
+        "fontSize": {
+          "default": {
+            "$value": "14px",
+            "$type": "dimension",
+            "$description": "Component token for select input label font size default."
+          },
+          "microcopy": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Component token for select input label font size microcopy."
+          }
+        },
+        "fontWeight": {
+          "default": {
+            "$value": 400,
+            "$type": "fontWeight",
+            "$description": "Component token for select input label font weight default."
+          },
+          "microcopy": {
+            "$value": 450,
+            "$type": "fontWeight",
+            "$description": "Component token for select input label font weight microcopy."
+          },
+          "error": {
+            "$value": 700,
+            "$type": "fontWeight",
+            "$description": "Component token for select input label font weight error."
+          }
+        },
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for select input label text color default."
+          },
+          "microcopy": {
+            "$value": "#646768",
+            "$type": "color",
+            "$description": "Component token for select input label text color microcopy."
+          },
+          "error": {
+            "$value": "#cb0b31",
+            "$type": "color",
+            "$description": "Component token for select input label text color error."
+          }
+        }
+      },
+      "valueGroup": {
+        "textColor": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for select input value group text color."
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for select input value group font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for select input value group font weight."
+        }
+      }
+    },
+    "tag": {
+      "fontSize": {
+        "$value": "12px",
+        "$type": "dimension",
+        "$description": "Component token for tag font size."
+      },
+      "fontWeight": {
+        "$value": 450,
+        "$type": "fontWeight",
+        "$description": "Component token for tag font weight."
+      },
+      "borderRadius": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$description": "Component token for tag border radius."
+      },
+      "borderWidth": {
+        "$value": "2px",
+        "$type": "dimension",
+        "$description": "Component token for tag border width."
+      },
+      "backgroundColor": {
+        "generic": {
+          "$value": "#f7f7f7",
+          "$type": "color",
+          "$description": "Component token for tag background color generic."
+        },
+        "teal": {
+          "$value": "#f2fcf9",
+          "$type": "color",
+          "$description": "Component token for tag background color teal."
+        },
+        "red": {
+          "$value": "#fff0f3",
+          "$type": "color",
+          "$description": "Component token for tag background color red."
+        },
+        "gold": {
+          "$value": "#fffcf0",
+          "$type": "color",
+          "$description": "Component token for tag background color gold."
+        }
+      },
+      "padding": {
+        "inline": {
+          "large": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Component token for tag padding inline large."
+          },
+          "small": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Component token for tag padding inline small."
+          }
+        },
+        "block": {
+          "large": {
+            "$value": "4px",
+            "$type": "dimension",
+            "$description": "Component token for tag padding block large."
+          },
+          "small": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Component token for tag padding block small."
+          }
+        }
+      },
+      "borderColor": {
+        "generic": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for tag border color generic."
+        },
+        "teal": {
+          "$value": "#247e58",
+          "$type": "color",
+          "$description": "Component token for tag border color teal."
+        },
+        "red": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for tag border color red."
+        },
+        "gold": {
+          "$value": "#dfb22c",
+          "$type": "color",
+          "$description": "Component token for tag border color gold."
+        }
+      }
+    },
+    "textArea": {
+      "borderColor": {
+        "default": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for text area border color default."
+        }
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for text area border radius."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for text area border width."
+      },
+      "label": {
+        "fontWeight": {
+          "default": {
+            "$value": 400,
+            "$type": "fontWeight",
+            "$description": "Component token for text area label font weight default."
+          },
+          "error": {
+            "$value": 700,
+            "$type": "fontWeight",
+            "$description": "Component token for text area label font weight error."
+          },
+          "microcopy": {
+            "$value": 450,
+            "$type": "fontWeight",
+            "$description": "Component token for text area label font weight microcopy."
+          }
+        },
+        "fontSize": {
+          "default": {
+            "$value": "14px",
+            "$type": "dimension",
+            "$description": "Component token for text area label font size default."
+          },
+          "microcopy": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Component token for text area label font size microcopy."
+          }
+        },
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for text area label text color default."
+          },
+          "microcopy": {
+            "$value": "#646768",
+            "$type": "color",
+            "$description": "Component token for text area label text color microcopy."
+          },
+          "error": {
+            "$value": "#cb0b31",
+            "$type": "color",
+            "$description": "Component token for text area label text color error."
+          }
+        }
+      },
+      "backgroundColor": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for text area background color default."
+        },
+        "error": {
+          "$value": "#fff0f3",
+          "$type": "color",
+          "$description": "Component token for text area background color error."
+        }
+      },
+      "valueGroup": {
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for text area value group font weight."
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for text area value group font size."
+        }
+      }
+    },
+    "textInput": {
+      "borderColor": {
+        "default": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for text input border color default."
+        }
+      },
+      "textColor": {
+        "default": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for text input text color default."
+        }
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for text input border radius."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for text input border width."
+      },
+      "backgroundColor": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for text input background color default."
+        },
+        "error": {
+          "$value": "#fff0f3",
+          "$type": "color",
+          "$description": "Component token for text input background color error."
+        }
+      },
+      "valueGroup": {
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for text input value group font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for text input value group font weight."
+        }
+      }
+    },
+    "toggle": {
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for toggle border radius."
+      },
+      "padding": {
+        "default": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Component token for toggle padding default."
+        }
+      },
+      "backgroundColor": {
+        "active": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for toggle background color active."
+        },
+        "inactive": {
+          "$value": "#d8d9d9",
+          "$type": "color",
+          "$description": "Component token for toggle background color inactive."
+        }
+      },
+      "control": {
+        "backgroundColor": {
+          "default": {
+            "$value": "#ffffff",
+            "$type": "color",
+            "$description": "Component token for toggle control background color default."
+          }
+        }
+      }
+    },
+    "tooltip": {
+      "title": {
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for tooltip title font size."
+        },
+        "fontWeight": {
+          "$value": 600,
+          "$type": "fontWeight",
+          "$description": "Component token for tooltip title font weight."
+        }
+      },
+      "description": {
+        "fontSize": {
+          "$value": "14px",
+          "$type": "dimension",
+          "$description": "Component token for tooltip description font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for tooltip description font weight."
+        }
+      }
+    },
+    "cardRadio": {
+      "backgroundColor": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for card radio background color default."
+        }
+      },
+      "borderColor": {
+        "default": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for card radio border color default."
+        },
+        "hover": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for card radio border color hover."
+        },
+        "selected": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for card radio border color selected."
+        }
+      },
+      "title": {
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for card radio title text color default."
+          }
+        },
+        "fontSize": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Component token for card radio title font size."
+        },
+        "fontWeight": {
+          "$value": 525,
+          "$type": "fontWeight",
+          "$description": "Component token for card radio title font weight."
+        }
+      },
+      "subtitle": {
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for card radio subtitle text color default."
+          }
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for card radio subtitle font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for card radio subtitle font weight."
+        }
+      },
+      "subtext": {
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for card radio subtext text color default."
+          }
+        },
+        "fontSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for card radio subtext font size."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for card radio subtext font weight."
+        }
+      },
+      "footer": {
+        "formattedList": {
+          "textColor": {
+            "default": {
+              "$value": "#191a1a",
+              "$type": "color",
+              "$description": "Component token for card radio footer formatted list text color default."
+            }
+          },
+          "fontSize": {
+            "$value": "16px",
+            "$type": "dimension",
+            "$description": "Component token for card radio footer formatted list font size."
+          },
+          "fontWeight": {
+            "$value": 400,
+            "$type": "fontWeight",
+            "$description": "Component token for card radio footer formatted list font weight."
+          }
+        },
+        "footerText": {
+          "textColor": {
+            "default": {
+              "$value": "#191a1a",
+              "$type": "color",
+              "$description": "Component token for card radio footer footer text text color default."
+            }
+          },
+          "fontSize": {
+            "$value": "16px",
+            "$type": "dimension",
+            "$description": "Component token for card radio footer footer text font size."
+          },
+          "fontWeight": {
+            "$value": 400,
+            "$type": "fontWeight",
+            "$description": "Component token for card radio footer footer text font weight."
+          }
+        }
+      }
+    },
+    "label": {
+      "fontSize": {
+        "default": {
+          "$value": "14px",
+          "$type": "dimension",
+          "$description": "Component token for label font size default."
+        },
+        "microcopy": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Component token for label font size microcopy."
+        }
+      },
+      "fontWeight": {
+        "default": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Component token for label font weight default."
+        },
+        "microcopy": {
+          "$value": 450,
+          "$type": "fontWeight",
+          "$description": "Component token for label font weight microcopy."
+        },
+        "error": {
+          "$value": 700,
+          "$type": "fontWeight",
+          "$description": "Component token for label font weight error."
+        }
+      },
+      "textColor": {
+        "default": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for label text color default."
+        },
+        "microcopy": {
+          "$value": "#646768",
+          "$type": "color",
+          "$description": "Component token for label text color microcopy."
+        },
+        "error": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for label text color error."
+        }
+      }
+    }
+  },
+  "density": {
+    "surface": {
+      "padding": {
+        "block": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface padding block."
+        },
+        "inline": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface padding inline."
+        },
+        "all": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface padding all."
+        },
+        "gap": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface padding gap."
+        }
+      },
+      "small": {
+        "padding": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface small padding."
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface small gap."
+        }
+      },
+      "med": {
+        "padding": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface med padding."
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface med gap."
+        }
+      },
+      "large": {
+        "padding": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface large padding."
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface large gap."
+        }
+      },
+      "x-large": {
+        "padding": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface x large padding."
+        },
+        "gap": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for surface x large gap."
+        }
+      }
+    },
+    "spacing": {
+      "dynamic": {
+        "xx-small": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic xx small."
+        },
+        "x-small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic x small."
+        },
+        "small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic small."
+        },
+        "med": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic med."
+        },
+        "large": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic large."
+        },
+        "x-large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic x large."
+        },
+        "xx-large": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing dynamic xx large."
+        }
+      },
+      "fixed": {
+        "xx-small": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed xx small."
+        },
+        "x-small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed x small."
+        },
+        "small": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed small."
+        },
+        "med": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed med."
+        },
+        "large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed large."
+        },
+        "x-large": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed x large."
+        },
+        "xx-large": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed xx large."
+        }
+      }
+    },
+    "sizing": {
+      "dynamic": {
+        "hairline": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic hairline."
+        },
+        "xx-small": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic xx small."
+        },
+        "x-small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic x small."
+        },
+        "small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic small."
+        },
+        "med": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic med."
+        },
+        "large": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic large."
+        },
+        "x-large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic x large."
+        },
+        "xx-large": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing dynamic xx large."
+        }
+      },
+      "fixed": {
+        "hairline": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed hairline."
+        },
+        "xx-small": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed xx small."
+        },
+        "x-small": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed x small."
+        },
+        "small": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed small."
+        },
+        "med": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed med."
+        },
+        "large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed large."
+        },
+        "x-large": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed x large."
+        },
+        "xx-large": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for sizing fixed xx large."
+        }
+      }
+    },
+    "control": {
+      "margin": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Condensed-mode density value for control margin."
+      },
+      "input": {
+        "padding": {
+          "block": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input padding block."
+          },
+          "inline": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input padding inline."
+          }
+        },
+        "small": {
+          "minWidth": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input small min width."
+          },
+          "minHeight": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input small min height."
+          }
+        },
+        "large": {
+          "minWidth": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input large min width."
+          },
+          "minHeight": {
+            "$value": "112px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control input large min height."
+          }
+        }
+      },
+      "action": {
+        "minWidth": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for control action min width."
+        },
+        "minHeight": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for control action min height."
+        },
+        "padding": {
+          "block": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control action padding block."
+          },
+          "inline": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control action padding inline."
+          }
+        }
+      },
+      "selection": {
+        "padding": {
+          "block": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection padding block."
+          },
+          "inline": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection padding inline."
+          }
+        },
+        "fill": {
+          "small": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection fill small."
+          },
+          "large": {
+            "$value": "20px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection fill large."
+          }
+        },
+        "width": {
+          "small": {
+            "$value": "24px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection width small."
+          },
+          "large": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection width large."
+          }
+        },
+        "height": {
+          "small": {
+            "$value": "24px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection height small."
+          },
+          "large": {
+            "$value": "32px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for control selection height large."
+          }
+        }
+      }
+    },
+    "action": {
+      "target": {
+        "padding": {
+          "block": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for action target padding block."
+          },
+          "inline": {
+            "$value": "12px",
+            "$type": "dimension",
+            "$description": "Condensed-mode density value for action target padding inline."
+          }
+        }
+      },
+      "control": {
+        "size": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for action control size."
+        }
+      }
+    }
+  },
+  "color": {
+    "response": {
+      "critical": {
+        "base": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Dark-mode color value for response critical base."
+        },
+        "on-base": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Dark-mode color value for response critical on base."
+        },
+        "strong": {
+          "$value": "#9f0423",
+          "$type": "color",
+          "$description": "Dark-mode color value for response critical strong."
+        },
+        "subtle": {
+          "$value": "#fff0f3",
+          "$type": "color",
+          "$description": "Dark-mode color value for response critical subtle."
+        }
+      },
+      "success": {
+        "base": {
+          "$value": "#247e58",
+          "$type": "color",
+          "$description": "Dark-mode color value for response success base."
+        },
+        "on-base": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Dark-mode color value for response success on base."
+        },
+        "strong": {
+          "$value": "#19573d",
+          "$type": "color",
+          "$description": "Dark-mode color value for response success strong."
+        },
+        "subtle": {
+          "$value": "#f2fcf9",
+          "$type": "color",
+          "$description": "Dark-mode color value for response success subtle."
+        }
+      },
+      "warning": {
+        "base": {
+          "$value": "#d13805",
+          "$type": "color",
+          "$description": "Dark-mode color value for response warning base."
+        },
+        "on-base": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Dark-mode color value for response warning on base."
+        },
+        "strong": {
+          "$value": "#9f2b04",
+          "$type": "color",
+          "$description": "Dark-mode color value for response warning strong."
+        },
+        "subtle": {
+          "$value": "#fff4f0",
+          "$type": "color",
+          "$description": "Dark-mode color value for response warning subtle."
+        }
+      },
+      "neutral": {
+        "base": {
+          "$value": "#4b4d4e",
+          "$type": "color",
+          "$description": "Dark-mode color value for response neutral base."
+        },
+        "on-base": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Dark-mode color value for response neutral on base."
+        },
+        "strong": {
+          "$value": "#323334",
+          "$type": "color",
+          "$description": "Dark-mode color value for response neutral strong."
+        },
+        "subtle": {
+          "$value": "#f7f7f7",
+          "$type": "color",
+          "$description": "Dark-mode color value for response neutral subtle."
+        }
+      }
+    },
+    "intent": {
+      "primary": {
+        "base": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent primary base."
+        },
+        "on-base": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent primary on base."
+        },
+        "strong": {
+          "$value": "#004b70",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent primary strong."
+        },
+        "subtle": {
+          "$value": "#b5daed",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent primary subtle."
+        },
+        "text": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent primary text."
+        },
+        "border": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent primary border."
+        }
+      },
+      "secondary": {
+        "base": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent secondary base."
+        },
+        "on-base": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent secondary on base."
+        },
+        "strong": {
+          "$value": "#004b70",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent secondary strong."
+        },
+        "subtle": {
+          "$value": "#f0faff",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent secondary subtle."
+        },
+        "text": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent secondary text."
+        },
+        "border": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent secondary border."
+        }
+      },
+      "tertiary": {
+        "base": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent tertiary base."
+        },
+        "on-base": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent tertiary on base."
+        },
+        "strong": {
+          "$value": "#004b70",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent tertiary strong."
+        },
+        "subtle": {
+          "$value": "#f0faff",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent tertiary subtle."
+        },
+        "text": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent tertiary text."
+        },
+        "border": {
+          "$value": "#ffffff00",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent tertiary border."
+        }
+      },
+      "disabled": {
+        "base": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent disabled base."
+        },
+        "strong": {
+          "$value": "#4b4d4e",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent disabled strong."
+        },
+        "subtle": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent disabled subtle."
+        },
+        "text": {
+          "$value": "#4b4d4e",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent disabled text."
+        }
+      },
+      "neutral": {
+        "base": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent neutral base."
+        },
+        "on-base": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent neutral on base."
+        },
+        "strong": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent neutral strong."
+        },
+        "subtle": {
+          "$value": "#f2f2f2",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent neutral subtle."
+        },
+        "text": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent neutral text."
+        },
+        "border": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Dark-mode color value for intent neutral border."
+        }
+      }
+    },
+    "miscellaneous": {
+      "visited": {
+        "$value": "#8a4691",
+        "$type": "color",
+        "$description": "Dark-mode color value for miscellaneous visited."
+      }
+    },
+    "surface": {
+      "borderColor": {
+        "neutral": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface border color neutral."
+        },
+        "red": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface border color red."
+        },
+        "orange": {
+          "$value": "#fa784c",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface border color orange."
+        },
+        "green": {
+          "$value": "#517e24",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface border color green."
+        },
+        "teal": {
+          "$value": "#247e58",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface border color teal."
+        },
+        "blue": {
+          "$value": "#1588c1",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface border color blue."
+        },
+        "purple": {
+          "$value": "#6f5aaf",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface border color purple."
+        },
+        "violet": {
+          "$value": "#8a4691",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface border color violet."
+        },
+        "gold": {
+          "$value": "#dfb22c",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface border color gold."
+        }
+      },
+      "backgroundColor": {
+        "neutral-1": {
+          "$value": "#f7f7f7",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color neutral 1."
+        },
+        "neutral-2": {
+          "$value": "#e5e6e6",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color neutral 2."
+        },
+        "red": {
+          "$value": "#fff0f3",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color red."
+        },
+        "orange": {
+          "$value": "#fff4f0",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color orange."
+        },
+        "green": {
+          "$value": "#f7fcf2",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color green."
+        },
+        "teal": {
+          "$value": "#f2fcf9",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color teal."
+        },
+        "blue": {
+          "$value": "#f0faff",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color blue."
+        },
+        "purple": {
+          "$value": "#f4f0ff",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color purple."
+        },
+        "violet": {
+          "$value": "#fbf3fc",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color violet."
+        },
+        "gold": {
+          "$value": "#fffcf0",
+          "$type": "color",
+          "$description": "Dark-mode color value for surface background color gold."
+        }
+      }
+    },
+    "elevation": {
+      "carved": {
+        "umbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation carved umbra x."
+          },
+          "y": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation carved umbra y."
+          },
+          "blur": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation carved umbra blur."
+          },
+          "spread": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation carved umbra spread."
+          },
+          "alpha": {
+            "$value": 80,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation carved umbra alpha."
+          }
+        }
+      },
+      "settled": {
+        "umbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled umbra x."
+          },
+          "y": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled umbra y."
+          },
+          "blur": {
+            "$value": 1,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled umbra blur."
+          },
+          "spread": {
+            "$value": -1,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled umbra spread."
+          },
+          "alpha": {
+            "$value": 20,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled penumbra x."
+          },
+          "y": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled penumbra y."
+          },
+          "blur": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled penumbra blur."
+          },
+          "spread": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled penumbra spread."
+          },
+          "alpha": {
+            "$value": 20,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation settled penumbra alpha."
+          }
+        }
+      },
+      "resting": {
+        "umbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting umbra x."
+          },
+          "y": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting umbra y."
+          },
+          "blur": {
+            "$value": 2,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting umbra blur."
+          },
+          "spread": {
+            "$value": -2,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting umbra spread."
+          },
+          "alpha": {
+            "$value": 70,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting penumbra x."
+          },
+          "y": {
+            "$value": 3,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting penumbra y."
+          },
+          "blur": {
+            "$value": 4,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting penumbra blur."
+          },
+          "spread": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting penumbra spread."
+          },
+          "alpha": {
+            "$value": 20,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation resting penumbra alpha."
+          }
+        }
+      },
+      "raised": {
+        "umbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised umbra x."
+          },
+          "y": {
+            "$value": 3,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised umbra y."
+          },
+          "blur": {
+            "$value": 3,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised umbra blur."
+          },
+          "spread": {
+            "$value": -2,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised umbra spread."
+          },
+          "alpha": {
+            "$value": 25,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised penumbra x."
+          },
+          "y": {
+            "$value": 4,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised penumbra y."
+          },
+          "blur": {
+            "$value": 6,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised penumbra blur."
+          },
+          "spread": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised penumbra spread."
+          },
+          "alpha": {
+            "$value": 20,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation raised penumbra alpha."
+          }
+        }
+      },
+      "suspended": {
+        "umbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended umbra x."
+          },
+          "y": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended umbra y."
+          },
+          "blur": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended umbra blur."
+          },
+          "spread": {
+            "$value": -3,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended umbra spread."
+          },
+          "alpha": {
+            "$value": 55,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended penumbra x."
+          },
+          "y": {
+            "$value": 6,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended penumbra y."
+          },
+          "blur": {
+            "$value": 10,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended penumbra blur."
+          },
+          "spread": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended penumbra spread."
+          },
+          "alpha": {
+            "$value": 20,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation suspended penumbra alpha."
+          }
+        }
+      },
+      "levitating": {
+        "umbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating umbra x."
+          },
+          "y": {
+            "$value": 8,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating umbra y."
+          },
+          "blur": {
+            "$value": 8,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating umbra blur."
+          },
+          "spread": {
+            "$value": -5,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating umbra spread."
+          },
+          "alpha": {
+            "$value": 55,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating penumbra x."
+          },
+          "y": {
+            "$value": 9,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating penumbra y."
+          },
+          "blur": {
+            "$value": 16,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating penumbra blur."
+          },
+          "spread": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating penumbra spread."
+          },
+          "alpha": {
+            "$value": 20,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation levitating penumbra alpha."
+          }
+        }
+      },
+      "floating": {
+        "umbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating umbra x."
+          },
+          "y": {
+            "$value": 13,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating umbra y."
+          },
+          "blur": {
+            "$value": 13,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating umbra blur."
+          },
+          "spread": {
+            "$value": -7,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating umbra spread."
+          },
+          "alpha": {
+            "$value": 55,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating penumbra x."
+          },
+          "y": {
+            "$value": 14,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating penumbra y."
+          },
+          "blur": {
+            "$value": 26,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating penumbra blur."
+          },
+          "spread": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating penumbra spread."
+          },
+          "alpha": {
+            "$value": 20,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation floating penumbra alpha."
+          }
+        }
+      },
+      "transcending": {
+        "umbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending umbra x."
+          },
+          "y": {
+            "$value": 21,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending umbra y."
+          },
+          "blur": {
+            "$value": 21,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending umbra blur."
+          },
+          "spread": {
+            "$value": -11,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending umbra spread."
+          },
+          "alpha": {
+            "$value": 55,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending umbra alpha."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending penumbra x."
+          },
+          "y": {
+            "$value": 22,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending penumbra y."
+          },
+          "blur": {
+            "$value": 42,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending penumbra blur."
+          },
+          "spread": {
+            "$value": 0,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending penumbra spread."
+          },
+          "alpha": {
+            "$value": 20,
+            "$type": "number",
+            "$description": "Dark-mode color value for elevation transcending penumbra alpha."
+          }
+        }
+      }
+    },
+    "layout": {
+      "backgroundColor": {
+        "neutral": {
+          "base": {
+            "$value": "#323334",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color neutral base."
+          },
+          "level-1": {
+            "$value": "#3f4041",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color neutral level 1."
+          },
+          "level-2": {
+            "$value": "#4b4d4e",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color neutral level 2."
+          },
+          "level-3": {
+            "$value": "#646768",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color neutral level 3."
+          }
+        },
+        "primary": {
+          "base": {
+            "$value": "#fad141",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color primary base."
+          },
+          "level-1": {
+            "$value": "#dfb22c",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color primary level 1."
+          },
+          "level-2": {
+            "$value": "#c08d16",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color primary level 2."
+          },
+          "level-3": {
+            "$value": "#94650f",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color primary level 3."
+          }
+        },
+        "secondary": {
+          "base": {
+            "$value": "#00293d",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color secondary base."
+          },
+          "level-1": {
+            "$value": "#003a57",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color secondary level 1."
+          },
+          "level-2": {
+            "$value": "#004b70",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color secondary level 2."
+          },
+          "level-3": {
+            "$value": "#005c8a",
+            "$type": "color",
+            "$description": "Dark-mode color value for layout background color secondary level 3."
+          }
+        }
+      }
+    }
+  }
+}

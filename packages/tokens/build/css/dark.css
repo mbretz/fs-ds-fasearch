@@ -1,0 +1,14 @@
+[data-theme="dark"] {
+  --color-layout-background-color-neutral-base: #323334;
+  --color-layout-background-color-neutral-level-1: #3f4041;
+  --color-layout-background-color-neutral-level-2: #4b4d4e;
+  --color-layout-background-color-neutral-level-3: #646768;
+  --color-layout-background-color-primary-base: #fad141;
+  --color-layout-background-color-primary-level-1: #dfb22c;
+  --color-layout-background-color-primary-level-2: #c08d16;
+  --color-layout-background-color-primary-level-3: #94650f;
+  --color-layout-background-color-secondary-base: #00293d;
+  --color-layout-background-color-secondary-level-1: #003a57;
+  --color-layout-background-color-secondary-level-2: #004b70;
+  --color-layout-background-color-secondary-level-3: #005c8a;
+}
