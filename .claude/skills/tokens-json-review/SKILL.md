@@ -32,12 +32,21 @@ authoring.
      plugins/workflows) and must be re-saved as a plain JSON object before
      anything else is worth checking. This is a blocker — the script exits
      immediately.
-   - **Unit-suffix leftovers** — flags any value like `"4px"` or `"400px"`.
-     Per PLAN.md §1.2, values in the source JSON should be bare numbers;
-     units are attached later by the Style Dictionary transform. A
-     `"400px"` font-weight is invalid CSS and a common symptom of an
-     export plugin that blindly appends `px` to every numeric variable
-     regardless of type.
+   - **Unit-suffix leftovers** — type-aware, not a blanket "no unit ever"
+     rule. A unit-suffixed value (`"16px"`) is only flagged when the
+     token's own declared `type` is something other than `"dimension"`.
+     Two legitimate source conventions coexist depending on where the
+     file came from: community-plugin exports never declare `"dimension"`
+     at all (only `color`/`fontFamily`/`number`), so any unit suffix
+     there means a raw number that should have stayed unitless per
+     PLAN.md §1.2 (units get attached later by the Style Dictionary
+     transform). Tokens Studio Pro exports (with "convert numbers to
+     dimensions" enabled) correctly declare genuine dimensions as
+     `"dimension"` and bake the unit in at the source, per standard DTCG
+     practice — that's expected, not a violation. Either way, a unit
+     suffix on anything declared `fontWeight`/`number`/`color` is still
+     wrong — a `"400px"` font-weight is invalid CSS regardless of which
+     export produced it.
    - **Mode key-parity** — for collections that are genuinely multi-mode
      (auto-detected — see "How mode detection works" below), every mode
      must define the same set of leaf tokens. A token present in `light`

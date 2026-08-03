@@ -103,20 +103,42 @@ def collect_leaves(node, path=()):
 
 
 def check_units(data):
+    """A unit-suffixed value (e.g. "16px") is only a problem when the
+    token's declared type is something OTHER than "dimension". Two
+    legitimate source conventions exist depending on where the file came
+    from:
+
+    - Community-plugin exports (pre Tokens Studio): declared types are
+      only ever "color"/"fontFamily"/"number" (see sd.transforms.ts) --
+      "dimension" never appears, so a unit-suffixed value here always
+      means a raw number that should have stayed unitless per
+      PLAN.md §1.2 (units get attached later by the Style Dictionary
+      transform).
+    - Tokens Studio Pro exports (with "convert numbers to dimensions"):
+      genuinely dimensional values are declared "dimension" and
+      legitimately carry their unit already, per standard DTCG practice.
+      A unit suffix on a token declared anything else (fontWeight,
+      number, color) is still wrong -- e.g. a font-weight of "400px" is
+      invalid regardless of source convention.
+
+    So the rule is type-aware, not a blanket "no unit suffix ever":
+    flag a unit suffix only when the token's own declared type isn't
+    "dimension"."""
     print("\n== Unit-suffix check ==")
     bad = []
     for path, leaf in collect_leaves(data):
         v = leaf.get("value")
-        if isinstance(v, str) and re.fullmatch(r"-?\d+(\.\d+)?(px|em|rem)", v):
-            bad.append((".".join(path), v))
+        t = leaf.get("type")
+        if isinstance(v, str) and re.fullmatch(r"-?\d+(\.\d+)?(px|em|rem)", v) and t != "dimension":
+            bad.append((".".join(path), v, t))
     if bad:
-        print(f"{len(bad)} value(s) still carry a unit suffix "
-              f"(should be bare numbers per PLAN.md §1.2 — units are "
-              f"attached later by the Style Dictionary transform):")
-        for p, v in bad:
-            print(f"  {p} = {v!r}")
+        print(f"{len(bad)} value(s) carry a unit suffix despite not being "
+              f"declared type \"dimension\" (should be bare numbers per "
+              f"PLAN.md §1.2, or the type is simply wrong):")
+        for p, v, t in bad:
+            print(f"  {p} = {v!r} (type={t!r})")
     else:
-        print("OK — no px/em/rem-suffixed numeric values found.")
+        print("OK — no unit-suffixed values on non-dimension-typed tokens.")
     return bad
 
 
