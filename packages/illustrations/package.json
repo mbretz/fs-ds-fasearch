@@ -1,0 +1,19 @@
+{
+  "name": "illustrations",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "svgr --config-file svgr.config.cjs --out-dir src/generated source",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.2.7"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^8.1.0",
+    "@types/react": "^19.2.17",
+    "svgo": "^4.0.1",
+    "typescript": "^6.0.3"
+  }
+}
