@@ -162,6 +162,7 @@ You'll normalize each of the three Figma libraries once, before its first export
 
 **Known inconsistencies as of the 2026-08-04 MCP export** (source of truth: the Figma file, not this list — re-check on every re-export):
 - Icons use hardcoded `fill="#006DA3"`, not `currentColor` — the SVGO `currentColor` pass in `packages/icons/svgr.config.cjs` is load-bearing, not a defensive no-op.
+- Not every icon is actually single-color: `trash`, `notice-error`, `data-vis-loss` use red `#CB0B31`; `checkmark-circle`/`data-vis-gain` use green `#247E58`; `notice-warning` uses orange `#D13805`; `notice-info` uses `#4B4D4E`; `rating-star-full`/`rating-star-half` use gold `#C08D16`; `rating-star-empty` uses gray `#7D8082` — these are intentional semantic accent colors, not the neutral default. The SVGR `replaceAttrValues` transform targets only the literal `#006DA3` string, leaving every other hex value untouched, so these icons keep their authored color instead of being flattened to `currentColor`.
 - ~~`object-substract.svg` / `object_subtract.svg` naming drift~~ — fixed in Figma same day: renamed to `object-subtract` (24×24) and `object_subtract-sm` (16×16, underscore kept as authored).
 - ~~`data-vis-heirarchy.svg` typo~~ — fixed in Figma same day: renamed to `data-vis-hierarchy`.
 - ~~`building-institution.svg` exported at 26×26~~ — fixed in Figma same day: re-exports at 24×24, matching every other standard icon.
@@ -191,7 +192,9 @@ The Icons page gets its own package (`packages/icons`) and its own one-way pipel
 - The locator can import icons without dragging in the DS bundle.
 - The icon pipeline (SVGR + SVGO) has no overlap with the DS build, so isolating it keeps `packages/ds`'s build config simple.
 
-### 1.3a Illustrations Pipeline (Figma "Assets" library, Illustrations page → code)
+**Implementation notes / deviations from spec (2026-08-04 build), TODO for later:**
+- **No `size` shorthand on generated components.** Step 3 above calls for one; it isn't implemented. Baking a dynamic `size` prop into SVGR's output requires a custom JS template (SVGR's template API builds the `<svg>` JSX from the source file's own static attributes, so merging in a runtime `size` variable means hand-rolling the AST rather than using SVGR's default template) — disproportionate complexity for 107 generated files when consumers can already do `<ChevronRight width={16} height={16} />` via prop spreading. TODO: if the locator (or a future `<Icon name="..." />` wrapper, step 5) ends up needing `size` in practice, implement it there instead of in every generated file.
+- **Generated components use `forwardRef`, not React 19's ref-as-prop.** `svgr.config.cjs` sets `ref: true` for ref-forwarding support; SVGR's TypeScript template (last released 8.1.0, predates React 19's stable release) only knows how to implement that via `React.forwardRef`. This still works fine on React 19 (`forwardRef` isn't broken, just discouraged for new code per the React docs, which note a future release may deprecate it) — it's SVGR's default, not a deliberate choice. TODO: if SVGR ships React 19-native output, or if `forwardRef`'s deprecation becomes real, swap in a custom template using `function Icon({ ref, ...props })` instead. Low priority — no functional issue today. (Figma "Assets" library, Illustrations page → code)
 
 The Illustrations page gets its own package (`packages/illustrations`), sibling to `packages/icons`, with a pipeline that mirrors the icons pipeline minus the color-normalization step:
 
