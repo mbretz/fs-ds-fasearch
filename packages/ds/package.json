@@ -8,12 +8,17 @@
     "radix-ui": "^1.6.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "tokens": "workspace:*"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "tailwindcss": "^4.3.1",
     "typescript": "^6.0.3"
+  },
+  "scripts": {
+    "theme:check": "tailwindcss -i src/theme.css -o /dev/null --minify"
   }
 }
