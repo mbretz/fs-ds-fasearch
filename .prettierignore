@@ -1,0 +1,7 @@
+node_modules
+pnpm-lock.yaml
+packages/tokens/build
+packages/tokens/source/tokens-studio
+packages/icons/src/generated
+packages/illustrations/src/generated
+apps/storybook/storybook-static

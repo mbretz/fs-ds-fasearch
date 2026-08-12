@@ -73,7 +73,10 @@ function normalizeTree(node: RawTree): NormalizedTree {
   for (const [key, child] of Object.entries(node)) {
     if (key.startsWith('$')) continue;
     if (isRawLeaf(child)) {
-      const leaf: NormalizedLeaf = { value: child.$value, type: normalizeType(child.$type) };
+      const leaf: NormalizedLeaf = {
+        value: child.$value,
+        type: normalizeType(child.$type),
+      };
       if (child.$description) leaf.description = child.$description;
       out[key] = leaf;
     } else {
@@ -89,7 +92,9 @@ function loadSet(setName: string): RawTree {
 }
 
 function main() {
-  const themes: Theme[] = JSON.parse(readFileSync(resolve(TOKENS_STUDIO_DIR, '$themes.json'), 'utf8'));
+  const themes: Theme[] = JSON.parse(
+    readFileSync(resolve(TOKENS_STUDIO_DIR, '$themes.json'), 'utf8'),
+  );
 
   const groupToModeSets = new Map<string, Map<string, string>>();
   for (const theme of themes) {
@@ -101,7 +106,8 @@ function main() {
         `WARNING: theme '${theme.id}' (group '${theme.group}') has ${enabled.length} enabled sets, expected exactly 1: ${enabled.join(', ')}. Using the first.`,
       );
     }
-    if (!groupToModeSets.has(theme.group)) groupToModeSets.set(theme.group, new Map());
+    if (!groupToModeSets.has(theme.group))
+      groupToModeSets.set(theme.group, new Map());
     groupToModeSets.get(theme.group)!.set(theme.name, enabled[0]);
   }
 

@@ -27,7 +27,7 @@ authoring.
 
    This performs, in order:
    - **Double-encoding / JSON validity** — the file must parse to a plain
-     object on the first `json.loads()`. If it parses to a *string*, the
+     object on the first `json.loads()`. If it parses to a _string_, the
      export was double-stringified (a known failure mode of some export
      plugins/workflows) and must be re-saved as a plain JSON object before
      anything else is worth checking. This is a blocker — the script exits
@@ -91,11 +91,11 @@ same JSON shape (a dict of dicts with no `value` key at the parent level):
 
 - **Genuine modes** (`density.condensed` / `density.roomy`,
   `color.light` / `color.dark`) — structurally near-identical siblings;
-  same leaf paths, different values. These *should* have matching keys.
+  same leaf paths, different values. These _should_ have matching keys.
 - **Category groupings** (`semantic.content` / `semantic.control` / ...,
   `component.button` / `component.card` / ...) — siblings that happen to
   live in the same collection but are semantically unrelated. These are
-  *expected* to have completely different keys.
+  _expected_ to have completely different keys.
 
 The script tells these apart automatically using Jaccard similarity of
 normalized leaf-path sets between siblings (threshold 0.5, in
@@ -115,7 +115,7 @@ resolved literal instead of a `{path.to.token}` reference, defeating the
 whole point of the primitive → semantic → component tier structure (a
 color rebrand or dark-mode edit won't propagate). If the alias-resolution
 check reports **zero** `{...}` references found at all (not "broken",
-*absent*), that's a signal the export tool itself is the problem, not
+_absent_), that's a signal the export tool itself is the problem, not
 the Figma authoring — flag this distinctly from a normal alias-resolution
 failure and suggest a DTCG/W3C-format-aware exporter instead of a plain
 "variables to JSON" one.

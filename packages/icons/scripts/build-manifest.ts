@@ -17,7 +17,9 @@ const iconNames = readdirSync(sourceDir)
   .sort();
 
 const missingCategory = iconNames.filter((name) => !(name in categories));
-const orphanedCategory = Object.keys(categories).filter((name) => !iconNames.includes(name));
+const orphanedCategory = Object.keys(categories).filter(
+  (name) => !iconNames.includes(name),
+);
 
 if (missingCategory.length > 0) {
   throw new Error(

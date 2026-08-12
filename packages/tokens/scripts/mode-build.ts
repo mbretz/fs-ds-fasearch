@@ -29,13 +29,18 @@ export interface FlatToken {
   declaredType: string;
 }
 
-export async function buildModeTokens(context: AliasContext): Promise<FlatToken[]> {
+export async function buildModeTokens(
+  context: AliasContext,
+): Promise<FlatToken[]> {
   registerHooksOnce();
   const sd = new StyleDictionary({
     source: ['source/tokens.json'],
     platforms: {
       css: {
-        preprocessors: ['purpose/rename-value-groups', 'purpose/alias-path-remap'],
+        preprocessors: [
+          'purpose/rename-value-groups',
+          'purpose/alias-path-remap',
+        ],
         context,
         transformGroup: 'purpose/css',
       },

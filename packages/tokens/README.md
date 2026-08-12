@@ -58,11 +58,11 @@ The `.claude/skills/tokens-json-review/` skill checks `source/tokens.json` for d
 
 - **`sd.preprocessors.ts` — alias-path remapping.** The Tokens Studio export writes aliases relative to whichever collection sub-root a token lives under (e.g. `{control.action.color.default}`), not as the full merged path Style Dictionary's resolver expects. This preprocessor rewrites every alias to its real full path before resolution, in two passes: a static namespace pass for the single-mode collections (`primitives`/`semantic`/`component`), and a mode-relative pass for `color`/`density` that resolves against each leaf's own enclosing mode.
 - **`sd.preprocessors.ts` — value-key collision fix.** Five components (checkbox, searchInput, selectInput, and others) have a token literally named `value` inside a group also named `value` — colliding with Style Dictionary's reserved `value` key. Fixed by renaming before the tree reaches Style Dictionary's parser.
-- **`sd.transforms.ts` — path-based type inference.** The Tokens Studio export tags almost every non-color token as the generic DTCG type `"number"` — true but useless for output, since a border-radius, a font-weight, and an opacity are all numbers but need different CSS treatment (`px` suffix or not). Transforms infer intent from each token's *path* (does it contain `borderRadius`, `fontWeight`, `padding`, …) rather than trusting the declared `$type`. If a future export starts emitting correct DTCG types, switch the filters to check `$type` first and fall back to the path heuristic only where it's still wrong.
+- **`sd.transforms.ts` — path-based type inference.** The Tokens Studio export tags almost every non-color token as the generic DTCG type `"number"` — true but useless for output, since a border-radius, a font-weight, and an opacity are all numbers but need different CSS treatment (`px` suffix or not). Transforms infer intent from each token's _path_ (does it contain `borderRadius`, `fontWeight`, `padding`, …) rather than trusting the declared `$type`. If a future export starts emitting correct DTCG types, switch the filters to check `$type` first and fall back to the path heuristic only where it's still wrong.
 
 ## Multi-mode CSS output, and why it's split into three files instead of one
 
-`scripts/build-tokens.ts` runs the *same* token set through three mode combinations (light+roomy / dark+roomy / light+condensed) and diffs the results, rather than trusting declared token types to say whether a token is color-affected, density-affected, or neither:
+`scripts/build-tokens.ts` runs the _same_ token set through three mode combinations (light+roomy / dark+roomy / light+condensed) and diffs the results, rather than trusting declared token types to say whether a token is color-affected, density-affected, or neither:
 
 - `tokens.css` — base values on `:root` (light/roomy), including passthrough tokens not yet referenced by any component.
 - `dark.css` — sparse `[data-theme="dark"]` block: only tokens whose resolved value actually differs from light. As of the current export, that's 12 tokens, all under `layout.backgroundColor.*` — no shipped component references that part of the tree yet, so dark mode is wired end-to-end but not visibly different from light for anything built so far.
@@ -70,7 +70,7 @@ The `.claude/skills/tokens-json-review/` skill checks `source/tokens.json` for d
 
 ## DTCG output
 
-`scripts/build-dtcg.ts` emits one fully-resolved, spec-compliant DTCG JSON file per color × density combination (`build/dtcg/tokens.{color}-{density}.json`) — no aliases, auto-generated `$description`s. This is for consumers *outside* this codebase (other tools, other agents) that just need a self-contained token set without understanding this pipeline's alias-resolution or mode-selection logic. Not consumed by `packages/ds` — that package reads the CSS output instead.
+`scripts/build-dtcg.ts` emits one fully-resolved, spec-compliant DTCG JSON file per color × density combination (`build/dtcg/tokens.{color}-{density}.json`) — no aliases, auto-generated `$description`s. This is for consumers _outside_ this codebase (other tools, other agents) that just need a self-contained token set without understanding this pipeline's alias-resolution or mode-selection logic. Not consumed by `packages/ds` — that package reads the CSS output instead.
 
 ## Consuming
 

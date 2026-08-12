@@ -38,5 +38,5 @@ All 22 illustrations are authored at a uniform 104×104 frame (one is 105×104 i
 ```tsx
 import { LivingDebtFree, Vacation } from 'illustrations';
 
-<LivingDebtFree className="h-26 w-26" />
+<LivingDebtFree className="h-26 w-26" />;
 ```

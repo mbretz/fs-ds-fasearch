@@ -6,9 +6,12 @@
   "scripts": {
     "tokens:build": "pnpm --filter tokens build",
     "icons:build": "pnpm --filter icons build",
-    "illustrations:build": "pnpm --filter illustrations build"
+    "illustrations:build": "pnpm --filter illustrations build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "prettier": "^3.6.2",
     "turbo": "^2.9.18",
     "typescript": "^6.0.3"
   }

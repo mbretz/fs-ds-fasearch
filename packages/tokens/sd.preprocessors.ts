@@ -67,8 +67,8 @@ export interface AliasContext {
 }
 
 export const DEFAULT_ALIAS_CONTEXT: AliasContext = {
-  color: "light",
-  density: "roomy",
+  color: 'light',
+  density: 'roomy',
 };
 
 const MODE_SIMILARITY_THRESHOLD = 0.5;
@@ -90,10 +90,10 @@ const MODE_SIMILARITY_THRESHOLD = 0.5;
  * both to disambiguate. */
 function isLeaf(node: unknown): node is { value: unknown } {
   return (
-    typeof node === "object" &&
+    typeof node === 'object' &&
     node !== null &&
-    "value" in node &&
-    "type" in node
+    'value' in node &&
+    'type' in node
   );
 }
 
@@ -112,13 +112,13 @@ export function renameAmbiguousValueGroups(root: TokenTree): RenameResult {
   function walk(node: TokenTree, path: string[]) {
     for (const key of Object.keys(node)) {
       const child = node[key];
-      if (!child || typeof child !== "object") continue;
+      if (!child || typeof child !== 'object') continue;
       const childPath = [...path, key];
-      if (key === "value" && !isLeaf(child)) {
-        node["valueGroup"] = child;
+      if (key === 'value' && !isLeaf(child)) {
+        node['valueGroup'] = child;
         delete node[key];
-        renamed.push(childPath.join("."));
-        walk(child as TokenTree, [...path, "valueGroup"]);
+        renamed.push(childPath.join('.'));
+        walk(child as TokenTree, [...path, 'valueGroup']);
       } else if (!isLeaf(child)) {
         walk(child as TokenTree, childPath);
       }
@@ -134,8 +134,8 @@ function collectLeafPaths(node: TokenTree, prefix: string[] = []): string[] {
   for (const [key, child] of Object.entries(node)) {
     const path = [...prefix, key];
     if (isLeaf(child)) {
-      out.push(path.join("."));
-    } else if (child && typeof child === "object") {
+      out.push(path.join('.'));
+    } else if (child && typeof child === 'object') {
       out.push(...collectLeafPaths(child as TokenTree, path));
     }
   }
@@ -150,9 +150,9 @@ function collectLeafPaths(node: TokenTree, prefix: string[] = []): string[] {
 export function detectModeCollections(root: TokenTree): Set<string> {
   const modeCollections = new Set<string>();
   for (const [collName, coll] of Object.entries(root)) {
-    if (!coll || typeof coll !== "object" || isLeaf(coll)) continue;
+    if (!coll || typeof coll !== 'object' || isLeaf(coll)) continue;
     const children = Object.entries(coll as TokenTree).filter(
-      ([, v]) => v && typeof v === "object" && !isLeaf(v),
+      ([, v]) => v && typeof v === 'object' && !isLeaf(v),
     );
     if (children.length < 2) continue;
     const leafSets = children.map(
@@ -176,7 +176,7 @@ function resolveInTree(tree: TokenTree, parts: string[]): boolean {
   let cur: unknown = tree;
   for (const part of parts) {
     if (
-      typeof cur !== "object" ||
+      typeof cur !== 'object' ||
       cur === null ||
       !(part in (cur as TokenTree))
     )
@@ -206,7 +206,7 @@ export function remapAliasPaths(
   const staticRoots = new Map<string, string>();
   for (const [collName, coll] of Object.entries(root)) {
     if (modeCollections.has(collName)) continue;
-    if (!coll || typeof coll !== "object" || isLeaf(coll)) continue;
+    if (!coll || typeof coll !== 'object' || isLeaf(coll)) continue;
     for (const childKey of Object.keys(coll as TokenTree)) {
       staticRoots.set(childKey, collName);
     }
@@ -222,8 +222,11 @@ export function remapAliasPaths(
   const allModeTrees = new Map<string, Map<string, TokenTree>>();
   for (const collName of modeCollections) {
     const modes = new Map<string, TokenTree>();
-    for (const [modeName, tree] of Object.entries(root[collName] as TokenTree)) {
-      if (tree && typeof tree === "object") modes.set(modeName, tree as TokenTree);
+    for (const [modeName, tree] of Object.entries(
+      root[collName] as TokenTree,
+    )) {
+      if (tree && typeof tree === 'object')
+        modes.set(modeName, tree as TokenTree);
     }
     allModeTrees.set(collName, modes);
   }
@@ -235,16 +238,24 @@ export function remapAliasPaths(
   const contextModeTrees: { prefix: string; tree: TokenTree }[] = [];
   for (const collName of modeCollections) {
     const modeName = (context as unknown as Record<string, string>)[collName];
-    const modeTree = modeName ? allModeTrees.get(collName)?.get(modeName) : undefined;
+    const modeTree = modeName
+      ? allModeTrees.get(collName)?.get(modeName)
+      : undefined;
     if (modeTree) {
-      contextModeTrees.push({ prefix: `${collName}.${modeName}`, tree: modeTree });
+      contextModeTrees.push({
+        prefix: `${collName}.${modeName}`,
+        tree: modeTree,
+      });
     }
   }
 
   const result: RemapResult = { rewritten: 0, unresolved: [] };
 
-  function resolveAndRewrite(aliasPath: string, enclosingMode: EnclosingMode | null): string | null {
-    const parts = aliasPath.split(".");
+  function resolveAndRewrite(
+    aliasPath: string,
+    enclosingMode: EnclosingMode | null,
+  ): string | null {
+    const parts = aliasPath.split('.');
 
     const staticPrefix = staticRoots.get(parts[0]);
     if (staticPrefix && resolveInTree(root[staticPrefix] as TokenTree, parts)) {
@@ -252,7 +263,9 @@ export function remapAliasPaths(
     }
 
     if (enclosingMode) {
-      const selfTree = allModeTrees.get(enclosingMode.collection)?.get(enclosingMode.mode);
+      const selfTree = allModeTrees
+        .get(enclosingMode.collection)
+        ?.get(enclosingMode.mode);
       if (selfTree && resolveInTree(selfTree, parts)) {
         return `${enclosingMode.collection}.${enclosingMode.mode}.${aliasPath}`;
       }
@@ -266,15 +279,19 @@ export function remapAliasPaths(
     return null;
   }
 
-  function walk(node: TokenTree, path: string[], enclosingMode: EnclosingMode | null) {
+  function walk(
+    node: TokenTree,
+    path: string[],
+    enclosingMode: EnclosingMode | null,
+  ) {
     for (const [key, child] of Object.entries(node)) {
       const childPath = [...path, key];
       if (isLeaf(child)) {
         const value = (child as { value: unknown }).value;
         if (
-          typeof value === "string" &&
-          value.startsWith("{") &&
-          value.endsWith("}")
+          typeof value === 'string' &&
+          value.startsWith('{') &&
+          value.endsWith('}')
         ) {
           const aliasPath = value.slice(1, -1);
           const resolved = resolveAndRewrite(aliasPath, enclosingMode);
@@ -282,10 +299,10 @@ export function remapAliasPaths(
             (child as { value: unknown }).value = `{${resolved}}`;
             result.rewritten += 1;
           } else {
-            result.unresolved.push({ path: childPath.join("."), alias: value });
+            result.unresolved.push({ path: childPath.join('.'), alias: value });
           }
         }
-      } else if (child && typeof child === "object") {
+      } else if (child && typeof child === 'object') {
         const nextEnclosingMode =
           path.length === 0 && modeCollections.has(key)
             ? null // entering a mode collection itself; mode picked at the next level
@@ -313,7 +330,7 @@ export function remapAliasPaths(
  * DEFAULT_ALIAS_CONTEXT if a platform doesn't set one.
  */
 export const aliasPathRemapPreprocessor = {
-  name: "purpose/alias-path-remap",
+  name: 'purpose/alias-path-remap',
   preprocessor: (
     dictionary: TokenTree,
     options?: { context?: AliasContext },
@@ -339,13 +356,13 @@ export const aliasPathRemapPreprocessor = {
 /** Global, mode-independent: renames the ambiguous "value" group keys
  * once, before any per-platform, context-specific preprocessing runs. */
 export const renameValueGroupsPreprocessor = {
-  name: "purpose/rename-value-groups",
+  name: 'purpose/rename-value-groups',
   preprocessor: (dictionary: TokenTree) => {
     const renameResult = renameAmbiguousValueGroups(dictionary);
     if (renameResult.renamed.length > 0) {
       console.log(
         `[rename-value-groups] renamed ${renameResult.renamed.length} ambiguous "value" ` +
-          `group key(s) to "valueGroup": ${renameResult.renamed.join(", ")}`,
+          `group key(s) to "valueGroup": ${renameResult.renamed.join(', ')}`,
       );
     }
     return dictionary;

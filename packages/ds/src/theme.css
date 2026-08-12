@@ -14,11 +14,11 @@
  * tiering in docs/PLAN.md §1.2.
  */
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@import "tokens/build/css/tokens.css";
-@import "tokens/build/css/dark.css";
-@import "tokens/build/css/density.css";
+@import 'tokens/build/css/tokens.css';
+@import 'tokens/build/css/dark.css';
+@import 'tokens/build/css/density.css';
 
 @theme {
   /* color-intent: the primary/secondary/tertiary/neutral/disabled roles */
