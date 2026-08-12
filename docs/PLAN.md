@@ -85,7 +85,7 @@ fs-ds-fasearch/
 │       │   ├── primitives/     # Re-exports of selected Radix primitives
 │       │   ├── utils/          # cn(), cva re-exports, slot helpers
 │       │   └── index.ts
-│       ├── tailwind.preset.ts  # Shared Tailwind preset reading CSS vars
+│       ├── theme.css           # @theme entry point reading CSS vars (see §1.1 deviation note)
 │       └── package.json
 ├── docs/
 │   └── PLAN.md                 # This file
@@ -124,8 +124,10 @@ Tokens are authored as native Figma Variables. The pipeline was originally scope
      - `build/css/density.css` — `[data-density="roomy"]` and `[data-density="condensed"]` blocks, full in both (no single implicit default to diff against)
    - `packages/tokens/scripts/build-dtcg.ts` — `build/dtcg/tokens.{color}-{density}.json`, one fully-resolved, spec-compliant DTCG file per mode combination (no aliases, auto-generated `$description`s), for consumers outside this codebase (other tools, agents) that just need a self-contained token set.
    - `build/ts/tokens.ts` — typed token object (optional, for non-Tailwind consumers) — not yet built.
-5. **Consume in DS** — `packages/ds/tailwind.preset.ts` imports the `build/css/*.css` files. Components reference Tailwind classes that resolve to CSS vars. Color classes use `hsl(var(--...))` syntax so dark mode lights up later with zero component changes.
+5. **Consume in DS** — `packages/ds/src/theme.css` imports the `build/css/*.css` files. Components reference Tailwind classes that resolve to CSS vars. See the deviation note directly below — this file is CSS, not `tailwind.preset.ts`, and colors are consumed as bare hex-valued vars, not `hsl(var(--...))`.
 6. **Validate** — the `tokens-json-review` skill (`.claude/skills/tokens-json-review/`) checks `packages/tokens/source/tokens.json` for double-encoding, unit-suffix correctness (type-aware: a unit is only wrong on a non-`dimension`-typed token), mode key-parity, and alias resolution before it's trusted as a build input.
+
+**Deviation from plan (2026-08-12): `theme.css`, not `tailwind.preset.ts`, and no `hsl()` wrapper.** This section originally called for a `packages/ds/tailwind.preset.ts` and `hsl(var(--...))` color syntax — both v3-era Tailwind conventions. Verified directly against the installed `tailwindcss@4.3.3`: v4's config model is CSS-first (`@theme` blocks + `@import`), and JS/TS "presets" are only a legacy compatibility path via `@config`, not the idiomatic v4 approach. Style Dictionary's actual output (`build/css/tokens.css`) also emits colors as bare hex (`--color-intent-primary-base: #006da3`), not H/S/L triplets, so `hsl(var(--...))` would be invalid CSS against these vars regardless. The real artifact is `packages/ds/src/theme.css`: it `@import`s the three built token CSS files (bringing every tier — primitives/semantic/component/density — into the cascade as plain custom properties) and defines a `@theme` block that aliases only the `color-intent-*` and `color-response-*` semantic tokens into Tailwind's color namespace (`bg-primary`, `text-critical-strong`, etc). Every other tier is deliberately left unaliased — components reference those vars directly via arbitrary values (`h-[var(--component-button-min-height)]`), consistent with the primitives → semantic → component tiering in §1.2. Verified end-to-end with `@tailwindcss/cli`: utility classes resolve through the full var chain to the correct hex value, the `[data-theme="dark"]` and `[data-density="..."]` override blocks pass through untouched, and `pnpm --filter ds theme:check` compiles the file standalone as a smoke test.
 
 **Pipeline history:** the original plan locked in "free Figma community plugin only, no Tokens Studio" to keep the showcase reproducible on a free plan. Several free plugins produced structurally broken exports (double-encoded JSON, no real aliasing, ambiguous `"value"`-as-token-name collisions, inconsistent unit handling), which is what motivated purchasing Tokens Studio Pro and doing a one-time, non-reproducible export instead — an explicit, conscious tradeoff for this proof-of-concept, not a reproducibility guarantee reviewers can expect to re-run from a fresh Figma file.
 
@@ -380,7 +382,7 @@ packages/icons/src/index.ts                      # icon barrel (+ manifest expor
 packages/illustrations/source/*.svg              # Figma "Assets" library, Illustrations page export target
 packages/illustrations/svgr.config.cjs           # SVGR config (currentColor pass off, colors preserved)
 packages/illustrations/src/index.ts              # illustration barrel
-packages/ds/tailwind.preset.ts                   # shared Tailwind preset reading CSS vars (all three CSS files)
+packages/ds/src/theme.css                        # @theme entry point reading CSS vars (all three CSS files)
 packages/ds/src/index.ts                         # component barrel
 packages/ds/src/utils/cn.ts                      # clsx + tailwind-merge helper
 packages/ds/src/components/<Name>/<Name>.tsx     # one per component

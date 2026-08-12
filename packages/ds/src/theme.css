@@ -1,0 +1,78 @@
+/*
+ * DS theme entry point. Consuming apps (`apps/storybook`, `apps/locator`)
+ * import this file once, ahead of any DS component usage:
+ *
+ *   @import "ds/src/theme.css";
+ *
+ * It wires the built token layer into the cascade and exposes the
+ * `color-intent-*` / `color-response-*` semantic tokens as Tailwind color
+ * utilities (bg-primary, text-critical-strong, etc). Every other token tier
+ * (component-*, surface-*, density-*, primitives-ref-*) stays available as
+ * plain CSS custom properties — components reference those directly via
+ * arbitrary values (e.g. `h-[var(--component-button-min-height)]`) rather
+ * than through @theme aliases, per the primitives -> semantic -> component
+ * tiering in docs/PLAN.md §1.2.
+ */
+
+@import "tailwindcss";
+
+@import "tokens/build/css/tokens.css";
+@import "tokens/build/css/dark.css";
+@import "tokens/build/css/density.css";
+
+@theme {
+  /* color-intent: the primary/secondary/tertiary/neutral/disabled roles */
+  --color-primary: var(--color-intent-primary-base);
+  --color-primary-text: var(--color-intent-primary-text);
+  --color-primary-border: var(--color-intent-primary-border);
+  --color-primary-subtle: var(--color-intent-primary-subtle);
+  --color-primary-strong: var(--color-intent-primary-strong);
+  --color-primary-on: var(--color-intent-primary-on-base);
+
+  --color-secondary: var(--color-intent-secondary-base);
+  --color-secondary-text: var(--color-intent-secondary-text);
+  --color-secondary-border: var(--color-intent-secondary-border);
+  --color-secondary-subtle: var(--color-intent-secondary-subtle);
+  --color-secondary-strong: var(--color-intent-secondary-strong);
+  --color-secondary-on: var(--color-intent-secondary-on-base);
+
+  --color-tertiary: var(--color-intent-tertiary-base);
+  --color-tertiary-text: var(--color-intent-tertiary-text);
+  --color-tertiary-border: var(--color-intent-tertiary-border);
+  --color-tertiary-subtle: var(--color-intent-tertiary-subtle);
+  --color-tertiary-strong: var(--color-intent-tertiary-strong);
+  --color-tertiary-on: var(--color-intent-tertiary-on-base);
+
+  --color-neutral: var(--color-intent-neutral-base);
+  --color-neutral-text: var(--color-intent-neutral-text);
+  --color-neutral-border: var(--color-intent-neutral-border);
+  --color-neutral-subtle: var(--color-intent-neutral-subtle);
+  --color-neutral-strong: var(--color-intent-neutral-strong);
+  --color-neutral-on: var(--color-intent-neutral-on-base);
+
+  --color-disabled: var(--color-intent-disabled-base);
+  --color-disabled-text: var(--color-intent-disabled-text);
+  --color-disabled-subtle: var(--color-intent-disabled-subtle);
+  --color-disabled-strong: var(--color-intent-disabled-strong);
+
+  /* color-response: status/feedback roles (badges, alerts, form validation) */
+  --color-success: var(--color-response-success-base);
+  --color-success-on: var(--color-response-success-on-base);
+  --color-success-strong: var(--color-response-success-strong);
+  --color-success-subtle: var(--color-response-success-subtle);
+
+  --color-warning: var(--color-response-warning-base);
+  --color-warning-on: var(--color-response-warning-on-base);
+  --color-warning-strong: var(--color-response-warning-strong);
+  --color-warning-subtle: var(--color-response-warning-subtle);
+
+  --color-critical: var(--color-response-critical-base);
+  --color-critical-on: var(--color-response-critical-on-base);
+  --color-critical-strong: var(--color-response-critical-strong);
+  --color-critical-subtle: var(--color-response-critical-subtle);
+
+  --color-response-neutral: var(--color-response-neutral-base);
+  --color-response-neutral-on: var(--color-response-neutral-on-base);
+  --color-response-neutral-strong: var(--color-response-neutral-strong);
+  --color-response-neutral-subtle: var(--color-response-neutral-subtle);
+}
