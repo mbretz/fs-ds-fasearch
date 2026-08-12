@@ -13,24 +13,24 @@ Constraint: the showcase has to boot quickly on StackBlitz WebContainers for rev
 
 ## Locked Decisions (from interview)
 
-| Area | Choice |
-|---|---|
-| Framework | Vite + React + TypeScript |
-| Styling | Tailwind + CSS custom properties (shadcn-style) |
-| Primitives layer | Radix UI Primitives (the unstyled component lib) |
-| Variant API | `class-variance-authority` (cva) + `tailwind-merge` + `clsx` |
-| Token source | Native Figma Variables (Pro plan — no Variables REST API access) |
-| Token export | Tokens Studio Pro, one-time multi-file DTCG export (superseded the original "free plugin only" decision — see §1.1) |
+| Area                   | Choice                                                                                                                                                                                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Framework              | Vite + React + TypeScript                                                                                                                                                                                                                                                |
+| Styling                | Tailwind + CSS custom properties (shadcn-style)                                                                                                                                                                                                                          |
+| Primitives layer       | Radix UI Primitives (the unstyled component lib)                                                                                                                                                                                                                         |
+| Variant API            | `class-variance-authority` (cva) + `tailwind-merge` + `clsx`                                                                                                                                                                                                             |
+| Token source           | Native Figma Variables (Pro plan — no Variables REST API access)                                                                                                                                                                                                         |
+| Token export           | Tokens Studio Pro, one-time multi-file DTCG export (superseded the original "free plugin only" decision — see §1.1)                                                                                                                                                      |
 | Figma source structure | Three libraries: **Styles** (tokens), **Assets** (icons + illustrations), **Components**. The Assets library has two pages: **Icons** (single-color, grouped into category frames) and **Illustrations** (multicolor). Code splits Assets into two packages — see §1.3a. |
-| Illustrations | Own package `packages/illustrations`, sibling to `packages/icons`, sourced from the Assets library's Illustrations page. Multicolor SVGs keep their authored fill/stroke colors (no `currentColor` coercion) — see §1.3a. |
-| Icon categories | Figma groups icons into category frames on the Assets library's Icons page. Preserved in code as generated metadata (`manifest.ts`: name → category), not as folder structure — see §1.3. |
-| Color theming | Light mode primary; partial dark mode already authored in Figma; full dark mode is additive later |
-| Density theming | **Roomy** (default) and **Condensed** — two modes, per-element override supported |
-| Monorepo | pnpm workspaces + Turborepo |
-| DS docs | Storybook 8 |
-| Locator UX | Map + list side-by-side, pin popovers, list↔map sync, search/filter |
-| Map | MapLibre GL JS + free OSM raster tiles (no API key) |
-| Plan file | `docs/PLAN.md` at repo root |
+| Illustrations          | Own package `packages/illustrations`, sibling to `packages/icons`, sourced from the Assets library's Illustrations page. Multicolor SVGs keep their authored fill/stroke colors (no `currentColor` coercion) — see §1.3a.                                                |
+| Icon categories        | Figma groups icons into category frames on the Assets library's Icons page. Preserved in code as generated metadata (`manifest.ts`: name → category), not as folder structure — see §1.3.                                                                                |
+| Color theming          | Light mode primary; partial dark mode already authored in Figma; full dark mode is additive later                                                                                                                                                                        |
+| Density theming        | **Roomy** (default) and **Condensed** — two modes, per-element override supported                                                                                                                                                                                        |
+| Monorepo               | pnpm workspaces + Turborepo                                                                                                                                                                                                                                              |
+| DS docs                | Storybook 8                                                                                                                                                                                                                                                              |
+| Locator UX             | Map + list side-by-side, pin popovers, list↔map sync, search/filter                                                                                                                                                                                                      |
+| Map                    | MapLibre GL JS + free OSM raster tiles (no API key)                                                                                                                                                                                                                      |
+| Plan file              | `docs/PLAN.md` at repo root                                                                                                                                                                                                                                              |
 
 ---
 
@@ -39,9 +39,10 @@ Constraint: the showcase has to boot quickly on StackBlitz WebContainers for rev
 **Use Radix Primitives directly as your foundation. Reference shadcn for recipes but do not install it.**
 
 - **Radix UI Primitives** (`@radix-ui/react-*`) — unstyled, accessible, headless components (Dialog, DropdownMenu, Popover, Tabs, etc.). This is a real npm dependency you install.
-- **shadcn/ui** — not a library. It's a registry of copy-paste component files built *on top of* Radix Primitives with Tailwind styling. You own the code.
+- **shadcn/ui** — not a library. It's a registry of copy-paste component files built _on top of_ Radix Primitives with Tailwind styling. You own the code.
 
 For a **portfolio piece showcasing DS engineering**, copy-pasting shadcn undersells the work. Instead:
+
 - Take Radix Primitives as the accessibility/behavior foundation.
 - Use shadcn's source as a reference for proven patterns (`asChild`, slot composition, ref forwarding, variant cva recipes), but author each component yourself against your own tokens.
 - This produces a real, ownable component library — not a wrapper around shadcn — and visibly demonstrates DS thinking (theming, slot APIs, composition primitives) rather than wiring skills.
@@ -98,6 +99,7 @@ fs-ds-fasearch/
 Two apps + four packages — one package per Figma library, except the Assets library (Icons + Illustrations pages) which splits into two packages since the two asset types have materially different color handling. This mirrors how the design source is organized, which is both a clarity win and a portfolio narrative ("code structure tracks design structure").
 
 Workspace deps:
+
 - `packages/ds` → `packages/tokens`, `packages/icons`
 - `packages/icons` → `packages/tokens` (icons may reference color tokens for `currentColor` defaults / sizing)
 - `packages/illustrations` → no workspace deps (multicolor SVGs carry their own fixed palette, not token-driven)
@@ -138,6 +140,7 @@ Tokens are authored as native Figma Variables. The pipeline was originally scope
 You'll normalize each of the three Figma libraries once, before its first export. Subsequent edits inherit the naming.
 
 **In the Styles library (tokens):**
+
 - **Variable names** — slash-delimited (Figma's native group separator), semantic-first: `color/bg/primary`, `color/text/muted`, `density/padding/sm`, `density/height/md`. Avoid spaces, ampersands, or marketing names. Style Dictionary transforms slashes to dashes in CSS output (`--color-bg-primary`, `--density-padding-sm`).
 - **Collections & modes:**
   - `primitives` collection — single default mode. Raw values only: color scales (`blue.500`, `gray.100`), size, space, border-radius, font, and shadow primitives. Nothing in this collection is consumed directly by components.
@@ -150,6 +153,7 @@ You'll normalize each of the three Figma libraries once, before its first export
 - **Density values** — unitless numbers in Figma (px unit attached by Style Dictionary transform).
 
 **In the Assets library, Icons page:**
+
 - **Icon names** — kebab-case (`chevron-right`, `map-pin`). SVGR will PascalCase these on export (`ChevronRight`, `MapPin`).
 - **Category frames** — icons are grouped into named frames/groups per category (e.g. a `Navigation` frame containing `chevron-right`, `chevron-left`, ...). The frame/group name becomes each icon's `category` in the generated manifest (§1.3) — keep frame names short, PascalCase or Title Case, one level deep. Don't nest category frames inside other category frames.
 - **Single frame per icon** — uniform sizing (e.g. 24×24), centered, stroke-only or fill-only consistently. SVGR doesn't fix inconsistent source.
@@ -157,12 +161,14 @@ You'll normalize each of the three Figma libraries once, before its first export
 - **No background frames** — flatten away wrapper rectangles before export, or the SVG will have a transparent square that breaks vertical alignment.
 
 **In the Assets library, Illustrations page:**
+
 - **Illustration names** — component names are `Illustrations/<Title Case Name>` (e.g. `Illustrations/Living Debt Free`) as currently authored, not kebab-case. The export script strips the `Illustrations/` prefix and kebab-cases the rest (`living-debt-free`); SVGR PascalCases from there, same as icons.
 - **Multicolor is intentional** — do not flatten to `currentColor`; the SVGO/SVGR pipeline for this package skips the color-stripping pass entirely and preserves authored fills/strokes as-is. Confirmed via export: each illustration uses 7-8 distinct hex fills.
 - **Uniform 104×104 frame** — confirmed via export: all 22 illustrations are 104×104 (one off-by-one at 105×104, treated as noise). Still flatten away background/wrapper frames before export.
 - **Category frames optional** — grouping isn't required on this page; if present, it's ignored by the export pipeline (illustrations are few enough not to need a catalog taxonomy yet).
 
 **Known inconsistencies as of the 2026-08-04 MCP export** (source of truth: the Figma file, not this list — re-check on every re-export):
+
 - Icons use hardcoded `fill="#006DA3"`, not `currentColor` — the SVGO `currentColor` pass in `packages/icons/svgr.config.cjs` is load-bearing, not a defensive no-op.
 - Not every icon is actually single-color: `trash`, `notice-error`, `data-vis-loss` use red `#CB0B31`; `checkmark-circle`/`data-vis-gain` use green `#247E58`; `notice-warning` uses orange `#D13805`; `notice-info` uses `#4B4D4E`; `rating-star-full`/`rating-star-half` use gold `#C08D16`; `rating-star-empty` uses gray `#7D8082` — these are intentional semantic accent colors, not the neutral default. The SVGR `replaceAttrValues` transform targets only the literal `#006DA3` string, leaving every other hex value untouched, so these icons keep their authored color instead of being flattened to `currentColor`.
 - ~~`object-substract.svg` / `object_subtract.svg` naming drift~~ — fixed in Figma same day: renamed to `object-subtract` (24×24) and `object_subtract-sm` (16×16, underscore kept as authored).
@@ -170,7 +176,8 @@ You'll normalize each of the three Figma libraries once, before its first export
 - ~~`building-institution.svg` exported at 26×26~~ — fixed in Figma same day: re-exports at 24×24, matching every other standard icon.
 
 **In the Components library:**
-- **Component property names must equal code prop names** — `intent`, `size`, `disabled`, not `Style`, `Size/Type`, `State`. Variant *values* must match too: `primary`, `ghost`, `sm`, `md` — not `Primary Button`, `Default`.
+
+- **Component property names must equal code prop names** — `intent`, `size`, `disabled`, not `Style`, `Size/Type`, `State`. Variant _values_ must match too: `primary`, `ghost`, `sm`, `md` — not `Primary Button`, `Default`.
 - **Slot/anatomy naming** — for compound components (Dialog, DropdownMenu, Card, etc.), Figma layers should match Radix anatomy: `Trigger`, `Content`, `Item`, `Separator`, `Label`, `Header`, `Body`, `Footer`. This makes the Figma file readable as a spec for the code.
 - **Reference icons by name** — components that contain icons should reference the Icons library by name (`map-pin`), not contain inline SVG, so code can swap to `<MapPin />` deterministically.
 
@@ -190,11 +197,13 @@ The Icons page gets its own package (`packages/icons`) and its own one-way pipel
 6. **Refresh loop** — `pnpm icons:build` re-runs the manifest generator then SVGR. Two-step manual sync (`export from Figma` → `pnpm icons:build`).
 
 **Why a separate package** (not bundled into `packages/ds`):
+
 - Mirrors the Figma library split — clean conceptual story.
 - The locator can import icons without dragging in the DS bundle.
 - The icon pipeline (SVGR + SVGO) has no overlap with the DS build, so isolating it keeps `packages/ds`'s build config simple.
 
 **Implementation notes / deviations from spec (2026-08-04 build), TODO for later:**
+
 - **No `size` shorthand on generated components.** Step 3 above calls for one; it isn't implemented. Baking a dynamic `size` prop into SVGR's output requires a custom JS template (SVGR's template API builds the `<svg>` JSX from the source file's own static attributes, so merging in a runtime `size` variable means hand-rolling the AST rather than using SVGR's default template) — disproportionate complexity for 107 generated files when consumers can already do `<ChevronRight width={16} height={16} />` via prop spreading. TODO: if the locator (or a future `<Icon name="..." />` wrapper, step 5) ends up needing `size` in practice, implement it there instead of in every generated file.
 - **Generated components use `forwardRef`, not React 19's ref-as-prop.** `svgr.config.cjs` sets `ref: true` for ref-forwarding support; SVGR's TypeScript template (last released 8.1.0, predates React 19's stable release) only knows how to implement that via `React.forwardRef`. This still works fine on React 19 (`forwardRef` isn't broken, just discouraged for new code per the React docs, which note a future release may deprecate it) — it's SVGR's default, not a deliberate choice. TODO: if SVGR ships React 19-native output, or if `forwardRef`'s deprecation becomes real, swap in a custom template using `function Icon({ ref, ...props })` instead. Low priority — no functional issue today. (Figma "Assets" library, Illustrations page → code)
 
@@ -209,6 +218,7 @@ The Illustrations page gets its own package (`packages/illustrations`), sibling 
 4. **Refresh loop** — `pnpm illustrations:build` re-runs SVGR for this package. Same two-step manual sync as icons.
 
 **Why a separate package from `packages/icons`** (not one shared assets package):
+
 - The two asset types have genuinely different transform rules (currentColor coercion vs. none) — sharing one SVGR config would mean branching logic inside it instead of two simple configs.
 - Consumers rarely need both at once; the locator can pull `packages/illustrations` for an empty state without any icon-specific tooling coming along.
 - Keeps the "one Figma concern, one package" story intact even though both pages live in the same Figma library file.
@@ -231,9 +241,11 @@ The design system supports two density modes — **Roomy** (default) and **Conde
 **Global default:** `<html data-density="roomy">` is set in both `apps/locator/index.html` and Storybook's `preview.ts`. Components never need to know the default — they just read CSS vars, which always resolve because `<html>` always carries one of the two values.
 
 **Component `density` prop:** Every component with density-sensitive sizing accepts:
+
 ```ts
 density?: 'roomy' | 'condensed'
 ```
+
 When provided, the component sets `data-density={density}` on its root element. When omitted, the component inherits from its ancestor via CSS cascade.
 
 **cva integration:** Density does **not** drive cva variants (that would require JS density awareness). Instead, density is purely CSS-var-driven. The `size` cva variant (`sm | md | lg`) selects which CSS vars a component references; the density mode controls what those vars resolve to:
@@ -245,9 +257,9 @@ const buttonVariants = cva({
     size: {
       sm: 'h-[var(--density-height-sm)] px-[var(--density-padding-sm)] gap-[var(--density-gap-sm)]',
       md: 'h-[var(--density-height-md)] px-[var(--density-padding-md)] gap-[var(--density-gap-md)]',
-    }
-  }
-})
+    },
+  },
+});
 ```
 
 **Portal caveat:** Radix overlays (Dialog, Tooltip, Popover) render into a portal outside the DOM tree, breaking CSS cascade inheritance. Pass the `density` prop explicitly to these components — the component sets `data-density` directly on the portal content root.
@@ -268,14 +280,15 @@ This means the eventual flip is a workflow change, not a code rewrite. (Icons st
 
 All four levels, built in this order (atoms before composites). Icons and illustrations are not in this list — they live in `packages/icons` and `packages/illustrations` and are consumed by DS components where needed.
 
-| Level | Components | Notes |
-|---|---|---|
-| Primitives | Button, Input, Label, Badge, Avatar | `asChild` pattern via Radix `Slot` everywhere. Button supports icon children. |
-| Layout | Stack, Box, Separator, Card | Card is a compound: `Card.Root`, `Card.Header`, `Card.Body`, `Card.Footer` |
-| Overlays | Dialog, Popover, Tooltip, DropdownMenu | Built on Radix Primitives; styled via Tailwind + tokens |
-| Data display | List, Tabs, Accordion, ScrollArea | Radix for Tabs/Accordion/ScrollArea; List is custom |
+| Level        | Components                             | Notes                                                                         |
+| ------------ | -------------------------------------- | ----------------------------------------------------------------------------- |
+| Primitives   | Button, Input, Label, Badge, Avatar    | `asChild` pattern via Radix `Slot` everywhere. Button supports icon children. |
+| Layout       | Stack, Box, Separator, Card            | Card is a compound: `Card.Root`, `Card.Header`, `Card.Body`, `Card.Footer`    |
+| Overlays     | Dialog, Popover, Tooltip, DropdownMenu | Built on Radix Primitives; styled via Tailwind + tokens                       |
+| Data display | List, Tabs, Accordion, ScrollArea      | Radix for Tabs/Accordion/ScrollArea; List is custom                           |
 
 **Authoring conventions for every component:**
+
 - Forward refs.
 - Accept `className` + `asChild` where meaningful.
 - Accept `density?: 'roomy' | 'condensed'`; when provided, set `data-density` on the component root.
@@ -405,6 +418,7 @@ README.md                                        # StackBlitz pitch
 End-to-end smoke when each phase completes:
 
 **Phase 1 (Design system):**
+
 - `pnpm install && pnpm tokens:build && pnpm icons:build && pnpm illustrations:build && pnpm --filter storybook dev` boots Storybook locally.
 - Every DS component renders in Storybook with its variants.
 - Every icon appears in the Storybook Icons catalog, grouped by category, with a working import snippet.
@@ -417,6 +431,7 @@ End-to-end smoke when each phase completes:
 - Open the same flow on a fresh StackBlitz fork of the repo — confirm boot completes under 3 minutes (Storybook is the long pole).
 
 **Phase 2 (Locator):**
+
 - `pnpm --filter locator dev` boots the locator.
 - Click each list row → map flies to that pin, popover opens.
 - Click each map pin → list row highlights and scrolls into view.

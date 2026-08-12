@@ -34,16 +34,16 @@ Two manual steps, run whenever the Figma Icons page changes:
 
 Most icons in this library use a single hardcoded neutral fill, `#006DA3`, in the raw Figma export — not `currentColor`. `svgr.config.cjs` swaps **that exact hex value** to `currentColor` via `replaceAttrValues`, so icons inherit `color` from their CSS context.
 
-A handful of icons carry *intentional* semantic accent colors and are **not** touched by that swap — their authored hex stays as-is:
+A handful of icons carry _intentional_ semantic accent colors and are **not** touched by that swap — their authored hex stays as-is:
 
-| Color | Icons |
-|---|---|
-| Red `#CB0B31` | `trash`, `notice-error`, `data-vis-loss` |
-| Green `#247E58` | `checkmark-circle`, `data-vis-gain` |
-| Orange `#D13805` | `notice-warning` |
-| Gray `#4B4D4E` | `notice-info` |
-| Gold `#C08D16` | `rating-star-full`, `rating-star-half` |
-| Gray `#7D8082` | `rating-star-empty` |
+| Color            | Icons                                    |
+| ---------------- | ---------------------------------------- |
+| Red `#CB0B31`    | `trash`, `notice-error`, `data-vis-loss` |
+| Green `#247E58`  | `checkmark-circle`, `data-vis-gain`      |
+| Orange `#D13805` | `notice-warning`                         |
+| Gray `#4B4D4E`   | `notice-info`                            |
+| Gold `#C08D16`   | `rating-star-full`, `rating-star-half`   |
+| Gray `#7D8082`   | `rating-star-empty`                      |
 
 If a newly-exported icon is meant to be neutral (inherit `currentColor`) but comes out with a different hardcoded hex than `#006DA3`, either fix the fill color in Figma before re-exporting, or extend the `replaceAttrValues` map in `svgr.config.cjs` — don't switch to a blanket color-strip, or these semantic icons will silently lose their meaning.
 
@@ -57,6 +57,6 @@ If a newly-exported icon is meant to be neutral (inherit `currentColor`) but com
 ```tsx
 import { ChevronRight, MapPin, manifest } from 'icons';
 
-<ChevronRight className="h-4 w-4 text-slate-500" />
-manifest['chevron-right'].category // "Navigation"
+<ChevronRight className="h-4 w-4 text-slate-500" />;
+manifest['chevron-right'].category; // "Navigation"
 ```

@@ -68,7 +68,11 @@ function humanize(path: string[]): string {
     .join(' ');
 }
 
-function describe(topLevel: string, modeInfo: { collection: string; mode: string } | null, restPath: string[]): string {
+function describe(
+  topLevel: string,
+  modeInfo: { collection: string; mode: string } | null,
+  restPath: string[],
+): string {
   const words = humanize(restPath);
   if (modeInfo) {
     const kind = modeInfo.collection === 'color' ? 'color' : 'density';
@@ -84,23 +88,42 @@ function describe(topLevel: string, modeInfo: { collection: string; mode: string
  * actually did with it (does the value end in "px"?), not by
  * independently re-deriving from this token's own path -- see the module
  * doc for why those can disagree. */
-function classifyResolvedNumeric(token: FlatToken): 'dimension' | 'fontWeight' | 'number' {
+function classifyResolvedNumeric(
+  token: FlatToken,
+): 'dimension' | 'fontWeight' | 'number' {
   if (token.value.endsWith('px')) return 'dimension';
-  if (token.path.some((seg) => seg.toLowerCase() === 'fontweight')) return 'fontWeight';
+  if (token.path.some((seg) => seg.toLowerCase() === 'fontweight'))
+    return 'fontWeight';
   return 'number';
 }
 
-function toLeaf(token: FlatToken, modeInfo: { collection: string; mode: string } | null, restPath: string[]): DtcgLeaf {
+function toLeaf(
+  token: FlatToken,
+  modeInfo: { collection: string; mode: string } | null,
+  restPath: string[],
+): DtcgLeaf {
   const topLevel = token.path[0];
   if (token.declaredType === 'color') {
-    return { $value: token.value, $type: 'color', $description: describe(topLevel, modeInfo, restPath) };
+    return {
+      $value: token.value,
+      $type: 'color',
+      $description: describe(topLevel, modeInfo, restPath),
+    };
   }
   if (token.declaredType === 'fontFamily') {
-    return { $value: token.value, $type: 'fontFamily', $description: describe(topLevel, modeInfo, restPath) };
+    return {
+      $value: token.value,
+      $type: 'fontFamily',
+      $description: describe(topLevel, modeInfo, restPath),
+    };
   }
   const numericType = classifyResolvedNumeric(token);
   const value = numericType === 'dimension' ? token.value : Number(token.value);
-  return { $value: value, $type: numericType, $description: describe(topLevel, modeInfo, restPath) };
+  return {
+    $value: value,
+    $type: numericType,
+    $description: describe(topLevel, modeInfo, restPath),
+  };
 }
 
 function setPath(tree: DtcgTree, path: string[], leaf: DtcgLeaf) {
@@ -124,7 +147,11 @@ function buildDtcgTree(
     if (modeCollections.has(top)) {
       if (second !== activeModes[top]) continue; // not this file's mode -- skip
       const outputPath = [top, ...rest];
-      setPath(tree, outputPath, toLeaf(token, { collection: top, mode: second }, rest));
+      setPath(
+        tree,
+        outputPath,
+        toLeaf(token, { collection: top, mode: second }, rest),
+      );
     } else {
       setPath(tree, token.path, toLeaf(token, null, token.path.slice(1)));
     }
@@ -133,13 +160,18 @@ function buildDtcgTree(
 }
 
 async function main() {
-  const sourceTree = JSON.parse(readFileSync(resolve('source/tokens.json'), 'utf8')) as TokenTree;
+  const sourceTree = JSON.parse(
+    readFileSync(resolve('source/tokens.json'), 'utf8'),
+  ) as TokenTree;
   const modeCollections = detectModeCollections(sourceTree);
 
   const colorModes = Object.keys(sourceTree.color as TokenTree);
   const densityModes = Object.keys(sourceTree.density as TokenTree);
 
-  const buildDir = resolve(dirname(fileURLToPath(import.meta.url)), '../build/dtcg');
+  const buildDir = resolve(
+    dirname(fileURLToPath(import.meta.url)),
+    '../build/dtcg',
+  );
   mkdirSync(buildDir, { recursive: true });
 
   for (const color of colorModes) {
@@ -148,7 +180,10 @@ async function main() {
       const tokens = await buildModeTokens({ color, density });
       const tree = buildDtcgTree(tokens, modeCollections, { color, density });
       const filename = `tokens.${color}-${density}.json`;
-      writeFileSync(resolve(buildDir, filename), JSON.stringify(tree, null, 2) + '\n');
+      writeFileSync(
+        resolve(buildDir, filename),
+        JSON.stringify(tree, null, 2) + '\n',
+      );
       console.log(`  wrote ${filename}`);
     }
   }

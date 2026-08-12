@@ -91,7 +91,12 @@ interface DensityPassthrough {
 function derivePassthrough(
   tokens: FlatToken[],
   modeCollections: Set<string>,
-): { color: ColorPassthrough[]; density: DensityPassthrough[]; colorModes: [string, string]; densityModes: [string, string] } {
+): {
+  color: ColorPassthrough[];
+  density: DensityPassthrough[];
+  colorModes: [string, string];
+  densityModes: [string, string];
+} {
   const byCollection = new Map<string, Map<string, FlatToken[]>>();
   for (const collName of modeCollections) byCollection.set(collName, new Map());
   for (const token of tokens) {
@@ -105,25 +110,43 @@ function derivePassthrough(
   function pairUp(collName: string, modeA: string, modeB: string) {
     const byMode = byCollection.get(collName);
     const a = byMode?.get(modeA) ?? [];
-    const bByRest = new Map((byMode?.get(modeB) ?? []).map((t) => [t.path.join('.'), t]));
+    const bByRest = new Map(
+      (byMode?.get(modeB) ?? []).map((t) => [t.path.join('.'), t]),
+    );
     const pairs: { name: string; a: string; b: string }[] = [];
     for (const tokenA of a) {
       const restKey = tokenA.path.join('.');
       const tokenB = bByRest.get(restKey);
       if (!tokenB) continue; // asymmetric mode structure -- shouldn't happen post detectModeCollections, skip defensively
-      pairs.push({ name: kebabPath([collName, ...tokenA.path]), a: tokenA.value, b: tokenB.value });
+      pairs.push({
+        name: kebabPath([collName, ...tokenA.path]),
+        a: tokenA.value,
+        b: tokenB.value,
+      });
     }
     return pairs;
   }
 
-  const colorColl = [...modeCollections].find((c) => byCollection.get(c)?.has('light'));
-  const densityColl = [...modeCollections].find((c) => byCollection.get(c)?.has('roomy'));
+  const colorColl = [...modeCollections].find((c) =>
+    byCollection.get(c)?.has('light'),
+  );
+  const densityColl = [...modeCollections].find((c) =>
+    byCollection.get(c)?.has('roomy'),
+  );
 
   const color: ColorPassthrough[] = colorColl
-    ? pairUp(colorColl, 'light', 'dark').map((p) => ({ name: p.name, light: p.a, dark: p.b }))
+    ? pairUp(colorColl, 'light', 'dark').map((p) => ({
+        name: p.name,
+        light: p.a,
+        dark: p.b,
+      }))
     : [];
   const density: DensityPassthrough[] = densityColl
-    ? pairUp(densityColl, 'roomy', 'condensed').map((p) => ({ name: p.name, roomy: p.a, condensed: p.b }))
+    ? pairUp(densityColl, 'roomy', 'condensed').map((p) => ({
+        name: p.name,
+        roomy: p.a,
+        condensed: p.b,
+      }))
     : [];
 
   return {
@@ -135,38 +158,52 @@ function derivePassthrough(
 }
 
 async function main() {
-  const sourceTree = JSON.parse(readFileSync(resolve('source/tokens.json'), 'utf8')) as TokenTree;
+  const sourceTree = JSON.parse(
+    readFileSync(resolve('source/tokens.json'), 'utf8'),
+  ) as TokenTree;
   const modeCollections = detectModeCollections(sourceTree);
 
   console.log('Building light+roomy (base)...');
-  const lightRoomyTokens = await buildModeTokens({ color: 'light', density: 'roomy' });
+  const lightRoomyTokens = await buildModeTokens({
+    color: 'light',
+    density: 'roomy',
+  });
   console.log('Building dark+roomy...');
-  const darkRoomyTokens = await buildModeTokens({ color: 'dark', density: 'roomy' });
+  const darkRoomyTokens = await buildModeTokens({
+    color: 'dark',
+    density: 'roomy',
+  });
   console.log('Building light+condensed...');
-  const lightCondensedTokens = await buildModeTokens({ color: 'light', density: 'condensed' });
+  const lightCondensedTokens = await buildModeTokens({
+    color: 'light',
+    density: 'condensed',
+  });
 
   const lightRoomy = new Map(lightRoomyTokens.map((t) => [t.name, t.value]));
   const darkRoomy = new Map(darkRoomyTokens.map((t) => [t.name, t.value]));
-  const lightCondensed = new Map(lightCondensedTokens.map((t) => [t.name, t.value]));
-
-  const { color: colorPassthrough, density: densityPassthrough } = derivePassthrough(
-    lightRoomyTokens,
-    modeCollections,
+  const lightCondensed = new Map(
+    lightCondensedTokens.map((t) => [t.name, t.value]),
   );
+
+  const { color: colorPassthrough, density: densityPassthrough } =
+    derivePassthrough(lightRoomyTokens, modeCollections);
 
   // Raw mode-baked names (e.g. "color-light-layout-...", "density-roomy-...")
   // are superseded by their canonical passthrough counterpart above and
   // excluded from every output below, so we don't ship both.
   const isModeResidentRaw = (path: string[]) => modeCollections.has(path[0]);
   const allNames = new Set(
-    lightRoomyTokens.filter((t) => !isModeResidentRaw(t.path)).map((t) => t.name),
+    lightRoomyTokens
+      .filter((t) => !isModeResidentRaw(t.path))
+      .map((t) => t.name),
   );
 
   const colorVarying = new Set<string>();
   const densityVarying = new Set<string>();
   for (const name of allNames) {
     if (lightRoomy.get(name) !== darkRoomy.get(name)) colorVarying.add(name);
-    if (lightRoomy.get(name) !== lightCondensed.get(name)) densityVarying.add(name);
+    if (lightRoomy.get(name) !== lightCondensed.get(name))
+      densityVarying.add(name);
   }
 
   const both = [...colorVarying].filter((n) => densityVarying.has(n));
@@ -184,9 +221,10 @@ async function main() {
   // existing component/semantic/primitives-derived name -- shouldn't
   // happen (different top-level prefixes), but silent collisions would
   // be worse than a loud warning.
-  const existingNameCollisions = [...colorPassthrough, ...densityPassthrough].filter((p) =>
-    allNames.has(p.name),
-  );
+  const existingNameCollisions = [
+    ...colorPassthrough,
+    ...densityPassthrough,
+  ].filter((p) => allNames.has(p.name));
   if (existingNameCollisions.length > 0) {
     console.warn(
       `WARNING: ${existingNameCollisions.length} canonical passthrough name(s) collide with an existing token name -- needs manual resolution:`,
@@ -195,7 +233,9 @@ async function main() {
   }
 
   const tokensCssEntries: [string, string][] = [
-    ...[...allNames].filter((n) => !densityVarying.has(n)).map((n) => [n, lightRoomy.get(n)!] as [string, string]),
+    ...[...allNames]
+      .filter((n) => !densityVarying.has(n))
+      .map((n) => [n, lightRoomy.get(n)!] as [string, string]),
     ...colorPassthrough.map((p) => [p.name, p.light] as [string, string]),
   ];
   const tokensCss = cssBlock(':root', tokensCssEntries);
@@ -204,28 +244,41 @@ async function main() {
     ...[...colorVarying]
       .filter((n) => !densityVarying.has(n))
       .map((n) => [n, darkRoomy.get(n)!] as [string, string]),
-    ...colorPassthrough.filter((p) => p.light !== p.dark).map((p) => [p.name, p.dark] as [string, string]),
+    ...colorPassthrough
+      .filter((p) => p.light !== p.dark)
+      .map((p) => [p.name, p.dark] as [string, string]),
   ];
   const darkCss = cssBlock('[data-theme="dark"]', darkCssEntries);
 
   const densityCss =
     cssBlock('[data-density="roomy"]', [
-      ...[...densityVarying].map((n) => [n, lightRoomy.get(n)!] as [string, string]),
+      ...[...densityVarying].map(
+        (n) => [n, lightRoomy.get(n)!] as [string, string],
+      ),
       ...densityPassthrough.map((p) => [p.name, p.roomy] as [string, string]),
     ]) +
     '\n' +
     cssBlock('[data-density="condensed"]', [
-      ...[...densityVarying].map((n) => [n, lightCondensed.get(n)!] as [string, string]),
-      ...densityPassthrough.map((p) => [p.name, p.condensed] as [string, string]),
+      ...[...densityVarying].map(
+        (n) => [n, lightCondensed.get(n)!] as [string, string],
+      ),
+      ...densityPassthrough.map(
+        (p) => [p.name, p.condensed] as [string, string],
+      ),
     ]);
 
-  const buildDir = resolve(dirname(fileURLToPath(import.meta.url)), '../build/css');
+  const buildDir = resolve(
+    dirname(fileURLToPath(import.meta.url)),
+    '../build/css',
+  );
   mkdirSync(buildDir, { recursive: true });
   writeFileSync(resolve(buildDir, 'tokens.css'), tokensCss);
   writeFileSync(resolve(buildDir, 'dark.css'), darkCss);
   writeFileSync(resolve(buildDir, 'density.css'), densityCss);
 
-  console.log(`\ntokens.css:  ${tokensCssEntries.length} tokens (incl. ${colorPassthrough.length} canonical color passthrough)`);
+  console.log(
+    `\ntokens.css:  ${tokensCssEntries.length} tokens (incl. ${colorPassthrough.length} canonical color passthrough)`,
+  );
   console.log(`dark.css:    ${darkCssEntries.length} sparse override(s)`);
   console.log(
     `density.css: ${densityVarying.size + densityPassthrough.length} density-dependent token(s) x 2 modes (incl. ${densityPassthrough.length} canonical density passthrough)`,

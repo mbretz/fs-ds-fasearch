@@ -45,11 +45,16 @@ const DIMENSION_PATH_KEYWORDS = [
  * "size" appearing in a color-scale primitive name is not a dimension). */
 function pathIncludes(token: TransformedToken, keywords: string[]): boolean {
   const lowerPath = token.path.map((p) => p.toLowerCase());
-  return keywords.some((kw) => lowerPath.some((seg) => seg === kw.toLowerCase()));
+  return keywords.some((kw) =>
+    lowerPath.some((seg) => seg === kw.toLowerCase()),
+  );
 }
 
 function isDimension(token: TransformedToken): boolean {
-  return typeof token.value === 'number' && pathIncludes(token, DIMENSION_PATH_KEYWORDS);
+  return (
+    typeof token.value === 'number' &&
+    pathIncludes(token, DIMENSION_PATH_KEYWORDS)
+  );
 }
 
 function isUnitlessNumber(token: TransformedToken): boolean {
@@ -80,7 +85,9 @@ StyleDictionary.registerTransform({
  * multi-mode build script's canonical mode-collection passthrough
  * variables) stays byte-identical with what this transform produces. */
 export function kebabPath(path: string[]): string {
-  return path.map((seg) => seg.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()).join('-');
+  return path
+    .map((seg) => seg.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase())
+    .join('-');
 }
 
 StyleDictionary.registerTransform({
@@ -91,5 +98,9 @@ StyleDictionary.registerTransform({
 
 StyleDictionary.registerTransformGroup({
   name: 'purpose/css',
-  transforms: ['purpose/name-kebab', 'purpose/dimension-px', 'purpose/unitless-number'],
+  transforms: [
+    'purpose/name-kebab',
+    'purpose/dimension-px',
+    'purpose/unitless-number',
+  ],
 });
