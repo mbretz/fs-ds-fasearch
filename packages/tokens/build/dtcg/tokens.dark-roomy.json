@@ -2360,6 +2360,70 @@
           "$type": "dimension",
           "$description": "Component token for avatar border radius associate."
         }
+      },
+      "size": {
+        "x-small": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Component token for avatar size x small."
+        },
+        "small": {
+          "$value": "40px",
+          "$type": "dimension",
+          "$description": "Component token for avatar size small."
+        },
+        "default": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Component token for avatar size default."
+        },
+        "large": {
+          "$value": "80px",
+          "$type": "dimension",
+          "$description": "Component token for avatar size large."
+        },
+        "x-large": {
+          "$value": "104px",
+          "$type": "dimension",
+          "$description": "Component token for avatar size x large."
+        },
+        "xx-large": {
+          "$value": "144px",
+          "$type": "dimension",
+          "$description": "Component token for avatar size xx large."
+        }
+      },
+      "fontSize": {
+        "x-small": {
+          "$value": "10px",
+          "$type": "dimension",
+          "$description": "Component token for avatar font size x small."
+        },
+        "small": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Component token for avatar font size small."
+        },
+        "default": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for avatar font size default."
+        },
+        "large": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Component token for avatar font size large."
+        },
+        "x-large": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Component token for avatar font size x large."
+        },
+        "xx-large": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Component token for avatar font size xx large."
+        }
       }
     },
     "barchart": {
