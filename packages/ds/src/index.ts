@@ -6,3 +6,6 @@ export type {
   AvatarImageProps,
   AvatarFallbackProps,
 } from './components/Avatar/Avatar.types';
+
+export { Label, labelTextVariants } from './components/Label/Label';
+export type { LabelRequirement, LabelProps } from './components/Label/Label.types';
