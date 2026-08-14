@@ -48,6 +48,8 @@ There is no live sync. To pull in changes:
 
 The `.claude/skills/tokens-json-review/` skill checks `source/tokens.json` for double-encoding, unit-suffix correctness, mode key-parity, and alias resolution before trusting it as a build input — run it after step 3, before step 4, if something looks off.
 
+Before re-exporting, check `HAND_ADDED_TOKENS.md` (gitignored, local) for any tokens that were hand-added to `source/tokens.json` directly rather than pulled from a real Figma Variable — author those as real Variables in this pass so the next export doesn't silently drop them.
+
 ## Three-tier alias chain
 
 `primitives` → `semantic` → `component`, each a single-mode collection. This is the load-bearing decision that makes theming/rebranding cheap later: swapping a primitive, or a `color`/`density` mode value, cascades up through semantic and component aliases without touching component code. Components should reference `component` tokens first, falling back to `semantic` where no component-specific override exists — never reference `primitives` directly from component code.

@@ -64,6 +64,8 @@ Build output consumed downstream:
 
 The pipeline is a **one-time, non-reproducible export** (Tokens Studio Pro, not a live sync) — see `docs/PLAN.md` §1.1 "Pipeline history" for why, and `packages/tokens/README.md` for the full refresh procedure if the Figma source changes. The `tokens-json-review` skill (`.claude/skills/tokens-json-review/`) validates `packages/tokens/source/tokens.json` before it's trusted as a build input — run it after any re-export, before rebuilding.
 
+Some tokens referenced by shipped components don't exist as real Figma Variables yet — they were hand-added directly to `source/tokens.json` to unblock a build (e.g. `component-avatar-*` size steps, `component-text-input-*` state colors). `packages/tokens/HAND_ADDED_TOKENS.md` (gitignored, local) is the running record of exactly which tokens these are and what to author in Figma to close each gap — check it before assuming a component's token coverage is complete, and add to it any time a token gets hand-added rather than pulled from a real export.
+
 ## Design system (`packages/ds`)
 
 Radix UI Primitives (`radix-ui` package) + `class-variance-authority` + `tailwind-merge`/`clsx` + Tailwind v4, styled entirely from the token CSS vars above — no shadcn copy-paste (see `docs/PLAN.md` "Radix vs shadcn: Recommendation").
