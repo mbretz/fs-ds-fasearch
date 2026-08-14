@@ -158,6 +158,11 @@
             "$value": "48px",
             "$type": "dimension",
             "$description": "Roomy-mode density value for control input small min height."
+          },
+          "lineHeight": {
+            "$value": "24px",
+            "$type": "dimension",
+            "$description": "Roomy-mode density value for control input small line height."
           }
         },
         "large": {
@@ -3574,6 +3579,21 @@
           "$value": "#7d8082",
           "$type": "color",
           "$description": "Component token for text input border color default."
+        },
+        "error": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for text input border color error."
+        },
+        "active": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for text input border color active."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for text input border color disabled."
         }
       },
       "textColor": {
@@ -3581,6 +3601,11 @@
           "$value": "#191a1a",
           "$type": "color",
           "$description": "Component token for text input text color default."
+        },
+        "disabled": {
+          "$value": "#4b4d4e",
+          "$type": "color",
+          "$description": "Component token for text input text color disabled."
         }
       },
       "backgroundColor": {
@@ -3593,6 +3618,11 @@
           "$value": "#fff0f3",
           "$type": "color",
           "$description": "Component token for text input background color error."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for text input background color disabled."
         }
       },
       "borderRadius": {
@@ -3615,6 +3645,11 @@
           "$value": 400,
           "$type": "fontWeight",
           "$description": "Component token for text input input value font weight."
+        },
+        "lineHeight": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Component token for text input input value line height."
         }
       }
     },

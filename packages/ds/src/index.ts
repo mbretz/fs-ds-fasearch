@@ -9,3 +9,13 @@ export type {
 
 export { Label, labelTextVariants } from './components/Label/Label';
 export type { LabelRequirement, LabelProps } from './components/Label/Label.types';
+
+export {
+  TextInput,
+  textInputFieldVariants,
+} from './components/TextInput/TextInput';
+export type {
+  TextInputRootProps,
+  TextInputFieldProps,
+  TextInputMicrocopyProps,
+} from './components/TextInput/TextInput.types';
