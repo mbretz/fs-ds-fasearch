@@ -18,12 +18,20 @@
   "devDependencies": {
     "@storybook/react-vite": "^10.4.6",
     "@tailwindcss/cli": "^4.3.3",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.0.4",
+    "jsdom": "^28.0.0",
     "tailwindcss": "^4.3.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vite": "^7.3.6",
+    "vitest": "^3.2.5"
   },
   "scripts": {
-    "theme:check": "tailwindcss -i src/theme.css -o /dev/null --minify"
+    "theme:check": "tailwindcss -i src/theme.css -o /dev/null --minify",
+    "test": "vitest run",
+    "test:watch": "vitest"
   }
 }
