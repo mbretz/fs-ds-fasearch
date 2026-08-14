@@ -317,6 +317,13 @@ All four levels, built in this order (atoms before composites). Icons and illust
 - **No hardcoded color, spacing, or radius values** — always reference Tailwind classes backed by tokens, so dark mode lights up later without component edits.
 - Portal-rendered components (Dialog, Popover, Tooltip) set `data-density` on their content root when `density` prop is provided.
 
+**Label — built 2026-08-14, first `packages/ds` component after Avatar.** Confirms the flat-primitive listing above (no compound sub-parts needed) and wraps Radix's `Label.Root` directly (`radix-ui`'s `Label` export — same package, not a new dependency), which gets the native `htmlFor` association plus Radix's click-without-selecting-text fix for free. Two deliberate departures from the blanket conventions two bullets up, both narrower cases of exceptions Avatar already established:
+
+- **No `asChild`.** A Label's whole value is being a real `<label>` — Slot composition would let a consumer swap that away, which is never meaningful here the way it is for Button or Card. The Primitives-row table cell above ("`asChild` pattern via Radix `Slot` everywhere") is accurate for Button/Input/Badge/Avatar but not Label; treat it as the default, not an absolute.
+- **No `density` prop.** `packages/tokens`'s `component-label-*` tokens (font-size/weight/color for default, error, and microcopy states) have no density-mode overrides — flat across roomy and condensed — so there's nothing for a density switch to change. Same reasoning as Avatar's fixed size scale.
+
+Figma's `Requirement` variant (`required`/`optional`/`none`, node 88:596 — the three-way enum fix noted in `docs/FIGMA_COMPONENT_AUDIT.md`) maps to a single optional prop, `requirement?: 'required' | 'optional'` (omitted = `none`), not two booleans — carrying the same collision-avoidance the Figma-side fix already made into the code API, rather than reintroducing it.
+
 ### 1.7 Storybook 10 Setup
 
 - Hosted as `apps/storybook` so it's an independent workspace; reviewers can boot it without launching the locator.
