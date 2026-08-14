@@ -3,5 +3,9 @@
   "compilerOptions": {
     "types": ["node", "react"]
   },
-  "include": [".storybook", "../../packages/ds/src"]
+  "include": [".storybook", "../../packages/ds/src"],
+  "exclude": [
+    "../../packages/ds/src/**/*.test.ts",
+    "../../packages/ds/src/**/*.test.tsx"
+  ]
 }
