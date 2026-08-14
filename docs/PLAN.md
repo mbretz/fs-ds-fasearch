@@ -27,7 +27,7 @@ Constraint: the showcase has to boot quickly on StackBlitz WebContainers for rev
 | Color theming          | Light mode primary; partial dark mode already authored in Figma; full dark mode is additive later                                                                                                                                                                        |
 | Density theming        | **Roomy** (default) and **Condensed** — two modes, per-element override supported                                                                                                                                                                                        |
 | Monorepo               | pnpm workspaces + Turborepo                                                                                                                                                                                                                                              |
-| DS docs                | Storybook 8                                                                                                                                                                                                                                                              |
+| DS docs                | Storybook 10 (see 2026-08-14 deviation note in §1.7 — originally scoped as Storybook 8)                                                                                                                                                                                 |
 | Locator UX             | Map + list side-by-side, pin popovers, list↔map sync, search/filter                                                                                                                                                                                                      |
 | Map                    | MapLibre GL JS + free OSM raster tiles (no API key)                                                                                                                                                                                                                      |
 | Plan file              | `docs/PLAN.md` at repo root                                                                                                                                                                                                                                              |
@@ -56,7 +56,7 @@ Net: **Radix Primitives + cva + Tailwind + your tokens**, with shadcn as a refer
 ```
 fs-ds-fasearch/
 ├── apps/
-│   ├── storybook/              # Storybook 8 host (consumes packages/ds + icons)
+│   ├── storybook/              # Storybook 10 host (consumes packages/ds + icons)
 │   └── locator/                # Vite + React store-locator app
 ├── packages/
 │   ├── tokens/                 # Mirrors Figma "Styles" library
@@ -181,6 +181,24 @@ You'll normalize each of the three Figma libraries once, before its first export
 - **Slot/anatomy naming** — for compound components (Dialog, DropdownMenu, Card, etc.), Figma layers should match Radix anatomy: `Trigger`, `Content`, `Item`, `Separator`, `Label`, `Header`, `Body`, `Footer`. This makes the Figma file readable as a spec for the code.
 - **Reference icons by name** — components that contain icons should reference the Icons library by name (`map-pin`), not contain inline SVG, so code can swap to `<MapPin />` deterministically.
 
+**Deviation from plan (2026-08-13): Figma prop/variant naming stays Title-Case; only code translates it.** The rule above ("component property names must equal code prop names") was reversed after actually building against it — see `docs/FIGMA_COMPONENT_AUDIT.md`'s "Recommended fixes — Button (worked example), Issue 1" for the full reasoning. Forcing Figma properties into camelCase (`showLabel` instead of `Show Label`) trades a code-side convenience for real cognitive load on less-technical design staff, who'd have to author and read camelCase in the properties panel instead of natural prose. **Figma keeps human-readable Title-Case names and Title-Case variant values** (`Show Label`, `Size=Large/Small`, etc.); the camelCase/lowercase translation happens once per component, by hand, when that component is actually built in code — there's no automated Figma → component codegen in this project (unlike `tokens`/`icons`, which have real export pipelines), so there's nothing to wire a live conversion into. The "State=Idle/Hover" pseudo-class-as-variant pattern (Button, Segmented Control, Tabs) gets the same treatment for a different reason: it can't be removed from Figma at all (three approaches were tried and hit real Figma limitations, documented in full in the audit doc's Issue 3) — `State` stays permanently visible in Figma and is simply never implemented as a prop in code; hover is always CSS `hover:`, never data-driven. The slot/anatomy-naming and icon-referencing rules above are unaffected by this deviation — only the specific "prop names must equal code prop names" clause is reversed.
+
+**Size-scale prop value translation (2026-08-14):** The Title-Case-stays-in-Figma deviation above still leaves an open question for any component with an ordinal size scale (Avatar's `Size=X-small/Small/Default/Large/X-large/XX-large`, and future components with similar scales) — hand-translating each one is unnecessary judgment calls when the scale itself is fully mechanical. Use this fixed lookup table, matching Tailwind's own T-shirt naming convention, every time a Figma size variant is translated to a code prop value:
+
+| Figma value | Code value |
+| --- | --- |
+| XXX-small | `3xs` |
+| XX-small | `2xs` |
+| X-small | `xs` |
+| Small | `sm` |
+| Default / Medium / Base | `md` |
+| Large | `lg` |
+| X-large | `xl` |
+| XX-large | `2xl` |
+| XXX-large | `3xl` |
+
+Rule: strip `X-`/`XX-`/`XXX-` prefixes to a numeric multiplier prepended to the base word's Tailwind abbreviation (`small`→`sm`, `large`→`lg`); the unqualified middle value always becomes `md` regardless of whether Figma calls it "Default," "Medium," or "Base." This table applies only to ordinal size scales — non-ordinal domain variants (Avatar's `User=Associate/Entity`, Button's `State=Idle/Hover`, `Intent=Default/Destructive`) have no scale to mechanize and stay a deliberate per-component naming call, per the deviation note above.
+
 ### 1.3 Icons Pipeline (Figma "Assets" library, Icons page → code)
 
 The Icons page gets its own package (`packages/icons`) and its own one-way pipeline. Export can go through the Figma Dev Mode MCP server (`mcp__figma__get_figma_data` + `download_figma_images` — available on this Pro plan with a Full seat) instead of a manual batch export, since the icons are all components on a single page.
@@ -238,7 +256,7 @@ The design system supports two density modes — **Roomy** (default) and **Conde
   </aside>
 ```
 
-**Global default:** `<html data-density="roomy">` is set in both `apps/locator/index.html` and Storybook's `preview.ts`. Components never need to know the default — they just read CSS vars, which always resolve because `<html>` always carries one of the two values.
+**Global default:** `<html data-density="roomy">` is set in both `apps/locator/index.html` and Storybook's `preview.tsx`. Components never need to know the default — they just read CSS vars, which always resolve because `<html>` always carries one of the two values.
 
 **Component `density` prop:** Every component with density-sensitive sizing accepts:
 
@@ -289,29 +307,33 @@ All four levels, built in this order (atoms before composites). Icons and illust
 
 **Authoring conventions for every component:**
 
-- Forward refs.
+- Forward refs — using React 19's native `ref`-as-prop (destructure `ref` directly from the function component's props), not `React.forwardRef`. The one exception is `packages/icons`' generated components, where SVGR's TypeScript template predates React 19 and only knows how to emit ref forwarding via `React.forwardRef` (see §1.3 implementation notes) — that's a codegen tooling constraint scoped to that package, not a hand-written-component convention.
 - Accept `className` + `asChild` where meaningful.
 - Accept `density?: 'roomy' | 'condensed'`; when provided, set `data-density` on the component root.
 - Variant API via `cva` exported alongside the component for product-level extension.
 - All sizing (padding, height, gap) uses CSS vars from the density system — no hardcoded values.
 - Compound components use dot-notation exports (`Card.Root`, `Dialog.Trigger`) to mirror Radix anatomy and Figma slot naming.
-- Each component exports its props type for product consumption.
+- Each component exports its props type for product consumption. Props types/interfaces live in a dedicated `<Name>.types.ts` file, imported into `<Name>.tsx` — types are never defined inline in the component file.
 - **No hardcoded color, spacing, or radius values** — always reference Tailwind classes backed by tokens, so dark mode lights up later without component edits.
 - Portal-rendered components (Dialog, Popover, Tooltip) set `data-density` on their content root when `density` prop is provided.
 
-### 1.7 Storybook 8 Setup
+### 1.7 Storybook 10 Setup
 
 - Hosted as `apps/storybook` so it's an independent workspace; reviewers can boot it without launching the locator.
-- Vite builder (Storybook 8 default) for the closest match to the rest of the stack.
+- Vite builder (`@storybook/react-vite`) for the closest match to the rest of the stack.
 - Stories in CSF3 format, co-located in `packages/ds/src/components/<Name>/<Name>.stories.tsx`.
 - A separate "Icons" section in the Storybook sidebar shows every icon in `packages/icons`, grouped by category (from the generated `manifest.ts`, §1.3), with its name and click-to-copy import — turns the icon library into a browsable catalog.
 - A separate "Illustrations" section shows every illustration in `packages/illustrations` at a larger preview size (they're not icon-scale), with click-to-copy import. Ungrouped — no category taxonomy for this page (§1.2).
-- Addons: `@storybook/addon-essentials`, `@storybook/addon-a11y` (a11y is a strong DS portfolio signal).
-- **Density toolbar control** in `preview.ts` — a global toggle that sets `data-density` on the story root, letting reviewers switch roomy/condensed for any story without editing props.
+- Addons: `@storybook/addon-a11y` (a11y is a strong DS portfolio signal). No `@storybook/addon-essentials` — see deviation note below.
+- **Density toolbar control** in `preview.tsx` — a global toggle that sets `data-density` on the story root, letting reviewers switch roomy/condensed for any story without editing props.
 - Each component story includes a **"Density comparison"** story that renders the component in both densities side-by-side.
 - At least one story (Layout or Data Display section) demonstrates the per-element override pattern (e.g., a roomy Card containing a condensed List).
 - One `Overview.mdx` page per category (Primitives, Layout, Overlays, Data display) documenting the design philosophy. Heavy on showing composition examples.
-- **StackBlitz caveat:** Storybook 8 cold-boots in 60–120s in WebContainers. Mention this in the README so reviewers expect it. If it becomes a real bottleneck, Ladle is a drop-in CSF-compatible swap.
+- **StackBlitz caveat:** Storybook cold-boots in 60–120s in WebContainers. Mention this in the README so reviewers expect it. If it becomes a real bottleneck, Ladle is a drop-in CSF-compatible swap.
+
+**Deviation from plan (2026-08-14): Storybook 10, not 8; no `@storybook/addon-essentials`.** `apps/storybook/package.json` has `storybook`, `@storybook/react-vite`, and `@storybook/addon-a11y` pinned at `^10.4.6`, not the originally-scoped Storybook 8 — verified directly against the installed packages, same rigor as the `theme.css` and PLAN.md §1.2 drift caught earlier in this doc. `@storybook/addon-essentials` isn't installed and shouldn't be added: its functionality (controls, actions, viewport, backgrounds) was folded into Storybook core starting with v8/9, so a separate essentials package is no longer the right dependency — `@storybook/addon-a11y` remains the one addon actually needed per this doc's own reasoning (a11y signal). Every other decision in this section (Vite builder, CSF3, density toolbar, Icons/Illustrations catalog sections) is unaffected — only the version number and addon list were stale.
+
+**Deviation from plan (2026-08-14): `apps/storybook` bootstraps incrementally, not after all 17 components ship.** The original phasing gated any Storybook setup behind Phase 1's full component count ("built after all DS components ship"). Reversed while building Avatar (the first hand-authored `packages/ds` component) — waiting for all 17 components before ever rendering one in Storybook means no visual feedback loop exists for as long as the DS is being built, which defeats the purpose of using Storybook as the working surface rather than a final deliverable. `apps/storybook/.storybook/main.ts` and `preview.tsx` (with the density toolbar) are now real, bootstrapped config, added alongside `Avatar.stories.tsx` — not a placeholder. Each subsequent component adds its own `<Name>.stories.tsx` to the same running setup. The Icons/Illustrations catalog sections and the per-category `Overview.mdx` pages remain deferred until there's enough component coverage to make them worth building — this deviation only changes *when* the Storybook app itself starts existing, not the §1.8 exit criteria, which are unchanged: Phase 1 is still not "done" until all 17 components have stories and the full checklist below passes.
 
 ### 1.8 Phase 1 Exit Criteria
 
@@ -399,9 +421,10 @@ packages/ds/src/theme.css                        # @theme entry point reading CS
 packages/ds/src/index.ts                         # component barrel
 packages/ds/src/utils/cn.ts                      # clsx + tailwind-merge helper
 packages/ds/src/components/<Name>/<Name>.tsx     # one per component
+packages/ds/src/components/<Name>/<Name>.types.ts # props types/interfaces, imported into <Name>.tsx
 packages/ds/src/components/<Name>/<Name>.stories.tsx
-apps/storybook/.storybook/main.ts                # Storybook 8 config
-apps/storybook/.storybook/preview.ts             # global decorators + density toolbar + data-density="roomy"
+apps/storybook/.storybook/main.ts                # Storybook 10 config
+apps/storybook/.storybook/preview.tsx            # global decorators + density toolbar + data-density="roomy" (.tsx: decorator renders JSX)
 apps/locator/index.html                          # data-density="roomy" on <html>
 apps/locator/src/data/locations.ts               # static location data
 apps/locator/src/components/Map/Map.tsx          # MapLibre wrapper

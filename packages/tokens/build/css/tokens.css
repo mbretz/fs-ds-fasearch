@@ -155,6 +155,18 @@
   --component-avatar-background-color: #fad141;
   --component-avatar-border-radius-associate: 80px;
   --component-avatar-border-radius-entity: 16px;
+  --component-avatar-font-size-default: 16px;
+  --component-avatar-font-size-large: 24px;
+  --component-avatar-font-size-small: 12px;
+  --component-avatar-font-size-x-large: 32px;
+  --component-avatar-font-size-x-small: 10px;
+  --component-avatar-font-size-xx-large: 48px;
+  --component-avatar-size-default: 48px;
+  --component-avatar-size-large: 80px;
+  --component-avatar-size-small: 40px;
+  --component-avatar-size-x-large: 104px;
+  --component-avatar-size-x-small: 32px;
+  --component-avatar-size-xx-large: 144px;
   --component-barchart-bar-background-color-primary: #00293d;
   --component-barchart-bar-background-color-secondary: #c08d16;
   --component-barchart-bar-background-color-tertiary: #514396;

@@ -2,9 +2,25 @@
   "name": "storybook",
   "private": true,
   "version": "0.0.0",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build"
+  },
+  "dependencies": {
+    "ds": "workspace:*",
+    "icons": "workspace:*",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
   "devDependencies": {
     "@storybook/addon-a11y": "^10.4.6",
     "@storybook/react-vite": "^10.4.6",
-    "storybook": "^10.4.6"
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.11.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "storybook": "^10.4.6",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
   }
 }
