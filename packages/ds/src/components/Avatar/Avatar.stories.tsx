@@ -8,7 +8,7 @@ import type { AvatarSize } from './Avatar.types';
 const PLACEHOLDER_PHOTO =
   'data:image/svg+xml,' +
   encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23006DA3"/></svg>',
+    '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#006DA3"/></svg>',
   );
 
 const SIZES: AvatarSize[] = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'];

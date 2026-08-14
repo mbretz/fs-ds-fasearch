@@ -16,6 +16,17 @@
 
 @import 'tailwindcss';
 
+/*
+ * Explicit @source: Tailwind v4's automatic content-detection heuristic
+ * doesn't reliably find component files across a pnpm workspace boundary
+ * (this file lives in packages/ds, consumers importing it live in
+ * apps/storybook / apps/locator) — verified by inspecting the actual
+ * compiled dev-server output, which had zero generated utility classes
+ * (not even `.inline-flex`) despite Avatar.tsx using them. Declaring the
+ * source explicitly removes the guesswork.
+ */
+@source './components/**/*.{ts,tsx}';
+
 @import 'tokens/build/css/tokens.css';
 @import 'tokens/build/css/dark.css';
 @import 'tokens/build/css/density.css';
