@@ -388,13 +388,18 @@
   --component-text-area-label-text-color-error: #cb0b31;
   --component-text-area-label-text-color-microcopy: #646768;
   --component-text-input-background-color-default: #ffffff;
+  --component-text-input-background-color-disabled: #cbcccd;
   --component-text-input-background-color-error: #fff0f3;
+  --component-text-input-border-color-active: #006da3;
   --component-text-input-border-color-default: #7d8082;
+  --component-text-input-border-color-disabled: #cbcccd;
+  --component-text-input-border-color-error: #cb0b31;
   --component-text-input-border-radius: 4px;
   --component-text-input-border-width: 1px;
   --component-text-input-input-value-font-size: 16px;
   --component-text-input-input-value-font-weight: 400;
   --component-text-input-text-color-default: #191a1a;
+  --component-text-input-text-color-disabled: #4b4d4e;
   --component-toggle-background-color-active: #006da3;
   --component-toggle-background-color-inactive: #d8d9d9;
   --component-toggle-border-radius: 4px;
