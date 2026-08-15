@@ -25,7 +25,3 @@ export interface TextInputFieldProps
   iconEnd?: ReactNode;
   density?: 'roomy' | 'condensed';
 }
-
-export interface TextInputMicrocopyProps extends ComponentProps<'p'> {
-  error?: boolean;
-}

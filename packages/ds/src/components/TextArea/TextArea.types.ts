@@ -9,7 +9,3 @@ export interface TextAreaFieldProps
   error?: boolean;
   density?: 'roomy' | 'condensed';
 }
-
-export interface TextAreaMicrocopyProps extends ComponentProps<'p'> {
-  error?: boolean;
-}
