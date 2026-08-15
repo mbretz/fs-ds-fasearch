@@ -332,8 +332,13 @@
   --component-segmented-control-min-height: 60px;
   --component-segmented-control-padding: 4px;
   --component-select-input-background-color-default: #ffffff;
+  --component-select-input-background-color-disabled: #cbcccd;
   --component-select-input-background-color-error: #fff0f3;
-  --component-select-input-border-color: #7d8082;
+  --component-select-input-border-color-active: #006da3;
+  --component-select-input-border-color-default: #7d8082;
+  --component-select-input-border-color-disabled: #cbcccd;
+  --component-select-input-border-radius: 4px;
+  --component-select-input-border-width: 1px;
   --component-select-input-dropdown-min-width: 88px;
   --component-select-input-input-field-min-width: 120px;
   --component-select-input-input-value-font-size: 16px;
@@ -347,6 +352,10 @@
   --component-select-input-label-text-color-default: #191a1a;
   --component-select-input-label-text-color-error: #cb0b31;
   --component-select-input-label-text-color-microcopy: #646768;
+  --component-select-input-option-background-color-highlighted: #f0faff;
+  --component-select-input-option-background-color-selected: #006da3;
+  --component-select-input-option-text-color-default: #191a1a;
+  --component-select-input-option-text-color-selected: #ffffff;
   --component-tab-accent-color: #006da3;
   --component-tab-background-color-default: #ffffff;
   --component-tab-background-color-hover: #f0faff;

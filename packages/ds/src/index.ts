@@ -30,3 +30,14 @@ export type {
   TextAreaRootProps,
   TextAreaFieldProps,
 } from './components/TextArea/TextArea.types';
+
+export {
+  SelectInput,
+  selectInputTriggerVariants,
+} from './components/SelectInput/SelectInput';
+export type {
+  SelectInputRootProps,
+  SelectInputTriggerProps,
+  SelectInputContentProps,
+  SelectInputOptionProps,
+} from './components/SelectInput/SelectInput.types';
