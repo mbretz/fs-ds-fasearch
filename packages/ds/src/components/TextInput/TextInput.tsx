@@ -1,11 +1,8 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '../../utils/cn';
 import { Label } from '../Label/Label';
-import type {
-  TextInputRootProps,
-  TextInputFieldProps,
-  TextInputMicrocopyProps,
-} from './TextInput.types';
+import { Microcopy } from '../Microcopy/Microcopy';
+import type { TextInputRootProps, TextInputFieldProps } from './TextInput.types';
 
 /**
  * Confirmed via a direct re-fetch of the Figma "TextInput" component set
@@ -137,44 +134,16 @@ function TextInputField({
 TextInputField.displayName = 'TextInput.Field';
 
 /**
- * Reuses the `component-label-*` tokens rather than adding new
- * `component-text-input-microcopy-*` ones: Figma's Microcopy text run
- * (122:1463/122:1506) shares the exact same 14px/400 style as Label's
- * default/microcopy text, and its error color matches Label's error
- * red exactly — same values, so no new tokens, per the same reuse
- * rationale documented for Label.tsx's "(Optional)" suffix.
- */
-function TextInputMicrocopy({
-  className,
-  error = false,
-  ref,
-  ...props
-}: TextInputMicrocopyProps) {
-  return (
-    <p
-      ref={ref}
-      className={cn(
-        'font-[number:var(--component-label-font-weight-default)] text-[length:var(--component-label-font-size-default)]',
-        error
-          ? 'text-[color:var(--component-label-text-color-error)]'
-          : 'text-[color:var(--component-label-text-color-microcopy)]',
-        className,
-      )}
-      {...props}
-    />
-  );
-}
-TextInputMicrocopy.displayName = 'TextInput.Microcopy';
-
-/**
- * TextInput.Label is the standalone Label component (Label.tsx), not a
- * separate implementation — Figma's TextInput compound (122:1502)
- * nests a real "Input Label" instance (88:596), and Label already
- * covers the full requirement/error surface this needs.
+ * TextInput.Label and TextInput.Microcopy are the standalone Label and
+ * Microcopy components, not separate implementations — Figma's
+ * TextInput compound (122:1502) nests a real "Input Label" instance
+ * (88:596) and a Microcopy text run that shares Label's exact 14px/400
+ * default style and error red, so both are already fully covered by
+ * the shared primitives.
  */
 export const TextInput = {
   Root: TextInputRoot,
   Label,
   Field: TextInputField,
-  Microcopy: TextInputMicrocopy,
+  Microcopy,
 };

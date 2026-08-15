@@ -10,6 +10,9 @@ export type {
 export { Label, labelTextVariants } from './components/Label/Label';
 export type { LabelRequirement, LabelProps } from './components/Label/Label.types';
 
+export { Microcopy } from './components/Microcopy/Microcopy';
+export type { MicrocopyProps } from './components/Microcopy/Microcopy.types';
+
 export {
   TextInput,
   textInputFieldVariants,
@@ -17,7 +20,6 @@ export {
 export type {
   TextInputRootProps,
   TextInputFieldProps,
-  TextInputMicrocopyProps,
 } from './components/TextInput/TextInput.types';
 
 export {
@@ -27,5 +29,4 @@ export {
 export type {
   TextAreaRootProps,
   TextAreaFieldProps,
-  TextAreaMicrocopyProps,
 } from './components/TextArea/TextArea.types';

@@ -1,11 +1,8 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '../../utils/cn';
 import { Label } from '../Label/Label';
-import type {
-  TextAreaRootProps,
-  TextAreaFieldProps,
-  TextAreaMicrocopyProps,
-} from './TextArea.types';
+import { Microcopy } from '../Microcopy/Microcopy';
+import type { TextAreaRootProps, TextAreaFieldProps } from './TextArea.types';
 
 export const textAreaFieldVariants = cva(
   'flex min-h-[var(--component-text-area-min-height)] items-start rounded-[var(--component-text-area-border-radius)] border-[length:var(--component-text-area-border-width)] border-[color:var(--component-text-area-border-color-default)] bg-[var(--component-text-area-background-color-default)] pt-[var(--density-spacing-dynamic-x-small)] pr-[var(--density-spacing-dynamic-x-small)] pb-[var(--density-spacing-dynamic-x-small)] pl-[var(--density-spacing-dynamic-x-small)] focus-within:border-[color:var(--component-text-area-border-color-active)] focus-within:shadow-[inset_0_0_0_calc(var(--semantic-control-border-width-active)-var(--component-text-area-border-width))_var(--component-text-area-border-color-active)]',
@@ -85,31 +82,9 @@ function TextAreaField({
 }
 TextAreaField.displayName = 'TextArea.Field';
 
-function TextAreaMicrocopy({
-  className,
-  error = false,
-  ref,
-  ...props
-}: TextAreaMicrocopyProps) {
-  return (
-    <p
-      ref={ref}
-      className={cn(
-        'font-[number:var(--component-text-area-label-font-weight-default)] text-[length:var(--component-text-area-label-font-size-default)]',
-        error
-          ? 'text-[color:var(--component-text-area-label-text-color-error)]'
-          : 'text-[color:var(--component-text-area-label-text-color-microcopy)]',
-        className,
-      )}
-      {...props}
-    />
-  );
-}
-TextAreaMicrocopy.displayName = 'TextArea.Microcopy';
-
 export const TextArea = {
   Root: TextAreaRoot,
   Label,
   Field: TextAreaField,
-  Microcopy: TextAreaMicrocopy,
+  Microcopy,
 };
