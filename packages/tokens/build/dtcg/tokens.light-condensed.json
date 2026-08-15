@@ -188,6 +188,20 @@
             "$type": "dimension",
             "$description": "Condensed-mode density value for control input padding inline."
           }
+        },
+        "multiline": {
+          "padding": {
+            "block": {
+              "$value": "4px",
+              "$type": "dimension",
+              "$description": "Condensed-mode density value for control input multiline padding block."
+            },
+            "inline": {
+              "$value": "8px",
+              "$type": "dimension",
+              "$description": "Condensed-mode density value for control input multiline padding inline."
+            }
+          }
         }
       },
       "margin": {
@@ -3488,6 +3502,21 @@
           "$value": "#7d8082",
           "$type": "color",
           "$description": "Component token for text area border color default."
+        },
+        "error": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for text area border color error."
+        },
+        "active": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for text area border color active."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for text area border color disabled."
         }
       },
       "label": {
@@ -3548,6 +3577,11 @@
           "$value": "#fff0f3",
           "$type": "color",
           "$description": "Component token for text area background color error."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for text area background color disabled."
         }
       },
       "borderRadius": {
@@ -3560,6 +3594,11 @@
         "$type": "dimension",
         "$description": "Component token for text area border width."
       },
+      "minHeight": {
+        "$value": "144px",
+        "$type": "dimension",
+        "$description": "Component token for text area min height."
+      },
       "inputValue": {
         "fontWeight": {
           "$value": 400,
@@ -3570,6 +3609,35 @@
           "$value": "16px",
           "$type": "dimension",
           "$description": "Component token for text area input value font size."
+        },
+        "lineHeight": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for text area input value line height."
+        },
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for text area input value text color default."
+          },
+          "disabled": {
+            "$value": "#4b4d4e",
+            "$type": "color",
+            "$description": "Component token for text area input value text color disabled."
+          }
+        },
+        "padding": {
+          "block": {
+            "$value": "4px",
+            "$type": "dimension",
+            "$description": "Component token for text area input value padding block."
+          },
+          "inline": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Component token for text area input value padding inline."
+          }
         }
       }
     },

@@ -19,3 +19,13 @@ export type {
   TextInputFieldProps,
   TextInputMicrocopyProps,
 } from './components/TextInput/TextInput.types';
+
+export {
+  TextArea,
+  textAreaFieldVariants,
+} from './components/TextArea/TextArea';
+export type {
+  TextAreaRootProps,
+  TextAreaFieldProps,
+  TextAreaMicrocopyProps,
+} from './components/TextArea/TextArea.types';
