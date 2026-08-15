@@ -3308,9 +3308,21 @@
     },
     "selectInput": {
       "borderColor": {
-        "$value": "#7d8082",
-        "$type": "color",
-        "$description": "Component token for select input border color."
+        "default": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for select input border color default."
+        },
+        "active": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for select input border color active."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for select input border color disabled."
+        }
       },
       "backgroundColor": {
         "default": {
@@ -3322,6 +3334,47 @@
           "$value": "#fff0f3",
           "$type": "color",
           "$description": "Component token for select input background color error."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for select input background color disabled."
+        }
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for select input border radius."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for select input border width."
+      },
+      "option": {
+        "backgroundColor": {
+          "highlighted": {
+            "$value": "#f0faff",
+            "$type": "color",
+            "$description": "Component token for select input option background color highlighted."
+          },
+          "selected": {
+            "$value": "#006da3",
+            "$type": "color",
+            "$description": "Component token for select input option background color selected."
+          }
+        },
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for select input option text color default."
+          },
+          "selected": {
+            "$value": "#ffffff",
+            "$type": "color",
+            "$description": "Component token for select input option text color selected."
+          }
         }
       },
       "label": {
