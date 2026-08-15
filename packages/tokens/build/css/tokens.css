@@ -373,12 +373,18 @@
   --component-tag-padding-block-small: 2px;
   --component-tag-padding-inline-small: 8px;
   --component-text-area-background-color-default: #ffffff;
+  --component-text-area-background-color-disabled: #cbcccd;
   --component-text-area-background-color-error: #fff0f3;
+  --component-text-area-border-color-active: #006da3;
   --component-text-area-border-color-default: #7d8082;
+  --component-text-area-border-color-disabled: #cbcccd;
+  --component-text-area-border-color-error: #cb0b31;
   --component-text-area-border-radius: 4px;
   --component-text-area-border-width: 1px;
   --component-text-area-input-value-font-size: 16px;
   --component-text-area-input-value-font-weight: 400;
+  --component-text-area-input-value-text-color-default: #191a1a;
+  --component-text-area-input-value-text-color-disabled: #4b4d4e;
   --component-text-area-label-font-size-default: 14px;
   --component-text-area-label-font-size-microcopy: 12px;
   --component-text-area-label-font-weight-default: 400;
@@ -387,6 +393,7 @@
   --component-text-area-label-text-color-default: #191a1a;
   --component-text-area-label-text-color-error: #cb0b31;
   --component-text-area-label-text-color-microcopy: #646768;
+  --component-text-area-min-height: 144px;
   --component-text-input-background-color-default: #ffffff;
   --component-text-input-background-color-disabled: #cbcccd;
   --component-text-input-background-color-error: #fff0f3;

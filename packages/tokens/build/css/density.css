@@ -7,6 +7,9 @@
   --component-tab-padding-inline: 20px;
   --component-tag-padding-block-large: 8px;
   --component-tag-padding-inline-large: 24px;
+  --component-text-area-input-value-line-height: 24px;
+  --component-text-area-input-value-padding-block: 8px;
+  --component-text-area-input-value-padding-inline: 12px;
   --component-text-input-input-value-line-height: 24px;
   --density-action-control-size: 32px;
   --density-action-target-padding-block: 12px;
@@ -17,6 +20,8 @@
   --density-control-action-padding-inline: 16px;
   --density-control-input-large-min-height: 144px;
   --density-control-input-large-min-width: 48px;
+  --density-control-input-multiline-padding-block: 8px;
+  --density-control-input-multiline-padding-inline: 12px;
   --density-control-input-padding-block: 12px;
   --density-control-input-padding-inline: 16px;
   --density-control-input-small-line-height: 24px;
@@ -84,6 +89,9 @@
   --component-tab-padding-inline: 16px;
   --component-tag-padding-block-large: 4px;
   --component-tag-padding-inline-large: 20px;
+  --component-text-area-input-value-line-height: 16px;
+  --component-text-area-input-value-padding-block: 4px;
+  --component-text-area-input-value-padding-inline: 8px;
   --component-text-input-input-value-line-height: 16px;
   --density-action-control-size: 24px;
   --density-action-target-padding-block: 8px;
@@ -94,6 +102,8 @@
   --density-control-action-padding-inline: 12px;
   --density-control-input-large-min-height: 112px;
   --density-control-input-large-min-width: 32px;
+  --density-control-input-multiline-padding-block: 4px;
+  --density-control-input-multiline-padding-inline: 8px;
   --density-control-input-padding-block: 8px;
   --density-control-input-padding-inline: 12px;
   --density-control-input-small-line-height: 16px;
