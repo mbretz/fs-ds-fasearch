@@ -125,3 +125,41 @@ function NestedSelectAllExample({ error = false }: { error?: boolean }) {
 export const Nested: Story = {
   render: () => <NestedSelectAllExample />,
 };
+
+export const FitContent: Story = {
+  // No explicit width on Root, short label: the default case most
+  // consumers hit — the bordered Group box hugs its widest item, not the
+  // full container. Compare against Playground/Default/ErrorState (which
+  // pass className="w-72") for the fill-container treatment, and LongLabel
+  // for the case where the label itself is the widest content.
+  render: () => (
+    <ChecklistGroup.Root>
+      <ChecklistGroup.Label error requirement="required">
+        Select one.
+      </ChecklistGroup.Label>
+      <ChecklistGroup.Group error>
+        <ChecklistGroup.Item>A</ChecklistGroup.Item>
+        <ChecklistGroup.Item>B</ChecklistGroup.Item>
+      </ChecklistGroup.Group>
+      <ChecklistGroup.Microcopy error>This is helpful text</ChecklistGroup.Microcopy>
+    </ChecklistGroup.Root>
+  ),
+};
+
+export const LongLabel: Story = {
+  render: () => (
+    <ChecklistGroup.Root>
+      <ChecklistGroup.Label error requirement="required">
+        This label is intentionally much longer than either checklist item
+        below it.
+      </ChecklistGroup.Label>
+      <ChecklistGroup.Group error>
+        <ChecklistGroup.Item>A</ChecklistGroup.Item>
+        <ChecklistGroup.Item>B</ChecklistGroup.Item>
+      </ChecklistGroup.Group>
+      <ChecklistGroup.Microcopy error>
+        This is helpful text
+      </ChecklistGroup.Microcopy>
+    </ChecklistGroup.Root>
+  ),
+};

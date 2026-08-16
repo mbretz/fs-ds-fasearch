@@ -26,7 +26,7 @@ function RadioGroupRoot({
       ref={ref}
       data-density={density}
       className={cn(
-        'flex flex-col gap-[var(--component-radio-group-gap)]',
+        'grid w-fit grid-cols-[minmax(max-content,1fr)] gap-[var(--component-radio-group-gap)]',
         className,
       )}
       {...props}
