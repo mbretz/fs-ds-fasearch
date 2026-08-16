@@ -7,6 +7,13 @@ export type {
   AvatarFallbackProps,
 } from './components/Avatar/Avatar.types';
 
+export {
+  Checkbox,
+  checkboxInputVariants,
+  checkboxLabelVariants,
+} from './components/Checkbox/Checkbox';
+export type { CheckboxProps } from './components/Checkbox/Checkbox.types';
+
 export { Label, labelTextVariants } from './components/Label/Label';
 export type { LabelRequirement, LabelProps } from './components/Label/Label.types';
 
@@ -41,3 +48,10 @@ export type {
   SelectInputContentProps,
   SelectInputOptionProps,
 } from './components/SelectInput/SelectInput.types';
+
+export { ChecklistGroup } from './components/ChecklistGroup/ChecklistGroup';
+export type {
+  ChecklistGroupRootProps,
+  ChecklistGroupGroupProps,
+  ChecklistGroupNestedGroupProps,
+} from './components/ChecklistGroup/ChecklistGroup.types';

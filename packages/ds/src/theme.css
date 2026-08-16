@@ -26,6 +26,7 @@
  * source explicitly removes the guesswork.
  */
 @source './components/**/*.{ts,tsx}';
+@source './internal/**/*.{ts,tsx}';
 
 @import 'tokens/build/css/tokens.css';
 @import 'tokens/build/css/dark.css';
