@@ -25,7 +25,7 @@ function ChecklistGroupRoot({
       ref={ref}
       data-density={density}
       className={cn(
-        'flex flex-col gap-[var(--component-checklist-group-gap)]',
+        'grid w-fit grid-cols-[minmax(max-content,1fr)] gap-[var(--component-checklist-group-gap)]',
         className,
       )}
       {...props}

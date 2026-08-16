@@ -40,6 +40,31 @@ describe('ChecklistGroup', () => {
     });
   });
 
+  describe('Root width', () => {
+    it('uses a minmax(max-content,1fr) grid column so content sets the minimum width', () => {
+      render(
+        <ChecklistGroup.Root data-testid="root">
+          <ChecklistGroup.Label>Select one or more options.</ChecklistGroup.Label>
+        </ChecklistGroup.Root>,
+      );
+      const classNames = screen.getByTestId('root').className.split(' ');
+      expect(classNames).toContain('grid');
+      expect(classNames).toContain('w-fit');
+      expect(classNames).toContain('grid-cols-[minmax(max-content,1fr)]');
+    });
+
+    it('lets a consumer className override the default hug-to-content width', () => {
+      render(
+        <ChecklistGroup.Root data-testid="root" className="w-72">
+          <ChecklistGroup.Label>Select one or more options.</ChecklistGroup.Label>
+        </ChecklistGroup.Root>,
+      );
+      const classNames = screen.getByTestId('root').className.split(' ');
+      expect(classNames).toContain('w-72');
+      expect(classNames).not.toContain('w-fit');
+    });
+  });
+
   describe('nesting', () => {
     it('renders items nested inside a NestedGroup alongside top-level items', () => {
       render(

@@ -39,6 +39,28 @@ describe('RadioGroup', () => {
     });
   });
 
+  describe('Root width', () => {
+    it('uses a minmax(max-content,1fr) grid column so content sets the minimum width', () => {
+      render(<BasicRadioGroup />);
+      const root = screen.getByRole('radiogroup');
+      const classNames = root.className.split(' ');
+      expect(classNames).toContain('grid');
+      expect(classNames).toContain('w-fit');
+      expect(classNames).toContain('grid-cols-[minmax(max-content,1fr)]');
+    });
+
+    it('lets a consumer className override the default hug-to-content width', () => {
+      render(
+        <RadioGroup.Root defaultValue="a" className="w-72">
+          <RadioGroup.Item value="a">Option A</RadioGroup.Item>
+        </RadioGroup.Root>,
+      );
+      const classNames = screen.getByRole('radiogroup').className.split(' ');
+      expect(classNames).toContain('w-72');
+      expect(classNames).not.toContain('w-fit');
+    });
+  });
+
   describe('orientation', () => {
     it('defaults to vertical layout', () => {
       render(<BasicRadioGroup />);
