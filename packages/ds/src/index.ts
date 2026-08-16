@@ -14,6 +14,13 @@ export {
 } from './components/Checkbox/Checkbox';
 export type { CheckboxProps } from './components/Checkbox/Checkbox.types';
 
+export {
+  RadioButton,
+  radioButtonInputVariants,
+  radioButtonLabelVariants,
+} from './components/RadioButton/RadioButton';
+export type { RadioButtonProps } from './components/RadioButton/RadioButton.types';
+
 export { Label, labelTextVariants } from './components/Label/Label';
 export type { LabelRequirement, LabelProps } from './components/Label/Label.types';
 
@@ -55,3 +62,9 @@ export type {
   ChecklistGroupGroupProps,
   ChecklistGroupNestedGroupProps,
 } from './components/ChecklistGroup/ChecklistGroup.types';
+
+export { RadioGroup } from './components/RadioGroup/RadioGroup';
+export type {
+  RadioGroupRootProps,
+  RadioGroupGroupProps,
+} from './components/RadioGroup/RadioGroup.types';

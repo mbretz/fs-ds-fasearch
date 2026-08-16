@@ -3190,9 +3190,16 @@
       },
       "label": {
         "textColor": {
-          "$value": "#191a1a",
-          "$type": "color",
-          "$description": "Component token for radio label text color."
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for radio label text color default."
+          },
+          "disabled": {
+            "$value": "#4b4d4e",
+            "$type": "color",
+            "$description": "Component token for radio label text color disabled."
+          }
         },
         "fontSize": {
           "$value": "16px",
@@ -3204,6 +3211,43 @@
           "$type": "fontWeight",
           "$description": "Component token for radio label font weight."
         }
+      },
+      "size": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$description": "Component token for radio size."
+      },
+      "padding": {
+        "block": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Component token for radio padding block."
+        },
+        "inline": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for radio padding inline."
+        }
+      },
+      "gap": {
+        "$value": "16px",
+        "$type": "dimension",
+        "$description": "Component token for radio gap."
+      },
+      "minHeight": {
+        "$value": "48px",
+        "$type": "dimension",
+        "$description": "Component token for radio min height."
+      },
+      "borderWidth": {
+        "$value": "2px",
+        "$type": "dimension",
+        "$description": "Component token for radio border width."
+      },
+      "indicatorSize": {
+        "$value": "12px",
+        "$type": "dimension",
+        "$description": "Component token for radio indicator size."
       }
     },
     "scrim": {
@@ -4154,6 +4198,32 @@
         "$value": "40px",
         "$type": "dimension",
         "$description": "Component token for checklist group nested indent."
+      }
+    },
+    "radioGroup": {
+      "gap": {
+        "$value": "8px",
+        "$type": "dimension",
+        "$description": "Component token for radio group gap."
+      },
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for radio group border radius."
+      },
+      "borderColor": {
+        "error": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for radio group border color error."
+        }
+      },
+      "backgroundColor": {
+        "error": {
+          "$value": "#fff0f3",
+          "$type": "color",
+          "$description": "Component token for radio group background color error."
+        }
       }
     }
   },
