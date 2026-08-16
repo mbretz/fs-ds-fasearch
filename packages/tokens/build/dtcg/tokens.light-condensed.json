@@ -2682,9 +2682,21 @@
         "$description": "Component token for checkbox border color."
       },
       "textColor": {
-        "$value": "#191a1a",
-        "$type": "color",
-        "$description": "Component token for checkbox text color."
+        "default": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for checkbox text color default."
+        },
+        "error": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for checkbox text color error."
+        },
+        "disabled": {
+          "$value": "#4b4d4e",
+          "$type": "color",
+          "$description": "Component token for checkbox text color disabled."
+        }
       },
       "backgroundColor": {
         "default": {
@@ -2736,6 +2748,38 @@
         "$value": "4px",
         "$type": "dimension",
         "$description": "Component token for checkbox border radius."
+      },
+      "size": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$description": "Component token for checkbox size."
+      },
+      "padding": {
+        "block": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for checkbox padding block."
+        },
+        "inline": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Component token for checkbox padding inline."
+        }
+      },
+      "gap": {
+        "$value": "8px",
+        "$type": "dimension",
+        "$description": "Component token for checkbox gap."
+      },
+      "minHeight": {
+        "$value": "32px",
+        "$type": "dimension",
+        "$description": "Component token for checkbox min height."
+      },
+      "borderWidth": {
+        "$value": "2px",
+        "$type": "dimension",
+        "$description": "Component token for checkbox border width."
       }
     },
     "dialog": {
@@ -4079,6 +4123,37 @@
           "$type": "fontWeight",
           "$description": "Component token for tooltip description font weight."
         }
+      }
+    },
+    "checklistGroup": {
+      "borderRadius": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for checklist group border radius."
+      },
+      "borderColor": {
+        "error": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for checklist group border color error."
+        }
+      },
+      "backgroundColor": {
+        "error": {
+          "$value": "#fff0f3",
+          "$type": "color",
+          "$description": "Component token for checklist group background color error."
+        }
+      },
+      "gap": {
+        "$value": "8px",
+        "$type": "dimension",
+        "$description": "Component token for checklist group gap."
+      },
+      "nestedIndent": {
+        "$value": "40px",
+        "$type": "dimension",
+        "$description": "Component token for checklist group nested indent."
       }
     }
   },
