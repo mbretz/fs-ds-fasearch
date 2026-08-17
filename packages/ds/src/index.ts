@@ -79,3 +79,12 @@ export type {
   ButtonIconProps,
   ButtonLabelProps,
 } from './components/Button/Button.types';
+
+export { Link } from './components/Link/Link';
+export type { LinkProps } from './components/Link/Link.types';
+
+export { LinkHelp } from './components/LinkHelp/LinkHelp';
+export type { LinkHelpProps } from './components/LinkHelp/LinkHelp.types';
+
+export { LinkNavigation } from './components/LinkNavigation/LinkNavigation';
+export type { LinkNavigationProps } from './components/LinkNavigation/LinkNavigation.types';
