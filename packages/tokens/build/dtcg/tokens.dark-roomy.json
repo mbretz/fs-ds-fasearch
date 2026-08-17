@@ -3007,6 +3007,13 @@
           "$description": "Component token for link text color visited."
         }
       },
+      "backgroundColor": {
+        "hover": {
+          "$value": "#f0faff",
+          "$type": "color",
+          "$description": "Component token for link background color hover."
+        }
+      },
       "fontSize": {
         "default": {
           "$value": "16px",
@@ -3030,6 +3037,40 @@
           "$type": "fontWeight",
           "$description": "Component token for link font weight help."
         }
+      },
+      "icon": {
+        "size": {
+          "default": {
+            "$value": "16px",
+            "$type": "dimension",
+            "$description": "Component token for link icon size default."
+          },
+          "large": {
+            "$value": "24px",
+            "$type": "dimension",
+            "$description": "Component token for link icon size large."
+          }
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for link icon gap."
+        },
+        "paddingBottom": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for link icon padding bottom."
+        }
+      },
+      "underlineOffset": {
+        "$value": "4px",
+        "$type": "dimension",
+        "$description": "Component token for link underline offset."
+      },
+      "underlineThickness": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for link underline thickness."
       }
     },
     "tab": {
