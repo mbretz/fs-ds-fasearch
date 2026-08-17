@@ -95,6 +95,11 @@
             "$type": "dimension",
             "$description": "Condensed-mode density value for control action padding inline."
           }
+        },
+        "lineHeight": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for control action line height."
         }
       },
       "selection": {
@@ -2537,7 +2542,7 @@
       "textColor": {
         "primary": {
           "default": {
-            "$value": "#006da3",
+            "$value": "#ffffff",
             "$type": "color",
             "$description": "Component token for button text color primary default."
           }
@@ -2603,6 +2608,21 @@
           "$type": "dimension",
           "$description": "Component token for button padding block."
         }
+      },
+      "gap": {
+        "$value": "8px",
+        "$type": "dimension",
+        "$description": "Component token for button gap."
+      },
+      "lineHeight": {
+        "$value": "16px",
+        "$type": "dimension",
+        "$description": "Component token for button line height."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for button border width."
       }
     },
     "card": {

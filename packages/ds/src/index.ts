@@ -22,7 +22,10 @@ export {
 export type { RadioButtonProps } from './components/RadioButton/RadioButton.types';
 
 export { Label, labelTextVariants } from './components/Label/Label';
-export type { LabelRequirement, LabelProps } from './components/Label/Label.types';
+export type {
+  LabelRequirement,
+  LabelProps,
+} from './components/Label/Label.types';
 
 export { Microcopy } from './components/Microcopy/Microcopy';
 export type { MicrocopyProps } from './components/Microcopy/Microcopy.types';
@@ -68,3 +71,11 @@ export type {
   RadioGroupRootProps,
   RadioGroupGroupProps,
 } from './components/RadioGroup/RadioGroup.types';
+
+export { Button, buttonRootVariants } from './components/Button/Button';
+export type {
+  ButtonProps,
+  ButtonRootProps,
+  ButtonIconProps,
+  ButtonLabelProps,
+} from './components/Button/Button.types';
