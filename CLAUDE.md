@@ -20,7 +20,7 @@ apps/locator/       Vite + React store-locator app — empty skeleton (deps only
 packages/tokens/     Mirrors Figma "Styles" library — DONE. Figma Variables -> Tokens Studio export -> CSS/DTCG
 packages/icons/      Mirrors Figma Assets "Icons" page — DONE. SVG -> React components via SVGR
 packages/illustrations/  Mirrors Figma Assets "Illustrations" page — DONE. Same pipeline as icons, multicolor preserved
-packages/ds/         Mirrors Figma "Components" library — IN PROGRESS. Radix Primitives + cva + Tailwind v4. Avatar, Label, Microcopy, TextInput, TextArea, SelectInput, Checkbox, ChecklistGroup, RadioButton, RadioGroup shipped; Button is the only original-scope primitive left
+packages/ds/         Mirrors Figma "Components" library — IN PROGRESS. Radix Primitives + cva + Tailwind v4. Avatar, Label, Microcopy, TextInput, TextArea, SelectInput, Checkbox, ChecklistGroup, RadioButton, RadioGroup, Button shipped, plus Link/LinkHelp/LinkNavigation (out of original scope); all original-scope Primitives now done, next is Search Input or the Layout level — see docs/PLAN.md §1.6
 ```
 
 Workspace deps: `ds` depends on `tokens` (declared in `packages/ds/package.json`); `icons`/`illustrations` are currently dependency-free siblings. Consumers import each package directly (`tokens`, `icons`, `illustrations`, `ds`) — the DS package does not re-export icons or illustrations.
@@ -90,3 +90,4 @@ The Figma Dev Mode MCP server (`mcp__figma__get_figma_data`, `mcp__figma__downlo
 
 - `.claude/skills/tokens-json-review/` — validates `packages/tokens/source/tokens.json` (double-encoding, unit-suffix correctness, mode key-parity, alias resolution) before it's trusted as a build input.
 - `.claude/skills/branch/` — `/branch <new-branch-name> [base-branch]`, creates and checks out a git branch, runs on Haiku.
+- `.claude/skills/catchup/` — `/catchup [@extra-file ...]`, reads the standing project docs (including gitignored ones — `.gitignore` only affects the `@`-mention autocomplete picker, not direct file reads) plus current git state, and reports a status summary. Run at the start of a session before diving into new work.
