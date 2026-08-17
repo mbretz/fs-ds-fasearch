@@ -182,9 +182,11 @@
   --component-button-border-color-secondary: #006da3;
   --component-button-border-color-tertiary: #ffffff00;
   --component-button-border-radius: 4px;
+  --component-button-border-width: 1px;
   --component-button-font-size: 16px;
   --component-button-font-weight: 400;
-  --component-button-text-color-primary-default: #006da3;
+  --component-button-gap: 8px;
+  --component-button-text-color-primary-default: #ffffff;
   --component-button-text-color-secondary-default: #006da3;
   --component-button-text-color-secondary-hover: #004b70;
   --component-button-text-color-tertiary-default: #006da3;

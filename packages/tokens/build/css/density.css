@@ -1,4 +1,5 @@
 [data-density="roomy"] {
+  --component-button-line-height: 24px;
   --component-button-min-height: 48px;
   --component-button-min-width: 48px;
   --component-button-padding-block: 12px;
@@ -14,6 +15,7 @@
   --density-action-control-size: 32px;
   --density-action-target-padding-block: 12px;
   --density-action-target-padding-inline: 16px;
+  --density-control-action-line-height: 24px;
   --density-control-action-min-height: 48px;
   --density-control-action-min-width: 48px;
   --density-control-action-padding-block: 12px;
@@ -81,6 +83,7 @@
 }
 
 [data-density="condensed"] {
+  --component-button-line-height: 16px;
   --component-button-min-height: 32px;
   --component-button-min-width: 32px;
   --component-button-padding-block: 8px;
@@ -96,6 +99,7 @@
   --density-action-control-size: 24px;
   --density-action-target-padding-block: 8px;
   --density-action-target-padding-inline: 12px;
+  --density-control-action-line-height: 16px;
   --density-control-action-min-height: 32px;
   --density-control-action-min-width: 32px;
   --density-control-action-padding-block: 8px;
