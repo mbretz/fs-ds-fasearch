@@ -3080,9 +3080,16 @@
         "$description": "Component token for tab accent color."
       },
       "textColor": {
-        "$value": "#191a1a",
-        "$type": "color",
-        "$description": "Component token for tab text color."
+        "default": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for tab text color default."
+        },
+        "disabled": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for tab text color disabled."
+        }
       },
       "backgroundColor": {
         "default": {
@@ -3141,11 +3148,21 @@
           "$description": "Component token for tab border width active."
         }
       },
+      "lineHeight": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$description": "Component token for tab line height."
+      },
       "padding": {
         "inline": {
           "$value": "20px",
           "$type": "dimension",
           "$description": "Component token for tab padding inline."
+        },
+        "block": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Component token for tab padding block."
         }
       }
     },

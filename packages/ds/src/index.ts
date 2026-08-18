@@ -88,3 +88,11 @@ export type { LinkHelpProps } from './components/LinkHelp/LinkHelp.types';
 
 export { LinkNavigation } from './components/LinkNavigation/LinkNavigation';
 export type { LinkNavigationProps } from './components/LinkNavigation/LinkNavigation.types';
+
+export { Tabs, tabsTriggerVariants } from './components/Tabs/Tabs';
+export type {
+  TabsRootProps,
+  TabsListProps,
+  TabsTriggerProps,
+  TabsContentProps,
+} from './components/Tabs/Tabs.types';
