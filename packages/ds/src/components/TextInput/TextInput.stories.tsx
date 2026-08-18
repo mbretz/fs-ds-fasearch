@@ -242,10 +242,7 @@ export const DensityComparison: Story = {
         </TextInput.Root>
         <span className="text-xs">roomy</span>
       </div>
-      <div
-        data-density="condensed"
-        className="flex flex-col items-start gap-2"
-      >
+      <div data-density="condensed" className="flex flex-col items-start gap-2">
         <TextInput.Root className="w-64">
           <TextInput.Label htmlFor="d-condensed">Label</TextInput.Label>
           <TextInput.Field id="d-condensed" defaultValue="Value" />

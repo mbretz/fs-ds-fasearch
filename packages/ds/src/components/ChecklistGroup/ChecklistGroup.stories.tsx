@@ -141,7 +141,9 @@ export const FitContent: Story = {
         <ChecklistGroup.Item>A</ChecklistGroup.Item>
         <ChecklistGroup.Item>B</ChecklistGroup.Item>
       </ChecklistGroup.Group>
-      <ChecklistGroup.Microcopy error>This is helpful text</ChecklistGroup.Microcopy>
+      <ChecklistGroup.Microcopy error>
+        This is helpful text
+      </ChecklistGroup.Microcopy>
     </ChecklistGroup.Root>
   ),
 };
@@ -150,8 +152,8 @@ export const LongLabel: Story = {
   render: () => (
     <ChecklistGroup.Root>
       <ChecklistGroup.Label error requirement="required">
-        This label is intentionally much longer than either checklist item
-        below it.
+        This label is intentionally much longer than either checklist item below
+        it.
       </ChecklistGroup.Label>
       <ChecklistGroup.Group error>
         <ChecklistGroup.Item>A</ChecklistGroup.Item>

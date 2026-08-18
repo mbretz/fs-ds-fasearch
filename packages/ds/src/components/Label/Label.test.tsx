@@ -56,9 +56,7 @@ describe('Label', () => {
           Label
         </Label>,
       );
-      expect(screen.getByTestId('label')).toHaveTextContent(
-        'Label (Optional)',
-      );
+      expect(screen.getByTestId('label')).toHaveTextContent('Label (Optional)');
     });
   });
 
@@ -94,9 +92,7 @@ describe('Label', () => {
     it('applies labelTextVariants({ error: false }) by default', () => {
       render(<Label data-testid="label">Label</Label>);
       const textRun = screen.getByText('Label').closest('span');
-      expect(textRun?.className).toBe(
-        cn(labelTextVariants({ error: false })),
-      );
+      expect(textRun?.className).toBe(cn(labelTextVariants({ error: false })));
     });
 
     it('combines error and required, keeping the asterisk inside the red/bold text run', () => {

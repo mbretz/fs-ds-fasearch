@@ -64,7 +64,9 @@ describe('RadioButton', () => {
       );
       const label = screen.getByText('Option A').closest('label');
       expect(label?.className.split(' ')).toContain('gap-4');
-      expect(label?.className).not.toContain('gap-[var(--component-radio-gap)]');
+      expect(label?.className).not.toContain(
+        'gap-[var(--component-radio-gap)]',
+      );
     });
   });
 });

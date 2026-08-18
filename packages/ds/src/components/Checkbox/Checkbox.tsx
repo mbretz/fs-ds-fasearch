@@ -13,11 +13,9 @@ export const checkboxLabelVariants = cva(
   {
     variants: {
       state: {
-        default:
-          'text-[color:var(--component-checkbox-text-color-default)]',
+        default: 'text-[color:var(--component-checkbox-text-color-default)]',
         error: 'text-[color:var(--component-checkbox-text-color-error)]',
-        disabled:
-          'text-[color:var(--component-checkbox-text-color-disabled)]',
+        disabled: 'text-[color:var(--component-checkbox-text-color-disabled)]',
       },
     },
     defaultVariants: {
@@ -111,11 +109,7 @@ function Checkbox({
   ...props
 }: CheckboxProps) {
   const labelState = disabled ? 'disabled' : error ? 'error' : 'default';
-  const inputState = disabled
-    ? 'disabled'
-    : checked
-      ? 'checked'
-      : 'unchecked';
+  const inputState = disabled ? 'disabled' : checked ? 'checked' : 'unchecked';
 
   return (
     <label
@@ -133,7 +127,11 @@ function Checkbox({
         {...props}
       >
         <CheckboxPrimitive.Indicator className="size-full">
-          {checked === 'indeterminate' ? <IndeterminateGlyph /> : <CheckGlyph />}
+          {checked === 'indeterminate' ? (
+            <IndeterminateGlyph />
+          ) : (
+            <CheckGlyph />
+          )}
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Root>
       {children && (

@@ -1,7 +1,12 @@
 import { cn } from '../../utils/cn';
 import type { MicrocopyProps } from './Microcopy.types';
 
-function Microcopy({ className, error = false, ref, ...props }: MicrocopyProps) {
+function Microcopy({
+  className,
+  error = false,
+  ref,
+  ...props
+}: MicrocopyProps) {
   return (
     <p
       ref={ref}

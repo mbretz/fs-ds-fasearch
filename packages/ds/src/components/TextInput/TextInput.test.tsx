@@ -65,7 +65,7 @@ describe('TextInput', () => {
   });
 
   describe('icon slots', () => {
-    it('renders iconStart as the input\'s immediately preceding sibling', () => {
+    it("renders iconStart as the input's immediately preceding sibling", () => {
       render(
         <TextInput.Field
           data-testid="field"
@@ -77,7 +77,7 @@ describe('TextInput', () => {
       expect(input.previousElementSibling).toBe(icon.parentElement);
     });
 
-    it('renders iconEnd as the input\'s immediately following sibling', () => {
+    it("renders iconEnd as the input's immediately following sibling", () => {
       render(
         <TextInput.Field
           data-testid="field"
@@ -121,9 +121,7 @@ describe('TextInput', () => {
 
   describe('className merge', () => {
     it('lets a consumer className override the default rounded utility', () => {
-      render(
-        <TextInput.Field data-testid="field" className="rounded-none" />,
-      );
+      render(<TextInput.Field data-testid="field" className="rounded-none" />);
       const wrapper = screen.getByTestId('field').parentElement;
       const classNames = wrapper?.className.split(' ') ?? [];
       expect(classNames).toContain('rounded-none');

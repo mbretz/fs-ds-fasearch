@@ -74,7 +74,10 @@ export const Required: Story = {
       <SelectInput.Label htmlFor="required-select" requirement="required">
         Label
       </SelectInput.Label>
-      <SelectInput.Trigger id="required-select" placeholder="Select an option" />
+      <SelectInput.Trigger
+        id="required-select"
+        placeholder="Select an option"
+      />
       <SelectInput.Content>
         <Options />
       </SelectInput.Content>
@@ -177,7 +180,9 @@ export const AllStates: Story = {
         <SelectInput.Content>
           <Options />
         </SelectInput.Content>
-        <SelectInput.Microcopy error>This is helpful text.</SelectInput.Microcopy>
+        <SelectInput.Microcopy error>
+          This is helpful text.
+        </SelectInput.Microcopy>
       </SelectInput.Root>
       <SelectInput.Root className="w-64">
         <SelectInput.Label htmlFor="s-disabled">Label</SelectInput.Label>
@@ -216,10 +221,7 @@ export const DensityComparison: Story = {
         </SelectInput.Root>
         <span className="text-xs">roomy</span>
       </div>
-      <div
-        data-density="condensed"
-        className="flex flex-col items-start gap-2"
-      >
+      <div data-density="condensed" className="flex flex-col items-start gap-2">
         <SelectInput.Root className="w-64">
           <SelectInput.Label htmlFor="d-condensed">Label</SelectInput.Label>
           <SelectInput.Trigger

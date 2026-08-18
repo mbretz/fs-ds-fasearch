@@ -7,8 +7,10 @@ import type { Checkbox as CheckboxPrimitive } from 'radix-ui';
  * rather than a separate axis, so `selection` isn't its own prop here — a
  * consumer passes `checked="indeterminate"` directly.
  */
-export interface CheckboxProps
-  extends Omit<ComponentProps<typeof CheckboxPrimitive.Root>, 'children'> {
+export interface CheckboxProps extends Omit<
+  ComponentProps<typeof CheckboxPrimitive.Root>,
+  'children'
+> {
   /** Figma "Checkbox Label" — the row's own label text, not a separate <label>. */
   children?: ReactNode;
   /**

@@ -44,7 +44,9 @@ describe('ChecklistGroup', () => {
     it('uses a minmax(max-content,1fr) grid column so content sets the minimum width', () => {
       render(
         <ChecklistGroup.Root data-testid="root">
-          <ChecklistGroup.Label>Select one or more options.</ChecklistGroup.Label>
+          <ChecklistGroup.Label>
+            Select one or more options.
+          </ChecklistGroup.Label>
         </ChecklistGroup.Root>,
       );
       const classNames = screen.getByTestId('root').className.split(' ');
@@ -56,7 +58,9 @@ describe('ChecklistGroup', () => {
     it('lets a consumer className override the default hug-to-content width', () => {
       render(
         <ChecklistGroup.Root data-testid="root" className="w-72">
-          <ChecklistGroup.Label>Select one or more options.</ChecklistGroup.Label>
+          <ChecklistGroup.Label>
+            Select one or more options.
+          </ChecklistGroup.Label>
         </ChecklistGroup.Root>,
       );
       const classNames = screen.getByTestId('root').className.split(' ');
@@ -81,8 +85,9 @@ describe('ChecklistGroup', () => {
         </ChecklistGroup.Root>,
       );
       expect(screen.getAllByRole('checkbox')).toHaveLength(3);
-      const nestedGroup = screen.getByText('Child A').closest('label')
-        ?.parentElement;
+      const nestedGroup = screen
+        .getByText('Child A')
+        .closest('label')?.parentElement;
       expect(nestedGroup?.children).toHaveLength(2);
       expect(nestedGroup).toContainElement(screen.getByText('Child B'));
     });
@@ -188,9 +193,12 @@ describe('ChecklistGroup', () => {
   describe('error state', () => {
     it('applies the error background/border to the Group and not the Root', () => {
       render(<BasicChecklistGroup error />);
-      const group = screen.getByText('Option A').closest('label')
-        ?.parentElement;
-      expect(group?.className).toContain('border-[color:var(--group-field-border-color)]');
+      const group = screen
+        .getByText('Option A')
+        .closest('label')?.parentElement;
+      expect(group?.className).toContain(
+        'border-[color:var(--group-field-border-color)]',
+      );
     });
   });
 });

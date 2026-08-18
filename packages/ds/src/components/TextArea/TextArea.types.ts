@@ -4,8 +4,10 @@ export interface TextAreaRootProps extends ComponentProps<'div'> {
   density?: 'roomy' | 'condensed';
 }
 
-export interface TextAreaFieldProps
-  extends Omit<ComponentProps<'textarea'>, 'size'> {
+export interface TextAreaFieldProps extends Omit<
+  ComponentProps<'textarea'>,
+  'size'
+> {
   error?: boolean;
   density?: 'roomy' | 'condensed';
 }

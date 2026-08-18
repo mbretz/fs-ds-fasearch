@@ -1,8 +1,9 @@
 import type { ComponentProps } from 'react';
 import type { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
 
-export interface RadioGroupRootProps
-  extends ComponentProps<typeof RadioGroupPrimitive.Root> {
+export interface RadioGroupRootProps extends ComponentProps<
+  typeof RadioGroupPrimitive.Root
+> {
   density?: 'roomy' | 'condensed';
 }
 

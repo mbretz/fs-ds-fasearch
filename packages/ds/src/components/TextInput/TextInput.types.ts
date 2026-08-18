@@ -16,8 +16,10 @@ export interface TextInputRootProps extends ComponentProps<'div'> {
  * since Figma never defines Disabled+Error or Disabled+Read-Only
  * combinations).
  */
-export interface TextInputFieldProps
-  extends Omit<ComponentProps<'input'>, 'size'> {
+export interface TextInputFieldProps extends Omit<
+  ComponentProps<'input'>,
+  'size'
+> {
   error?: boolean;
   /** Figma "Show Icon Start" (121:1322) — inline-start icon slot. */
   iconStart?: ReactNode;

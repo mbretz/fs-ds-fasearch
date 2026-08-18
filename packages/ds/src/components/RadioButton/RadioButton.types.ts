@@ -12,7 +12,9 @@ import type { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
  * RadioButton.stories.tsx for the minimum wrapping needed to render one in
  * isolation.
  */
-export interface RadioButtonProps
-  extends Omit<ComponentProps<typeof RadioGroupPrimitive.Item>, 'children'> {
+export interface RadioButtonProps extends Omit<
+  ComponentProps<typeof RadioGroupPrimitive.Item>,
+  'children'
+> {
   children?: ReactNode;
 }

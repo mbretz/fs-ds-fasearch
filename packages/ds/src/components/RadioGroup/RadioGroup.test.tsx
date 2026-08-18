@@ -64,17 +64,17 @@ describe('RadioGroup', () => {
   describe('orientation', () => {
     it('defaults to vertical layout', () => {
       render(<BasicRadioGroup />);
-      const group = screen.getByRole('radiogroup').querySelector(
-        ':scope > div',
-      );
+      const group = screen
+        .getByRole('radiogroup')
+        .querySelector(':scope > div');
       expect(group?.className).toContain('flex-col');
     });
 
     it('applies horizontal layout when orientation="horizontal"', () => {
       render(<BasicRadioGroup orientation="horizontal" />);
-      const group = screen.getByRole('radiogroup').querySelector(
-        ':scope > div',
-      );
+      const group = screen
+        .getByRole('radiogroup')
+        .querySelector(':scope > div');
       expect(group?.className).toContain('flex-row');
     });
   });
@@ -82,8 +82,9 @@ describe('RadioGroup', () => {
   describe('error state', () => {
     it('applies the error background/border to the Group and not the Root', () => {
       render(<BasicRadioGroup error />);
-      const group = screen.getByText('Option A').closest('label')
-        ?.parentElement;
+      const group = screen
+        .getByText('Option A')
+        .closest('label')?.parentElement;
       expect(group?.className).toContain(
         'border-[color:var(--group-field-border-color)]',
       );

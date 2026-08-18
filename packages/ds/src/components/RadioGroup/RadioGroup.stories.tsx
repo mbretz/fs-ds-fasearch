@@ -112,8 +112,7 @@ export const LongLabel: Story = {
   render: () => (
     <RadioGroup.Root defaultValue="a">
       <RadioGroup.Label error requirement="required">
-        This label is intentionally much longer than either radio item below
-        it.
+        This label is intentionally much longer than either radio item below it.
       </RadioGroup.Label>
       <RadioGroup.Group error>
         <RadioGroup.Item value="a">A</RadioGroup.Item>

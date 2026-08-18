@@ -8,8 +8,7 @@ import type { Label as LabelPrimitive } from 'radix-ui';
  */
 export type LabelRequirement = 'required' | 'optional';
 
-export interface LabelProps
-  extends ComponentProps<typeof LabelPrimitive.Root> {
+export interface LabelProps extends ComponentProps<typeof LabelPrimitive.Root> {
   requirement?: LabelRequirement;
   error?: boolean;
 }

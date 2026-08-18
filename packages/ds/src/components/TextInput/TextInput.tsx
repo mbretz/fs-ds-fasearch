@@ -2,7 +2,10 @@ import { cva } from 'class-variance-authority';
 import { cn } from '../../utils/cn';
 import { Label } from '../Label/Label';
 import { Microcopy } from '../Microcopy/Microcopy';
-import type { TextInputRootProps, TextInputFieldProps } from './TextInput.types';
+import type {
+  TextInputRootProps,
+  TextInputFieldProps,
+} from './TextInput.types';
 
 /**
  * Confirmed via a direct re-fetch of the Figma "TextInput" component set

@@ -57,9 +57,7 @@ describe('Checkbox', () => {
     function ControlledCheckbox(
       props: Partial<React.ComponentProps<typeof Checkbox>> = {},
     ) {
-      const [checked, setChecked] = useState<boolean | 'indeterminate'>(
-        false,
-      );
+      const [checked, setChecked] = useState<boolean | 'indeterminate'>(false);
       return (
         <Checkbox checked={checked} onCheckedChange={setChecked} {...props}>
           Subscribe
