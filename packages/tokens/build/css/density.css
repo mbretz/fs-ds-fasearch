@@ -5,6 +5,8 @@
   --component-button-padding-block: 12px;
   --component-button-padding-inline: 16px;
   --component-dialog-spacing-padding: 24px;
+  --component-tab-line-height: 24px;
+  --component-tab-padding-block: 12px;
   --component-tab-padding-inline: 20px;
   --component-tag-padding-block-large: 8px;
   --component-tag-padding-inline-large: 24px;
@@ -89,6 +91,8 @@
   --component-button-padding-block: 8px;
   --component-button-padding-inline: 12px;
   --component-dialog-spacing-padding: 20px;
+  --component-tab-line-height: 16px;
+  --component-tab-padding-block: 8px;
   --component-tab-padding-inline: 16px;
   --component-tag-padding-block-large: 4px;
   --component-tag-padding-inline-large: 20px;

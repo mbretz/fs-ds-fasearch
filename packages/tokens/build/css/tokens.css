@@ -400,7 +400,8 @@
   --component-tab-font-size-default: 16px;
   --component-tab-font-weight-active: 600;
   --component-tab-font-weight-default: 400;
-  --component-tab-text-color: #191a1a;
+  --component-tab-text-color-default: #191a1a;
+  --component-tab-text-color-disabled: #7d8082;
   --component-tag-background-color-generic: #f7f7f7;
   --component-tag-background-color-gold: #fffcf0;
   --component-tag-background-color-red: #fff0f3;
