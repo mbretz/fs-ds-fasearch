@@ -103,3 +103,13 @@ export type {
   TagRootProps,
   TagLabelProps,
 } from './components/Tag/Tag.types';
+
+export { Card } from './components/Card/Card';
+export type {
+  CardRootProps,
+  CardHeaderProps,
+  CardHeaderTitleProps,
+  CardHeaderDescriptionProps,
+  CardBodyProps,
+  CardFooterProps,
+} from './components/Card/Card.types';

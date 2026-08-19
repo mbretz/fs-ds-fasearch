@@ -4,6 +4,12 @@
   --component-button-min-width: 48px;
   --component-button-padding-block: 12px;
   --component-button-padding-inline: 16px;
+  --component-card-body-gap: 16px;
+  --component-card-body-padding: 16px;
+  --component-card-footer-gap: 16px;
+  --component-card-footer-padding: 16px;
+  --component-card-header-gap: 8px;
+  --component-card-header-padding: 8px;
   --component-dialog-spacing-padding: 24px;
   --component-tab-line-height: 24px;
   --component-tab-padding-block: 12px;
@@ -88,6 +94,12 @@
   --component-button-min-width: 32px;
   --component-button-padding-block: 8px;
   --component-button-padding-inline: 12px;
+  --component-card-body-gap: 4px;
+  --component-card-body-padding: 4px;
+  --component-card-footer-gap: 4px;
+  --component-card-footer-padding: 4px;
+  --component-card-header-gap: 4px;
+  --component-card-header-padding: 4px;
   --component-dialog-spacing-padding: 20px;
   --component-tab-line-height: 16px;
   --component-tab-padding-block: 8px;
