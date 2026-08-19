@@ -96,3 +96,10 @@ export type {
   TabsTriggerProps,
   TabsContentProps,
 } from './components/Tabs/Tabs.types';
+
+export { Tag, tagRootVariants } from './components/Tag/Tag';
+export type {
+  TagProps,
+  TagRootProps,
+  TagLabelProps,
+} from './components/Tag/Tag.types';
