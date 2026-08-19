@@ -412,10 +412,17 @@
   --component-tag-border-color-teal: #247e58;
   --component-tag-border-radius: 24px;
   --component-tag-border-width: 2px;
-  --component-tag-font-size: 12px;
-  --component-tag-font-weight: 450;
+  --component-tag-font-size: 14px;
+  --component-tag-font-weight: 400;
+  --component-tag-gap: 8px;
+  --component-tag-line-height: 21px;
+  --component-tag-min-height-large: 37px;
+  --component-tag-min-height-small: 25px;
+  --component-tag-padding-block-large: 8px;
   --component-tag-padding-block-small: 2px;
+  --component-tag-padding-inline-large: 24px;
   --component-tag-padding-inline-small: 8px;
+  --component-tag-text-color-default: #191a1a;
   --component-text-area-background-color-default: #ffffff;
   --component-text-area-background-color-disabled: #cbcccd;
   --component-text-area-background-color-error: #fff0f3;
@@ -795,6 +802,7 @@
   --semantic-control-border-radius: 4px;
   --semantic-control-border-width-active: 4px;
   --semantic-control-border-width-default: 1px;
+  --semantic-control-border-width-heavy: 4px;
   --semantic-control-color-accent-active: #006da3;
   --semantic-control-color-accent-inactive: #7d8082;
   --semantic-control-color-background-color: #ffffff;

@@ -2217,6 +2217,11 @@
           "$value": "1px",
           "$type": "dimension",
           "$description": "Semantic token for control border width default."
+        },
+        "heavy": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Semantic token for control border width heavy."
         }
       },
       "borderRadius": {
@@ -3668,15 +3673,27 @@
           "$description": "Component token for tag border color gold."
         }
       },
+      "textColor": {
+        "default": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for tag text color default."
+        }
+      },
       "fontSize": {
-        "$value": "12px",
+        "$value": "14px",
         "$type": "dimension",
         "$description": "Component token for tag font size."
       },
       "fontWeight": {
-        "$value": 450,
+        "$value": 400,
         "$type": "fontWeight",
         "$description": "Component token for tag font weight."
+      },
+      "lineHeight": {
+        "$value": "21px",
+        "$type": "dimension",
+        "$description": "Component token for tag line height."
       },
       "borderRadius": {
         "$value": "24px",
@@ -3687,6 +3704,23 @@
         "$value": "2px",
         "$type": "dimension",
         "$description": "Component token for tag border width."
+      },
+      "gap": {
+        "$value": "8px",
+        "$type": "dimension",
+        "$description": "Component token for tag gap."
+      },
+      "minHeight": {
+        "large": {
+          "$value": "37px",
+          "$type": "dimension",
+          "$description": "Component token for tag min height large."
+        },
+        "small": {
+          "$value": "25px",
+          "$type": "dimension",
+          "$description": "Component token for tag min height small."
+        }
       },
       "padding": {
         "inline": {
