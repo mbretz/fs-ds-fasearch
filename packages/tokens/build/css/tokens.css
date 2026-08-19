@@ -197,10 +197,14 @@
   --component-card-border-width: 1px;
   --component-card-header-border-border-color: #7d8082;
   --component-card-header-border-border-width: 1px;
+  --component-card-header-control-icon-size: 24px;
   --component-card-header-description-font-size: 16px;
   --component-card-header-description-font-weight: 400;
+  --component-card-header-description-text-color: #191a1a;
+  --component-card-header-icon-size: 24px;
   --component-card-header-title-font-size: 20px;
   --component-card-header-title-font-weight: 525;
+  --component-card-header-title-text-color: #191a1a;
   --component-card-min-width: 320px;
   --component-card-radio-background-color-default: #ffffff;
   --component-card-radio-border-color-default: #7d8082;
