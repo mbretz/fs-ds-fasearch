@@ -23,6 +23,9 @@ into new work.
      `.gitignore` only affects the `@`-mention autocomplete picker, not
      direct file reads)
    - `packages/tokens/HAND_ADDED_TOKENS.md` (gitignored, same as above)
+   - `docs/TESTING_PLAN.md` (gitignored, same as above — check its own
+     header for planned-vs-implemented status before trusting its
+     contents; skip if it doesn't exist)
    - `RESUME_NOTES.txt` (gitignored scratch file, same as above)
 
 2. If `$ARGUMENTS` contains additional file references — whether typed as
@@ -44,6 +47,9 @@ into new work.
      and recent commits.
    - Any standing conventions or gotchas worth keeping in mind for new
      work (pull from `docs/PLAN.md`'s dated notes and `RESUME_NOTES.txt`).
+   - `docs/TESTING_PLAN.md`'s current status (planned vs. actually
+     implemented — check its header, don't assume from memory of past
+     sessions) if the file exists.
    - The open "next target" decision, if `RESUME_NOTES.txt` flags one —
      surface it as a question for the user, don't pick for them.
    - Anything from the extra referenced files (step 2), if any were

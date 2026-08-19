@@ -1,5 +1,29 @@
 {
   "permissions": {
     "allow": ["WebSearch", "WebFetch"]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-start-catchup.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/catchup-complete-sound.sh",
+            "async": true
+          }
+        ]
+      }
+    ]
   }
 }
