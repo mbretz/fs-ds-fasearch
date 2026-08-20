@@ -22,4 +22,7 @@ export interface CloseButtonProps
       ComponentProps<'button'>,
       'onClick' | 'disabled' | 'className' | 'id' | 'ref'
     >,
-    CloseButtonAriaLabelProp {}
+    CloseButtonAriaLabelProp {
+  /** Forwarded straight to the underlying Button, which already reacts to it. */
+  density?: 'roomy' | 'condensed';
+}
