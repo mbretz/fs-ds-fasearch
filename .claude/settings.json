@@ -1,6 +1,6 @@
 {
   "permissions": {
-    "allow": ["WebSearch", "WebFetch"]
+    "allow": ["WebSearch", "WebFetch", "Bash(git add *)"]
   },
   "hooks": {
     "SessionStart": [
