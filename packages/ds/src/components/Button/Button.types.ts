@@ -1,7 +1,12 @@
 import type { ComponentProps, ReactNode } from 'react';
+import type { AriaLabelProp } from '../../utils/a11y-props';
 
 // No `size` prop — Figma's Button (288:1360) has no `Size` variant.
-export interface ButtonRootProps extends ComponentProps<'button'> {
+// 'aria-label' is Omit'd from ComponentProps<'button'> so AriaLabelProp
+// (see its own doc for why) is the only contributor of that key — two
+// interfaces both declaring it would make the hover doc ambiguous.
+export interface ButtonRootProps
+  extends Omit<ComponentProps<'button'>, 'aria-label'>, AriaLabelProp {
   variant?: 'primary' | 'secondary' | 'tertiary';
   // Boolean, not part of `intent`: Figma's "Destructive" state draws from
   // `response.critical.*`, not `intent.*` (docs/FIGMA_COMPONENT_AUDIT.md).

@@ -16,6 +16,11 @@ const meta = {
     iconStart: { control: false, table: { disable: true } },
     iconEnd: { control: false, table: { disable: true } },
     className: { control: false, table: { disable: true } },
+    'aria-label': {
+      control: 'text',
+      description:
+        'Overrides the accessible name. Set this when the visible label doesn’t fully describe the action in context, or when `showLabel` is false and the icon alone isn’t enough.',
+    },
   },
   args: {
     variant: 'primary',

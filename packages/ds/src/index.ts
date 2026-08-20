@@ -104,6 +104,9 @@ export type {
   TagLabelProps,
 } from './components/Tag/Tag.types';
 
+export { CloseButton } from './components/CloseButton/CloseButton';
+export type { CloseButtonProps } from './components/CloseButton/CloseButton.types';
+
 export { Card } from './components/Card/Card';
 export type {
   CardRootProps,
