@@ -10,6 +10,13 @@ Get oriented at the start of a session: read the standing set of project
 docs, note current git state, and report a concise summary before diving
 into new work.
 
+> **Note:** `.claude/hooks/session-start-catchup.sh` duplicates steps 1
+> and 3 below (it reads the same file list and runs the same git commands
+> itself, then injects the results as SessionStart context, so catchup
+> data is available every session without depending on this skill being
+> explicitly invoked). The file list is hardcoded in both places — if you
+> add/remove/rename a doc in step 1 here, update the hook script too.
+
 ## Procedure
 
 1. Read each of the following, via the `Read` tool, in this order. If a
