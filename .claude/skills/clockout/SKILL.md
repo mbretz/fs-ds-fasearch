@@ -25,7 +25,7 @@ start, this one writes them at session end.
      commits/branches/PRs created, and current working-tree state.
    - `git diff --stat` (and `git diff` for anything non-trivial) for
      uncommitted work.
-   - Your own conversation context for the *why* behind those changes —
+   - Your own conversation context for the _why_ behind those changes —
      decisions made with the user, dead ends tried and abandoned, bugs
      found and fixed, standing conventions established. This is the part
      `git log` alone can't reconstruct, and it's the most valuable part
