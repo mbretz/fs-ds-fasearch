@@ -119,3 +119,17 @@ export type {
 
 export { Separator, separatorVariants } from './components/Separator/Separator';
 export type { SeparatorProps } from './components/Separator/Separator.types';
+
+export { Scrim } from './components/Scrim/Scrim';
+export type { ScrimProps } from './components/Scrim/Scrim.types';
+
+export { Dialog } from './components/Dialog/Dialog';
+export type {
+  DialogRootProps,
+  DialogTriggerProps,
+  DialogContentProps,
+  DialogHeaderProps,
+  DialogBodyProps,
+  DialogFooterProps,
+  DialogCloseProps,
+} from './components/Dialog/Dialog.types';

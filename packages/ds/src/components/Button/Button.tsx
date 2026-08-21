@@ -15,7 +15,8 @@ export const buttonRootVariants = cva(
   {
     variants: {
       iconOnly: {
-        false: 'min-w-[var(--component-button-min-width)] px-[var(--component-button-padding-inline)] py-[calc(var(--component-button-padding-block)-var(--component-button-border-width))]',
+        false:
+          'min-w-[var(--component-button-min-width)] px-[var(--component-button-padding-inline)] py-[calc(var(--component-button-padding-block)-var(--component-button-border-width))]',
         true: 'h-[var(--component-button-min-height)] w-[var(--component-button-min-height)] px-0 py-0',
       },
       variant: {

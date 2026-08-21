@@ -81,9 +81,7 @@ describe('Button', () => {
     it('gives a labeled button a min-width floor plus real padding on both axes', () => {
       render(<Button>Save</Button>);
       const className = screen.getByRole('button').className;
-      expect(className).toContain(
-        'min-w-[var(--component-button-min-width)]',
-      );
+      expect(className).toContain('min-w-[var(--component-button-min-width)]');
       expect(className).toContain(
         'px-[var(--component-button-padding-inline)]',
       );
@@ -114,8 +112,9 @@ describe('Button', () => {
           </Button.Icon>
         </Button.Root>,
       );
-      const className = screen.getByRole('button', { name: 'Export' })
-        .className;
+      const className = screen.getByRole('button', {
+        name: 'Export',
+      }).className;
       expect(className).toContain('w-[var(--component-button-min-height)]');
       expect(className).toContain('h-[var(--component-button-min-height)]');
     });
