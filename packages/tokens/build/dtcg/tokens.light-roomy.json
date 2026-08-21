@@ -1143,9 +1143,16 @@
         },
         "miscellaneous": {
           "separator": {
-            "$value": "#ffffff",
-            "$type": "color",
-            "$description": "Primitive value for ref color miscellaneous separator."
+            "horizontal": {
+              "$value": "linear-gradient(90deg, #e9e9e9 0%, #b7b5b5 50%, #e9e9e9 100%)",
+              "$type": "color",
+              "$description": "Primitive value for ref color miscellaneous separator horizontal."
+            },
+            "vertical": {
+              "$value": "linear-gradient(180deg, #e9e9e9 0%, #b7b5b5 50%, #e9e9e9 100%)",
+              "$type": "color",
+              "$description": "Primitive value for ref color miscellaneous separator vertical."
+            }
           }
         }
       },
@@ -2287,6 +2294,25 @@
         "$description": "Semantic token for surface border width."
       }
     },
+    "divider": {
+      "gradient": {
+        "horizontal": {
+          "$value": "linear-gradient(90deg, #e9e9e9 0%, #b7b5b5 50%, #e9e9e9 100%)",
+          "$type": "color",
+          "$description": "Semantic token for divider gradient horizontal."
+        },
+        "vertical": {
+          "$value": "linear-gradient(180deg, #e9e9e9 0%, #b7b5b5 50%, #e9e9e9 100%)",
+          "$type": "color",
+          "$description": "Semantic token for divider gradient vertical."
+        }
+      },
+      "thickness": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Semantic token for divider thickness."
+      }
+    },
     "brand": {
       "primary": {
         "gold": {
@@ -3398,6 +3424,25 @@
         "$value": "#373843bf",
         "$type": "color",
         "$description": "Component token for scrim background color."
+      }
+    },
+    "separator": {
+      "gradient": {
+        "horizontal": {
+          "$value": "linear-gradient(90deg, #e9e9e9 0%, #b7b5b5 50%, #e9e9e9 100%)",
+          "$type": "color",
+          "$description": "Component token for separator gradient horizontal."
+        },
+        "vertical": {
+          "$value": "linear-gradient(180deg, #e9e9e9 0%, #b7b5b5 50%, #e9e9e9 100%)",
+          "$type": "color",
+          "$description": "Component token for separator gradient vertical."
+        }
+      },
+      "thickness": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for separator thickness."
       }
     },
     "searchInput": {
@@ -4647,6 +4692,18 @@
         "$value": "#8a4691",
         "$type": "color",
         "$description": "Light-mode color value for miscellaneous visited."
+      },
+      "separator": {
+        "horizontal": {
+          "$value": "linear-gradient(90deg, #e9e9e9 0%, #b7b5b5 50%, #e9e9e9 100%)",
+          "$type": "color",
+          "$description": "Light-mode color value for miscellaneous separator horizontal."
+        },
+        "vertical": {
+          "$value": "linear-gradient(180deg, #e9e9e9 0%, #b7b5b5 50%, #e9e9e9 100%)",
+          "$type": "color",
+          "$description": "Light-mode color value for miscellaneous separator vertical."
+        }
       }
     },
     "surface": {
