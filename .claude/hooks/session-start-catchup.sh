@@ -33,8 +33,8 @@ read_or_note() {
 }
 
 body="$(
-  printf '## Automated catchup (SessionStart hook)\n\n'
-  printf 'This is the /catchup skill'"'"'s data, gathered automatically at session start so it always runs regardless of whether the skill is explicitly invoked. Read it, then report the usual concise catchup summary (branch/tree state, what shipped recently, standing conventions/gotchas, testing-plan status, any open "next target" question) before starting new work — no need to re-read these files yourself.\n\n'
+  printf '## \xe2\x9a\xa0\xef\xb8\x8f MANDATORY FIRST ACTION — read this before anything else \xe2\x9a\xa0\xef\xb8\x8f\n\n'
+  printf 'GATE CONDITION: your very first output this session, before any tool call and before addressing the user'"'"'s message — no matter what that message asks, even if it looks urgent or trivial — MUST be a visible catchup summary printed as plain chat/CLI text. Not a tool call, not silent internal review of the data below: printed text the user can read. This is not optional and does not depend on being asked.\n\nRequired contents of that summary (concise, a few lines each):\n- branch/tree state\n- what shipped recently\n- standing conventions/gotchas\n- testing-plan status\n- any open "next target" question\n\nOnly after that text has been posted do you move on to the user'"'"'s actual request. This rule applies identically every single session — do not treat any session as an exception.\n\nThis is the /catchup skill'"'"'s data, gathered automatically at session start so the gate above always fires regardless of whether the skill is explicitly invoked. No need to re-read these files yourself, this context already has everything.\n\n'
 
   read_or_note "CLAUDE.md"
   read_or_note "docs/PLAN.md"
