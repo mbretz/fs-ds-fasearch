@@ -11,9 +11,13 @@ import type {
 // Fill variants (primary): background/border track the same var so both
 // always match, per Figma (border color never diverges from the fill).
 export const buttonRootVariants = cva(
-  'inline-flex min-h-[var(--component-button-min-height)] min-w-[var(--component-button-min-width)] shrink-0 items-center justify-center gap-[var(--component-button-gap)] rounded-[var(--component-button-border-radius)] border-[length:var(--component-button-border-width)] px-[var(--component-button-padding-inline)] py-[calc(var(--component-button-padding-block)-var(--component-button-border-width))] text-[length:var(--component-button-font-size)] leading-[length:var(--component-button-line-height)] font-[number:var(--component-button-font-weight)] outline-none disabled:cursor-not-allowed disabled:border-disabled-subtle disabled:bg-disabled-subtle disabled:text-disabled-text',
+  'inline-flex min-h-[var(--component-button-min-height)] shrink-0 items-center justify-center gap-[var(--component-button-gap)] rounded-[var(--component-button-border-radius)] border-[length:var(--component-button-border-width)] text-[length:var(--component-button-font-size)] leading-[length:var(--component-button-line-height)] font-[number:var(--component-button-font-weight)] outline-none disabled:cursor-not-allowed disabled:border-disabled-subtle disabled:bg-disabled-subtle disabled:text-disabled-text',
   {
     variants: {
+      iconOnly: {
+        false: 'min-w-[var(--component-button-min-width)] px-[var(--component-button-padding-inline)] py-[calc(var(--component-button-padding-block)-var(--component-button-border-width))]',
+        true: 'h-[var(--component-button-min-height)] w-[var(--component-button-min-height)] px-0 py-0',
+      },
       variant: {
         primary:
           'border-[color:var(--component-button-background-color-primary-default)] bg-[var(--component-button-background-color-primary-default)] text-[color:var(--component-button-text-color-primary-default)] hover:border-[color:var(--component-button-background-color-primary-hover)] hover:bg-[var(--component-button-background-color-primary-hover)] focus-visible:shadow-[inset_0_0_0_calc(var(--semantic-control-border-width-active)-var(--component-button-border-width))_var(--component-button-background-color-primary-hover)]',
@@ -50,6 +54,7 @@ export const buttonRootVariants = cva(
     defaultVariants: {
       variant: 'primary',
       destructive: false,
+      iconOnly: false,
     },
   },
 );
@@ -58,6 +63,7 @@ function ButtonRoot({
   className,
   variant,
   destructive,
+  iconOnly,
   density,
   asChild,
   ref,
@@ -68,7 +74,10 @@ function ButtonRoot({
     <Comp
       ref={ref}
       data-density={density}
-      className={cn(buttonRootVariants({ variant, destructive }), className)}
+      className={cn(
+        buttonRootVariants({ variant, destructive, iconOnly }),
+        className,
+      )}
       {...props}
     />
   );
@@ -113,7 +122,7 @@ function Button({
   ...props
 }: ButtonProps) {
   return (
-    <ButtonRoot {...props}>
+    <ButtonRoot iconOnly={!showLabel} {...props}>
       {iconStart && <ButtonIcon>{iconStart}</ButtonIcon>}
       <ButtonLabel visuallyHidden={!showLabel}>{children}</ButtonLabel>
       {iconEnd && <ButtonIcon>{iconEnd}</ButtonIcon>}
