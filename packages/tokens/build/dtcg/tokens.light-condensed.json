@@ -311,6 +311,11 @@
           "$value": "24px",
           "$type": "dimension",
           "$description": "Condensed-mode density value for spacing fixed xx large."
+        },
+        "xxx-large": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for spacing fixed xxx large."
         }
       }
     },
@@ -2953,6 +2958,52 @@
           "$value": "20px",
           "$type": "dimension",
           "$description": "Component token for dialog spacing padding."
+        },
+        "paddingTop": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Component token for dialog spacing padding top."
+        },
+        "gap": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for dialog spacing gap."
+        }
+      },
+      "header": {
+        "padding": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for dialog header padding."
+        },
+        "gap": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for dialog header gap."
+        }
+      },
+      "body": {
+        "padding": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for dialog body padding."
+        },
+        "gap": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for dialog body gap."
+        }
+      },
+      "footer": {
+        "padding": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for dialog footer padding."
+        },
+        "gap": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for dialog footer gap."
         }
       }
     },

@@ -86,9 +86,14 @@ function SelectInputTrigger({
 }
 SelectInputTrigger.displayName = 'SelectInput.Trigger';
 
+// Defaults to 'roomy' (the DS-wide default density, docs/PLAN.md §1.4) —
+// Content is portal-rendered to document.body, escaping any ancestor
+// data-density wrapper, so without a concrete fallback here every
+// density-scoped CSS var used inside the dropdown would silently fail to
+// resolve. Same reasoning as Dialog.Content.
 function SelectInputContent({
   className,
-  density,
+  density = 'roomy',
   children,
   ...props
 }: SelectInputContentProps) {

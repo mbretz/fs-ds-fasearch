@@ -74,6 +74,7 @@
   --density-spacing-fixed-x-small: 4px;
   --density-spacing-fixed-xx-large: 24px;
   --density-spacing-fixed-xx-small: 2px;
+  --density-spacing-fixed-xxx-large: 32px;
   --density-surface-large-gap: 16px;
   --density-surface-large-padding: 16px;
   --density-surface-med-gap: 8px;
@@ -164,6 +165,7 @@
   --density-spacing-fixed-x-small: 4px;
   --density-spacing-fixed-xx-large: 24px;
   --density-spacing-fixed-xx-small: 2px;
+  --density-spacing-fixed-xxx-large: 32px;
   --density-surface-large-gap: 4px;
   --density-surface-large-padding: 4px;
   --density-surface-med-gap: 4px;
