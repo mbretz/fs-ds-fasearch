@@ -13,6 +13,7 @@ export interface ButtonRootProps
   destructive?: boolean;
   density?: 'roomy' | 'condensed';
   asChild?: boolean;
+  iconOnly?: boolean;
 }
 
 export type ButtonIconProps = ComponentProps<'span'>;
@@ -27,7 +28,7 @@ export interface ButtonLabelProps extends ComponentProps<'span'> {
  * icon-only pattern — `children` stays mounted but visually hidden, so it's
  * still the default accessible name; `aria-label` overrides it when needed.
  */
-export interface ButtonProps extends ButtonRootProps {
+export interface ButtonProps extends Omit<ButtonRootProps, 'iconOnly'> {
   children: ReactNode;
   showLabel?: boolean;
   iconStart?: ReactNode;

@@ -77,6 +77,56 @@ describe('Button', () => {
     });
   });
 
+  describe('icon-only square sizing', () => {
+    it('gives a labeled button a min-width floor plus real padding on both axes', () => {
+      render(<Button>Save</Button>);
+      const className = screen.getByRole('button').className;
+      expect(className).toContain(
+        'min-w-[var(--component-button-min-width)]',
+      );
+      expect(className).toContain(
+        'px-[var(--component-button-padding-inline)]',
+      );
+      expect(className).toContain(
+        'py-[calc(var(--component-button-padding-block)-var(--component-button-border-width))]',
+      );
+      expect(className).not.toContain('w-[var(--component-button-min-height)]');
+      expect(className).not.toContain('py-0');
+    });
+
+    it('forces an exact min-height square (both width and height) with zero padding when showLabel is false', () => {
+      render(<Button showLabel={false}>Close</Button>);
+      const className = screen.getByRole('button').className;
+      expect(className).toContain('w-[var(--component-button-min-height)]');
+      expect(className).toContain('h-[var(--component-button-min-height)]');
+      expect(className).toContain('px-0');
+      expect(className).toContain('py-0');
+      expect(className).not.toContain(
+        'min-w-[var(--component-button-min-width)]',
+      );
+    });
+
+    it('exposes iconOnly directly on Button.Root, for a compound icon-only button with no label at all', () => {
+      render(
+        <Button.Root iconOnly aria-label="Export">
+          <Button.Icon>
+            <svg data-testid="icon" />
+          </Button.Icon>
+        </Button.Root>,
+      );
+      const className = screen.getByRole('button', { name: 'Export' })
+        .className;
+      expect(className).toContain('w-[var(--component-button-min-height)]');
+      expect(className).toContain('h-[var(--component-button-min-height)]');
+    });
+
+    it('produces distinct cva output for iconOnly true vs false', () => {
+      expect(buttonRootVariants({ iconOnly: true })).not.toBe(
+        buttonRootVariants({ iconOnly: false }),
+      );
+    });
+  });
+
   describe('disabled', () => {
     it('is a native disabled button', () => {
       render(<Button disabled>Save</Button>);
