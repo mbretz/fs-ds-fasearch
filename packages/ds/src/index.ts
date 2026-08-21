@@ -116,3 +116,6 @@ export type {
   CardBodyProps,
   CardFooterProps,
 } from './components/Card/Card.types';
+
+export { Separator, separatorVariants } from './components/Separator/Separator';
+export type { SeparatorProps } from './components/Separator/Separator.types';
