@@ -3784,6 +3784,72 @@
         }
       }
     },
+    "chip": {
+      "backgroundColor": {
+        "$value": "#f0faff",
+        "$type": "color",
+        "$description": "Component token for chip background color."
+      },
+      "borderColor": {
+        "$value": "#b5daed",
+        "$type": "color",
+        "$description": "Component token for chip border color."
+      },
+      "textColor": {
+        "$value": "#191a1a",
+        "$type": "color",
+        "$description": "Component token for chip text color."
+      },
+      "fontSize": {
+        "$value": "14px",
+        "$type": "dimension",
+        "$description": "Component token for chip font size."
+      },
+      "fontWeight": {
+        "$value": 500,
+        "$type": "fontWeight",
+        "$description": "Component token for chip font weight."
+      },
+      "lineHeight": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$description": "Component token for chip line height."
+      },
+      "borderRadius": {
+        "$value": "3px",
+        "$type": "dimension",
+        "$description": "Component token for chip border radius."
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for chip border width."
+      },
+      "gap": {
+        "$value": "8px",
+        "$type": "dimension",
+        "$description": "Component token for chip gap."
+      },
+      "padding": {
+        "block": {
+          "$value": "2px",
+          "$type": "dimension",
+          "$description": "Component token for chip padding block."
+        },
+        "inline": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Component token for chip padding inline."
+        }
+      },
+      "closeIcon": {
+        "size": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for chip close icon size."
+        }
+      }
+    },
     "tag": {
       "backgroundColor": {
         "generic": {

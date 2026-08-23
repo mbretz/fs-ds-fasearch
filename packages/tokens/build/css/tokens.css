@@ -252,6 +252,18 @@
   --component-checklist-group-border-radius: 4px;
   --component-checklist-group-gap: 8px;
   --component-checklist-group-nested-indent: 40px;
+  --component-chip-background-color: #f0faff;
+  --component-chip-border-color: #b5daed;
+  --component-chip-border-radius: 3px;
+  --component-chip-border-width: 1px;
+  --component-chip-close-icon-size: 16px;
+  --component-chip-font-size: 14px;
+  --component-chip-font-weight: 500;
+  --component-chip-gap: 8px;
+  --component-chip-line-height: 24px;
+  --component-chip-padding-block: 2px;
+  --component-chip-padding-inline: 8px;
+  --component-chip-text-color: #191a1a;
   --component-dialog-background-color: #ffffff;
   --component-dialog-body-gap: 8px;
   --component-dialog-body-padding: 8px;
