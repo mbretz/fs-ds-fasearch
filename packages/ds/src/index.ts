@@ -104,6 +104,14 @@ export type {
   TagLabelProps,
 } from './components/Tag/Tag.types';
 
+export { Chip } from './components/Chip/Chip';
+export type {
+  ChipProps,
+  ChipRootProps,
+  ChipLabelProps,
+  ChipCloseButtonProps,
+} from './components/Chip/Chip.types';
+
 export { CloseButton } from './components/CloseButton/CloseButton';
 export type { CloseButtonProps } from './components/CloseButton/CloseButton.types';
 
