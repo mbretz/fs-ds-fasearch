@@ -66,6 +66,8 @@ The pipeline is a **one-time, non-reproducible export** (Tokens Studio Pro, not 
 
 Some tokens referenced by shipped components don't exist as real Figma Variables yet — they were hand-added directly to `source/tokens.json` to unblock a build (e.g. `component-avatar-*` size steps, `component-text-input-*` state colors). `packages/tokens/HAND_ADDED_TOKENS.md` (gitignored, local) is the running record of exactly which tokens these are and what to author in Figma to close each gap — check it before assuming a component's token coverage is complete, and add to it any time a token gets hand-added rather than pulled from a real export.
 
+**When hand-adding a `component.*` token, always resolve it through an existing `semantic`-tier token first — never alias a `component.*` token straight to a `primitives.ref.*` value, even as a stopgap.** This holds for color (`intent.*`/`content.*`/`control.*`/`surface.*`) as much as for spacing/sizing (the density-invariant `spacing.fixed.*`/`sizing.fixed.*` steps, not a bare `ref.size.*`/`ref.space.*`). See `docs/PLAN.md` §1.6's authoring-conventions list for the full reasoning and prior precedent this rule generalizes.
+
 ## Design system (`packages/ds`)
 
 Radix UI Primitives (`radix-ui` package) + `class-variance-authority` + `tailwind-merge`/`clsx` + Tailwind v4, styled entirely from the token CSS vars above — no shadcn copy-paste (see `docs/PLAN.md` "Radix vs shadcn: Recommendation").
