@@ -3816,7 +3816,7 @@
         "$description": "Component token for chip line height."
       },
       "borderRadius": {
-        "$value": "3px",
+        "$value": "2px",
         "$type": "dimension",
         "$description": "Component token for chip border radius."
       },
