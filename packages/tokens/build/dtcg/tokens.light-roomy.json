@@ -3989,6 +3989,11 @@
             "$value": "#e5e6e6",
             "$type": "color",
             "$description": "Component token for segmented control button background color inactive."
+          },
+          "hover": {
+            "$value": "#f0faff",
+            "$type": "color",
+            "$description": "Component token for segmented control button background color hover."
           }
         },
         "borderColor": {
@@ -4013,6 +4018,11 @@
             "$value": "#0d0d0d",
             "$type": "color",
             "$description": "Component token for segmented control button text color inactive."
+          },
+          "hover": {
+            "$value": "#004b70",
+            "$type": "color",
+            "$description": "Component token for segmented control button text color hover."
           }
         },
         "fontWeight": {

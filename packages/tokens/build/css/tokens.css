@@ -380,6 +380,7 @@
   --component-segmented-control-background-color: #e5e6e6;
   --component-segmented-control-border-radius: 32px;
   --component-segmented-control-button-background-color-active: #ffffff;
+  --component-segmented-control-button-background-color-hover: #f0faff;
   --component-segmented-control-button-background-color-inactive: #e5e6e6;
   --component-segmented-control-button-border-color-active: #006da3;
   --component-segmented-control-button-border-color-inactive: #e5e6e6;
@@ -387,6 +388,7 @@
   --component-segmented-control-button-font-weight-active: 600;
   --component-segmented-control-button-font-weight-inactive: 400;
   --component-segmented-control-button-text-color-active: #006da3;
+  --component-segmented-control-button-text-color-hover: #004b70;
   --component-segmented-control-button-text-color-inactive: #0d0d0d;
   --component-segmented-control-font-size: 16px;
   --component-segmented-control-min-height: 60px;
