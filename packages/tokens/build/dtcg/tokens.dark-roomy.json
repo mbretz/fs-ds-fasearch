@@ -2318,6 +2318,427 @@
         "$description": "Semantic token for divider thickness."
       }
     },
+    "elevation": {
+      "carved": {
+        "x": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "Semantic token for elevation carved x."
+        },
+        "y": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Semantic token for elevation carved y."
+        },
+        "blur": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Semantic token for elevation carved blur."
+        },
+        "spread": {
+          "$value": "0px",
+          "$type": "dimension",
+          "$description": "Semantic token for elevation carved spread."
+        },
+        "color": {
+          "$value": "#0d0d0dcc",
+          "$type": "color",
+          "$description": "Semantic token for elevation carved color."
+        }
+      },
+      "settled": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation settled umbra x."
+          },
+          "y": {
+            "$value": "1px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation settled umbra y."
+          },
+          "blur": {
+            "$value": "1px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation settled umbra blur."
+          },
+          "spread": {
+            "$value": "-1px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation settled umbra spread."
+          },
+          "color": {
+            "$value": "#0d0d0d33",
+            "$type": "color",
+            "$description": "Semantic token for elevation settled umbra color."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation settled penumbra x."
+          },
+          "y": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation settled penumbra y."
+          },
+          "blur": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation settled penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation settled penumbra spread."
+          },
+          "color": {
+            "$value": "#4b4d4e33",
+            "$type": "color",
+            "$description": "Semantic token for elevation settled penumbra color."
+          }
+        }
+      },
+      "resting": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation resting umbra x."
+          },
+          "y": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation resting umbra y."
+          },
+          "blur": {
+            "$value": "2px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation resting umbra blur."
+          },
+          "spread": {
+            "$value": "-2px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation resting umbra spread."
+          },
+          "color": {
+            "$value": "#0d0d0db3",
+            "$type": "color",
+            "$description": "Semantic token for elevation resting umbra color."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation resting penumbra x."
+          },
+          "y": {
+            "$value": "3px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation resting penumbra y."
+          },
+          "blur": {
+            "$value": "4px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation resting penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation resting penumbra spread."
+          },
+          "color": {
+            "$value": "#4b4d4e33",
+            "$type": "color",
+            "$description": "Semantic token for elevation resting penumbra color."
+          }
+        }
+      },
+      "raised": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation raised umbra x."
+          },
+          "y": {
+            "$value": "3px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation raised umbra y."
+          },
+          "blur": {
+            "$value": "3px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation raised umbra blur."
+          },
+          "spread": {
+            "$value": "-2px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation raised umbra spread."
+          },
+          "color": {
+            "$value": "#0d0d0d40",
+            "$type": "color",
+            "$description": "Semantic token for elevation raised umbra color."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation raised penumbra x."
+          },
+          "y": {
+            "$value": "4px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation raised penumbra y."
+          },
+          "blur": {
+            "$value": "6px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation raised penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation raised penumbra spread."
+          },
+          "color": {
+            "$value": "#4b4d4e33",
+            "$type": "color",
+            "$description": "Semantic token for elevation raised penumbra color."
+          }
+        }
+      },
+      "suspended": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation suspended umbra x."
+          },
+          "y": {
+            "$value": "5px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation suspended umbra y."
+          },
+          "blur": {
+            "$value": "5px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation suspended umbra blur."
+          },
+          "spread": {
+            "$value": "-3px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation suspended umbra spread."
+          },
+          "color": {
+            "$value": "#0d0d0d8c",
+            "$type": "color",
+            "$description": "Semantic token for elevation suspended umbra color."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation suspended penumbra x."
+          },
+          "y": {
+            "$value": "6px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation suspended penumbra y."
+          },
+          "blur": {
+            "$value": "10px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation suspended penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation suspended penumbra spread."
+          },
+          "color": {
+            "$value": "#4b4d4e33",
+            "$type": "color",
+            "$description": "Semantic token for elevation suspended penumbra color."
+          }
+        }
+      },
+      "levitating": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation levitating umbra x."
+          },
+          "y": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation levitating umbra y."
+          },
+          "blur": {
+            "$value": "8px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation levitating umbra blur."
+          },
+          "spread": {
+            "$value": "-5px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation levitating umbra spread."
+          },
+          "color": {
+            "$value": "#0d0d0d8c",
+            "$type": "color",
+            "$description": "Semantic token for elevation levitating umbra color."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation levitating penumbra x."
+          },
+          "y": {
+            "$value": "9px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation levitating penumbra y."
+          },
+          "blur": {
+            "$value": "16px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation levitating penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation levitating penumbra spread."
+          },
+          "color": {
+            "$value": "#4b4d4e33",
+            "$type": "color",
+            "$description": "Semantic token for elevation levitating penumbra color."
+          }
+        }
+      },
+      "floating": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation floating umbra x."
+          },
+          "y": {
+            "$value": "13px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation floating umbra y."
+          },
+          "blur": {
+            "$value": "13px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation floating umbra blur."
+          },
+          "spread": {
+            "$value": "-7px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation floating umbra spread."
+          },
+          "color": {
+            "$value": "#0d0d0d8c",
+            "$type": "color",
+            "$description": "Semantic token for elevation floating umbra color."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation floating penumbra x."
+          },
+          "y": {
+            "$value": "14px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation floating penumbra y."
+          },
+          "blur": {
+            "$value": "26px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation floating penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation floating penumbra spread."
+          },
+          "color": {
+            "$value": "#4b4d4e33",
+            "$type": "color",
+            "$description": "Semantic token for elevation floating penumbra color."
+          }
+        }
+      },
+      "transcending": {
+        "umbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation transcending umbra x."
+          },
+          "y": {
+            "$value": "21px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation transcending umbra y."
+          },
+          "blur": {
+            "$value": "21px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation transcending umbra blur."
+          },
+          "spread": {
+            "$value": "-11px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation transcending umbra spread."
+          },
+          "color": {
+            "$value": "#0d0d0d8c",
+            "$type": "color",
+            "$description": "Semantic token for elevation transcending umbra color."
+          }
+        },
+        "penumbra": {
+          "x": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation transcending penumbra x."
+          },
+          "y": {
+            "$value": "22px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation transcending penumbra y."
+          },
+          "blur": {
+            "$value": "42px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation transcending penumbra blur."
+          },
+          "spread": {
+            "$value": "0px",
+            "$type": "dimension",
+            "$description": "Semantic token for elevation transcending penumbra spread."
+          },
+          "color": {
+            "$value": "#4b4d4e33",
+            "$type": "color",
+            "$description": "Semantic token for elevation transcending penumbra color."
+          }
+        }
+      }
+    },
     "brand": {
       "primary": {
         "gold": {
