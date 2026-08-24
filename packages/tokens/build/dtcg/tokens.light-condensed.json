@@ -4990,6 +4990,76 @@
           "$description": "Component token for radio group background color error."
         }
       }
+    },
+    "filterMenu": {
+      "header": {
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu header gap."
+        },
+        "borderRadius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu header border radius."
+        }
+      },
+      "content": {
+        "backgroundColor": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for filter menu content background color."
+        },
+        "borderColor": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for filter menu content border color."
+        },
+        "borderWidth": {
+          "$value": "1px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu content border width."
+        },
+        "borderRadius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu content border radius."
+        },
+        "padding": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu content padding."
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu content gap."
+        }
+      },
+      "drawer": {
+        "padding": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu drawer padding."
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu drawer gap."
+        }
+      },
+      "footer": {
+        "padding": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu footer padding."
+        },
+        "gap": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for filter menu footer gap."
+        }
+      }
     }
   },
   "color": {
