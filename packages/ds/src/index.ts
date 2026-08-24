@@ -141,3 +141,11 @@ export type {
   DialogFooterProps,
   DialogCloseProps,
 } from './components/Dialog/Dialog.types';
+
+export { SegmentedControl } from './components/SegmentedControl/SegmentedControl';
+export type {
+  SegmentedControlRootProps,
+  SegmentedControlListProps,
+  SegmentedControlTriggerProps,
+  SegmentedControlContentProps,
+} from './components/SegmentedControl/SegmentedControl.types';
