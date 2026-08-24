@@ -104,7 +104,7 @@ function SelectInputContent({
         position="popper"
         sideOffset={4}
         className={cn(
-          'z-50 min-w-[var(--component-select-input-dropdown-min-width)] overflow-hidden rounded-[var(--component-select-input-border-radius)] border-[length:var(--component-select-input-border-width)] border-[color:var(--component-select-input-border-color-default)] bg-[var(--component-select-input-background-color-default)]',
+          'z-50 min-w-[var(--component-select-input-dropdown-min-width)] overflow-hidden rounded-[var(--component-select-input-border-radius)] border-[length:var(--component-select-input-border-width)] border-[color:var(--component-select-input-border-color-default)] bg-[var(--component-select-input-background-color-default)] shadow-elevation-raised',
           className,
         )}
         style={{ width: 'var(--radix-select-trigger-width)' }}
