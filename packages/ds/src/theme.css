@@ -88,3 +88,116 @@
   --color-response-neutral-strong: var(--color-response-neutral-strong);
   --color-response-neutral-subtle: var(--color-response-neutral-subtle);
 }
+
+/*
+ * Elevation & Shadows utilities. `semantic.elevation.*` (see
+ * packages/tokens/HAND_ADDED_TOKENS.md, "semantic.elevation") is a
+ * complete, component-agnostic set of 8 shadow recipes verified directly
+ * against the Styles library's own "Elevation & Shadows" effect styles —
+ * every consumer wants the exact same box-shadow value, not a per-component
+ * variant, so these are defined once here rather than composed inline (a
+ * multi-var, comma-separated box-shadow is a lot to hand-assemble and
+ * retype correctly in every component that needs one). `@utility`, not
+ * `@apply`: these set a single raw CSS property from custom properties,
+ * not a combination of other utility classes — `@apply` is for the latter.
+ * Deliberately not aliased through a `component.*` tier — see the
+ * HAND_ADDED_TOKENS.md entry for why these reference `--semantic-elevation-*`
+ * directly rather than a per-component passthrough token.
+ */
+@utility shadow-elevation-carved {
+  box-shadow: inset var(--semantic-elevation-carved-x)
+    var(--semantic-elevation-carved-y) var(--semantic-elevation-carved-blur)
+    var(--semantic-elevation-carved-spread)
+    var(--semantic-elevation-carved-color);
+}
+@utility shadow-elevation-settled {
+  box-shadow:
+    var(--semantic-elevation-settled-umbra-x)
+      var(--semantic-elevation-settled-umbra-y)
+      var(--semantic-elevation-settled-umbra-blur)
+      var(--semantic-elevation-settled-umbra-spread)
+      var(--semantic-elevation-settled-umbra-color),
+    var(--semantic-elevation-settled-penumbra-x)
+      var(--semantic-elevation-settled-penumbra-y)
+      var(--semantic-elevation-settled-penumbra-blur)
+      var(--semantic-elevation-settled-penumbra-spread)
+      var(--semantic-elevation-settled-penumbra-color);
+}
+@utility shadow-elevation-resting {
+  box-shadow:
+    var(--semantic-elevation-resting-umbra-x)
+      var(--semantic-elevation-resting-umbra-y)
+      var(--semantic-elevation-resting-umbra-blur)
+      var(--semantic-elevation-resting-umbra-spread)
+      var(--semantic-elevation-resting-umbra-color),
+    var(--semantic-elevation-resting-penumbra-x)
+      var(--semantic-elevation-resting-penumbra-y)
+      var(--semantic-elevation-resting-penumbra-blur)
+      var(--semantic-elevation-resting-penumbra-spread)
+      var(--semantic-elevation-resting-penumbra-color);
+}
+@utility shadow-elevation-raised {
+  box-shadow:
+    var(--semantic-elevation-raised-umbra-x)
+      var(--semantic-elevation-raised-umbra-y)
+      var(--semantic-elevation-raised-umbra-blur)
+      var(--semantic-elevation-raised-umbra-spread)
+      var(--semantic-elevation-raised-umbra-color),
+    var(--semantic-elevation-raised-penumbra-x)
+      var(--semantic-elevation-raised-penumbra-y)
+      var(--semantic-elevation-raised-penumbra-blur)
+      var(--semantic-elevation-raised-penumbra-spread)
+      var(--semantic-elevation-raised-penumbra-color);
+}
+@utility shadow-elevation-suspended {
+  box-shadow:
+    var(--semantic-elevation-suspended-umbra-x)
+      var(--semantic-elevation-suspended-umbra-y)
+      var(--semantic-elevation-suspended-umbra-blur)
+      var(--semantic-elevation-suspended-umbra-spread)
+      var(--semantic-elevation-suspended-umbra-color),
+    var(--semantic-elevation-suspended-penumbra-x)
+      var(--semantic-elevation-suspended-penumbra-y)
+      var(--semantic-elevation-suspended-penumbra-blur)
+      var(--semantic-elevation-suspended-penumbra-spread)
+      var(--semantic-elevation-suspended-penumbra-color);
+}
+@utility shadow-elevation-levitating {
+  box-shadow:
+    var(--semantic-elevation-levitating-umbra-x)
+      var(--semantic-elevation-levitating-umbra-y)
+      var(--semantic-elevation-levitating-umbra-blur)
+      var(--semantic-elevation-levitating-umbra-spread)
+      var(--semantic-elevation-levitating-umbra-color),
+    var(--semantic-elevation-levitating-penumbra-x)
+      var(--semantic-elevation-levitating-penumbra-y)
+      var(--semantic-elevation-levitating-penumbra-blur)
+      var(--semantic-elevation-levitating-penumbra-spread)
+      var(--semantic-elevation-levitating-penumbra-color);
+}
+@utility shadow-elevation-floating {
+  box-shadow:
+    var(--semantic-elevation-floating-umbra-x)
+      var(--semantic-elevation-floating-umbra-y)
+      var(--semantic-elevation-floating-umbra-blur)
+      var(--semantic-elevation-floating-umbra-spread)
+      var(--semantic-elevation-floating-umbra-color),
+    var(--semantic-elevation-floating-penumbra-x)
+      var(--semantic-elevation-floating-penumbra-y)
+      var(--semantic-elevation-floating-penumbra-blur)
+      var(--semantic-elevation-floating-penumbra-spread)
+      var(--semantic-elevation-floating-penumbra-color);
+}
+@utility shadow-elevation-transcending {
+  box-shadow:
+    var(--semantic-elevation-transcending-umbra-x)
+      var(--semantic-elevation-transcending-umbra-y)
+      var(--semantic-elevation-transcending-umbra-blur)
+      var(--semantic-elevation-transcending-umbra-spread)
+      var(--semantic-elevation-transcending-umbra-color),
+    var(--semantic-elevation-transcending-penumbra-x)
+      var(--semantic-elevation-transcending-penumbra-y)
+      var(--semantic-elevation-transcending-penumbra-blur)
+      var(--semantic-elevation-transcending-penumbra-spread)
+      var(--semantic-elevation-transcending-penumbra-color);
+}
