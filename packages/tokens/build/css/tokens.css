@@ -299,6 +299,11 @@
   --component-file-upload-max-width: 600px;
   --component-file-upload-title-font-size: 16px;
   --component-file-upload-title-font-weight: 600;
+  --component-filter-menu-content-background-color: #ffffff;
+  --component-filter-menu-content-border-color: #7d8082;
+  --component-filter-menu-content-border-radius: 4px;
+  --component-filter-menu-content-border-width: 1px;
+  --component-filter-menu-header-border-radius: 4px;
   --component-inline-notification-background-color-critical: #fff0f3;
   --component-inline-notification-background-color-neutral: #f7f7f7;
   --component-inline-notification-background-color-success: #f2fcf9;

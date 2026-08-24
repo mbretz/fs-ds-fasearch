@@ -149,3 +149,14 @@ export type {
   SegmentedControlTriggerProps,
   SegmentedControlContentProps,
 } from './components/SegmentedControl/SegmentedControl.types';
+
+export { FilterMenu } from './components/FilterMenu/FilterMenu';
+export type {
+  FilterMenuRootProps,
+  FilterMenuHeaderProps,
+  FilterMenuTriggerProps,
+  FilterMenuClearButtonProps,
+  FilterMenuContentProps,
+  FilterMenuDrawerProps,
+  FilterMenuFooterProps,
+} from './components/FilterMenu/FilterMenu.types';
