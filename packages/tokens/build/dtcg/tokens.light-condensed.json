@@ -3934,13 +3934,104 @@
             "$value": 450,
             "$type": "fontWeight",
             "$description": "Component token for search input label microcopy font weight."
+          },
+          "paddingInlineStart": {
+            "$value": "16px",
+            "$type": "dimension",
+            "$description": "Component token for search input label microcopy padding inline start."
           }
+        },
+        "paddingInlineStart": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for search input label padding inline start."
         }
+      },
+      "borderColor": {
+        "default": {
+          "$value": "#7d8082",
+          "$type": "color",
+          "$description": "Component token for search input border color default."
+        },
+        "active": {
+          "$value": "#006da3",
+          "$type": "color",
+          "$description": "Component token for search input border color active."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for search input border color disabled."
+        }
+      },
+      "backgroundColor": {
+        "default": {
+          "$value": "#ffffff",
+          "$type": "color",
+          "$description": "Component token for search input background color default."
+        },
+        "disabled": {
+          "$value": "#cbcccd",
+          "$type": "color",
+          "$description": "Component token for search input background color disabled."
+        }
+      },
+      "textColor": {
+        "default": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Component token for search input text color default."
+        },
+        "disabled": {
+          "$value": "#4b4d4e",
+          "$type": "color",
+          "$description": "Component token for search input text color disabled."
+        }
+      },
+      "borderWidth": {
+        "$value": "1px",
+        "$type": "dimension",
+        "$description": "Component token for search input border width."
       },
       "borderRadius": {
         "$value": "24px",
         "$type": "dimension",
         "$description": "Component token for search input border radius."
+      },
+      "drawer": {
+        "borderRadius": {
+          "$value": "4px",
+          "$type": "dimension",
+          "$description": "Component token for search input drawer border radius."
+        },
+        "offsetInlineStart": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Component token for search input drawer offset inline start."
+        }
+      },
+      "clearButton": {
+        "iconSize": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Component token for search input clear button icon size."
+        }
+      },
+      "option": {
+        "backgroundColor": {
+          "highlighted": {
+            "$value": "#f0faff",
+            "$type": "color",
+            "$description": "Component token for search input option background color highlighted."
+          }
+        },
+        "textColor": {
+          "default": {
+            "$value": "#191a1a",
+            "$type": "color",
+            "$description": "Component token for search input option text color default."
+          }
+        }
       },
       "inputValue": {
         "fontSize": {

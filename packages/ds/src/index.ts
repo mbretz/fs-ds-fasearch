@@ -160,3 +160,19 @@ export type {
   FilterMenuDrawerProps,
   FilterMenuFooterProps,
 } from './components/FilterMenu/FilterMenu.types';
+
+export {
+  SearchInput,
+  searchInputFieldVariants,
+} from './components/SearchInput/SearchInput';
+export type {
+  SearchInputRootProps,
+  SearchInputInputGroupProps,
+  SearchInputFieldProps,
+  SearchInputClearButtonProps,
+  SearchInputButtonProps,
+  SearchInputSuggestionsProps,
+  SearchInputOptionProps,
+} from './components/SearchInput/SearchInput.types';
+
+export { highlightMatch } from './utils/highlight-match';

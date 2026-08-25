@@ -27,6 +27,7 @@
  */
 @source './components/**/*.{ts,tsx}';
 @source './internal/**/*.{ts,tsx}';
+@source './utils/**/*.{ts,tsx}';
 
 @import 'tokens/build/css/tokens.css';
 @import 'tokens/build/css/dark.css';
