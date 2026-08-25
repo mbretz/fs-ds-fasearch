@@ -8,19 +8,19 @@ A pnpm-workspace monorepo building a public, StackBlitz-hosted portfolio piece: 
 
 `docs/FIGMA_COMPONENT_AUDIT.md` tracks naming/hygiene findings from auditing the Figma "Components" library against `docs/PLAN.md` §1.2's conventions, plus worked fix examples (Button) — consult it before building a new component from Figma.
 
-No test suite or linter is configured anywhere in this repo yet. Build scripts and TypeScript's `--noEmit` typecheck are the only verification available per-package.
+No linter is configured anywhere in this repo. `packages/ds` has a real Vitest suite (`pnpm --filter ds test`, `packages/ds/src/components/**/*.test.tsx`) — run it alongside the `--noEmit` typecheck and per-package build scripts when verifying a change; other packages (`tokens`, `icons`, `illustrations`) still have no test suite of their own.
 
 Code style is enforced via Prettier (`.prettierrc` at repo root — notably `trailingComma: "all"`). Run `pnpm format` to write fixes or `pnpm format:check` to verify without writing; match its rules when writing or editing code so diffs don't need a follow-up formatting pass.
 
 ## Monorepo layout
 
 ```
-apps/storybook/    Storybook 8 host — empty skeleton (deps only), built after all DS components ship
+apps/storybook/    Storybook 10 host — LIVE, hosts every packages/ds component's stories (docs/PLAN.md §1.7). `pnpm --filter storybook dev` to run it
 apps/locator/       Vite + React store-locator app — empty skeleton (deps only), built after Storybook
 packages/tokens/     Mirrors Figma "Styles" library — DONE. Figma Variables -> Tokens Studio export -> CSS/DTCG
 packages/icons/      Mirrors Figma Assets "Icons" page — DONE. SVG -> React components via SVGR
 packages/illustrations/  Mirrors Figma Assets "Illustrations" page — DONE. Same pipeline as icons, multicolor preserved
-packages/ds/         Mirrors Figma "Components" library — IN PROGRESS. Radix Primitives + cva + Tailwind v4. Avatar, Label, Microcopy, TextInput, TextArea, SelectInput, Checkbox, ChecklistGroup, RadioButton, RadioGroup, Button shipped, plus Link/LinkHelp/LinkNavigation (out of original scope); all original-scope Primitives now done, next is Search Input or the Layout level — see docs/PLAN.md §1.6
+packages/ds/         Mirrors Figma "Components" library — IN PROGRESS. Radix Primitives + cva + Tailwind v4. Avatar, Label, TextInput, TextArea, Microcopy, SelectInput, Checkbox, ChecklistGroup, RadioButton, RadioGroup, Button, Link, LinkHelp, LinkNavigation, Tag, Card, CloseButton, Separator, Scrim, Dialog, Chip, SegmentedControl, FilterMenu, SearchInput shipped; all original-scope Primitives plus several scope extensions now done — next target undecided, see RESUME_NOTES.txt / docs/PLAN.md §1.6
 ```
 
 Workspace deps: `ds` depends on `tokens` (declared in `packages/ds/package.json`); `icons`/`illustrations` are currently dependency-free siblings. Consumers import each package directly (`tokens`, `icons`, `illustrations`, `ds`) — the DS package does not re-export icons or illustrations.

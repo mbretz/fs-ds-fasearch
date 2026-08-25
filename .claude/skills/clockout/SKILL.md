@@ -1,23 +1,24 @@
 ---
 name: clockout
-description: This skill should be used when the user asks to "clock out", "wrap up", "end the session", "update resume notes", or runs "/clockout". Reviews what happened this session and updates the standing project docs (RESUME_NOTES.txt freely; docs/PLAN.md, packages/tokens/HAND_ADDED_TOKENS.md, and docs/TESTING_PLAN.md only after flagging the specific addition) so the next /catchup starts from an accurate baseline.
+description: This skill should be used when the user asks to "clock out", "wrap up", "end the session", "update resume notes", or runs "/clockout". Reviews what happened this session and updates the standing project docs (RESUME_NOTES.txt freely; docs/PLAN.md, packages/tokens/HAND_ADDED_TOKENS.md, docs/TESTING_PLAN.md, and CLAUDE.md only after flagging the specific addition/correction) so the next /catchup starts from an accurate baseline.
 ---
 
 # Clockout
 
 Close out a session: figure out what actually happened, then bring
 `RESUME_NOTES.txt` (and, where warranted, `docs/PLAN.md` /
-`packages/tokens/HAND_ADDED_TOKENS.md` / `docs/TESTING_PLAN.md`) up to
-date so the next session's `/catchup` has an accurate baseline. This is
-the mirror image of `/catchup` — that skill reads these docs at session
-start, this one writes them at session end.
+`packages/tokens/HAND_ADDED_TOKENS.md` / `docs/TESTING_PLAN.md` /
+`CLAUDE.md`) up to date so the next session's `/catchup` has an accurate
+baseline. This is the mirror image of `/catchup` — that skill reads these
+docs at session start, this one writes them at session end.
 
 ## Procedure
 
 1. Read the current state of the standing docs, same set `/catchup`
-   reads: `docs/PLAN.md`, `packages/tokens/HAND_ADDED_TOKENS.md`
-   (gitignored), `docs/TESTING_PLAN.md` (gitignored), `RESUME_NOTES.txt`
-   (gitignored). Skip any that don't exist rather than erroring.
+   reads: `CLAUDE.md` (root), `docs/PLAN.md`,
+   `packages/tokens/HAND_ADDED_TOKENS.md` (gitignored),
+   `docs/TESTING_PLAN.md` (gitignored), `RESUME_NOTES.txt` (gitignored).
+   Skip any that don't exist rather than erroring.
 
 2. Reconstruct what happened this session:
 
@@ -65,8 +66,22 @@ start, this one writes them at session end.
    propose the header update — same review-before-write treatment as
    step 5, this file isn't scratch state either.
 
-7. Report back: what got rewritten in `RESUME_NOTES.txt`, what (if
+7. Check `CLAUDE.md`'s own factual claims against actual current repo
+   state — not just this session's diff, since staleness here tends to
+   accumulate silently across many sessions rather than being introduced
+   by any one of them. Its highest-drift spots: the monorepo-layout
+   table's per-package status/shipped-component lists (e.g. an "empty
+   skeleton (deps only)" claim for something that's since gone live, or
+   a shipped-component list that stopped being updated partway through),
+   and any flat "no test suite configured" / "no X exists yet"-style
+   assertions that a later session's own work has since made false. This
+   is a targeted verify-the-claims pass, not a general prose audit —
+   don't rewrite unrelated sections for style. If you find a real
+   mismatch, draft the correction and show it to the user before writing,
+   same review-before-write treatment as step 5.
+
+8. Report back: what got rewritten in `RESUME_NOTES.txt`, what (if
    anything) you're proposing for `PLAN.md`/`HAND_ADDED_TOKENS.md`/
-   `TESTING_PLAN.md` and why, and confirm the working tree state so the
-   user knows whether anything's still uncommitted before they close
-   the session.
+   `TESTING_PLAN.md`/`CLAUDE.md` and why, and confirm the working tree
+   state so the user knows whether anything's still uncommitted before
+   they close the session.
