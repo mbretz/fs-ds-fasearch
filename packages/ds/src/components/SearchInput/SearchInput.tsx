@@ -479,6 +479,17 @@ function SearchInputSuggestions({
           fieldRef.current?.focus();
         }}
         onEscapeKeyDown={() => setOpen(false)}
+        // Radix's outside-click dismissal doesn't know the field counts as
+        // "inside" the combobox the way it would for a real Popover.Trigger
+        // — Anchor only supplies position, not dismiss-exclusion. Without
+        // this, clicking back into the already-focused field (e.g. to
+        // reposition the cursor mid-query) would register as an outside
+        // click and close the drawer out from under the user.
+        onPointerDownOutside={(event) => {
+          if (fieldRef.current?.contains(event.target as Node)) {
+            event.preventDefault();
+          }
+        }}
         className={cn(
           'z-50 flex flex-col overflow-hidden rounded-[var(--component-search-input-drawer-border-radius)] border-[length:var(--component-search-input-border-width)] border-[color:var(--component-search-input-border-color-default)] bg-[var(--component-search-input-background-color-default)] shadow-elevation-raised',
           className,
