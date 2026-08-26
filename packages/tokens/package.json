@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "./build/js/tokens.ts",
+  "types": "./build/js/tokens.ts",
   "scripts": {
     "import:tokens-studio": "node scripts/tokens-studio-adapter.ts",
     "build:css": "node scripts/build-tokens.ts",

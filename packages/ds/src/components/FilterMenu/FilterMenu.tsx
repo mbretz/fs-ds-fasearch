@@ -1,5 +1,6 @@
 import { Popover as PopoverPrimitive } from 'radix-ui';
 import { Filter } from 'icons';
+import { lightRoomyTokens } from 'tokens';
 import { cn } from '../../utils/cn';
 import { Button } from '../Button/Button';
 import { Tag } from '../Tag/Tag';
@@ -94,12 +95,12 @@ function FilterMenuClearButton({
 }
 FilterMenuClearButton.displayName = 'FilterMenu.ClearButton';
 
-// spacing.fixed.x-small (4px, density-invariant). Popper's sideOffset takes
-// a plain number, not a CSS var — packages/tokens ships no JS-importable
-// token values (CSS custom properties are the only interface, per
-// docs/PLAN.md's CSS-first deviation note), so the value is mirrored here
-// as a named constant instead.
-const CONTENT_SIDE_OFFSET = 4;
+// spacing.fixed.x-small (4px, density-invariant -- `lightRoomyTokens` is
+// used arbitrarily below since the value doesn't change across mode
+// combos). Popper's sideOffset takes a plain number, not a CSS var, so this
+// reads packages/tokens' JS token output directly rather than mirroring the
+// value by hand.
+const CONTENT_SIDE_OFFSET = lightRoomyTokens.densitySpacingFixedXSmall;
 
 // No Popover.Portal — Figma shows this as a plain in-flow panel, not
 // portaled to document.body, so it keeps inheriting an ambient data-density
