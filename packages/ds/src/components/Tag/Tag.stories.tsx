@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { CheckmarkCircle } from 'icons';
 import { Tag } from './Tag';
 
@@ -60,6 +61,14 @@ export const BorderWidth: Story = {
       </Tag>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const defaultRoot = canvas.getByText('default').parentElement!;
+    const heavyRoot = canvas.getByText('heavy').parentElement!;
+    await expect(defaultRoot.getBoundingClientRect().height).toBe(
+      heavyRoot.getBoundingClientRect().height,
+    );
+  },
 };
 
 // No Density story — Tag is deliberately not density-aware (docs/PLAN.md

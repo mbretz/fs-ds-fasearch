@@ -30,3 +30,7 @@ jobs:
       - run: pnpm --filter ds test
 
       - run: pnpm --filter ds theme:check
+
+      - run: pnpm exec playwright install chromium --with-deps
+
+      - run: pnpm --filter ds test:browser
