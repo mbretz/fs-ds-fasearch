@@ -13,6 +13,7 @@ import {
 import { Popover as PopoverPrimitive } from 'radix-ui';
 import { cva } from 'class-variance-authority';
 import { CloseSm, Search } from 'icons';
+import { lightRoomyTokens } from 'tokens';
 import { cn } from '../../utils/cn';
 import { Label } from '../Label/Label';
 import { Microcopy } from '../Microcopy/Microcopy';
@@ -411,16 +412,21 @@ function SearchInputClearButton({
 }
 SearchInputClearButton.displayName = 'SearchInput.ClearButton';
 
-const CONTENT_SIDE_OFFSET = 4;
+// spacing.fixed.x-small (4px, density-invariant), same token FilterMenu's
+// own sideOffset reads. Popper's sideOffset takes a plain number, not a CSS
+// var, so this reads packages/tokens' JS token output directly.
+const CONTENT_SIDE_OFFSET = lightRoomyTokens.densitySpacingFixedXSmall;
 
-// Mirrors `component.searchInput.drawer.offsetInlineStart` (spacing.fixed
-// x-large, 20px — the distance Figma offsets Menu-OptionsDrawer from the
-// root's left edge by). Popper's `alignOffset` takes a plain number, not a
-// CSS var — packages/tokens ships no JS-importable token values (CSS
-// custom properties are the only interface, per docs/PLAN.md's CSS-first
-// deviation note), so the value is mirrored here as a named constant, same
-// as `CONTENT_SIDE_OFFSET` above.
-const CONTENT_ALIGN_OFFSET = 20;
+// spacing.fixed.x-large (20px, density-invariant) — the distance Figma
+// offsets Menu-OptionsDrawer from the root's left edge by. Reads the same
+// `spacing.fixed.*` tier directly rather than going through
+// `component.searchInput.drawer.offsetInlineStart` (which happens to alias
+// to this same value): the offset is a Popper positioning detail, not a
+// searchInput-owned design value, so it shouldn't depend on that
+// component-tier token continuing to equal this exact step. Popper's
+// `alignOffset` takes a plain number, not a CSS var, same as
+// `CONTENT_SIDE_OFFSET` above.
+const CONTENT_ALIGN_OFFSET = lightRoomyTokens.densitySpacingFixedXLarge;
 
 /**
  * Container border/background reuse `component.searchInput`'s own
