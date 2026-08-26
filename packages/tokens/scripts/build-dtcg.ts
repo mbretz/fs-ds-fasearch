@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { detectModeCollections, type TokenTree } from '../sd.preprocessors.ts';
 import { buildModeTokens, type FlatToken } from './mode-build.ts';
+import { classifyResolvedNumeric } from './flatten-tokens.ts';
 
 /**
  * Emits fully-resolved, W3C Design Tokens Community Group (DTCG,
@@ -26,20 +27,10 @@ import { buildModeTokens, type FlatToken } from './mode-build.ts';
  * or "number" (see sd.transforms.ts). "color" and "fontFamily" map
  * directly to their DTCG equivalents. "number" is split further into
  * "dimension" (px-suffixed string, per DTCG's dimension type requiring a
- * unit), "fontWeight", or "number" -- BUT this is derived from the
- * *already-resolved* value/path from the CSS build (does it end in
- * "px"?), not by independently re-running the dimension-keyword
- * heuristic against this token's own path. Those can legitimately
- * disagree: `semantic.border.radius.default` aliases
- * `semantic.border.radius.moderate` aliases `{ref.size.02}` -- the
- * *referencing* token's own path has no dimension keyword ("border"/
- * "radius" are separate segments, matching nothing), but Style
- * Dictionary's transitive resolution correctly px-suffixes it based on
- * the terminal primitive's path ("size" matches). Re-deriving type from
- * this token's own path would misclassify it as a bare "number" and then
- * fail to parse "4px" as a number -- confirmed this happening for 22
- * tokens (11 per file x mismatched types) before switching to trusting
- * the resolved value directly.
+ * unit), "fontWeight", or "number" via `classifyResolvedNumeric`
+ * (flatten-tokens.ts, shared with the JS/Swift/Kotlin outputs -- see its
+ * doc comment for why this is derived from the resolved value rather than
+ * the token's own path).
  *
  * Mode-collection handling mirrors the canonical-passthrough fix in
  * build-tokens.ts: a leaf living inside `color.<mode>.*` or
@@ -82,19 +73,6 @@ function describe(
   if (topLevel === 'semantic') return `Semantic token for ${words}.`;
   if (topLevel === 'component') return `Component token for ${words}.`;
   return `Token for ${[topLevel, ...restPath].join(' ')}.`;
-}
-
-/** Classify an already-resolved numeric token by what the CSS pipeline
- * actually did with it (does the value end in "px"?), not by
- * independently re-deriving from this token's own path -- see the module
- * doc for why those can disagree. */
-function classifyResolvedNumeric(
-  token: FlatToken,
-): 'dimension' | 'fontWeight' | 'number' {
-  if (token.value.endsWith('px')) return 'dimension';
-  if (token.path.some((seg) => seg.toLowerCase() === 'fontweight'))
-    return 'fontWeight';
-  return 'number';
 }
 
 function toLeaf(
