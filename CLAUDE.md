@@ -46,9 +46,13 @@ pnpm --filter illustrations typecheck
 
 # Design system (packages/ds)
 pnpm --filter ds theme:check       # compiles src/theme.css standalone via @tailwindcss/cli as a smoke test
+pnpm --filter ds test:browser       # runs Storybook's .stories.tsx as real-Chromium Vitest tests via @storybook/addon-vitest
+pnpm --filter ds test:browser:setup # one-time local Playwright chromium binary install
 ```
 
 Full pipeline from a clean checkout: `pnpm install && pnpm tokens:build && pnpm icons:build && pnpm illustrations:build`.
+
+`.github/workflows/ci.yml` runs `format:check`, the `tokens-json-review` skill's `check_tokens.py`, `tsc --noEmit`, `pnpm --filter ds test`, `theme:check`, and `test:browser` on every push/PR to `main`. Branch protection on `main` requires this workflow's `check` job to pass before merging (the repo owner is exempted).
 
 `turbo` is a root devDependency but there is no `turbo.json` yet — task orchestration is still plain `pnpm --filter`, not Turborepo pipelines, despite the dependency being present.
 
