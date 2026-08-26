@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm format:check
+
+      - run: python3 .claude/skills/tokens-json-review/scripts/check_tokens.py packages/tokens/source/tokens.json
+
+      - run: pnpm --filter ds exec tsc --noEmit
+
+      - run: pnpm --filter ds test
+
+      - run: pnpm --filter ds theme:check
