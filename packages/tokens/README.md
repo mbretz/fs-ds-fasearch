@@ -17,14 +17,23 @@ source/tokens.json        Merged output of the adapter -- what the rest of the p
 scripts/tokens-studio-adapter.ts  Merges source/tokens-studio/* -> source/tokens.json
 sd.preprocessors.ts       Style Dictionary preprocessors (alias-path remap, value-key collision fix)
 sd.transforms.ts          Style Dictionary transforms (path-based dimension/fontWeight/number typing)
-scripts/mode-build.ts     Shared mode-aware build helper used by both build scripts below
+scripts/mode-build.ts     Shared mode-aware build helper used by every build script below
+scripts/flatten-tokens.ts Shared per-mode-combo flattening + naming, used by build-dtcg/js/swift/kotlin
 scripts/build-tokens.ts   Multi-mode CSS build -> build/css/*.css
 scripts/build-dtcg.ts     Resolved DTCG JSON per mode combo -> build/dtcg/*.json
+scripts/build-js.ts       Resolved JS/TS values per mode combo -> build/js/tokens.ts
+scripts/build-swift.ts    Resolved Swift values per mode combo -> build/swift/Tokens.swift
+scripts/build-kotlin.ts   Resolved Kotlin values per mode combo -> build/kotlin/Tokens.kt
 build/css/tokens.css      :root base values (light + roomy)
 build/css/dark.css        [data-theme="dark"] sparse overrides (only tokens that differ from light)
 build/css/density.css     [data-density="roomy"] and [data-density="condensed"], full in both
 build/dtcg/tokens.{color}-{density}.json  Fully-resolved DTCG JSON, one file per mode combination
+build/js/tokens.ts        Fully-resolved JS/TS values, one flat object per mode combo + a getTokens() lookup
+build/swift/Tokens.swift  Fully-resolved Swift values, one enum namespace per mode combo (no consumer here)
+build/kotlin/Tokens.kt    Fully-resolved Kotlin values, one object per mode combo (no consumer here)
 ```
+
+Prefer the CSS vars above for anything in `packages/ds`/web code — they get theming/density for free from the cascade. `build/js/tokens.ts` exists for the cases a CSS value can't reach, e.g. a numeric-only prop on a Radix primitive (`Popover`'s `sideOffset`); it is not a general substitute for a CSS var reference. Swift/Kotlin have no consumer in this repo — they exist to demonstrate the full cross-platform pipeline.
 
 ## Building
 
@@ -33,7 +42,7 @@ pnpm tokens:build          # from repo root
 pnpm --filter tokens build # equivalent
 ```
 
-Runs `build:css` (→ `build/css/*.css`) then `build:dtcg` (→ `build/dtcg/*.json`). Both read `source/tokens.json` — neither touches `source/tokens-studio/` or Figma.
+Runs `build:css`, `build:dtcg`, `build:js`, `build:swift`, and `build:kotlin` in sequence (each has its own `pnpm --filter tokens build:<name>` if you only need one). All read `source/tokens.json` — none touch `source/tokens-studio/` or Figma.
 
 `pnpm --filter tokens import:tokens-studio` re-runs the adapter (`source/tokens-studio/*` → `source/tokens.json`) if the raw Tokens Studio export is ever re-pulled. This is the one step that's a manual, one-time action per re-export — see "Refreshing from Figma" below.
 

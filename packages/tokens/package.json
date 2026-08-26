@@ -7,7 +7,10 @@
     "import:tokens-studio": "node scripts/tokens-studio-adapter.ts",
     "build:css": "node scripts/build-tokens.ts",
     "build:dtcg": "node scripts/build-dtcg.ts",
-    "build": "pnpm build:css && pnpm build:dtcg"
+    "build:js": "node scripts/build-js.ts",
+    "build:swift": "node scripts/build-swift.ts",
+    "build:kotlin": "node scripts/build-kotlin.ts",
+    "build": "pnpm build:css && pnpm build:dtcg && pnpm build:js && pnpm build:swift && pnpm build:kotlin"
   },
   "devDependencies": {
     "style-dictionary": "^5.4.4"

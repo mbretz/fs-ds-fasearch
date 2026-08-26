@@ -33,7 +33,10 @@ All run from repo root via pnpm workspace filters, or `cd` into the package and 
 pnpm install                       # installs all workspace packages
 
 # Tokens (packages/tokens)
-pnpm tokens:build                  # source/tokens.json -> build/css/*.css + build/dtcg/*.json
+pnpm tokens:build                  # source/tokens.json -> build/css/*.css + build/dtcg/*.json + build/js/tokens.ts + build/swift/Tokens.swift + build/kotlin/Tokens.kt
+pnpm --filter tokens build:js       # source/tokens.json -> build/js/tokens.ts only (plain JS/TS values, e.g. for Radix numeric props)
+pnpm --filter tokens build:swift    # source/tokens.json -> build/swift/Tokens.swift only (no consumer in this repo -- portfolio breadth)
+pnpm --filter tokens build:kotlin   # source/tokens.json -> build/kotlin/Tokens.kt only (no consumer in this repo -- portfolio breadth)
 pnpm --filter tokens import:tokens-studio  # re-merge source/tokens-studio/* -> source/tokens.json (manual, one-time per Figma re-export)
 
 # Icons (packages/icons)
@@ -65,6 +68,10 @@ Build output consumed downstream:
 - `build/css/tokens.css` — `:root` base values (light + roomy)
 - `build/css/dark.css` — sparse `[data-theme="dark"]` overrides (only tokens that actually differ from light)
 - `build/css/density.css` — `[data-density="roomy"]` and `[data-density="condensed"]`, both full blocks
+- `build/dtcg/tokens.<color>-<density>.json` — fully-resolved DTCG JSON, one file per mode combo
+- `build/js/tokens.ts`, `build/swift/Tokens.swift`, `build/kotlin/Tokens.kt` — fully-resolved, non-CSS platform formats (2026-08-26 addition; web still prefers the CSS vars above and is unaffected). Unlike the CSS cascade, none of these platforms can resolve modes automatically, so each ships all 4 color×density combos as separate named sets and leaves picking the active one to the host app — see the dated deviation note in `docs/PLAN.md` §1.1 for the full reasoning. `build/js/tokens.ts` is the one with a concrete consumer in this repo (numeric values for Radix component props, e.g. `Popover`'s `sideOffset`); Swift/Kotlin exist to demonstrate cross-platform pipeline breadth and have no consumer here.
+
+**In web/DS code, always prefer the CSS vars over `build/js/tokens.ts`.** The CSS vars get theming/density for free from the cascade and stay in sync with every other component automatically; a JS token is a static snapshot of one resolved mode combo baked in at whatever point it's read; reaching for it means the app, not the browser, now owns picking and re-picking the right combo as theme/density change. Use a JS token only where a component genuinely can't take a CSS value — e.g. a numeric-only prop on a Radix primitive (`sideOffset`, `collisionPadding`) that doesn't accept `var(--...)` — never as a general substitute for a CSS var reference.
 
 The pipeline is a **one-time, non-reproducible export** (Tokens Studio Pro, not a live sync) — see `docs/PLAN.md` §1.1 "Pipeline history" for why, and `packages/tokens/README.md` for the full refresh procedure if the Figma source changes. The `tokens-json-review` skill (`.claude/skills/tokens-json-review/`) validates `packages/tokens/source/tokens.json` before it's trusted as a build input — run it after any re-export, before rebuilding.
 
