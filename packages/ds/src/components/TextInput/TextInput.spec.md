@@ -17,6 +17,14 @@ Typing can often be the most efficient method of entry. Use this component when 
 - Keep labels simple and relevant. Avoid long labels and colons.
 - For date and amount inputs, omit the words "date" and "amount" when they are implied by context or field type.
 
+## Variants
+
+- Text input — default, single-line text entry.
+- Number input — pass the native `type="number"` to `TextInput.Field`; no separate numeric-specific styling of its own.
+- Masked input — apply input masking (e.g. phone or account-number formats) yourself; `TextInput.Field` has no built-in masking logic.
+- Disabled field — the `disabled` prop.
+- Error with microcopy — the `error` prop paired with `TextInput.Microcopy`.
+
 ## Accessibility
 
 ### Keyboard controls
