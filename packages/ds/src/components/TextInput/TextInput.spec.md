@@ -46,9 +46,9 @@ Examples: "Last Name, edit. Smith. Max length is 24 characters. Type in text." o
 
 ### ARIA attributes
 
-- `aria-describedby`: associate the input with related microcopy and error messages.
-- `aria-required="true"`: indicate a required field.
-- `aria-invalid="true"`: indicate an invalid state. Include an error message explaining how to correct the issue.
+- `aria-invalid="true"`: set automatically by `TextInput.Field` whenever `error` is `true`.
+- `aria-required="true"`: set automatically by `TextInput.Field` whenever the native `required` prop is set.
+- `aria-describedby`: **not** wired automatically — `TextInput.Label`, `TextInput.Field`, and `TextInput.Microcopy` render as independent sibling elements with no shared context linking their ids, the same way `Label`'s `htmlFor` must already be paired manually with `Field`'s `id`. Give `TextInput.Microcopy` (and any error text) an `id`, then pass `aria-describedby` on `TextInput.Field` pointing at it.
 
 ## Related
 
