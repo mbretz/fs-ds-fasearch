@@ -66,6 +66,8 @@ function TextAreaField({
         ref={ref}
         disabled={disabled}
         readOnly={readOnly}
+        aria-invalid={error || undefined}
+        aria-required={props.required || undefined}
         className={cn(
           'min-w-0 flex-1 resize-y self-stretch border-0 bg-transparent pr-[var(--component-text-area-input-value-padding-inline)] py-[var(--component-text-area-input-value-padding-block)] text-[length:var(--component-text-area-input-value-font-size)] font-[number:var(--component-text-area-input-value-font-weight)] leading-[var(--component-text-area-input-value-line-height)] outline-none',
           state === 'read-only'

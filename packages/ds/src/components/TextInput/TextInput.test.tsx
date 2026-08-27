@@ -64,6 +64,48 @@ describe('TextInput', () => {
     });
   });
 
+  describe('ARIA', () => {
+    it('sets aria-invalid when error is true', () => {
+      render(<TextInput.Field data-testid="field" error />);
+      expect(screen.getByTestId('field')).toHaveAttribute(
+        'aria-invalid',
+        'true',
+      );
+    });
+
+    it('omits aria-invalid when error is false', () => {
+      render(<TextInput.Field data-testid="field" />);
+      expect(screen.getByTestId('field')).not.toHaveAttribute('aria-invalid');
+    });
+
+    it('sets aria-required when required is true', () => {
+      render(<TextInput.Field data-testid="field" required />);
+      expect(screen.getByTestId('field')).toHaveAttribute(
+        'aria-required',
+        'true',
+      );
+    });
+
+    it('omits aria-required when required is not set', () => {
+      render(<TextInput.Field data-testid="field" />);
+      expect(screen.getByTestId('field')).not.toHaveAttribute('aria-required');
+    });
+
+    it('lets a consumer override the computed aria-invalid/aria-required', () => {
+      render(
+        <TextInput.Field
+          data-testid="field"
+          error
+          aria-invalid={false}
+          aria-required={false}
+        />,
+      );
+      const field = screen.getByTestId('field');
+      expect(field).toHaveAttribute('aria-invalid', 'false');
+      expect(field).toHaveAttribute('aria-required', 'false');
+    });
+  });
+
   describe('icon slots', () => {
     it("renders iconStart as the input's immediately preceding sibling", () => {
       render(
