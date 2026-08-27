@@ -37,12 +37,12 @@ Dialogs temporarily halt interaction with the main application. Because they int
 
 ### Keyboard controls
 
-| Key          | Behavior                                                                                                |
-| ------------ | ------------------------------------------------------------------------------------------------------- |
-| Dialog opens | Place keyboard focus on the first focusable element within the dialog.                                  |
-| Tab          | Moves focus to the next focusable element inside the dialog; wraps to the first item from the last.     |
-| Shift + Tab  | Moves focus to the previous focusable element inside the dialog; wraps to the last item from the first. |
-| Esc          | Closes the dialog and returns focus to the element that launched it.                                    |
+| Key          | Behavior                                                                                                                                                                                                                                                         |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dialog opens | Place keyboard focus on the dialog's built-in close button, not generically "the first focusable element" — deliberate and tested (`Dialog.tsx`/`Dialog.test.tsx`), so focus lands somewhere predictable regardless of what content a consumer puts in the body. |
+| Tab          | Moves focus to the next focusable element inside the dialog; wraps to the first item from the last.                                                                                                                                                              |
+| Shift + Tab  | Moves focus to the previous focusable element inside the dialog; wraps to the last item from the first.                                                                                                                                                          |
+| Esc          | Closes the dialog and returns focus to the element that launched it.                                                                                                                                                                                             |
 
 ### Focus management
 
@@ -65,12 +65,6 @@ For broader support, include the following on the page container while the dialo
 
 - `aria-hidden="true"`
 - `tabindex="-1"`
-
-### Needs improvement
-
-This component has known accessibility issues on the backlog, including:
-
-- Proper focus management when the modal is launched.
 
 ## Related
 
