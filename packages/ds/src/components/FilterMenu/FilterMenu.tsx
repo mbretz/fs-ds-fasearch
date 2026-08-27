@@ -71,7 +71,8 @@ function FilterMenuTrigger({
   expandedLabel,
   ...props
 }: FilterMenuTriggerProps) {
-  const hasLabelSwap = collapsedLabel !== undefined && expandedLabel !== undefined;
+  const hasLabelSwap =
+    collapsedLabel !== undefined && expandedLabel !== undefined;
 
   return (
     <PopoverPrimitive.Trigger asChild>
