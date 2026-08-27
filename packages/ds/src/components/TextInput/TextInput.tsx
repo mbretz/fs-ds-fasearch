@@ -115,6 +115,8 @@ function TextInputField({
         ref={ref}
         disabled={disabled}
         readOnly={readOnly}
+        aria-invalid={error || undefined}
+        aria-required={props.required || undefined}
         className={cn(
           'min-w-0 flex-1 border-0 bg-transparent text-[length:var(--component-text-input-input-value-font-size)] font-[number:var(--component-text-input-input-value-font-weight)] leading-[var(--component-text-input-input-value-line-height)] outline-none',
           disabled
