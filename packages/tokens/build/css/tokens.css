@@ -419,6 +419,7 @@
   --component-select-input-border-color-active: #006da3;
   --component-select-input-border-color-default: #7d8082;
   --component-select-input-border-color-disabled: #cbcccd;
+  --component-select-input-border-color-error: #cb0b31;
   --component-select-input-border-radius: 4px;
   --component-select-input-border-width: 1px;
   --component-select-input-dropdown-min-width: 88px;
@@ -426,14 +427,6 @@
   --component-select-input-input-value-font-size: 16px;
   --component-select-input-input-value-font-weight: 400;
   --component-select-input-input-value-text-color: #191a1a;
-  --component-select-input-label-font-size-default: 14px;
-  --component-select-input-label-font-size-microcopy: 12px;
-  --component-select-input-label-font-weight-default: 400;
-  --component-select-input-label-font-weight-error: 700;
-  --component-select-input-label-font-weight-microcopy: 450;
-  --component-select-input-label-text-color-default: #191a1a;
-  --component-select-input-label-text-color-error: #cb0b31;
-  --component-select-input-label-text-color-microcopy: #646768;
   --component-select-input-option-background-color-highlighted: #f0faff;
   --component-select-input-option-background-color-selected: #006da3;
   --component-select-input-option-text-color-default: #191a1a;
@@ -487,14 +480,6 @@
   --component-text-area-input-value-font-weight: 400;
   --component-text-area-input-value-text-color-default: #191a1a;
   --component-text-area-input-value-text-color-disabled: #4b4d4e;
-  --component-text-area-label-font-size-default: 14px;
-  --component-text-area-label-font-size-microcopy: 12px;
-  --component-text-area-label-font-weight-default: 400;
-  --component-text-area-label-font-weight-error: 700;
-  --component-text-area-label-font-weight-microcopy: 450;
-  --component-text-area-label-text-color-default: #191a1a;
-  --component-text-area-label-text-color-error: #cb0b31;
-  --component-text-area-label-text-color-microcopy: #646768;
   --component-text-area-min-height: 144px;
   --component-text-input-background-color-default: #ffffff;
   --component-text-input-background-color-disabled: #cbcccd;

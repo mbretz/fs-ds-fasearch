@@ -4167,6 +4167,11 @@
           "$type": "color",
           "$description": "Component token for select input border color active."
         },
+        "error": {
+          "$value": "#cb0b31",
+          "$type": "color",
+          "$description": "Component token for select input border color error."
+        },
         "disabled": {
           "$value": "#cbcccd",
           "$type": "color",
@@ -4223,54 +4228,6 @@
             "$value": "#ffffff",
             "$type": "color",
             "$description": "Component token for select input option text color selected."
-          }
-        }
-      },
-      "label": {
-        "textColor": {
-          "default": {
-            "$value": "#191a1a",
-            "$type": "color",
-            "$description": "Component token for select input label text color default."
-          },
-          "microcopy": {
-            "$value": "#646768",
-            "$type": "color",
-            "$description": "Component token for select input label text color microcopy."
-          },
-          "error": {
-            "$value": "#cb0b31",
-            "$type": "color",
-            "$description": "Component token for select input label text color error."
-          }
-        },
-        "fontSize": {
-          "default": {
-            "$value": "14px",
-            "$type": "dimension",
-            "$description": "Component token for select input label font size default."
-          },
-          "microcopy": {
-            "$value": "12px",
-            "$type": "dimension",
-            "$description": "Component token for select input label font size microcopy."
-          }
-        },
-        "fontWeight": {
-          "default": {
-            "$value": 400,
-            "$type": "fontWeight",
-            "$description": "Component token for select input label font weight default."
-          },
-          "microcopy": {
-            "$value": 450,
-            "$type": "fontWeight",
-            "$description": "Component token for select input label font weight microcopy."
-          },
-          "error": {
-            "$value": 700,
-            "$type": "fontWeight",
-            "$description": "Component token for select input label font weight error."
           }
         }
       },
@@ -4514,54 +4471,6 @@
           "$value": "#cbcccd",
           "$type": "color",
           "$description": "Component token for text area border color disabled."
-        }
-      },
-      "label": {
-        "textColor": {
-          "default": {
-            "$value": "#191a1a",
-            "$type": "color",
-            "$description": "Component token for text area label text color default."
-          },
-          "microcopy": {
-            "$value": "#646768",
-            "$type": "color",
-            "$description": "Component token for text area label text color microcopy."
-          },
-          "error": {
-            "$value": "#cb0b31",
-            "$type": "color",
-            "$description": "Component token for text area label text color error."
-          }
-        },
-        "fontWeight": {
-          "default": {
-            "$value": 400,
-            "$type": "fontWeight",
-            "$description": "Component token for text area label font weight default."
-          },
-          "error": {
-            "$value": 700,
-            "$type": "fontWeight",
-            "$description": "Component token for text area label font weight error."
-          },
-          "microcopy": {
-            "$value": 450,
-            "$type": "fontWeight",
-            "$description": "Component token for text area label font weight microcopy."
-          }
-        },
-        "fontSize": {
-          "default": {
-            "$value": "14px",
-            "$type": "dimension",
-            "$description": "Component token for text area label font size default."
-          },
-          "microcopy": {
-            "$value": "12px",
-            "$type": "dimension",
-            "$description": "Component token for text area label font size microcopy."
-          }
         }
       },
       "backgroundColor": {
