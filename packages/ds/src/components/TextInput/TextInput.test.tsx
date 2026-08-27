@@ -88,9 +88,7 @@ describe('TextInput', () => {
 
     it('omits aria-required when required is not set', () => {
       render(<TextInput.Field data-testid="field" />);
-      expect(screen.getByTestId('field')).not.toHaveAttribute(
-        'aria-required',
-      );
+      expect(screen.getByTestId('field')).not.toHaveAttribute('aria-required');
     });
 
     it('lets a consumer override the computed aria-invalid/aria-required', () => {
