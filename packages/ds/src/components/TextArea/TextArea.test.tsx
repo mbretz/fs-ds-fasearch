@@ -81,6 +81,50 @@ describe('TextArea', () => {
     });
   });
 
+  describe('ARIA', () => {
+    it('sets aria-invalid when error is true', () => {
+      render(<TextArea.Field data-testid="field" error />);
+      expect(screen.getByTestId('field')).toHaveAttribute(
+        'aria-invalid',
+        'true',
+      );
+    });
+
+    it('omits aria-invalid when error is false', () => {
+      render(<TextArea.Field data-testid="field" />);
+      expect(screen.getByTestId('field')).not.toHaveAttribute('aria-invalid');
+    });
+
+    it('sets aria-required when required is true', () => {
+      render(<TextArea.Field data-testid="field" required />);
+      expect(screen.getByTestId('field')).toHaveAttribute(
+        'aria-required',
+        'true',
+      );
+    });
+
+    it('omits aria-required when required is not set', () => {
+      render(<TextArea.Field data-testid="field" />);
+      expect(screen.getByTestId('field')).not.toHaveAttribute(
+        'aria-required',
+      );
+    });
+
+    it('lets a consumer override the computed aria-invalid/aria-required', () => {
+      render(
+        <TextArea.Field
+          data-testid="field"
+          error
+          aria-invalid={false}
+          aria-required={false}
+        />,
+      );
+      const field = screen.getByTestId('field');
+      expect(field).toHaveAttribute('aria-invalid', 'false');
+      expect(field).toHaveAttribute('aria-required', 'false');
+    });
+  });
+
   describe('focus', () => {
     it('forwards ref to the underlying textarea so .focus() works programmatically', () => {
       const ref = createRef<HTMLTextAreaElement>();
