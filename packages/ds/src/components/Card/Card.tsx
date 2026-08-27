@@ -160,11 +160,18 @@ CardHeaderDescription.displayName = 'Card.HeaderDescription';
 // `overflow-hidden`/`min-h-0` wrapper with no padding of its own sits
 // between the grid row and the padded content, guaranteeing a full
 // collapse to 0.
+//
+// `invisible`/`visibility` (not `hidden`): forceMount makes Radix's own
+// `hidden: !isOpen` on this element always false, so nothing excludes
+// collapsed content from the a11y tree or tab order on its own —
+// `visibility:hidden` does both, and `data-[state=closed]:delay-200`
+// defers it until the grid-rows collapse animation finishes so content
+// doesn't vanish mid-animation.
 function CardBody({ className, children, ref, ...props }: CardBodyProps) {
   return (
     <CollapsiblePrimitive.Content
       forceMount
-      className="grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows] duration-200 ease-out data-[state=open]:grid-rows-[1fr]"
+      className="invisible grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows,visibility] duration-200 ease-out data-[state=closed]:delay-200 data-[state=open]:visible data-[state=open]:grid-rows-[1fr]"
     >
       <div className="min-h-0 overflow-hidden">
         <div
@@ -186,7 +193,7 @@ function CardFooter({ className, children, ref, ...props }: CardFooterProps) {
   return (
     <CollapsiblePrimitive.Content
       forceMount
-      className="grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows] duration-200 ease-out data-[state=open]:grid-rows-[1fr]"
+      className="invisible grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows,visibility] duration-200 ease-out data-[state=closed]:delay-200 data-[state=open]:visible data-[state=open]:grid-rows-[1fr]"
     >
       <div className="min-h-0 overflow-hidden">
         <div
