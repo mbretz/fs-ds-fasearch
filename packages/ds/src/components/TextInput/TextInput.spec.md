@@ -17,6 +17,14 @@ Typing can often be the most efficient method of entry. Use this component when 
 - Keep labels simple and relevant. Avoid long labels and colons.
 - For date and amount inputs, omit the words "date" and "amount" when they are implied by context or field type.
 
+## Variants
+
+- Text input — default, single-line text entry.
+- Number input — pass the native `type="number"` to `TextInput.Field`; no separate numeric-specific styling of its own.
+- Masked input — apply input masking (e.g. phone or account-number formats) yourself; `TextInput.Field` has no built-in masking logic.
+- Disabled field — the `disabled` prop.
+- Error with microcopy — the `error` prop paired with `TextInput.Microcopy`.
+
 ## Accessibility
 
 ### Keyboard controls
@@ -38,9 +46,9 @@ Examples: "Last Name, edit. Smith. Max length is 24 characters. Type in text." o
 
 ### ARIA attributes
 
-- `aria-describedby`: associate the input with related microcopy and error messages.
-- `aria-required="true"`: indicate a required field.
-- `aria-invalid="true"`: indicate an invalid state. Include an error message explaining how to correct the issue.
+- `aria-invalid="true"`: set automatically by `TextInput.Field` whenever `error` is `true`.
+- `aria-required="true"`: set automatically by `TextInput.Field` whenever the native `required` prop is set.
+- `aria-describedby`: **not** wired automatically — `TextInput.Label`, `TextInput.Field`, and `TextInput.Microcopy` render as independent sibling elements with no shared context linking their ids, the same way `Label`'s `htmlFor` must already be paired manually with `Field`'s `id`. Give `TextInput.Microcopy` (and any error text) an `id`, then pass `aria-describedby` on `TextInput.Field` pointing at it.
 
 ## Related
 
