@@ -12,8 +12,7 @@ Filter menus help users refine large data sets based on predefined attributes.
 
 When clicked or touched, the filter button reveals or hides the filter menu. When expanded, the filter menu should push content below it downward so the user can continue to see and adjust the data context.
 
-- The default button label is "Show filters."
-- When expanded, the label changes to "Hide filters."
+- The default button label is "Show filters"; when expanded, the label changes to "Hide filters." This swap is opt-in, not automatic: pass both `collapsedLabel` and `expandedLabel` to `FilterMenu.Trigger` and it renders/toggles both for you (CSS-only, off the trigger's own open/closed state). Passing plain `children` instead renders fully static, non-swapping content.
 - A "Clear" button appears after filters have been applied and clears all selected parameters.
 - A small number tag indicates how many parameters are set.
 - The filter container expands and collapses like a dropdown.
