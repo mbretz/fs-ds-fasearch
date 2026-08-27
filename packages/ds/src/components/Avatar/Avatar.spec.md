@@ -14,12 +14,12 @@ An avatar consists of a container filled with content representing the user or e
 
 - Pair avatars with a visible label when possible.
 - If an avatar is presented without a visible label, provide an accessible name that identifies the represented user or entity.
-- Use a circular shape for individuals and a square shape for entities.
+- Use a circular shape for individuals and a rounded square (`variant="entity"`, 16px border-radius) for entities — not a literal square.
 - Size avatars according to context, following the same base sizing logic used for icons.
 
 ## Accessibility
 
-The avatar component uses an accessible label on the SVG to communicate the name to assistive technology. If the avatar is part of a button or other actionable element, a visible label is usually the best approach for speech recognition users.
+Wiring an accessible label onto the avatar is the consumer's responsibility, not automatic — `AvatarFallback`/`AvatarImage` spread `...props` straight through, so pass `aria-label` (fallback) or `alt` (image) yourself to communicate the represented user or entity to assistive technology. If the avatar is part of a button or other actionable element, a visible label is usually the best approach for speech recognition users.
 
 ## Supporting research
 

@@ -93,6 +93,46 @@ describe('FilterMenu', () => {
     });
   });
 
+  describe('Trigger label swap', () => {
+    it('renders plain children as static content when collapsedLabel/expandedLabel are omitted', () => {
+      render(
+        <FilterMenu.Root>
+          <FilterMenu.Header>
+            <FilterMenu.Trigger>Custom label</FilterMenu.Trigger>
+          </FilterMenu.Header>
+        </FilterMenu.Root>,
+      );
+      expect(screen.getByText('Custom label')).toBeInTheDocument();
+      expect(screen.queryByText('Show filters')).not.toBeInTheDocument();
+    });
+
+    it('renders both labels and toggles data-state-driven visibility classes when both are provided', async () => {
+      render(
+        <FilterMenu.Root>
+          <FilterMenu.Header>
+            <FilterMenu.Trigger
+              collapsedLabel="Show filters"
+              expandedLabel="Hide filters"
+            />
+          </FilterMenu.Header>
+          <FilterMenu.Content>
+            <FilterMenu.Drawer>Drawer content</FilterMenu.Drawer>
+          </FilterMenu.Content>
+        </FilterMenu.Root>,
+      );
+      const trigger = screen.getByRole('button');
+      const collapsed = screen.getByText('Show filters');
+      const expanded = screen.getByText('Hide filters');
+      expect(collapsed.className).toContain('group-data-[state=open]:hidden');
+      expect(expanded.className).toContain('hidden');
+      expect(expanded.className).toContain('group-data-[state=open]:inline');
+      expect(trigger).toHaveAttribute('data-state', 'closed');
+
+      await userEvent.click(trigger);
+      expect(trigger).toHaveAttribute('data-state', 'open');
+    });
+  });
+
   describe('ClearButton count badge', () => {
     it('renders the count only when provided', () => {
       const { rerender } = render(
