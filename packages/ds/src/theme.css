@@ -33,6 +33,28 @@
 @import 'tokens/build/css/dark.css';
 @import 'tokens/build/css/density.css';
 
+/*
+ * `--semantic-content-font-family` (from `primitives.ref.font.family.text`,
+ * see the dated note in docs/PLAN.md §1.1) names a real variable font, so it
+ * needs an actual @font-face backing it — otherwise the token resolves to a
+ * font name no browser has, and every component silently falls back to its
+ * default sans-serif. `font-weight: 100 900` declares the full variable
+ * weight axis (this design system's type styles span 300-700, plus
+ * in-between synthetic weights like 450/525/575 — only reachable on a true
+ * variable font, not a handful of static cuts).
+ */
+@font-face {
+  font-family: 'DS Sans Text Var';
+  src: url('./assets/fonts/ds-sans-text-var.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: var(--semantic-content-font-family), system-ui, sans-serif;
+}
+
 @theme {
   /* color-intent: the primary/secondary/tertiary/neutral/disabled roles */
   --color-primary: var(--color-intent-primary-base);

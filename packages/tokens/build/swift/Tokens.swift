@@ -762,7 +762,7 @@ public enum LightRoomyTokens {
     public static let primitivesRefColorViolet900: String = "#f7dcf9"
     public static let primitivesRefColorViolet950: String = "#f8ecf9"
     public static let primitivesRefColorViolet970: String = "#fbf3fc"
-    public static let primitivesRefFontFamilyText: String = "EJ Sans Text Var"
+    public static let primitivesRefFontFamilyText: String = "DS Sans Text Var"
     public static let primitivesRefFontLineHeightGinormous: Double = 96
     public static let primitivesRefFontLineHeightHuge: Double = 75
     public static let primitivesRefFontLineHeightLarge: Double = 30
@@ -885,7 +885,7 @@ public enum LightRoomyTokens {
     public static let semanticContentDisclaimerFontWeight: Double = 400
     public static let semanticContentDisclaimerLineHeight: Double = 24
     public static let semanticContentErrorFontWeight: Double = 700
-    public static let semanticContentFontFamily: String = "EJ Sans Text Var"
+    public static let semanticContentFontFamily: String = "DS Sans Text Var"
     public static let semanticContentHeadingColor: String = "#191a1a"
     public static let semanticContentHeadingFontSize: Double = 30
     public static let semanticContentHeadingFontWeight: Double = 500
@@ -1820,7 +1820,7 @@ public enum DarkRoomyTokens {
     public static let primitivesRefColorViolet900: String = "#f7dcf9"
     public static let primitivesRefColorViolet950: String = "#f8ecf9"
     public static let primitivesRefColorViolet970: String = "#fbf3fc"
-    public static let primitivesRefFontFamilyText: String = "EJ Sans Text Var"
+    public static let primitivesRefFontFamilyText: String = "DS Sans Text Var"
     public static let primitivesRefFontLineHeightGinormous: Double = 96
     public static let primitivesRefFontLineHeightHuge: Double = 75
     public static let primitivesRefFontLineHeightLarge: Double = 30
@@ -1943,7 +1943,7 @@ public enum DarkRoomyTokens {
     public static let semanticContentDisclaimerFontWeight: Double = 400
     public static let semanticContentDisclaimerLineHeight: Double = 24
     public static let semanticContentErrorFontWeight: Double = 700
-    public static let semanticContentFontFamily: String = "EJ Sans Text Var"
+    public static let semanticContentFontFamily: String = "DS Sans Text Var"
     public static let semanticContentHeadingColor: String = "#191a1a"
     public static let semanticContentHeadingFontSize: Double = 30
     public static let semanticContentHeadingFontWeight: Double = 500
@@ -2878,7 +2878,7 @@ public enum LightCondensedTokens {
     public static let primitivesRefColorViolet900: String = "#f7dcf9"
     public static let primitivesRefColorViolet950: String = "#f8ecf9"
     public static let primitivesRefColorViolet970: String = "#fbf3fc"
-    public static let primitivesRefFontFamilyText: String = "EJ Sans Text Var"
+    public static let primitivesRefFontFamilyText: String = "DS Sans Text Var"
     public static let primitivesRefFontLineHeightGinormous: Double = 96
     public static let primitivesRefFontLineHeightHuge: Double = 75
     public static let primitivesRefFontLineHeightLarge: Double = 30
@@ -3001,7 +3001,7 @@ public enum LightCondensedTokens {
     public static let semanticContentDisclaimerFontWeight: Double = 400
     public static let semanticContentDisclaimerLineHeight: Double = 24
     public static let semanticContentErrorFontWeight: Double = 700
-    public static let semanticContentFontFamily: String = "EJ Sans Text Var"
+    public static let semanticContentFontFamily: String = "DS Sans Text Var"
     public static let semanticContentHeadingColor: String = "#191a1a"
     public static let semanticContentHeadingFontSize: Double = 30
     public static let semanticContentHeadingFontWeight: Double = 500
@@ -3936,7 +3936,7 @@ public enum DarkCondensedTokens {
     public static let primitivesRefColorViolet900: String = "#f7dcf9"
     public static let primitivesRefColorViolet950: String = "#f8ecf9"
     public static let primitivesRefColorViolet970: String = "#fbf3fc"
-    public static let primitivesRefFontFamilyText: String = "EJ Sans Text Var"
+    public static let primitivesRefFontFamilyText: String = "DS Sans Text Var"
     public static let primitivesRefFontLineHeightGinormous: Double = 96
     public static let primitivesRefFontLineHeightHuge: Double = 75
     public static let primitivesRefFontLineHeightLarge: Double = 30
@@ -4059,7 +4059,7 @@ public enum DarkCondensedTokens {
     public static let semanticContentDisclaimerFontWeight: Double = 400
     public static let semanticContentDisclaimerLineHeight: Double = 24
     public static let semanticContentErrorFontWeight: Double = 700
-    public static let semanticContentFontFamily: String = "EJ Sans Text Var"
+    public static let semanticContentFontFamily: String = "DS Sans Text Var"
     public static let semanticContentHeadingColor: String = "#191a1a"
     public static let semanticContentHeadingFontSize: Double = 30
     public static let semanticContentHeadingFontWeight: Double = 500

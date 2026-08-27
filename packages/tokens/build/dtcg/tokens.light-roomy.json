@@ -1164,7 +1164,7 @@
       "font": {
         "family": {
           "text": {
-            "$value": "EJ Sans Text Var",
+            "$value": "DS Sans Text Var",
             "$type": "fontFamily",
             "$description": "Primitive value for ref font family text."
           }
@@ -1931,7 +1931,7 @@
         }
       },
       "fontFamily": {
-        "$value": "EJ Sans Text Var",
+        "$value": "DS Sans Text Var",
         "$type": "fontFamily",
         "$description": "Semantic token for content font family."
       },

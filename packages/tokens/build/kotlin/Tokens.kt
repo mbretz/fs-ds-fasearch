@@ -762,7 +762,7 @@ object LightRoomyTokens {
     const val primitivesRefColorViolet900: String = "#f7dcf9"
     const val primitivesRefColorViolet950: String = "#f8ecf9"
     const val primitivesRefColorViolet970: String = "#fbf3fc"
-    const val primitivesRefFontFamilyText: String = "EJ Sans Text Var"
+    const val primitivesRefFontFamilyText: String = "DS Sans Text Var"
     const val primitivesRefFontLineHeightGinormous: Double = 96
     const val primitivesRefFontLineHeightHuge: Double = 75
     const val primitivesRefFontLineHeightLarge: Double = 30
@@ -885,7 +885,7 @@ object LightRoomyTokens {
     const val semanticContentDisclaimerFontWeight: Double = 400
     const val semanticContentDisclaimerLineHeight: Double = 24
     const val semanticContentErrorFontWeight: Double = 700
-    const val semanticContentFontFamily: String = "EJ Sans Text Var"
+    const val semanticContentFontFamily: String = "DS Sans Text Var"
     const val semanticContentHeadingColor: String = "#191a1a"
     const val semanticContentHeadingFontSize: Double = 30
     const val semanticContentHeadingFontWeight: Double = 500
@@ -1820,7 +1820,7 @@ object DarkRoomyTokens {
     const val primitivesRefColorViolet900: String = "#f7dcf9"
     const val primitivesRefColorViolet950: String = "#f8ecf9"
     const val primitivesRefColorViolet970: String = "#fbf3fc"
-    const val primitivesRefFontFamilyText: String = "EJ Sans Text Var"
+    const val primitivesRefFontFamilyText: String = "DS Sans Text Var"
     const val primitivesRefFontLineHeightGinormous: Double = 96
     const val primitivesRefFontLineHeightHuge: Double = 75
     const val primitivesRefFontLineHeightLarge: Double = 30
@@ -1943,7 +1943,7 @@ object DarkRoomyTokens {
     const val semanticContentDisclaimerFontWeight: Double = 400
     const val semanticContentDisclaimerLineHeight: Double = 24
     const val semanticContentErrorFontWeight: Double = 700
-    const val semanticContentFontFamily: String = "EJ Sans Text Var"
+    const val semanticContentFontFamily: String = "DS Sans Text Var"
     const val semanticContentHeadingColor: String = "#191a1a"
     const val semanticContentHeadingFontSize: Double = 30
     const val semanticContentHeadingFontWeight: Double = 500
@@ -2878,7 +2878,7 @@ object LightCondensedTokens {
     const val primitivesRefColorViolet900: String = "#f7dcf9"
     const val primitivesRefColorViolet950: String = "#f8ecf9"
     const val primitivesRefColorViolet970: String = "#fbf3fc"
-    const val primitivesRefFontFamilyText: String = "EJ Sans Text Var"
+    const val primitivesRefFontFamilyText: String = "DS Sans Text Var"
     const val primitivesRefFontLineHeightGinormous: Double = 96
     const val primitivesRefFontLineHeightHuge: Double = 75
     const val primitivesRefFontLineHeightLarge: Double = 30
@@ -3001,7 +3001,7 @@ object LightCondensedTokens {
     const val semanticContentDisclaimerFontWeight: Double = 400
     const val semanticContentDisclaimerLineHeight: Double = 24
     const val semanticContentErrorFontWeight: Double = 700
-    const val semanticContentFontFamily: String = "EJ Sans Text Var"
+    const val semanticContentFontFamily: String = "DS Sans Text Var"
     const val semanticContentHeadingColor: String = "#191a1a"
     const val semanticContentHeadingFontSize: Double = 30
     const val semanticContentHeadingFontWeight: Double = 500
@@ -3936,7 +3936,7 @@ object DarkCondensedTokens {
     const val primitivesRefColorViolet900: String = "#f7dcf9"
     const val primitivesRefColorViolet950: String = "#f8ecf9"
     const val primitivesRefColorViolet970: String = "#fbf3fc"
-    const val primitivesRefFontFamilyText: String = "EJ Sans Text Var"
+    const val primitivesRefFontFamilyText: String = "DS Sans Text Var"
     const val primitivesRefFontLineHeightGinormous: Double = 96
     const val primitivesRefFontLineHeightHuge: Double = 75
     const val primitivesRefFontLineHeightLarge: Double = 30
@@ -4059,7 +4059,7 @@ object DarkCondensedTokens {
     const val semanticContentDisclaimerFontWeight: Double = 400
     const val semanticContentDisclaimerLineHeight: Double = 24
     const val semanticContentErrorFontWeight: Double = 700
-    const val semanticContentFontFamily: String = "EJ Sans Text Var"
+    const val semanticContentFontFamily: String = "DS Sans Text Var"
     const val semanticContentHeadingColor: String = "#191a1a"
     const val semanticContentHeadingFontSize: Double = 30
     const val semanticContentHeadingFontWeight: Double = 500

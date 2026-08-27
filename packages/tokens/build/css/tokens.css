@@ -663,7 +663,7 @@
   --primitives-ref-color-violet-900: #f7dcf9;
   --primitives-ref-color-violet-950: #f8ecf9;
   --primitives-ref-color-violet-970: #fbf3fc;
-  --primitives-ref-font-family-text: EJ Sans Text Var;
+  --primitives-ref-font-family-text: DS Sans Text Var;
   --primitives-ref-font-line-height-ginormous: 96px;
   --primitives-ref-font-line-height-huge: 75px;
   --primitives-ref-font-line-height-large: 30px;
@@ -786,7 +786,7 @@
   --semantic-content-disclaimer-font-weight: 400;
   --semantic-content-disclaimer-line-height: 24px;
   --semantic-content-error-font-weight: 700;
-  --semantic-content-font-family: EJ Sans Text Var;
+  --semantic-content-font-family: DS Sans Text Var;
   --semantic-content-heading-color: #191a1a;
   --semantic-content-heading-font-size: 30px;
   --semantic-content-heading-font-weight: 500;
