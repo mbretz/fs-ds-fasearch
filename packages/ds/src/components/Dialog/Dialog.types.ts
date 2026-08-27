@@ -30,7 +30,7 @@ export interface DialogContentProps extends Omit<
   closeButtonAriaLabel?: string;
   /** Whether the backdrop Scrim renders behind Content. Defaults to true. */
   showScrim?: boolean;
-  /** Merged onto the backdrop Scrim — e.g. to override its default z-50 if it conflicts with another stacking context. */
+  /** Merged onto the backdrop Scrim — e.g. to override its default z-index-overlay if it conflicts with another stacking context. */
   scrimClassName?: string;
 }
 

@@ -51,14 +51,14 @@ function DialogContent({
     <DialogPrimitive.Portal>
       {showScrim && (
         <DialogPrimitive.Overlay asChild>
-          <Scrim className={cn('z-50', scrimClassName)} />
+          <Scrim className={cn('z-index-overlay', scrimClassName)} />
         </DialogPrimitive.Overlay>
       )}
       <DialogPrimitive.Content
         ref={ref}
         data-density={density}
         className={cn(
-          'fixed left-1/2 top-1/2 z-50 grid w-full max-w-[var(--component-dialog-max-width)] -translate-x-1/2 -translate-y-1/2 rounded-[var(--component-dialog-border-radius)] border-[length:var(--component-dialog-border-width)] border-[color:var(--component-dialog-border-color)] bg-[var(--component-dialog-background-color)] shadow-elevation-suspended',
+          'fixed left-1/2 top-1/2 z-index-modal grid w-full max-w-[var(--component-dialog-max-width)] -translate-x-1/2 -translate-y-1/2 rounded-[var(--component-dialog-border-radius)] border-[length:var(--component-dialog-border-width)] border-[color:var(--component-dialog-border-color)] bg-[var(--component-dialog-background-color)] shadow-elevation-suspended',
           className,
         )}
         // Default (per user direction, 2026-08-21): focus the close button on
