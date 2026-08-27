@@ -17,13 +17,10 @@ Text area inputs support multi-sentence input.
 
 ## Variants
 
-- Text input
-- Number input
-- Masked input
-- Text area
-- Disabled field
-- Error with microcopy
-- Character counter
+- Text area — the only field shape `TextArea.Field` renders; unlike `TextInput`, there's no `type` prop or input masking to vary.
+- Disabled field — the `disabled` prop.
+- Error with microcopy — the `error` prop paired with `TextArea.Microcopy`.
+- Character counter — a consumer-built pattern (max-length tracking plus counter UI), not something `TextArea.Field` implements itself; it's a bare `<textarea>` with no length-tracking logic.
 
 Using a max-length character counter helps users understand the typed length and limit. Error messages should explain how to fix invalid input and replace helper text until the error is resolved.
 
@@ -48,9 +45,9 @@ Examples: "Last Name, edit. Smith. Max length is 24 characters. Type in text." o
 
 ### ARIA attributes
 
-- `aria-describedby`: associate the input with related microcopy and error messages.
-- `aria-required="true"`: indicate a required field.
-- `aria-invalid="true"`: indicate an invalid state. Include an error message explaining how to correct the issue.
+- `aria-invalid="true"`: set automatically by `TextArea.Field` whenever `error` is `true`.
+- `aria-required="true"`: set automatically by `TextArea.Field` whenever the native `required` prop is set.
+- `aria-describedby`: **not** wired automatically — `TextArea.Label`, `TextArea.Field`, and `TextArea.Microcopy` render as independent sibling elements with no shared context linking their ids, the same way `Label`'s `htmlFor` must already be paired manually with `Field`'s `id`. Give `TextArea.Microcopy` (and any error text) an `id`, then pass `aria-describedby` on `TextArea.Field` pointing at it.
 
 ## Related
 
