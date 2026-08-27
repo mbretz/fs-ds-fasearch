@@ -22,14 +22,15 @@ Submitting the field takes the user to a search results page for site-wide searc
 
 ### Keyboard controls
 
-| Key                    | Behavior                                                                                                        |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Tab                    | Moves focus into the search text field.                                                                         |
-| Enter                  | Performs the search when focus is in the text field.                                                            |
-| Down Arrow or Up Arrow | When suggestions are displayed, moves focus to the first or last suggestion and cycles through the list.        |
-| Spacebar or Enter      | Selects the focused suggestion, closes the list, and performs the search.                                       |
-| Tab                    | Moves focus back to the text field without selecting a suggestion, or from the text field to the Search button. |
-| Enter or Spacebar      | Activates the focused Search button.                                                                            |
+| Key               | Behavior                                                                                                                                                                                                                                                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Tab               | Moves focus into the search text field.                                                                                                                                                                                                                                                                                  |
+| Enter             | Performs the search when focus is in the text field.                                                                                                                                                                                                                                                                     |
+| Down Arrow        | From the text field, opens the suggestion list (focus stays in the field); pressing it again moves focus to the first suggestion. Within the list, moves focus to the next suggestion and clamps at the last one (no wraparound — intentional, avoids ambiguity with a wrapped-around `ArrowDown` from the last option). |
+| Up Arrow          | Within the list, moves focus to the previous suggestion and clamps at the first one (no wraparound). From the text field, Up Arrow is a no-op — only Down Arrow and Escape are handled there.                                                                                                                            |
+| Spacebar or Enter | Selects the focused suggestion, closes the list, and performs the search.                                                                                                                                                                                                                                                |
+| Tab               | Moves focus back to the text field without selecting a suggestion, or from the text field to the Search button.                                                                                                                                                                                                          |
+| Enter or Spacebar | Activates the focused Search button.                                                                                                                                                                                                                                                                                     |
 
 ### Screen reader behavior
 
