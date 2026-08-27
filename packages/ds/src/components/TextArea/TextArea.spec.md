@@ -17,13 +17,10 @@ Text area inputs support multi-sentence input.
 
 ## Variants
 
-- Text input
-- Number input
-- Masked input
-- Text area
-- Disabled field
-- Error with microcopy
-- Character counter
+- Text area — the only field shape `TextArea.Field` renders; unlike `TextInput`, there's no `type` prop or input masking to vary.
+- Disabled field — the `disabled` prop.
+- Error with microcopy — the `error` prop paired with `TextArea.Microcopy`.
+- Character counter — a consumer-built pattern (max-length tracking plus counter UI), not something `TextArea.Field` implements itself; it's a bare `<textarea>` with no length-tracking logic.
 
 Using a max-length character counter helps users understand the typed length and limit. Error messages should explain how to fix invalid input and replace helper text until the error is resolved.
 
