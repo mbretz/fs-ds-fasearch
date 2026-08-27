@@ -143,6 +143,29 @@ describe('Card', () => {
       expect(region.className).toContain('data-[state=open]:grid-rows-[1fr]');
       expect(region).toHaveAttribute('data-state', 'closed');
     });
+
+    // forceMount keeps Radix's own `hidden` attribute from ever being set
+    // (see Card.tsx's comment above CardBody), so collapsed content relied
+    // on the CSS-only grid-rows collapse alone and stayed in the a11y tree
+    // and tab order while visually hidden. `visibility:hidden` closes that
+    // gap; this asserts the class wiring, since jsdom can't assert the
+    // resulting a11y-tree/tab-order exclusion itself.
+    it('hides collapsed content from the a11y tree via visibility, deferred until the collapse animation finishes', () => {
+      render(
+        <Card.Root defaultOpen={false}>
+          <Card.Header expandable>
+            <Card.HeaderTitle>Card Title</Card.HeaderTitle>
+          </Card.Header>
+          <Card.Body>Body content</Card.Body>
+        </Card.Root>,
+      );
+      const region = screen
+        .getByText('Body content')
+        .closest('[data-state]') as HTMLElement;
+      expect(region.className).toContain('invisible');
+      expect(region.className).toContain('data-[state=open]:visible');
+      expect(region.className).toContain('data-[state=closed]:delay-200');
+    });
   });
 
   describe('asChild', () => {
