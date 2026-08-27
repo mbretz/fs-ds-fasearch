@@ -8,9 +8,18 @@ import type {
   SegmentedControlContentProps,
 } from './SegmentedControl.types';
 
+// Manual activation, not Radix's own `automatic` default: unlike a plain
+// tab strip, each segment here can show a genuinely different view (e.g.
+// list vs. map vs. satellite) with its own possibly-expensive setup
+// (calling a map API, etc.) — arrow-key focus shouldn't unexpectedly
+// trigger that. WAI-ARIA APG recommends automatic activation as the
+// general default and reserves manual for exactly this case (activation
+// is costly or the resulting content is disruptive), which is why this
+// diverges from Tabs.tsx's own (unset, automatic) activationMode.
 function SegmentedControlRoot({
   className,
   density,
+  activationMode = 'manual',
   ref,
   ...props
 }: SegmentedControlRootProps) {
@@ -18,6 +27,7 @@ function SegmentedControlRoot({
     <TabsPrimitive.Root
       ref={ref}
       data-density={density}
+      activationMode={activationMode}
       // `items-start`, not the flex default (`stretch`): List should hug
       // its own Triggers' width by default, matching Figma's own sizing.
       // Without this, Root's default cross-axis stretch would size List to

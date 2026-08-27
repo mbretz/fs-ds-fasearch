@@ -34,12 +34,12 @@ For assistive technology users, a segmented control behaves like tabs. The selec
 
 ### Keyboard controls
 
-| Key               | Behavior                                                                        |
-| ----------------- | ------------------------------------------------------------------------------- |
-| Tab               | Moves focus into the segmented control, landing on the currently active option. |
-| Left/Right Arrow  | Moves focus through options without automatically activating them.              |
-| Enter or Spacebar | Selects the focused option.                                                     |
-| Tab               | Moves focus out of the segmented control.                                       |
+| Key               | Behavior                                                                                                                                                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Tab               | Moves focus into the segmented control, landing on the currently active option.                                                                                                            |
+| Left/Right Arrow  | Moves focus through options without automatically activating them (manual activation — deliberate, since segments can show views with expensive or disruptive setup, e.g. a map API call). |
+| Enter or Spacebar | Selects (activates) the focused option.                                                                                                                                                    |
+| Tab               | Moves focus out of the segmented control.                                                                                                                                                  |
 
 ### Screen reader behavior
 

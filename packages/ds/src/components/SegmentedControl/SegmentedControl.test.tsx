@@ -53,6 +53,25 @@ describe('SegmentedControl', () => {
     expect(screen.queryByText('Store list view')).not.toBeInTheDocument();
   });
 
+  it('moves focus without activating on arrow key (manual activation), then activates on Enter', async () => {
+    const user = userEvent.setup();
+    renderSegmentedControl();
+    const listTab = screen.getByRole('tab', { name: 'List' });
+    const mapTab = screen.getByRole('tab', { name: 'Map' });
+
+    listTab.focus();
+    await user.keyboard('{ArrowRight}');
+    expect(mapTab).toHaveFocus();
+    expect(mapTab).toHaveAttribute('data-state', 'inactive');
+    expect(listTab).toHaveAttribute('data-state', 'active');
+    expect(screen.getByText('Store list view')).toBeInTheDocument();
+    expect(screen.queryByText('Store map view')).not.toBeInTheDocument();
+
+    await user.keyboard('{Enter}');
+    expect(mapTab).toHaveAttribute('data-state', 'active');
+    expect(screen.getByText('Store map view')).toBeInTheDocument();
+  });
+
   it('renders a disabled trigger as a native disabled button', () => {
     renderSegmentedControl();
     expect(screen.getByRole('tab', { name: 'Satellite' })).toBeDisabled();
