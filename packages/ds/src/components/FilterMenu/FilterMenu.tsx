@@ -58,12 +58,42 @@ function FilterMenuHeader({
 FilterMenuHeader.displayName = 'FilterMenu.Header';
 
 // Figma's Trigger/Button nodes expose no text property, so the "Show
-// Filters" label is `children`, not a hardcoded string.
-function FilterMenuTrigger({ children, ...props }: FilterMenuTriggerProps) {
+// Filters" label is `children`, not a hardcoded string. The built-in
+// Show/Hide swap (collapsedLabel/expandedLabel) reads Radix Popover.
+// Trigger's own `data-state` via `group-data-[state=open]:`, same
+// pseudo-state-stays-CSS-only precedent as Card's caret rotation — only
+// the visible span contributes to the button's accessible name, so no
+// extra aria-label bookkeeping is needed either.
+function FilterMenuTrigger({
+  className,
+  children,
+  collapsedLabel,
+  expandedLabel,
+  ...props
+}: FilterMenuTriggerProps) {
+  const hasLabelSwap =
+    collapsedLabel !== undefined && expandedLabel !== undefined;
+
   return (
     <PopoverPrimitive.Trigger asChild>
-      <Button variant="tertiary" iconStart={<Filter aria-hidden />} {...props}>
-        {children}
+      <Button
+        variant="tertiary"
+        iconStart={<Filter aria-hidden />}
+        className={cn(hasLabelSwap && 'group', className)}
+        {...props}
+      >
+        {hasLabelSwap ? (
+          <>
+            <span className="group-data-[state=open]:hidden">
+              {collapsedLabel}
+            </span>
+            <span className="hidden group-data-[state=open]:inline">
+              {expandedLabel}
+            </span>
+          </>
+        ) : (
+          children
+        )}
       </Button>
     </PopoverPrimitive.Trigger>
   );
