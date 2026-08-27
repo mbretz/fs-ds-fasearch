@@ -20,7 +20,7 @@ apps/locator/       Vite + React store-locator app — empty skeleton (deps only
 packages/tokens/     Mirrors Figma "Styles" library — DONE. Figma Variables -> Tokens Studio export -> CSS/DTCG
 packages/icons/      Mirrors Figma Assets "Icons" page — DONE. SVG -> React components via SVGR
 packages/illustrations/  Mirrors Figma Assets "Illustrations" page — DONE. Same pipeline as icons, multicolor preserved
-packages/ds/         Mirrors Figma "Components" library — IN PROGRESS. Radix Primitives + cva + Tailwind v4. Avatar, Label, TextInput, TextArea, Microcopy, SelectInput, Checkbox, ChecklistGroup, RadioButton, RadioGroup, Button, Link, LinkHelp, LinkNavigation, Tag, Card, CloseButton, Separator, Scrim, Dialog, Chip, SegmentedControl, FilterMenu, SearchInput shipped; all original-scope Primitives plus several scope extensions now done — next target undecided, see RESUME_NOTES.txt / docs/PLAN.md §1.6
+packages/ds/         Mirrors Figma "Components" library — IN PROGRESS. Radix Primitives + cva + Tailwind v4. Avatar, Label, TextInput, TextArea, Microcopy, SelectInput, Checkbox, ChecklistGroup, RadioButton, RadioGroup, Button, Link, LinkHelp, LinkNavigation, Tag, Card, CloseButton, Separator, Scrim, Dialog, Chip, SegmentedControl, FilterMenu, SearchInput, Tabs shipped; all original-scope Primitives plus several scope extensions now done — next target undecided, see RESUME_NOTES.txt / docs/PLAN.md §1.6
 ```
 
 Workspace deps: `ds` depends on `tokens` (declared in `packages/ds/package.json`); `icons`/`illustrations` are currently dependency-free siblings. Consumers import each package directly (`tokens`, `icons`, `illustrations`, `ds`) — the DS package does not re-export icons or illustrations.
@@ -88,6 +88,8 @@ Radix UI Primitives (`radix-ui` package) + `class-variance-authority` + `tailwin
 Density theming is a `data-density="roomy"|"condensed"` attribute cascading from the nearest ancestor (`docs/PLAN.md` §1.4) — components read CSS vars that resolve differently per density, not JS branching. Radix portal-rendered components (Dialog, Popover, Tooltip) must set `data-density` explicitly on their content root since portals break the DOM cascade.
 
 Component authoring conventions (forward refs, `asChild` support, `density` prop, cva-exported variants, no hardcoded colors/spacing) are enumerated in `docs/PLAN.md` §1.6 — apply them to every new component rather than re-deriving conventions per component.
+
+`packages/ds` is treated as its own real publish boundary — a consumer only sees what's inside that package, not the monorepo root. `packages/ds/README.md` is the front door; `packages/ds/specs/{standards,style-foundations}/` holds cross-cutting UX/accessibility guidance, and a component with real acceptance criteria gets a colocated `<Name>.spec.md` (13 of 25 components have one so far — a coverage gap, not an unfinished-component signal). Full pattern and rationale in `docs/PLAN.md` §1.6's dated 2026-08-27 note.
 
 ## Icons and illustrations (`packages/icons`, `packages/illustrations`)
 
