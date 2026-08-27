@@ -497,7 +497,7 @@ function SearchInputSuggestions({
           }
         }}
         className={cn(
-          'z-50 flex flex-col overflow-hidden rounded-[var(--component-search-input-drawer-border-radius)] border-[length:var(--component-search-input-border-width)] border-[color:var(--component-search-input-border-color-default)] bg-[var(--component-search-input-background-color-default)] shadow-elevation-raised',
+          'z-index-popover flex flex-col overflow-hidden rounded-[var(--component-search-input-drawer-border-radius)] border-[length:var(--component-search-input-border-width)] border-[color:var(--component-search-input-border-color-default)] bg-[var(--component-search-input-background-color-default)] shadow-elevation-raised',
           className,
         )}
         // `minWidth` subtracts 1x `CONTENT_ALIGN_OFFSET`: the drawer's left

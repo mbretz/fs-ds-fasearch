@@ -202,3 +202,26 @@
       var(--semantic-elevation-transcending-penumbra-spread)
       var(--semantic-elevation-transcending-penumbra-color);
 }
+
+/*
+ * Z-index scale — added 2026-08-27, deliberately CSS-only, no tokens.json
+ * bucket. Full reasoning (why CSS-only, why role beats shadow rank,
+ * `toast`'s reserved base) in `docs/PLAN.md` §1.6's dated note.
+ *
+ * Role decides the tier (`overlay` < `modal` < `popover`, bases 100 apart);
+ * the offset is that component's own `shadow-elevation-*` rank (Carved=1
+ * ... Transcending=8), used only to tiebreak within a role, never to
+ * reorder roles.
+ */
+@utility z-index-overlay {
+  z-index: 100; /* role: overlay, no elevation rank -- Scrim */
+}
+@utility z-index-modal {
+  z-index: calc(
+    200 + 5
+  ); /* role: modal, rank 5 (suspended) -- Dialog.Content */
+}
+@utility z-index-popover {
+  /* role: popover, rank 4 (raised) -- SelectInput, FilterMenu, SearchInput's drawer */
+  z-index: calc(300 + 4);
+}

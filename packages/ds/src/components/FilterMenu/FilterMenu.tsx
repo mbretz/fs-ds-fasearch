@@ -120,7 +120,7 @@ function FilterMenuContent({
       align="start"
       sideOffset={CONTENT_SIDE_OFFSET}
       className={cn(
-        'z-50 flex flex-col gap-[var(--component-filter-menu-content-gap)] rounded-[var(--component-filter-menu-content-border-radius)] border-[length:var(--component-filter-menu-content-border-width)] border-[color:var(--component-filter-menu-content-border-color)] bg-[var(--component-filter-menu-content-background-color)] p-[var(--component-filter-menu-content-padding)] shadow-elevation-raised',
+        'z-index-popover flex flex-col gap-[var(--component-filter-menu-content-gap)] rounded-[var(--component-filter-menu-content-border-radius)] border-[length:var(--component-filter-menu-content-border-width)] border-[color:var(--component-filter-menu-content-border-color)] bg-[var(--component-filter-menu-content-background-color)] p-[var(--component-filter-menu-content-padding)] shadow-elevation-raised',
         className,
       )}
       {...props}
