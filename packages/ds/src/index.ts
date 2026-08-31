@@ -175,4 +175,16 @@ export type {
   SearchInputOptionProps,
 } from './components/SearchInput/SearchInput.types';
 
+export { Box, boxVariants } from './components/Box/Box';
+export type { BoxProps } from './components/Box/Box.types';
+
+export { Stack, stackVariants } from './components/Stack/Stack';
+export type { StackProps } from './components/Stack/Stack.types';
+
+export { Grid, gridVariants } from './components/Grid/Grid';
+export type { GridProps } from './components/Grid/Grid.types';
+
+export { SPACING_SCALE } from './utils/spacing-scale';
+export type { Spacing } from './utils/spacing-scale';
+
 export { highlightMatch } from './utils/highlight-match';
