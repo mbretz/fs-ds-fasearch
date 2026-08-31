@@ -29,21 +29,21 @@ Some exceptions may apply depending on the platform: Apple's macOS guidance plac
 
 ### Standard labels
 
-| Standard label   | Use case                                                                                                                          |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Cancel            | Default — a planned action should not take place.                                                                                 |
-| Dismiss           | When "Cancel" is contextually inappropriate, e.g., cancel an appointment vs. dismiss the calendar edit.                          |
-| Delete [Object]   | Data will be immediately destroyed. Present the user with a confirmation dialog if the destruction could be severe. Be explicit about what will be deleted. |
-| Save              | Content changes made within the current context will persist in a database.                                                      |
-| Save & Continue   | Content changes are saved, but there are more steps to complete beyond the current context.                                      |
-| Save & Complete   | Content changes are saved, but there are more steps to complete beyond the current context at a future time.                     |
-| Edit              | Data is available for editing.                                                                                                    |
-| Update            | Changes only persist on-screen; nothing is committed to the database. Progress is lost if a user leaves context.                 |
-| Submit            | Used as the final commit for the task or process. Data will be sent to a recipient destination. Do not use if there are more steps. |
-| Print             | Triggers a print options dialog or print preview.                                                                                 |
-| Print Preview     | Triggers the creation of a PDF of the print preview.                                                                              |
-| Send to Printer   | Immediately delivers a request to a printer, without bringing up a print options dialog or print preview.                        |
-| Sign Up           | Product-specific — use "Sign Up," not "enroll," when referring to a customer portal or other online services.                    |
+| Standard label  | Use case                                                                                                                                                    |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cancel          | Default — a planned action should not take place.                                                                                                           |
+| Dismiss         | When "Cancel" is contextually inappropriate, e.g., cancel an appointment vs. dismiss the calendar edit.                                                     |
+| Delete [Object] | Data will be immediately destroyed. Present the user with a confirmation dialog if the destruction could be severe. Be explicit about what will be deleted. |
+| Save            | Content changes made within the current context will persist in a database.                                                                                 |
+| Save & Continue | Content changes are saved, but there are more steps to complete beyond the current context.                                                                 |
+| Save & Complete | Content changes are saved, but there are more steps to complete beyond the current context at a future time.                                                |
+| Edit            | Data is available for editing.                                                                                                                              |
+| Update          | Changes only persist on-screen; nothing is committed to the database. Progress is lost if a user leaves context.                                            |
+| Submit          | Used as the final commit for the task or process. Data will be sent to a recipient destination. Do not use if there are more steps.                         |
+| Print           | Triggers a print options dialog or print preview.                                                                                                           |
+| Print Preview   | Triggers the creation of a PDF of the print preview.                                                                                                        |
+| Send to Printer | Immediately delivers a request to a printer, without bringing up a print options dialog or print preview.                                                   |
+| Sign Up         | Product-specific — use "Sign Up," not "enroll," when referring to a customer portal or other online services.                                               |
 
 ### Variants
 
@@ -122,11 +122,11 @@ Using a tertiary button in the following ways helps a user understand that it is
 
 ### Keyboard controls
 
-| Key             | Behavior                            |
-| --------------- | ------------------------------------ |
-| Tab             | Moves focus to the button.          |
-| Enter or Space  | Activates the button.               |
-| Tab             | Moves focus away from the button.   |
+| Key            | Behavior                          |
+| -------------- | --------------------------------- |
+| Tab            | Moves focus to the button.        |
+| Enter or Space | Activates the button.             |
+| Tab            | Moves focus away from the button. |
 
 ### Focus management
 
