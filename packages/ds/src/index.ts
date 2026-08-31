@@ -184,6 +184,19 @@ export type { StackProps } from './components/Stack/Stack.types';
 export { Grid, gridVariants } from './components/Grid/Grid';
 export type { GridProps } from './components/Grid/Grid.types';
 
+export {
+  ScrollArea,
+  scrollAreaScrollbarVariants,
+} from './components/ScrollArea/ScrollArea';
+export type {
+  ScrollAreaProps,
+  ScrollAreaRootProps,
+  ScrollAreaViewportProps,
+  ScrollAreaScrollbarProps,
+  ScrollAreaThumbProps,
+  ScrollAreaCornerProps,
+} from './components/ScrollArea/ScrollArea.types';
+
 export { SPACING_SCALE } from './utils/spacing-scale';
 export type { Spacing } from './utils/spacing-scale';
 
