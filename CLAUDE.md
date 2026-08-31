@@ -20,7 +20,7 @@ apps/locator/       Vite + React store-locator app — empty skeleton (deps only
 packages/tokens/     Mirrors Figma "Styles" library — DONE. Figma Variables -> Tokens Studio export -> CSS/DTCG
 packages/icons/      Mirrors Figma Assets "Icons" page — DONE. SVG -> React components via SVGR
 packages/illustrations/  Mirrors Figma Assets "Illustrations" page — DONE. Same pipeline as icons, multicolor preserved
-packages/ds/         Mirrors Figma "Components" library — IN PROGRESS. Radix Primitives + cva + Tailwind v4. Avatar, Label, TextInput, TextArea, Microcopy, SelectInput, Checkbox, ChecklistGroup, RadioButton, RadioGroup, Button, Link, LinkHelp, LinkNavigation, Tag, Card, CloseButton, Separator, Scrim, Dialog, Chip, SegmentedControl, FilterMenu, SearchInput, Tabs shipped; all original-scope Primitives plus several scope extensions now done — next target undecided, see RESUME_NOTES.txt / docs/PLAN.md §1.6
+packages/ds/         Mirrors Figma "Components" library — IN PROGRESS. Radix Primitives + cva + Tailwind v4. Avatar, Label, TextInput, TextArea, Microcopy, SelectInput, Checkbox, ChecklistGroup, RadioButton, RadioGroup, Button, Link, LinkHelp, LinkNavigation, Tag, Card, CloseButton, Separator, Scrim, Dialog, Chip, SegmentedControl, FilterMenu, SearchInput, Tabs, Box, Stack, Grid shipped; all original-scope Primitives/Layout plus several scope extensions now done — next up is `apps/locator`, see RESUME_NOTES.txt / docs/PLAN.md §1.6
 ```
 
 Workspace deps: `ds` depends on `tokens` (declared in `packages/ds/package.json`); `icons`/`illustrations` are currently dependency-free siblings. Consumers import each package directly (`tokens`, `icons`, `illustrations`, `ds`) — the DS package does not re-export icons or illustrations.
