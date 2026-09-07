@@ -1,11 +1,11 @@
-# Monorepo: Design System + Store Locator — Portfolio Showcase
+# Monorepo: Design System + Advisor Locator — Portfolio Showcase
 
 ## Context
 
 You want a public StackBlitz-hosted monorepo as a portfolio piece that demonstrates:
 
 1. **Design-system engineering** — a Radix-style, fully composable component library driven by tokens authored in Figma.
-2. **Product composition** — a store-locator app that consumes the DS both as off-the-shelf components and as primitives composed into new product-level components.
+2. **Product composition** — an advisor-locator app that consumes the DS both as off-the-shelf components and as primitives composed into new product-level components.
 
 Constraint: the showcase has to boot quickly on StackBlitz WebContainers for reviewers clicking your link. That tips us away from heavyweight tooling and toward a clean, fast cold start. The DS is built in its entirety before the locator begins.
 
@@ -28,7 +28,7 @@ Constraint: the showcase has to boot quickly on StackBlitz WebContainers for rev
 | Density theming        | **Roomy** (default) and **Condensed** — two modes, per-element override supported                                                                                                                                                                                        |
 | Monorepo               | pnpm workspaces + Turborepo                                                                                                                                                                                                                                              |
 | DS docs                | Storybook 10 (see 2026-08-14 deviation note in §1.7 — originally scoped as Storybook 8)                                                                                                                                                                                  |
-| Locator UX             | Map + list side-by-side, pin popovers, list↔map sync, search/filter                                                                                                                                                                                                      |
+| Locator UX             | Map + list side-by-side, pin popovers, list↔map sync, search by advisor name or location                                                                                                                                                                                 |
 | Map                    | MapLibre GL JS + free OSM raster tiles (no API key)                                                                                                                                                                                                                      |
 | Plan file              | `docs/PLAN.md` at repo root                                                                                                                                                                                                                                              |
 
@@ -57,7 +57,7 @@ Net: **Radix Primitives + cva + Tailwind + your tokens**, with shadcn as a refer
 fs-ds-fasearch/
 ├── apps/
 │   ├── storybook/              # Storybook 10 host (consumes packages/ds + icons)
-│   └── locator/                # Vite + React store-locator app
+│   └── locator/                # Vite + React advisor-locator app
 ├── packages/
 │   ├── tokens/                 # Mirrors Figma "Styles" library
 │   │   ├── source/             # Raw export from Figma plugin
@@ -575,9 +575,25 @@ Figma's `Requirement` variant (`required`/`optional`/`none`, node 88:596 — the
 
 ---
 
-## Phase 2: Store Locator (`apps/locator`)
+## Phase 2: Advisor Locator (`apps/locator`)
 
 Begins only after Phase 1 exit criteria are met.
+
+### 2.0 Application Flow & Routing
+
+High-level flow, captured 2026-09-08 — expect further detail/refinement once this gets built out. **Routing**: React Router, since the app is now multi-page rather than a single map+list screen. **Figma designs exist for almost everything described in this section, including `SiteHeader`** — will be provided when work on `apps/locator` actually begins, same as every `packages/ds` component was built against a real Figma source. Treat the specifics below (styling, exact copy, layout) as placeholder/provisional until then, not as a spec to build blind against.
+
+**Site shell.** The locator is presented as an "embedded" product experience inside a template of the surrounding website it'd actually ship in. A `SiteShell` component wraps every route (outside the React Router route tree, not itself a page) with a `SiteHeader` and `SiteFooter`. Both are deliberately generic — no `packages/ds`/`packages/tokens` references at all — so the shell visibly reads as a different, surrounding site rather than part of the DS-driven product underneath. `SiteHeader` has a placeholder brand mark and a few plain nav labels that are **completely non-functional**: no routing, no click handlers, not real interactive elements — just enough markup to look like nav, with a `cursor: not-allowed` treatment on hover so mouse users get a visual "this doesn't do anything" cue. `SiteFooter` is just a large "Footer" label — no links, no columns, a placeholder standing in for a real footer.
+
+Pages/routes (all render inside `SiteShell`, and are unrelated to it — the locator's own sign-in/favorites controls from item 6 below are part of the product, not the shell):
+
+1. **Landing** — just a `SearchInput` (DS export). No map, no list.
+2. **Results** — reached on search submission. Desktop defaults to **Dual View** (map + list side-by-side, §2.1/2.2 below); user can switch to List-only or Map-only via a DS `SegmentedControl`. Mobile only offers List/Map (no Dual View), defaulting to List, switched via DS `RadioGroup`/`RadioButton` instead of `SegmentedControl`. Also carries two filter controls, independent of the view switcher: a DS `FilterMenu` filtering by advisor `focusAreas` (multi-select), and a single DS `Checkbox` — "Show only advisors accepting new clients" — which keeps a location if it has at least one advisor with `newClientStatus: 'accepting'` (multi-advisor locations aren't dropped just because one of their advisors doesn't qualify).
+3. **Advisor profile** — one per advisor, reached via a "View profile" CTA on any advisor card/map tile. Hosts the New Client Inquiry module inline (see below) when that advisor is accepting new clients.
+4. **Location profile** — one per location, reached via a "View location" CTA. Lists that location's advisor cards; each links to its own advisor profile page.
+5. **New Client Inquiry** (advisors with `newClientStatus: 'accepting'` only — whether `'waitlist'` also gets a CTA, and with what label, is still open) — an inquiry form/CTA appears wherever that advisor is shown (card, map tile, profile page). Desktop opens it in a DS `Dialog`; mobile navigates to a dedicated route instead. Also embedded directly as an inline module on the advisor's own profile page (not a dialog there).
+6. **Sign-in (spoofed)** — not part of `SiteHeader` (that's decorative-only, see "Site shell" above) and not a product header/nav shell either; instead a couple of small, dedicated components rendered within the locator's own pages. A `SessionControl` component (exact placement/pages TBD) shows a `Button` reading "Sign In" when signed out; clicking it is a one-click toggle to a single hardcoded fake user — no credentials form, nothing to type — and the same component then shows that user's DS `Avatar` + name plus a sign-out action. A separate `FavoritesLauncher` component (small button/link, signed-in only) opens the Saved advisors page (below).
+7. **Saved advisors** (signed-in only) — a bookmark/favorite toggle on every advisor card/row anywhere one appears (Results list, pin popovers, Location profile's advisor list, the Advisor profile page itself) that a signed-in user can click to favorite/unfavorite that advisor. A dedicated page (opened via `FavoritesLauncher`) lists everything currently favorited. Favorites persist to `localStorage` for the current browser — there's no real backend or multi-user auth, this is a single spoofed session — and are cleared on sign-out. Signed-out users don't see the favorite toggle at all (open to revisit: could instead show it disabled with a "sign in to save" affordance).
 
 ### 2.1 Map Implementation
 
@@ -585,34 +601,39 @@ Begins only after Phase 1 exit criteria are met.
 - **Tiles**: free OpenStreetMap raster tiles (`https://tile.openstreetmap.org/{z}/{x}/{y}.png`). No key required. Looks slightly dated vs vector tiles but is zero-friction and StackBlitz-bulletproof.
 - **Upgrade path** (note in code, don't implement): swap tile URL to MapTiler vector tiles for smooth zoom — requires a free account and public API key.
 - **Wrapper**: a thin `<Map>` component in `apps/locator/src/components/Map/` that exposes imperative methods (`flyTo`, `setSelected`) via `useImperativeHandle`. Keeps MapLibre out of the rest of the app.
-- **Data**: ~6–10 locations in `apps/locator/src/data/locations.ts` — typed array of `{ id, name, category, address, lat, lng, hours, open }`.
+- **Data**: ~20 locations in `apps/locator/src/data/locations.ts` — typed array of `{ id, name, address, lat, lng, hours, open, advisors }`, where `advisors` is a non-empty array of `{ id, name, title, newClientStatus, focusAreas }`. Most locations have exactly one advisor; a few are multi-advisor to prove the UI handles both shapes. `newClientStatus` is a three-state enum — `'accepting' | 'waitlist' | 'referralOnly'` — and is per-advisor (not per-location) since a multi-advisor location can mix all three. `focusAreas` is a non-empty string array per advisor (e.g. `['Retirement Planning', 'Estate Planning']`) driving the Results screen's Focus Area filter.
+- **Pin styling**: two marker variants — single-advisor locations get one pin style, multi-advisor locations get a visually distinct one (e.g. a stacked/badge-count treatment) — so the map itself communicates location "size" before a pin is even clicked.
 
 ### 2.2 Locator UX Features
 
-All four chosen:
+All seven chosen:
 
 1. **Side-by-side map + list** — composed from DS `Stack`, `Card`, `ScrollArea`.
-2. **Pin popovers** — clicking a map pin opens a Radix `Popover` (DS export) anchored to the pin, showing store details composed from `Card.Header`, `Badge` (open/closed), `Stack`, and a primary `Button` for "Get directions".
+2. **Pin popovers** — clicking a map pin opens a Radix `Popover` (DS export) anchored to the pin, showing location details composed from `Card.Header`, a locator-local `Badge` component (open/closed) — not a DS export; there's no `Badge` in `packages/ds` — `Stack`, and one row per advisor (name, title, and that same `Badge` component for `newClientStatus` — "Accepting new clients" / "Waitlist" / "By referral only", one distinct color per state), plus a primary `Button` for "Get directions".
 3. **List ↔ map sync** —
    - Click a list row → `mapRef.current.flyTo({ center: [lng, lat], zoom: 14 })`, popover opens.
    - Click a pin → list scrolls to that row (DS `ScrollArea.scrollIntoView`) and row gets a selected style.
    - Single source of truth: a `selectedLocationId` in React state; both views render from it.
-4. **Search/filter** — a `FilterBar` product component composed from DS `Input` (name search), `DropdownMenu` (category), `Badge` (open-now toggle). Filtering is client-side over the static array.
+4. **Search by advisor name or location** — a `SearchInput` (DS export) filters the static array client-side, matching against each location's `name`/`address` and every advisor's `name` in its `advisors` array. A match on an advisor surfaces that advisor's location, not just an advisor-only result — the list and map both stay location-rows.
+5. **Map legend** — a small overlay panel (own custom control, positioned inside the `<Map>` wrapper, independent of the raster tile layer) explaining the two pin styles (single- vs. multi-advisor location) and the `newClientStatus` `Badge` colors used inside the popovers, so a user can read pin/badge meaning at a glance before clicking anything.
+6. **Focus Area filter** — a DS `FilterMenu` (multi-select) over the union of every advisor's `focusAreas`. A location stays in the results if at least one of its advisors matches at least one selected focus area.
+7. **Accepting-new-clients filter** — a single DS `Checkbox` ("Show only advisors accepting new clients") that keeps a location if at least one of its advisors has `newClientStatus: 'accepting'` — independent of, and composes with, the Focus Area filter and the search box.
 
 ### 2.3 Composition Patterns to Showcase
 
 The locator is the proof that the DS composes well. Make sure each of these is visible:
 
-- **Out-of-the-box use**: `Button`, `Input`, `Avatar`, `Tabs` consumed directly.
-- **Sub-component composition**: `Card.Root` + `Card.Header` + `Card.Body` assembled into a `LocationCard` product component — not a DS export.
-- **Icon composition**: `<Button><MapPin />Directions</Button>` and `<Badge><Clock />Open now</Badge>` — shows the icons package composing cleanly with DS components.
+- **Out-of-the-box use**: `Button`, `SearchInput`, `Avatar`, `Tabs`, `FilterMenu`, `Checkbox`, `SegmentedControl`, `RadioGroup`/`RadioButton` consumed directly.
+- **Sub-component composition**: `Card.Root` + `Card.Header` + `Card.Body` assembled into a `LocationCard` product component — not a DS export. `LocationCard` renders one row per advisor (name + title + the locator-local `newClientStatus` `Badge`), so the single- vs. multi-advisor cases share one code path.
+- **Icon composition**: `<Button><MapPin />Directions</Button>` (DS `Button` + `icons` package) and `<Badge><Clock />Open now</Badge>` (locator-local `Badge` + `icons` package) — shows the icons package composing cleanly with both DS and locator-local components.
 - **`asChild` pattern**: `<Button asChild><a href="...">Directions</a></Button>` for the directions link, proving Radix slot composition works through the DS.
 - **Variant extension via cva**: the `LocationCard` extends `Card`'s cva recipe to add a `selected` variant — demonstrates the DS doesn't lock you in.
+- **Reused across contexts**: the locator-local `newClientStatus` `Badge` (and its color coding, resolved through DS tokens) appears in both the map legend and the popovers, unmodified — proves one component/token pairing can drive two different surfaces consistently, even for a component that itself lives outside the DS package boundary.
 
 ### 2.4 Phase 2 Exit Criteria
 
-- All four UX features working end-to-end.
-- At least three product-level components composed from DS primitives (e.g., `LocationCard`, `FilterBar`, `LocationDetailsPopover`).
+- All seven UX features working end-to-end.
+- At least three product-level components composed from DS primitives (e.g., `LocationCard`, `LocationSearch`, `LocationDetailsPopover`).
 - Tokens flow end-to-end from `packages/tokens` through the DS into the locator UI (verifiable by changing a semantic color in the token JSON, re-running the build, and seeing the locator re-skin).
 - `pnpm --filter locator dev` boots cleanly on a fresh StackBlitz fork.
 
@@ -655,7 +676,14 @@ apps/locator/index.html                          # data-density="roomy" on <html
 apps/locator/src/data/locations.ts               # static location data
 apps/locator/src/components/Map/Map.tsx          # MapLibre wrapper
 apps/locator/src/components/LocationCard.tsx     # DS composition example
-apps/locator/src/components/FilterBar.tsx        # DS composition example
+apps/locator/src/components/LocationSearch.tsx   # DS composition example
+apps/locator/src/components/Badge.tsx            # locator-local, not a DS export
+apps/locator/src/components/SessionControl.tsx   # spoofed sign-in/out toggle, locator-local
+apps/locator/src/components/FavoritesLauncher.tsx # opens the Saved advisors page, locator-local
+apps/locator/src/components/FavoriteButton.tsx   # per-advisor bookmark toggle, locator-local
+apps/locator/src/components/SiteShell.tsx        # wraps every route with SiteHeader + SiteFooter
+apps/locator/src/components/SiteHeader.tsx       # decorative, non-interactive; no DS/tokens references
+apps/locator/src/components/SiteFooter.tsx       # decorative "Footer" label only; no DS/tokens references
 docs/PLAN.md                                     # this file
 README.md                                        # StackBlitz pitch
 ```
@@ -684,8 +712,8 @@ End-to-end smoke when each phase completes:
 - `pnpm --filter locator dev` boots the locator.
 - Click each list row → map flies to that pin, popover opens.
 - Click each map pin → list row highlights and scrolls into view.
-- Type in search box → list + pins filter together.
-- Toggle category dropdown and open-now badge → filters compose.
+- Type an advisor's name in the search box → only that advisor's location remains in list + pins.
+- Type a location name/address fragment in the search box → matching locations remain in list + pins.
 - Changing a semantic color in the token source JSON and re-running the token build re-skins the locator UI — same proof as in Phase 1, now across the package boundary.
 - Open on a fresh StackBlitz fork — confirm full interaction works in WebContainers.
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A pnpm-workspace monorepo building a public, StackBlitz-hosted portfolio piece: a Radix-style design system driven by Figma-authored tokens, plus a store-locator app that consumes it. Full architecture, phased build order, and locked decisions live in `docs/PLAN.md` — read it before making any structural change; it's the source of truth, not this file. `docs/PLAN.md` also carries dated "Deviation from plan" notes where implementation diverged from the original spec (e.g. `packages/ds/src/theme.css` replacing a planned `tailwind.preset.ts`) — check those before trusting the plan's prose on a topic that's already been built.
+A pnpm-workspace monorepo building a public, StackBlitz-hosted portfolio piece: a Radix-style design system driven by Figma-authored tokens, plus an advisor-locator app that consumes it. Full architecture, phased build order, and locked decisions live in `docs/PLAN.md` — read it before making any structural change; it's the source of truth, not this file. `docs/PLAN.md` also carries dated "Deviation from plan" notes where implementation diverged from the original spec (e.g. `packages/ds/src/theme.css` replacing a planned `tailwind.preset.ts`) — check those before trusting the plan's prose on a topic that's already been built.
 
 `docs/FIGMA_COMPONENT_AUDIT.md` tracks naming/hygiene findings from auditing the Figma "Components" library against `docs/PLAN.md` §1.2's conventions, plus worked fix examples (Button) — consult it before building a new component from Figma.
 
@@ -16,7 +16,7 @@ Code style is enforced via Prettier (`.prettierrc` at repo root — notably `tra
 
 ```
 apps/storybook/    Storybook 10 host — LIVE, hosts every packages/ds component's stories (docs/PLAN.md §1.7). `pnpm --filter storybook dev` to run it
-apps/locator/       Vite + React store-locator app — empty skeleton (deps only), built after Storybook
+apps/locator/       Vite + React advisor-locator app — empty skeleton (deps only), built after Storybook
 packages/tokens/     Mirrors Figma "Styles" library — DONE. Figma Variables -> Tokens Studio export -> CSS/DTCG
 packages/icons/      Mirrors Figma Assets "Icons" page — DONE. SVG -> React components via SVGR
 packages/illustrations/  Mirrors Figma Assets "Illustrations" page — DONE. Same pipeline as icons, multicolor preserved
