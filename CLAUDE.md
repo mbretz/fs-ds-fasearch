@@ -16,7 +16,7 @@ Code style is enforced via Prettier (`.prettierrc` at repo root — notably `tra
 
 ```
 apps/storybook/    Storybook 10 host — LIVE, hosts every packages/ds component's stories (docs/PLAN.md §1.7). `pnpm --filter storybook dev` to run it
-apps/locator/       Vite + React advisor-locator app — empty skeleton (deps only), built after Storybook
+apps/locator/       Vite + React advisor-locator app — bootable skeleton (Vite/Tailwind config, entry point); no routing/pages/data/UI yet, see docs/PLAN.md §2.0-§2.4 for the locked flow to build against
 packages/tokens/     Mirrors Figma "Styles" library — DONE. Figma Variables -> Tokens Studio export -> CSS/DTCG
 packages/icons/      Mirrors Figma Assets "Icons" page — DONE. SVG -> React components via SVGR
 packages/illustrations/  Mirrors Figma Assets "Illustrations" page — DONE. Same pipeline as icons, multicolor preserved
