@@ -63,6 +63,7 @@ export { default as LockLocked } from './LockLocked';
 export { default as LockUnlocked } from './LockUnlocked';
 export { default as LoginKey } from './LoginKey';
 export { default as MapPinLarge } from './MapPinLarge';
+export { default as Map } from './Map';
 export { default as MembersPeople } from './MembersPeople';
 export { default as MessageEnvelope } from './MessageEnvelope';
 export { default as MessageForward } from './MessageForward';
