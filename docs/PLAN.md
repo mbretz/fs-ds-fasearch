@@ -585,6 +585,8 @@ High-level flow, captured 2026-09-08 — expect further detail/refinement once t
 
 **Site shell.** The locator is presented as an "embedded" product experience inside a template of the surrounding website it'd actually ship in. A `SiteShell` component wraps every route (outside the React Router route tree, not itself a page) with a `SiteHeader` and `SiteFooter`. Both are deliberately generic — no `packages/ds`/`packages/tokens` references at all — so the shell visibly reads as a different, surrounding site rather than part of the DS-driven product underneath. `SiteHeader` has a placeholder brand mark and a few plain nav labels that are **completely non-functional**: no routing, no click handlers, not real interactive elements — just enough markup to look like nav, with a `cursor: not-allowed` treatment on hover so mouse users get a visual "this doesn't do anything" cue. `SiteFooter` is just a large "Footer" label — no links, no columns, a placeholder standing in for a real footer.
 
+**Deviation from plan (2026-09-08): `SiteHeader` ships with real Edward Jones branding, not a de-branded placeholder.** Once real Figma page-template references for `SiteHeader`/`SiteFooter` were provided, they turned out to use the actual company name, logo, and nav copy throughout. Given the choice between matching that exactly or inventing generic copy, the user explicitly chose to build it exactly as designed — accepting that this portfolio piece's rendered UI now names the source company, a tradeoff from the original "reads as a different, surrounding site" framing above. The "no `packages/ds`/`packages/tokens` references" and "completely non-functional" constraints still hold regardless; only the branding content changed. `SiteHeader` also picked up a third responsive tier (a tablet breakpoint between the original mobile/desktop pair) after cross-checking against the real edwardjones.com header, which the provided Figma frames didn't fully specify on their own.
+
 Pages/routes (all render inside `SiteShell`, and are unrelated to it — the locator's own sign-in/favorites controls from item 6 below are part of the product, not the shell):
 
 1. **Landing** — just a `SearchInput` (DS export). No map, no list.
@@ -681,9 +683,10 @@ apps/locator/src/components/Badge.tsx            # locator-local, not a DS expor
 apps/locator/src/components/SessionControl.tsx   # spoofed sign-in/out toggle, locator-local
 apps/locator/src/components/FavoritesLauncher.tsx # opens the Saved advisors page, locator-local
 apps/locator/src/components/FavoriteButton.tsx   # per-advisor bookmark toggle, locator-local
-apps/locator/src/components/SiteShell.tsx        # wraps every route with SiteHeader + SiteFooter
-apps/locator/src/components/SiteHeader.tsx       # decorative, non-interactive; no DS/tokens references
-apps/locator/src/components/SiteFooter.tsx       # decorative "Footer" label only; no DS/tokens references
+apps/locator/src/host-template/SiteShell.tsx     # wraps every route with SiteHeader + SiteFooter; kept out of src/components/ deliberately
+apps/locator/src/host-template/SiteHeader.tsx    # real Figma/branding content, non-interactive; no DS/tokens references
+apps/locator/src/host-template/SiteFooter.tsx    # "Footer" label placeholder only; no DS/tokens references
+apps/locator/src/host-template/assets/site-header-logo.svg  # host-chrome logo asset
 docs/PLAN.md                                     # this file
 README.md                                        # StackBlitz pitch
 ```
