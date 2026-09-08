@@ -45,6 +45,7 @@
   "live-chat-associate": "Contacts and messaging",
   "phone-mobile": "Contacts and messaging",
   "compose-sm": "Contacts and messaging",
+  "phone": "Contacts and messaging",
 
   "filter": "Grids and tables",
   "grid-three": "Grids and tables",
@@ -96,6 +97,7 @@
   "fullscreen-expand": "Utilities and controls",
   "hamburger": "Utilities and controls",
   "share": "Utilities and controls",
+  "login-key": "Utilities and controls",
 
   "rating-star-empty": "Favoritism",
   "rating-star-full": "Favoritism",
