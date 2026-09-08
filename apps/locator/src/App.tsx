@@ -1,5 +1,7 @@
 import 'ds/src/theme.css';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './router';
 
 export function App() {
-  return <div>Locator — coming soon</div>;
+  return <RouterProvider router={router} />;
 }
