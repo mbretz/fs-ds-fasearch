@@ -69,6 +69,7 @@ export const manifest: Record<string, IconMeta> = {
   'lock-locked': { category: 'Data management' },
   'lock-unlocked': { category: 'Data management' },
   'login-key': { category: 'Utilities and controls' },
+  'map': { category: 'Miscellaneous metaphors' },
   'map-pin-large': { category: 'Miscellaneous metaphors' },
   'members-people': { category: 'Contacts and messaging' },
   'message-envelope': { category: 'Contacts and messaging' },
