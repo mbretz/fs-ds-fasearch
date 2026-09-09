@@ -1,6 +1,16 @@
 import { Button } from 'ds';
 import { NewWindow } from 'icons';
 import heroImage from '../../assets/search-module-hero.png';
+// vite-imagetools-generated WebP srcset (build-time only; the plain
+// `heroImage` import above stays as both the <img>'s fallback `src` and
+// the browser-decides-nothing baseline). Widths cover the image's actual
+// rendered range end to end: ~340-625px across the stacked layout (see
+// the `sizes` attribute below, which reuses this component's own derived
+// viewport-to-container-width formulas), capped at a fixed 335px once
+// @[625px] switches to the side-by-side treatment — 1300w covers that at
+// 3x DPR with headroom, 1810w is the source's own native width as a
+// ceiling for anything wider.
+import heroImageSrcset from '../../assets/search-module-hero.png?w=400;700;1000;1300;1810&format=webp&as=srcset';
 import { SearchFormSearchInput } from './SearchFormSearchInput';
 
 // Every padding/gap value below falls back to `primitives.ref.space.*`
@@ -240,6 +250,15 @@ export function Start() {
         <div className="flex flex-col gap-[var(--density-spacing-fixed-xx-large)] @[625px]:flex-row @[625px]:items-center @[625px]:gap-[var(--primitives-ref-space-07)]">
           <img
             src={heroImage}
+            srcSet={heroImageSrcset}
+            // Reuses this component's own derived width formulas (see the
+            // container-query comments above): viewport - 493 once the
+            // two-column grid is active (@[768px]/module+), viewport - 48
+            // in single-column mode, fixed 335px once the inner row itself
+            // goes side-by-side (@[625px] on this row's own container,
+            // which lands at viewport >=1110px — see that container
+            // query's own comment for the exact math).
+            sizes="(min-width: 1110px) 335px, (min-width: 768px) calc(100vw - 493px), calc(100vw - 48px)"
             alt=""
             // Figma's own 335x206 frame ratio (~1.626:1), via aspect-ratio
             // instead of a fixed h-[206px] — a fixed height with a growing
