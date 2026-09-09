@@ -16,7 +16,7 @@ Code style is enforced via Prettier (`.prettierrc` at repo root — notably `tra
 
 ```
 apps/storybook/    Storybook 10 host — LIVE, hosts every packages/ds component's stories (docs/PLAN.md §1.7). `pnpm --filter storybook dev` to run it
-apps/locator/       Vite + React advisor-locator app — routing/site-shell scaffold + mock data fixture done (React Router, host-template SiteHeader/Footer, locations.ts); no product UI yet, see docs/PLAN.md §2.0-§2.4 for the locked flow to build against
+apps/locator/       Vite + React advisor-locator app — routing/site-shell scaffold + mock data fixture done (React Router, host-template SiteHeader/Footer, locations.ts); Landing page's AdvisorSearchModule Stage=Start now built (dark card shell, search field, promo panels, fully responsive via container queries) — Stage=InProgress, typeahead wiring, and View Transitions still to come, see docs/PLAN.md §2.0-§2.4 and RESUME_NOTES.txt for the locked flow
 packages/tokens/     Mirrors Figma "Styles" library — DONE. Figma Variables -> Tokens Studio export -> CSS/DTCG
 packages/icons/      Mirrors Figma Assets "Icons" page — DONE. SVG -> React components via SVGR
 packages/illustrations/  Mirrors Figma Assets "Illustrations" page — DONE. Same pipeline as icons, multicolor preserved
@@ -100,6 +100,12 @@ Both packages' `src/generated/` directories (components, barrel, and icons' `man
 ## Figma integration
 
 The Figma Dev Mode MCP server (`mcp__figma__get_figma_data`, `mcp__figma__download_figma_images`) is the preferred way to pull component/asset data from Figma; permissions for both are already granted in `.claude/settings.local.json`. There's no stored file key for the "Financial Services DS - Components" file in this repo — ask the user for the Figma URL/file key when auditing or building against components, same as was done for the audit in `docs/FIGMA_COMPONENT_AUDIT.md`.
+
+## Browser support
+
+Baseline Widely Available, no fallbacks required — this is a public portfolio piece, not a product with a legacy-browser install base. Confirmed 2026-09-09 per the `modern-web-guidance` skill's own default policy after adopting CSS container queries as the primary responsive mechanism in `apps/locator`'s `AdvisorSearchModule` (Baseline since 2023-02-14; Chrome 105, Firefox 110, Safari 16). Revisit this line rather than re-deriving a policy per component if a narrower target is ever needed (e.g. `@supports` fallbacks for a specific older engine).
+
+**Always consult the `modern-web-guidance` skill before implementing any HTML/CSS/client-side-JS feature, especially advanced/modern techniques (container queries, `:has()`, anchor positioning, scroll-driven animations, `grid-template-areas`, etc.) — its own trigger rules mark this mandatory, not optional, and it was skipped once this session for the container-query/grid work in `AdvisorSearchModule` before being caught after the fact.**
 
 ## Skills
 
