@@ -43,8 +43,8 @@ function StartingPointPanel() {
     <div className="rounded-[var(--semantic-border-radius-generous)] bg-[var(--color-layout-background-color-neutral-level-1)] p-[var(--primitives-ref-space-07)] @[1024px]/module:px-[var(--primitives-ref-space-08)] @[1024px]/module:py-[var(--primitives-ref-space-07)]">
       {/* Microcopy: size-small/line-height-medium/weight-regular (14/24/400) */}
       <p className="text-[length:var(--primitives-ref-font-size-small)] leading-[length:var(--primitives-ref-font-line-height-medium)] font-[number:var(--primitives-ref-font-weight-regular)] text-white">
-        Get a better understanding of your different financial goals and how
-        a financial advisor can work with you to meet them.{' '}
+        Get a better understanding of your different financial goals and how a
+        financial advisor can work with you to meet them.{' '}
         <a
           href="#"
           aria-disabled="true"
@@ -76,8 +76,8 @@ function MatchPanel() {
         </h2>
         {/* Mobile: Microcopy (14/24/400). Desktop: Common (16/24/400). */}
         <p className="text-[length:var(--primitives-ref-font-size-small)] leading-[length:var(--primitives-ref-font-line-height-medium)] font-[number:var(--primitives-ref-font-weight-regular)] text-white @[1024px]/module:text-[length:var(--primitives-ref-font-size-medium)]">
-          Take two minutes to help us understand your needs and goals and
-          match with financial advisors personalized for you.
+          Take two minutes to help us understand your needs and goals and match
+          with financial advisors personalized for you.
         </p>
       </div>
       {/*
@@ -251,9 +251,9 @@ export function Start() {
           <div className="flex min-w-0 flex-col gap-[var(--density-spacing-fixed-xx-large)] @[625px]:gap-[var(--primitives-ref-space-05)] @[625px]:max-w-[320px]">
             {/* Common: size-medium/line-height-medium/weight-regular (16/24/400) */}
             <p className="text-[length:var(--primitives-ref-font-size-medium)] leading-[length:var(--primitives-ref-font-line-height-medium)] font-[number:var(--primitives-ref-font-weight-regular)] text-white">
-              Edward Jones has offices in communities across the country.
-              Find financial advisors near you or search for a specific
-              advisor by name.
+              Edward Jones has offices in communities across the country. Find
+              financial advisors near you or search for a specific advisor by
+              name.
             </p>
             <SearchFormSearchInput density="roomy" labelPlacement="above" />
           </div>
