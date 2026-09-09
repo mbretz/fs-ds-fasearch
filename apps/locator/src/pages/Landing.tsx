@@ -1,3 +1,10 @@
+import { AdvisorSearchModule } from '../components/AdvisorSearchModule/AdvisorSearchModule';
+import { Start } from '../components/AdvisorSearchModule/Start';
+
 export function Landing() {
-  return <div>Landing — coming soon</div>;
+  return (
+    <AdvisorSearchModule>
+      <Start />
+    </AdvisorSearchModule>
+  );
 }
