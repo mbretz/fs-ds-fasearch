@@ -1,6 +1,7 @@
 node_modules
 .DS_Store
 storybook-static
+dist
 RESUME_NOTES.txt
 .vscode
 FIGMA_COMPONENT_AUDIT.md
