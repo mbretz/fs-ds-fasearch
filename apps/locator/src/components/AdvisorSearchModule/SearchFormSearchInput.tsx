@@ -72,7 +72,7 @@ export function SearchFormSearchInput({
         <SearchInput.Field
           id={fieldId}
           density={density}
-          placeholder={`Try typing the name, "louis"`}
+          placeholder={`Try typing "louis"`}
           iconEnd={null}
         />
         <SearchInput.Button>Search</SearchInput.Button>
