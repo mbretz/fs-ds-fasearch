@@ -13,28 +13,31 @@ import heroImage from '../../assets/search-module-hero.png';
 import heroImageSrcset from '../../assets/search-module-hero.png?w=400;700;1000;1300;1810&format=webp&as=srcset';
 import { SearchFormSearchInput } from './SearchFormSearchInput';
 
-// Every padding/gap value below falls back to `primitives.ref.space.*`
-// rather than a literal px value — `packages/tokens` has no semantic-tier
-// spacing scale yet (only `density.spacing.fixed.*`, which tops out at
-// 32px/xxx-large and is meant for component-internal density-aware
-// spacing, not page-composition gaps like these). Falling back to
-// primitives directly is a deliberate exception to the "never reference
-// primitives directly" rule (CLAUDE.md), scoped to cases where the
-// semantic tier genuinely has nothing to offer — recommendation for
-// closing this gap: author a `semantic.spacing.*` tier (e.g.
+// `packages/tokens` has no semantic-tier spacing scale yet, so every
+// padding/gap value below prefers `density.spacing.fixed.*` (density-
+// invariant at every step actually used here, per CLAUDE.md's fallback
+// order) wherever its value matches, falling back to a literal
+// `primitives.ref.space.*` step only where no density-fixed step lines
+// up. `density.spacing.fixed.*` tops out at 32px/xxx-large and is
+// intended for component-internal density-aware spacing rather than
+// page-composition gaps like these, so this is a deliberate stretch of
+// its intended scope, not a true semantic tier — recommendation for
+// closing this gap properly: author a `semantic.spacing.*` tier (e.g.
 // cozy/comfortable/generous, mirroring how `semantic.border-radius.*`
 // already aliases these same primitive steps) so future page-composition
-// code has a semantic token to reach for instead of primitives.
+// code has a real semantic token to reach for instead.
 //
-// Same story for the Figma text styles used below (Page Title, Heavy,
-// Common, Subheading, Microcopy, Heading Large) — `packages/tokens` has
-// no semantic-tier typography scale either, only `primitives.ref.font.*`
-// (size/weight/line-height) and a slew of `component.<name>.*` sets
-// scoped to single components. Each Figma style maps exactly to a
-// primitive combination (documented per usage below), so those are what's
-// referenced; closing this gap would mean authoring a
-// `semantic.typography.*` (or similar) tier mirroring the named Figma
-// text styles.
+// Every Figma text style used below (Page Title, Heading Large, Heavy,
+// Common, Subheading, Microcopy) turned out to have a matching semantic
+// token set (`--semantic-content-<style>-font-size/-line-height/-font-
+// weight`, named after the Figma style itself) once actually checked —
+// there is no `semantic.typography.*`-style umbrella tier, just one
+// `--semantic-content-*` group per named style, each referenced directly
+// below instead of falling back to `primitives.ref.font.*`. Reverse
+// (white) text color is shared across every style group as a single
+// token, `--semantic-content-common-text-color-reverse` — there's no per-style
+// reverse color, only each style's own dark default (e.g.
+// `--semantic-content-page-title-color`) for use on light backgrounds.
 
 // Neither a real <a> nor `Button asChild -> <a>` has a native `disabled`
 // attribute, so the two promo CTAs below fake it: aria-disabled, tabIndex
@@ -50,9 +53,9 @@ function preventDisabledClick(event: { preventDefault: () => void }) {
 
 function StartingPointPanel() {
   return (
-    <div className="rounded-[var(--semantic-border-radius-generous)] bg-[var(--color-layout-background-color-neutral-level-1)] p-[var(--primitives-ref-space-07)] @[1024px]/module:px-[var(--primitives-ref-space-08)] @[1024px]/module:py-[var(--primitives-ref-space-07)]">
+    <div className="rounded-[var(--semantic-border-radius-generous)] bg-[var(--color-layout-background-color-neutral-level-1)] p-[var(--density-spacing-fixed-xx-large)] @[1024px]/module:px-[var(--density-spacing-fixed-xxx-large)] @[1024px]/module:py-[var(--density-spacing-fixed-xx-large)]">
       {/* Microcopy: size-small/line-height-medium/weight-regular (14/24/400) */}
-      <p className="text-[length:var(--primitives-ref-font-size-small)] leading-[length:var(--primitives-ref-font-line-height-medium)] font-[number:var(--primitives-ref-font-weight-regular)] text-white">
+      <p className="text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] font-[number:var(--semantic-content-microcopy-font-weight)] text-[var(--semantic-content-common-text-color-reverse)]">
         Get a better understanding of your different financial goals and how a
         financial advisor can work with you to meet them.{' '}
         <a
@@ -78,14 +81,14 @@ function MatchPanel() {
     // (just the "h1" row at tablet, "h1"+"main" combined at desktop — see
     // the scoped <style> block in Start.tsx). This inner div just needs
     // `h-full` to inherit that stretched height itself.
-    <div className="flex h-full flex-col justify-center gap-[var(--primitives-ref-space-05)] rounded-[var(--semantic-border-radius-generous)] bg-[var(--color-layout-background-color-neutral-level-2)] px-[var(--primitives-ref-space-07)] py-[var(--primitives-ref-space-07)] @[768px]/module:px-[var(--primitives-ref-space-09)] @[1024px]/module:gap-[var(--primitives-ref-space-08)]">
-      <div className="flex flex-col gap-[var(--primitives-ref-space-05)]">
+    <div className="flex h-full flex-col justify-center gap-[var(--density-spacing-fixed-large)] rounded-[var(--semantic-border-radius-generous)] bg-[var(--color-layout-background-color-neutral-level-2)] px-[var(--density-spacing-fixed-xx-large)] py-[var(--density-spacing-fixed-xx-large)] @[768px]/module:px-[var(--primitives-ref-space-09)] @[1024px]/module:gap-[var(--density-spacing-fixed-xxx-large)]">
+      <div className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
         {/* Mobile: Heavy (16/24/600). Desktop: Subheading (20/30/525). */}
-        <h2 className="text-balance text-[length:var(--primitives-ref-font-size-medium)] leading-[length:var(--primitives-ref-font-line-height-medium)] font-[number:var(--primitives-ref-font-weight-semibold)] text-white @[768px]/module:text-center @[768px]/module:text-[length:var(--primitives-ref-font-size-large)] @[768px]/module:leading-[length:var(--primitives-ref-font-line-height-large)] @[768px]/module:font-[number:var(--primitives-ref-font-weight-medium-plus)]">
+        <h2 className="text-balance text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[var(--semantic-content-common-text-color-reverse)] @[768px]/module:text-center @[768px]/module:text-[length:var(--semantic-content-subheading-font-size)] @[768px]/module:leading-[length:var(--semantic-content-subheading-line-height)] @[768px]/module:font-[number:var(--semantic-content-subheading-font-weight)]">
           Get Matched with Advisors Near You
         </h2>
         {/* Mobile: Microcopy (14/24/400). Desktop: Common (16/24/400). */}
-        <p className="text-[length:var(--primitives-ref-font-size-small)] leading-[length:var(--primitives-ref-font-line-height-medium)] font-[number:var(--primitives-ref-font-weight-regular)] text-white @[1024px]/module:text-[length:var(--primitives-ref-font-size-medium)]">
+        <p className="text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] font-[number:var(--semantic-content-microcopy-font-weight)] text-[var(--semantic-content-common-text-color-reverse)] @[1024px]/module:text-[length:var(--semantic-content-common-font-size)]">
           Take two minutes to help us understand your needs and goals and match
           with financial advisors personalized for you.
         </p>
@@ -148,9 +151,9 @@ const gridAreaStyles = `
   @container module (min-width: 768px) {
     .advisor-search-start-grid {
       grid-template-columns: minmax(0, 1fr) minmax(260px, 365px);
-      column-gap: var(--primitives-ref-space-08);
+      column-gap: var(--density-spacing-fixed-xxx-large);
       row-gap: var(--primitives-ref-space-11);
-      padding: var(--primitives-ref-space-11) var(--primitives-ref-space-08) var(--primitives-ref-space-09);
+      padding: var(--primitives-ref-space-11) var(--density-spacing-fixed-xxx-large) var(--primitives-ref-space-09);
       grid-template-areas:
         "h1   h1"
         "main match"
@@ -177,10 +180,10 @@ export function Start() {
     // tracks (a flexible `minmax(0,1fr)` left track, a capped-but-still-
     // shrinkable `minmax(260px,365px)` right track) can't overlap the way
     // two same-row flex items with mismatched shrink behavior can.
-    <div className="advisor-search-start-grid grid grid-cols-1 gap-[var(--primitives-ref-space-03)] p-[var(--primitives-ref-space-03)]">
+    <div className="advisor-search-start-grid grid grid-cols-1 gap-[var(--density-spacing-fixed-small)] p-[var(--density-spacing-fixed-small)]">
       <style>{gridAreaStyles}</style>
 
-      <div className="[grid-area:h1] flex flex-col items-start gap-[var(--primitives-ref-space-02)] p-[var(--primitives-ref-space-05)] pb-0 @[768px]/module:p-0">
+      <div className="[grid-area:h1] flex flex-col items-start gap-[var(--density-spacing-fixed-x-small)] p-[var(--density-spacing-fixed-large)] pb-0 @[768px]/module:p-0">
         {/*
           Three tiers, not two: mobile Heavy (16/24/600) up to Page Title
           (50/75/600) was a straight jump too large for a tablet-width
@@ -208,7 +211,7 @@ export function Start() {
           from either source. Container query for the whole component
           removes any possibility of that mismatch.
         */}
-        <h1 className="text-[length:var(--primitives-ref-font-size-medium)] leading-[length:var(--primitives-ref-font-line-height-medium)] font-[number:var(--primitives-ref-font-weight-semibold)] text-white @[600px]/module:text-[length:var(--primitives-ref-font-size-xx-large)] @[600px]/module:leading-[length:var(--primitives-ref-font-line-height-xx-large)] @[1024px]/module:text-[length:var(--primitives-ref-font-size-huge)] @[1024px]/module:leading-[length:var(--primitives-ref-font-line-height-huge)]">
+        <h1 className="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[var(--semantic-content-common-text-color-reverse)] @[600px]/module:text-[length:var(--semantic-content-heading-large-font-size)] @[600px]/module:leading-[length:var(--semantic-content-heading-large-line-height)] @[1024px]/module:text-[length:var(--semantic-content-page-title-font-size)] @[1024px]/module:leading-[length:var(--semantic-content-page-title-line-height)]">
           Find a Financial Advisor
         </h1>
         {/*
@@ -221,7 +224,7 @@ export function Start() {
           both, per explicit direction) — it does not follow the H1's
           second 1024px step up to Page Title.
         */}
-        <div className="h-0.5 w-[60px] bg-[var(--semantic-brand-secondary-light-gold)] @[600px]/module:h-1 @[600px]/module:w-[120px]" />
+        <div className="h-[var(--density-sizing-fixed-xx-small)] w-[60px] bg-[var(--semantic-brand-secondary-light-gold)] @[600px]/module:h-[var(--density-sizing-fixed-x-small)] @[600px]/module:w-[120px]" />
       </div>
 
       {/*
@@ -237,7 +240,7 @@ export function Start() {
         `p-0` at 768px+ hands spacing back to the grid's own (now 48px)
         row-gap entirely, same as every other area at that tier.
       */}
-      <div className="@container [grid-area:main] flex min-w-0 flex-col justify-center gap-[var(--primitives-ref-space-07)] p-[var(--primitives-ref-space-05)] pt-[var(--primitives-ref-space-05)] @[600px]/module:pt-[var(--primitives-ref-space-07)] @[768px]/module:p-0 @[1110px]/module:pr-[var(--primitives-ref-space-03)]">
+      <div className="@container [grid-area:main] flex min-w-0 flex-col justify-center gap-[var(--density-spacing-fixed-xx-large)] p-[var(--density-spacing-fixed-large)] pt-[var(--density-spacing-fixed-large)] @[600px]/module:pt-[var(--density-spacing-fixed-xx-large)] @[768px]/module:p-0 @[1110px]/module:pr-[var(--density-spacing-fixed-small)]">
         {/*
           Stacked-state gap uses `--density-spacing-fixed-xx-large` (24px)
           rather than a `primitives.ref.space.*` fallback — this is a real
@@ -267,9 +270,9 @@ export function Start() {
             // rather than scaling the same framing proportionally.
             className="aspect-[335/206] w-full rounded-[var(--semantic-border-radius-generous)] object-cover @[625px]:max-w-[335px]"
           />
-          <div className="flex min-w-0 flex-col gap-[var(--density-spacing-fixed-xx-large)] @[625px]:gap-[var(--primitives-ref-space-05)] @[625px]:max-w-[320px]">
+          <div className="flex min-w-0 flex-col gap-[var(--density-spacing-fixed-xx-large)] @[625px]:gap-[var(--density-spacing-fixed-large)] @[625px]:max-w-[320px]">
             {/* Common: size-medium/line-height-medium/weight-regular (16/24/400) */}
-            <p className="text-[length:var(--primitives-ref-font-size-medium)] leading-[length:var(--primitives-ref-font-line-height-medium)] font-[number:var(--primitives-ref-font-weight-regular)] text-white">
+            <p className="text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--semantic-content-common-font-weight)] text-[var(--semantic-content-common-text-color-reverse)]">
               Edward Jones has offices in communities across the country. Find
               financial advisors near you or search for a specific advisor by
               name.
@@ -279,11 +282,11 @@ export function Start() {
         </div>
       </div>
 
-      <div className="[grid-area:quiz] min-w-0 px-[var(--primitives-ref-space-05)] @[768px]/module:px-0">
+      <div className="[grid-area:quiz] min-w-0 px-[var(--density-spacing-fixed-large)] @[768px]/module:px-0">
         <StartingPointPanel />
       </div>
 
-      <div className="[grid-area:match] min-w-0 px-[var(--primitives-ref-space-05)] pb-[var(--primitives-ref-space-05)] @[768px]/module:px-0 @[768px]/module:pb-0">
+      <div className="[grid-area:match] min-w-0 px-[var(--density-spacing-fixed-large)] pb-[var(--density-spacing-fixed-large)] @[768px]/module:px-0 @[768px]/module:pb-0">
         <MatchPanel />
       </div>
     </div>
