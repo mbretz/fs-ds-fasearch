@@ -9,8 +9,6 @@ import { SearchFormSearchInput } from './SearchFormSearchInput';
 interface FocusAreaFilterProps {
   selected: string[];
   onSelectedChange: (next: string[]) => void;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   // Figma's FilterMenuHeader/Content are always a white box regardless of
   // the surrounding card (no dark-mode token override exists for
   // `component-filter-menu-*` -- verified against packages/tokens/build/css/
@@ -30,14 +28,32 @@ interface FocusAreaFilterProps {
 // Trigger button instead. The Show/Hide label swap built into
 // FilterMenu.Trigger isn't used here since "Selected (N)" is driven by
 // selection count, a different axis than open/closed state.
+//
+// `open` is local state, NOT lifted alongside `selected` -- same pattern
+// as SearchFormSearchInput's own Suggestions `open` (see its comment).
+// InProgress mounts two FocusAreaFilter instances simultaneously (mobile +
+// desktop, toggled via CSS `hidden`), and lifting `open` caused a real bug
+// here too, despite FilterMenu.Content having no Portal (the earlier
+// assumption that no-Portal made this safe was wrong): clicking the
+// visible instance's Trigger set the shared `open` to `true`, which also
+// flipped the *hidden* instance's own FilterMenu.Root open -- and that
+// hidden instance's Radix Popover then ran its own outside-click check,
+// saw the triggering click landed inside the *other* (visible) instance's
+// DOM subtree rather than its own, decided that was an outside click, and
+// called the shared `onOpenChange(false)` right back -- observed directly
+// via a temporary console.log wrapper: `setFilterMenuOpen` fired with
+// `true` then `false` on the same click, so the menu never visibly opened.
+// Keeping `open` local sidesteps this the same way it does for
+// SearchFormSearchInput: only the instance a user can actually see/click
+// is ever the one whose own Popover state changes.
 function FocusAreaFilter({
   selected,
   onSelectedChange,
-  open,
-  onOpenChange,
   theme,
   className,
 }: FocusAreaFilterProps) {
+  const [open, setOpen] = useState(false);
+
   function toggle(area: string, checked: boolean) {
     onSelectedChange(
       checked ? [...selected, area] : selected.filter((a) => a !== area),
@@ -59,7 +75,7 @@ function FocusAreaFilter({
       </span>
       <FilterMenu.Root
         open={open}
-        onOpenChange={onOpenChange}
+        onOpenChange={setOpen}
         density="condensed"
         className="w-full"
       >
@@ -125,7 +141,7 @@ function FocusAreaFilter({
             </ChecklistGroup.Root>
           </FilterMenu.Drawer>
           <FilterMenu.Footer>
-            <Button variant="secondary" onClick={() => onOpenChange(false)}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>
               Apply Filters
             </Button>
             <Button variant="tertiary" onClick={() => onSelectedChange([])}>
@@ -138,16 +154,17 @@ function FocusAreaFilter({
   );
 }
 
-// selectedFocusAreas/filterMenuOpen/acceptingNewClients are lifted above the
-// mobile/desktop split below rather than owned per-breakpoint -- both
-// structures stay mounted simultaneously (toggled with CSS `hidden`, not
-// conditionally rendered, so container-query resizing doesn't remount
-// anything), so per-instance state would let the two silently diverge
-// (e.g. a filter picked on mobile not reflected if the window is then
-// resized past the container-query threshold to the desktop layout).
+// selectedFocusAreas/acceptingNewClients are lifted above the mobile/
+// desktop split below rather than owned per-breakpoint -- both structures
+// stay mounted simultaneously (toggled with CSS `hidden`, not conditionally
+// rendered, so container-query resizing doesn't remount anything), so
+// per-instance state would let the two silently diverge (e.g. a filter
+// picked on mobile not reflected if the window is then resized past the
+// container-query threshold to the desktop layout). `filterMenuOpen`
+// deliberately does NOT follow this pattern -- see FocusAreaFilter's own
+// comment for the real bug lifting it caused.
 export function InProgress() {
   const [selectedFocusAreas, setSelectedFocusAreas] = useState<string[]>([]);
-  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [acceptingNewClients, setAcceptingNewClients] = useState(false);
 
   // Seeded from the `q` URL param Start.tsx's submit handler navigates
@@ -234,8 +251,6 @@ export function InProgress() {
             theme="light"
             selected={selectedFocusAreas}
             onSelectedChange={setSelectedFocusAreas}
-            open={filterMenuOpen}
-            onOpenChange={setFilterMenuOpen}
           />
           <Checkbox
             checked={acceptingNewClients}
@@ -285,8 +300,6 @@ export function InProgress() {
           theme="dark"
           selected={selectedFocusAreas}
           onSelectedChange={setSelectedFocusAreas}
-          open={filterMenuOpen}
-          onOpenChange={setFilterMenuOpen}
           className="w-[347px] min-w-[220px]"
         />
         {/* Checkbox's label color override mirrors SearchFormSearchInput's
