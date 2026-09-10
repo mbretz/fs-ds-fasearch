@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Button, Checkbox, ChecklistGroup, FilterMenu } from 'ds';
 import { CaretDown } from 'icons';
@@ -160,6 +160,16 @@ export function InProgress() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(() => searchParams.get('q') ?? '');
 
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // Same pattern as Start.tsx's own heading focus — moves focus here on
+  // mount so a keyboard/AT user lands somewhere meaningful after arriving
+  // from Start (transition or not; View Transitions morphs the DOM but
+  // doesn't manage focus itself).
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
+
   function submitSearch(value: string) {
     const trimmed = value.trim();
     if (!trimmed) return;
@@ -168,11 +178,22 @@ export function InProgress() {
 
   return (
     <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-large)] @[768px]/module:px-[var(--density-spacing-fixed-xx-large)] @[768px]/module:pt-[var(--density-spacing-fixed-large)] @[768px]/module:pb-[var(--density-spacing-fixed-xx-large)]">
-      <div className="flex flex-col items-start gap-[var(--density-spacing-fixed-x-small)]">
+      {/*
+        `[view-transition-name:advisor-search-heading]` pairs with the
+        same name on Start.tsx's H1 wrapper (see AdvisorSearchModule.tsx's
+        own comment on the outer shell's matching name) -- this wrapper is
+        a single instance on this Stage, unlike SearchFormSearchInput
+        below, so no dual-mount duplicate-name risk here.
+      */}
+      <div className="[view-transition-name:advisor-search-heading] flex flex-col items-start gap-[var(--density-spacing-fixed-x-small)]">
         {/* Heavy (16/24/600) in both InProgress breakpoints -- unlike
             Start's H1, this stage never shows the large Page Title size,
             so no container-query size switch is needed here. */}
-        <h1 className="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[color:var(--semantic-content-common-text-color-reverse)]">
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[color:var(--semantic-content-common-text-color-reverse)] outline-none"
+        >
           Find a Financial Advisor
         </h1>
         <div className="h-0.5 w-[60px] bg-[var(--semantic-brand-secondary-light-gold)]" />
@@ -234,10 +255,28 @@ export function InProgress() {
           row height already equals that same 32px, so it lines up too with
           no per-item override needed. */}
       <div className="hidden items-end gap-[var(--density-spacing-fixed-xx-large)] @[768px]/module:flex">
+        {/*
+          `inputGroupClassName` (not `className`) pairs Start's and this
+          instance's Field+Button pill specifically, per the same name on
+          Start.tsx's own SearchFormSearchInput -- deliberately excludes the
+          Label text above it from the morphed group. Also deliberately only
+          on this desktop-row instance, not the mobile one above: this
+          component dual-mounts (mobile + desktop, toggled via CSS `hidden`
+          rather than conditional rendering), and the View Transitions spec
+          skips the transition entirely for a name that matches more than
+          one element at once -- same class of dual-mount gotcha already
+          hit with this pair's `open` state (see SearchFormSearchInput.tsx's
+          own comment). Picking one instance means the search-input morph
+          only actually plays when landing on desktop; arriving on mobile
+          still navigates fine, just without that one piece animating (the
+          H1/card-shell names above aren't dual-mounted, so those still
+          transition on every breakpoint).
+        */}
         <SearchFormSearchInput
           density="condensed"
           labelPlacement="above"
           className="w-[320px] min-w-[200px]"
+          inputGroupClassName="[view-transition-name:advisor-search-input]"
           value={query}
           onValueChange={setQuery}
           onSubmit={submitSearch}

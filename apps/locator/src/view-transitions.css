@@ -1,0 +1,12 @@
+/* View Transition pseudo-elements are generated on `document`, not scoped
+   to wherever a `view-transition-name` is declared, so this override lives
+   in its own global stylesheet rather than a component-local <style> block.
+   Disables the morph/cross-fade animation for users who've asked for
+   reduced motion; the DOM update (route change) itself still happens. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

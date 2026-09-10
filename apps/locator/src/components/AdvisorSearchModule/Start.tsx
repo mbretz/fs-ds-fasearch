@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'ds';
 import { NewWindow } from 'icons';
@@ -180,11 +180,28 @@ export function Start() {
   // open/closed state, unlike this, stays local to that component instead.
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // Moves focus to this stage's own heading on mount — covers both the
+  // initial page load and a browser back-navigation from Results, so a
+  // keyboard/AT user always lands somewhere meaningful after a route
+  // change, transition or not (View Transitions morphs the DOM visually
+  // but doesn't manage focus on its own).
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
 
   function submitSearch(value: string) {
     const trimmed = value.trim();
     if (!trimmed) return;
-    navigate(`/search?q=${encodeURIComponent(trimmed)}`);
+    // `viewTransition: true` wraps React Router's own DOM commit in
+    // `document.startViewTransition()` — see AdvisorSearchModule.tsx/this
+    // file's H1 wrapper/SearchFormSearchInput below for the matching
+    // `view-transition-name`s InProgress.tsx shares. Unsupported browsers
+    // (this option is a no-op there) just get the instant navigation.
+    navigate(`/search?q=${encodeURIComponent(trimmed)}`, {
+      viewTransition: true,
+    });
   }
 
   return (
@@ -199,7 +216,14 @@ export function Start() {
     <div className="advisor-search-start-grid grid grid-cols-1 gap-[var(--density-spacing-fixed-small)] p-[var(--density-spacing-fixed-small)]">
       <style>{gridAreaStyles}</style>
 
-      <div className="[grid-area:h1] flex flex-col items-start gap-[var(--density-spacing-fixed-x-small)] p-[var(--density-spacing-fixed-large)] pb-0 @[768px]/module:p-0">
+      {/*
+        `[view-transition-name:advisor-search-heading]` pairs with the same
+        name on InProgress.tsx's own H1 wrapper — this is a single instance
+        on this Stage (unlike SearchFormSearchInput below, which InProgress
+        dual-mounts), so there's no risk of two elements sharing the name
+        at once.
+      */}
+      <div className="[grid-area:h1] [view-transition-name:advisor-search-heading] flex flex-col items-start gap-[var(--density-spacing-fixed-x-small)] p-[var(--density-spacing-fixed-large)] pb-0 @[768px]/module:p-0">
         {/*
           Three tiers, not two: mobile Heavy (16/24/600) up to Page Title
           (50/75/600) was a straight jump too large for a tablet-width
@@ -227,7 +251,11 @@ export function Start() {
           from either source. Container query for the whole component
           removes any possibility of that mismatch.
         */}
-        <h1 className="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[var(--semantic-content-common-text-color-reverse)] @[600px]/module:text-[length:var(--semantic-content-heading-large-font-size)] @[600px]/module:leading-[length:var(--semantic-content-heading-large-line-height)] @[1024px]/module:text-[length:var(--semantic-content-page-title-font-size)] @[1024px]/module:leading-[length:var(--semantic-content-page-title-line-height)]">
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[var(--semantic-content-common-text-color-reverse)] outline-none @[600px]/module:text-[length:var(--semantic-content-heading-large-font-size)] @[600px]/module:leading-[length:var(--semantic-content-heading-large-line-height)] @[1024px]/module:text-[length:var(--semantic-content-page-title-font-size)] @[1024px]/module:leading-[length:var(--semantic-content-page-title-line-height)]"
+        >
           Find a Financial Advisor
         </h1>
         {/*
@@ -296,6 +324,7 @@ export function Start() {
             <SearchFormSearchInput
               density="roomy"
               labelPlacement="above"
+              inputGroupClassName="[view-transition-name:advisor-search-input]"
               value={query}
               onValueChange={setQuery}
               onSubmit={submitSearch}

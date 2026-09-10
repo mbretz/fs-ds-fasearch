@@ -17,9 +17,15 @@ export function AdvisorSearchModule({ children }: { children: ReactNode }) {
     // container to key Start.tsx's H1 tier switches off of — named so
     // Start.tsx's `@[…]/module:` queries this one specifically rather than
     // the nearer, differently-behaved inner container.
+    // Rendered exactly once per route (Landing.tsx / Results.tsx each mount
+    // this component around one Stage), so `view-transition-name` here is
+    // never duplicated in the DOM at any single moment — it's what lets
+    // React Router's `navigate(..., { viewTransition: true })` (see
+    // Start.tsx's submit handler) morph this card shell between stages
+    // instead of hard-cutting to the new route.
     <div
       data-theme="dark"
-      className="@container/module rounded-none bg-[var(--color-layout-background-color-neutral-base)] md:rounded-[var(--semantic-border-radius-generous)]"
+      className="@container/module [view-transition-name:advisor-search-module] rounded-none bg-[var(--color-layout-background-color-neutral-base)] md:rounded-[var(--semantic-border-radius-generous)]"
     >
       {children}
     </div>
