@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'ds';
 import { NewWindow } from 'icons';
 import heroImage from '../../assets/search-module-hero.png';
@@ -171,6 +173,20 @@ const gridAreaStyles = `
 `;
 
 export function Start() {
+  // Query text is lifted here (single instance on this stage, so it
+  // doesn't strictly need to be, but Start->InProgress persistence still
+  // flows through the submitted URL, not this state) — see
+  // SearchFormSearchInput's own prop comments for why the drawer's
+  // open/closed state, unlike this, stays local to that component instead.
+  const [query, setQuery] = useState('');
+  const navigate = useNavigate();
+
+  function submitSearch(value: string) {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    navigate(`/search?q=${encodeURIComponent(trimmed)}`);
+  }
+
   return (
     // CSS Grid, not flex, for the Left/Match split: two flex children with
     // fixed pixel widths (756px + 365px) don't reliably shrink together as
@@ -277,7 +293,13 @@ export function Start() {
               financial advisors near you or search for a specific advisor by
               name.
             </p>
-            <SearchFormSearchInput density="roomy" labelPlacement="above" />
+            <SearchFormSearchInput
+              density="roomy"
+              labelPlacement="above"
+              value={query}
+              onValueChange={setQuery}
+              onSubmit={submitSearch}
+            />
           </div>
         </div>
       </div>

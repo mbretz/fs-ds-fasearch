@@ -148,6 +148,11 @@ function FilterMenuContent({
       ref={ref}
       data-density={density}
       align="start"
+      // Figma's drawer is always below the trigger — override Popper's
+      // default flip-on-collision behavior. Consumers can still pass
+      // their own side/avoidCollisions to opt back out (spread below).
+      side="bottom"
+      avoidCollisions={false}
       sideOffset={CONTENT_SIDE_OFFSET}
       className={cn(
         'z-index-popover flex flex-col gap-[var(--component-filter-menu-content-gap)] rounded-[var(--component-filter-menu-content-border-radius)] border-[length:var(--component-filter-menu-content-border-width)] border-[color:var(--component-filter-menu-content-border-color)] bg-[var(--component-filter-menu-content-background-color)] p-[var(--component-filter-menu-content-padding)] shadow-elevation-raised',
