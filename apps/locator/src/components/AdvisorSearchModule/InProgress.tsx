@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { Button, Checkbox, ChecklistGroup, FilterMenu } from 'ds';
 import { CaretDown } from 'icons';
 import { cn } from '../../utils/cn';
@@ -154,29 +153,37 @@ function FocusAreaFilter({
   );
 }
 
-// selectedFocusAreas/acceptingNewClients are lifted above the mobile/
-// desktop split below rather than owned per-breakpoint -- both structures
-// stay mounted simultaneously (toggled with CSS `hidden`, not conditionally
-// rendered, so container-query resizing doesn't remount anything), so
-// per-instance state would let the two silently diverge (e.g. a filter
-// picked on mobile not reflected if the window is then resized past the
-// container-query threshold to the desktop layout). `filterMenuOpen`
-// deliberately does NOT follow this pattern -- see FocusAreaFilter's own
-// comment for the real bug lifting it caused.
-export function InProgress() {
-  const [selectedFocusAreas, setSelectedFocusAreas] = useState<string[]>([]);
-  const [acceptingNewClients, setAcceptingNewClients] = useState(false);
+interface InProgressProps {
+  query: string;
+  onQueryChange: (value: string) => void;
+  onSubmitSearch: (value: string) => void;
+  selectedFocusAreas: string[];
+  onSelectedFocusAreasChange: (next: string[]) => void;
+  acceptingNewClients: boolean;
+  onAcceptingNewClientsChange: (value: boolean) => void;
+}
 
-  // Seeded from the `q` URL param Start.tsx's submit handler navigates
-  // here with, so a picked suggestion (or a typed-and-submitted query)
-  // carries over into this stage's field instead of resetting to empty —
-  // the URL, not a shared context, is what persists it across the route
-  // change (these are two separate page components, not a state a
-  // context could hand off between without one already having been
-  // mounted to provide it).
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState(() => searchParams.get('q') ?? '');
-
+// query/selectedFocusAreas/acceptingNewClients are all owned by Results.tsx
+// (the page), not this component -- lifted there so the results list and a
+// future selected-focus-area chip row (both siblings of AdvisorSearchModule,
+// not descendants of it) can read/drive the same filter state. Considered
+// a shared React Context for this instead of plain props; rejected because
+// Results.tsx renders InProgress/the results list/chip row as direct
+// children (one hop each, no indifferent intermediate layers to drill
+// through) -- Context earns its cost when state has to cross several
+// uninvolved layers, not for three siblings off one page component. Same
+// reasoning `Start.tsx` -> `InProgress` already applies to `query` itself:
+// prefer explicit lifted state (or, for surviving a route change, the URL)
+// over Context here.
+export function InProgress({
+  query,
+  onQueryChange,
+  onSubmitSearch,
+  selectedFocusAreas,
+  onSelectedFocusAreasChange,
+  acceptingNewClients,
+  onAcceptingNewClientsChange,
+}: InProgressProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   // Same pattern as Start.tsx's own heading focus — moves focus here on
@@ -186,12 +193,6 @@ export function InProgress() {
   useEffect(() => {
     headingRef.current?.focus();
   }, []);
-
-  function submitSearch(value: string) {
-    const trimmed = value.trim();
-    if (!trimmed) return;
-    setSearchParams({ q: trimmed });
-  }
 
   return (
     <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-large)] @[768px]/module:px-[var(--density-spacing-fixed-xx-large)] @[768px]/module:pt-[var(--density-spacing-fixed-large)] @[768px]/module:pb-[var(--density-spacing-fixed-xx-large)]">
@@ -230,8 +231,8 @@ export function InProgress() {
           density="roomy"
           labelPlacement="below"
           value={query}
-          onValueChange={setQuery}
-          onSubmit={submitSearch}
+          onValueChange={onQueryChange}
+          onSubmit={onSubmitSearch}
         />
         {/* Negative margins cancel this component's own root padding
             (`p-[--density-spacing-fixed-large]` above) on exactly the sides
@@ -250,12 +251,12 @@ export function InProgress() {
           <FocusAreaFilter
             theme="light"
             selected={selectedFocusAreas}
-            onSelectedChange={setSelectedFocusAreas}
+            onSelectedChange={onSelectedFocusAreasChange}
           />
           <Checkbox
             checked={acceptingNewClients}
             onCheckedChange={(checked) =>
-              setAcceptingNewClients(checked === true)
+              onAcceptingNewClientsChange(checked === true)
             }
             className="self-start justify-start"
           >
@@ -293,13 +294,13 @@ export function InProgress() {
           className="w-[320px] min-w-[200px]"
           inputGroupClassName="[view-transition-name:advisor-search-input]"
           value={query}
-          onValueChange={setQuery}
-          onSubmit={submitSearch}
+          onValueChange={onQueryChange}
+          onSubmit={onSubmitSearch}
         />
         <FocusAreaFilter
           theme="dark"
           selected={selectedFocusAreas}
-          onSelectedChange={setSelectedFocusAreas}
+          onSelectedChange={onSelectedFocusAreasChange}
           className="w-[347px] min-w-[220px]"
         />
         {/* Checkbox's label color override mirrors SearchFormSearchInput's
@@ -321,7 +322,7 @@ export function InProgress() {
           <Checkbox
             checked={acceptingNewClients}
             onCheckedChange={(checked) =>
-              setAcceptingNewClients(checked === true)
+              onAcceptingNewClientsChange(checked === true)
             }
           >
             Accepting New Clients
