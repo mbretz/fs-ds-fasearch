@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Button, Checkbox, ChecklistGroup, FilterMenu } from 'ds';
 import { CaretDown } from 'icons';
 import { cn } from '../../utils/cn';
@@ -149,6 +150,22 @@ export function InProgress() {
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [acceptingNewClients, setAcceptingNewClients] = useState(false);
 
+  // Seeded from the `q` URL param Start.tsx's submit handler navigates
+  // here with, so a picked suggestion (or a typed-and-submitted query)
+  // carries over into this stage's field instead of resetting to empty —
+  // the URL, not a shared context, is what persists it across the route
+  // change (these are two separate page components, not a state a
+  // context could hand off between without one already having been
+  // mounted to provide it).
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState(() => searchParams.get('q') ?? '');
+
+  function submitSearch(value: string) {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    setSearchParams({ q: trimmed });
+  }
+
   return (
     <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-large)] @[768px]/module:px-[var(--density-spacing-fixed-xx-large)] @[768px]/module:pt-[var(--density-spacing-fixed-large)] @[768px]/module:pb-[var(--density-spacing-fixed-xx-large)]">
       <div className="flex flex-col items-start gap-[var(--density-spacing-fixed-x-small)]">
@@ -171,7 +188,13 @@ export function InProgress() {
           carry over the desktop row layout below (its children just
           shrink), rather than getting this stacked treatment. */}
       <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] @[768px]/module:hidden">
-        <SearchFormSearchInput density="roomy" labelPlacement="below" />
+        <SearchFormSearchInput
+          density="roomy"
+          labelPlacement="below"
+          value={query}
+          onValueChange={setQuery}
+          onSubmit={submitSearch}
+        />
         {/* Negative margins cancel this component's own root padding
             (`p-[--density-spacing-fixed-large]` above) on exactly the sides
             this panel needs full-bleed -- left/right/bottom, not top, since
@@ -215,6 +238,9 @@ export function InProgress() {
           density="condensed"
           labelPlacement="above"
           className="w-[320px] min-w-[200px]"
+          value={query}
+          onValueChange={setQuery}
+          onSubmit={submitSearch}
         />
         <FocusAreaFilter
           theme="dark"

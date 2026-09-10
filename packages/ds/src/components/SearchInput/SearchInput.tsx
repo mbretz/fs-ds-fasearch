@@ -477,6 +477,11 @@ function SearchInputSuggestions({
         role="listbox"
         data-density={density}
         align="start"
+        // Figma's drawer is always below the field — override Popper's
+        // default flip-on-collision behavior. Consumers can still pass
+        // their own side/avoidCollisions to opt back out (spread below).
+        side="bottom"
+        avoidCollisions={false}
         alignOffset={CONTENT_ALIGN_OFFSET}
         sideOffset={CONTENT_SIDE_OFFSET}
         onOpenAutoFocus={(event) => event.preventDefault()}
