@@ -16,7 +16,7 @@ Code style is enforced via Prettier (`.prettierrc` at repo root — notably `tra
 
 ```
 apps/storybook/    Storybook 10 host — LIVE, hosts every packages/ds component's stories (docs/PLAN.md §1.7). `pnpm --filter storybook dev` to run it
-apps/locator/       Vite + React advisor-locator app — routing/site-shell scaffold + mock data fixture done (React Router, host-template SiteHeader/Footer, locations.ts); Landing page's AdvisorSearchModule Stage=Start now built (dark card shell, search field, promo panels, fully responsive via container queries) — Stage=InProgress, typeahead wiring, and View Transitions still to come, see docs/PLAN.md §2.0-§2.4 and RESUME_NOTES.txt for the locked flow
+apps/locator/       Vite + React advisor-locator app — routing/site-shell scaffold + mock data fixture done (React Router, host-template SiteHeader/Footer, locations.ts); AdvisorSearchModule's Stage=Start (Landing) and Stage=InProgress (Results) both built, fully responsive via container queries — typeahead wiring and View Transitions still to come, see docs/PLAN.md §2.0-§2.4 and RESUME_NOTES.txt for the locked flow
 packages/tokens/     Mirrors Figma "Styles" library — DONE. Figma Variables -> Tokens Studio export -> CSS/DTCG
 packages/icons/      Mirrors Figma Assets "Icons" page — DONE. SVG -> React components via SVGR
 packages/illustrations/  Mirrors Figma Assets "Illustrations" page — DONE. Same pipeline as icons, multicolor preserved
