@@ -1,3 +1,10 @@
+import { AdvisorSearchModule } from '../components/AdvisorSearchModule/AdvisorSearchModule';
+import { InProgress } from '../components/AdvisorSearchModule/InProgress';
+
 export function Results() {
-  return <div>Results — coming soon</div>;
+  return (
+    <AdvisorSearchModule>
+      <InProgress />
+    </AdvisorSearchModule>
+  );
 }
