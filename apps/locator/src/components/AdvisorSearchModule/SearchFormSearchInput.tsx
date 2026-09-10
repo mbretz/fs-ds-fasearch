@@ -18,6 +18,15 @@ interface SearchFormSearchInputProps {
   labelPlacement?: 'above' | 'below';
   className?: string;
   /**
+   * Applied to `SearchInput.InputGroup` (the Field+Button pill), not Root —
+   * callers use this for the View Transitions `view-transition-name` that
+   * pairs Start's and InProgress's search boxes specifically, deliberately
+   * excluding the Label text above it from the morphed group. See Start.tsx/
+   * InProgress.tsx's own comments for why only one of InProgress's two
+   * dual-mounted instances sets this.
+   */
+  inputGroupClassName?: string;
+  /**
    * Query text is owned by the caller, not this component — both Start and
    * InProgress render this component, and InProgress specifically mounts it
    * twice at once (mobile + desktop, toggled with CSS `hidden` rather than
@@ -49,6 +58,7 @@ export function SearchFormSearchInput({
   density = 'roomy',
   labelPlacement = 'above',
   className,
+  inputGroupClassName,
   value,
   onValueChange,
   onSubmit,
@@ -95,7 +105,7 @@ export function SearchFormSearchInput({
       >
         {LABEL_TEXT}
       </SearchInput.Label>
-      <SearchInput.InputGroup>
+      <SearchInput.InputGroup className={inputGroupClassName}>
         <SearchInput.Field
           id={fieldId}
           density={density}
