@@ -243,7 +243,14 @@ export function InProgress({
             available cross-axis space *minus its margins*, so the negative
             margins alone extend it edge-to-edge -- an explicit `w-full`
             here would fix the width at 100% of the (still-inset) parent
-            instead of letting it expand. */}
+            instead of letting it expand.
+
+            This -16px alone is also correct through AdvisorSearchModule's
+            own 768-816px mobile-breakout band (see that file's comment):
+            that fix cancels `<main>`'s ambient padding via a margin on its
+            own card div, one level above this component's root, so this
+            root's content box already reads as fully edge-to-edge in that
+            band exactly like true mobile -- nothing extra to cancel here. */}
         <div
           data-theme="light"
           className="-mx-[var(--density-spacing-fixed-large)] -mb-[var(--density-spacing-fixed-large)] flex flex-col items-stretch gap-[var(--density-spacing-fixed-large)] bg-[var(--semantic-surface-base-default)] p-[var(--density-spacing-fixed-large)]"
