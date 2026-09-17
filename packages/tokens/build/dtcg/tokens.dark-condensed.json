@@ -404,6 +404,60 @@
           "$description": "Condensed-mode density value for sizing fixed xx small."
         }
       }
+    },
+    "layout": {
+      "fixed": {
+        "small": {
+          "$value": "8px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed small."
+        },
+        "med": {
+          "$value": "12px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed med."
+        },
+        "large": {
+          "$value": "16px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed large."
+        },
+        "x-large": {
+          "$value": "20px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed x large."
+        },
+        "xx-large": {
+          "$value": "24px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed xx large."
+        },
+        "xxx-large": {
+          "$value": "32px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed xxx large."
+        },
+        "4x-large": {
+          "$value": "40px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed 4x large."
+        },
+        "5x-large": {
+          "$value": "44px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed 5x large."
+        },
+        "6x-large": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed 6x large."
+        },
+        "7x-large": {
+          "$value": "64px",
+          "$type": "dimension",
+          "$description": "Condensed-mode density value for layout fixed 7x large."
+        }
+      }
     }
   },
   "primitives": {
