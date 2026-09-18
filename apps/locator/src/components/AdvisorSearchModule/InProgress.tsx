@@ -53,10 +53,33 @@ function FocusAreaFilter({
 }: FocusAreaFilterProps) {
   const [open, setOpen] = useState(false);
 
+  // Checking/unchecking inside the drawer -- and "Clear all" -- only ever
+  // edits this local draft, never the lifted `selected` prop directly.
+  // "Apply Filters" is what commits the draft via `onSelectedChange`; the
+  // selected-focus-area Chip row (FilterFacets, a sibling of
+  // AdvisorSearchModule in Results.tsx) is a deliberately separate,
+  // secondary removal mechanism that still applies immediately, since it
+  // has no Apply step of its own.
+  const [draftSelected, setDraftSelected] = useState(selected);
+
+  // Re-seeds the draft from the last *applied* selection every time the
+  // drawer opens -- covers both a normal open and closing without Apply
+  // (outside click, Escape): the draft is simply discarded and rebuilt
+  // from `selected` next time, rather than persisting a half-edited draft
+  // across an abandoned open.
+  useEffect(() => {
+    if (open) setDraftSelected(selected);
+  }, [open, selected]);
+
   function toggle(area: string, checked: boolean) {
-    onSelectedChange(
-      checked ? [...selected, area] : selected.filter((a) => a !== area),
+    setDraftSelected((current) =>
+      checked ? [...current, area] : current.filter((a) => a !== area),
     );
+  }
+
+  function applyFilters() {
+    onSelectedChange(draftSelected);
+    setOpen(false);
   }
 
   return (
@@ -128,7 +151,7 @@ function FocusAreaFilter({
                 {focusAreas.map((area) => (
                   <ChecklistGroup.Item
                     key={area}
-                    checked={selected.includes(area)}
+                    checked={draftSelected.includes(area)}
                     onCheckedChange={(checked) =>
                       toggle(area, checked === true)
                     }
@@ -140,10 +163,10 @@ function FocusAreaFilter({
             </ChecklistGroup.Root>
           </FilterMenu.Drawer>
           <FilterMenu.Footer>
-            <Button variant="secondary" onClick={() => setOpen(false)}>
+            <Button variant="secondary" onClick={applyFilters}>
               Apply Filters
             </Button>
-            <Button variant="tertiary" onClick={() => onSelectedChange([])}>
+            <Button variant="tertiary" onClick={() => setDraftSelected([])}>
               Clear all
             </Button>
           </FilterMenu.Footer>
