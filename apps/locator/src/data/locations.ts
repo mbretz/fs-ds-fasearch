@@ -1,3 +1,5 @@
+import officePhotoPlaceholder from '../assets/office-photo-placeholder.png';
+
 export type NewClientStatus = 'accepting' | 'waitlist' | 'referralOnly';
 
 export type BranchStaffTitle =
@@ -32,6 +34,10 @@ export interface Advisor {
   designations: string[];
   /** Years at the company. */
   tenureYears: number;
+  /** Direct line. Optional — falls back to `Location.phone` when unset. */
+  phone?: string;
+  /** Optional — most advisors don't have a personal fax number on file. */
+  fax?: string;
   linkedIn: boolean;
   facebook: boolean;
   /** Short list for the profile bio's "outside the office" section. */
@@ -48,8 +54,24 @@ export interface Advisor {
 
 export interface Location {
   id: string;
+  /**
+   * Internal/short label (e.g. map pin tooltips) — not the card-facing
+   * display heading. Cards show `address` instead (docs/PLAN.md's entity
+   * card work, 2026-09).
+   */
   name: string;
   address: string;
+  /** Branch main line. Optional — set on most, not all, locations. */
+  phone?: string;
+  /** Optional — only set on a handful of locations. */
+  fax?: string;
+  /**
+   * Office Details panel's exterior/interior photo (Figma's Office
+   * Details "Branch Image" slot). Optional — only set on a handful of
+   * locations, same ones as `fax`, since it's currently a single shared
+   * placeholder asset rather than a real per-branch photo.
+   */
+  officePhotoUrl?: string;
   lat: number;
   lng: number;
   hours: string;
@@ -63,6 +85,9 @@ export const locations: Location[] = [
     id: 'loc-1',
     name: 'St. Louis Downtown',
     address: '211 N Broadway, St. Louis, MO 63102',
+    phone: '(555) 010-0001',
+    fax: '(555) 010-9001',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6273,
     lng: -90.1889,
     hours: 'Mon–Fri 8am–5pm',
@@ -74,6 +99,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=1',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0001',
         focusAreas: [
           'Investors Nearing Retirement',
           'College Savers',
@@ -99,6 +125,9 @@ export const locations: Location[] = [
     id: 'loc-2',
     name: 'Clayton Central',
     address: '7701 Forsyth Blvd, Clayton, MO 63105',
+    phone: '(555) 010-0002',
+    fax: '(555) 010-9002',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6459,
     lng: -90.3374,
     hours: 'Mon–Fri 8am–6pm, Sat 9am–1pm',
@@ -110,6 +139,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=2',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0002',
         focusAreas: [
           'Charitable Giving',
           'Young Families',
@@ -136,6 +166,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=3',
         newClientStatus: 'waitlist',
+        phone: '(555) 020-0003',
         focusAreas: [
           'Small Business Retirement Plans',
           'Women Investors',
@@ -187,6 +218,7 @@ export const locations: Location[] = [
     id: 'loc-3',
     name: 'Chesterfield Valley',
     address: '17330 N Outer Forty Rd, Chesterfield, MO 63005',
+    phone: '(555) 010-0003',
     lat: 38.6631,
     lng: -90.5771,
     hours: 'Mon–Fri 9am–5pm',
@@ -198,6 +230,7 @@ export const locations: Location[] = [
         title: 'Senior Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=4',
         newClientStatus: 'referralOnly',
+        phone: '(555) 020-0004',
         focusAreas: [
           'Sudden Wealth Events',
           'Multigenerational Wealth Transfer',
@@ -230,6 +263,7 @@ export const locations: Location[] = [
     id: 'loc-4',
     name: 'Kirkwood Main Street',
     address: '111 W Argonne Dr, Kirkwood, MO 63122',
+    phone: '(555) 010-0004',
     lat: 38.5834,
     lng: -90.4068,
     hours: 'Mon–Fri 8am–5pm',
@@ -241,6 +275,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=5',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0005',
         focusAreas: [
           'Early Life Stage Investors',
           'New Investors',
@@ -269,6 +304,7 @@ export const locations: Location[] = [
     id: 'loc-5',
     name: 'Webster Groves',
     address: '8 W Lockwood Ave, Webster Groves, MO 63119',
+    phone: '(555) 010-0005',
     lat: 38.5895,
     lng: -90.3568,
     hours: 'Mon–Fri 9am–5pm',
@@ -280,6 +316,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=6',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0006',
         focusAreas: [
           'Money Management Strategies',
           'Business Owners',
@@ -309,6 +346,7 @@ export const locations: Location[] = [
     id: 'loc-6',
     name: 'Ballwin Plaza',
     address: '14855 Manchester Rd, Ballwin, MO 63011',
+    phone: '(555) 010-0006',
     lat: 38.5951,
     lng: -90.5462,
     hours: 'Mon–Fri 8am–5pm',
@@ -320,6 +358,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=7',
         newClientStatus: 'waitlist',
+        phone: '(555) 020-0007',
         focusAreas: [
           'Divorce Financial Planning',
           'Healthcare and Long-Term Care Planning',
@@ -358,6 +397,7 @@ export const locations: Location[] = [
     id: 'loc-7',
     name: "O'Fallon Crossing",
     address: '1300 Highway K, O’Fallon, MO 63366',
+    phone: '(555) 010-0007',
     lat: 38.8106,
     lng: -90.6998,
     hours: 'Mon–Fri 9am–6pm',
@@ -369,6 +409,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=8',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0008',
         focusAreas: [
           'Military and Veterans',
           'Investors Nearing Retirement',
@@ -395,6 +436,9 @@ export const locations: Location[] = [
     id: 'loc-8',
     name: 'St. Charles Riverfront',
     address: '425 S Main St, St. Charles, MO 63301',
+    phone: '(555) 010-0008',
+    fax: '(555) 010-9008',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7828,
     lng: -90.4877,
     hours: 'Mon–Fri 8am–5pm',
@@ -406,6 +450,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=9',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0009',
         focusAreas: [
           'Balancing Debt and Saving',
           'Charitable Giving',
@@ -441,6 +486,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=10',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0010',
         focusAreas: [
           'Tax-Efficient Investing',
           'Small Business Retirement Plans',
@@ -478,6 +524,7 @@ export const locations: Location[] = [
     id: 'loc-9',
     name: 'Maplewood Commons',
     address: '7260 Manchester Rd, Maplewood, MO 63143',
+    phone: '(555) 010-0009',
     lat: 38.6134,
     lng: -90.3238,
     hours: 'Mon–Fri 9am–5pm',
@@ -489,6 +536,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=11',
         newClientStatus: 'referralOnly',
+        phone: '(555) 020-0011',
         focusAreas: [
           'Social Security Optimization',
           'Sudden Wealth Events',
@@ -518,6 +566,7 @@ export const locations: Location[] = [
     id: 'loc-10',
     name: 'Florissant Square',
     address: '1050 Waterford Dr, Florissant, MO 63033',
+    phone: '(555) 010-0010',
     lat: 38.7892,
     lng: -90.3223,
     hours: 'Mon–Fri 8am–5pm',
@@ -529,6 +578,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=12',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0012',
         focusAreas: [
           'College Savers',
           'Early Life Stage Investors',
@@ -555,6 +605,7 @@ export const locations: Location[] = [
     id: 'loc-11',
     name: 'University City',
     address: '6660 Delmar Blvd, University City, MO 63130',
+    phone: '(555) 010-0011',
     lat: 38.6581,
     lng: -90.3095,
     hours: 'Mon–Fri 9am–6pm',
@@ -566,6 +617,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=13',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0013',
         focusAreas: [
           'Young Families',
           'Money Management Strategies',
@@ -596,6 +648,7 @@ export const locations: Location[] = [
     id: 'loc-12',
     name: 'Manchester Corners',
     address: '14275 Manchester Rd, Manchester, MO 63011',
+    phone: '(555) 010-0012',
     lat: 38.5975,
     lng: -90.5087,
     hours: 'Mon–Fri 8am–5pm',
@@ -607,6 +660,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=14',
         newClientStatus: 'waitlist',
+        phone: '(555) 020-0014',
         focusAreas: [
           'Women Investors',
           'Divorce Financial Planning',
@@ -633,6 +687,7 @@ export const locations: Location[] = [
     id: 'loc-13',
     name: 'Ferguson Heights',
     address: '1 N Florissant Rd, Ferguson, MO 63135',
+    phone: '(555) 010-0013',
     lat: 38.7442,
     lng: -90.3054,
     hours: 'Mon–Fri 9am–5pm',
@@ -644,6 +699,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=15',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0015',
         focusAreas: [
           'Multigenerational Wealth Transfer',
           'Military and Veterans',
@@ -671,6 +727,9 @@ export const locations: Location[] = [
     id: 'loc-14',
     name: 'Creve Coeur Lakeside',
     address: '11477 Olde Cabin Rd, Creve Coeur, MO 63141',
+    phone: '(555) 010-0014',
+    fax: '(555) 010-9014',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6659,
     lng: -90.4437,
     hours: 'Mon–Fri 8am–6pm',
@@ -682,6 +741,7 @@ export const locations: Location[] = [
         title: 'Senior Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=16',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0016',
         focusAreas: [
           'New Investors',
           'Balancing Debt and Saving',
@@ -715,6 +775,7 @@ export const locations: Location[] = [
     id: 'loc-15',
     name: 'Sunset Hills',
     address: '3853 S Lindbergh Blvd, Sunset Hills, MO 63127',
+    phone: '(555) 010-0015',
     lat: 38.5439,
     lng: -90.3898,
     hours: 'Mon–Fri 9am–5pm',
@@ -726,6 +787,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=17',
         newClientStatus: 'referralOnly',
+        phone: '(555) 020-0017',
         focusAreas: [
           'Business Owners',
           'Tax-Efficient Investing',
@@ -759,6 +821,7 @@ export const locations: Location[] = [
     id: 'loc-16',
     name: 'Affton Village',
     address: '9800 Gravois Rd, Affton, MO 63123',
+    phone: '(555) 010-0016',
     lat: 38.5589,
     lng: -90.3298,
     hours: 'Mon–Fri 8am–5pm',
@@ -770,6 +833,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=18',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0018',
         focusAreas: [
           'Healthcare and Long-Term Care Planning',
           'Social Security Optimization',
@@ -793,6 +857,7 @@ export const locations: Location[] = [
     id: 'loc-17',
     name: 'Wentzville Trailhead',
     address: '1550 Wentzville Pkwy, Wentzville, MO 63385',
+    phone: '(555) 010-0017',
     lat: 38.8114,
     lng: -90.8529,
     hours: 'Mon–Fri 9am–6pm',
@@ -804,6 +869,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=51',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0019',
         focusAreas: [
           'Investors Nearing Retirement',
           'College Savers',
@@ -830,6 +896,7 @@ export const locations: Location[] = [
     id: 'loc-18',
     name: 'Arnold Riverside',
     address: '2100 Arnold Tenbrook Rd, Arnold, MO 63010',
+    phone: '(555) 010-0018',
     lat: 38.4342,
     lng: -90.3765,
     hours: 'Mon–Fri 8am–5pm',
@@ -841,6 +908,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=20',
         newClientStatus: 'waitlist',
+        phone: '(555) 020-0020',
         focusAreas: [
           'Charitable Giving',
           'Young Families',
@@ -875,6 +943,9 @@ export const locations: Location[] = [
     id: 'loc-19',
     name: 'Fenton Corporate Park',
     address: '1050 Gravois Bluffs Blvd, Fenton, MO 63026',
+    phone: '(555) 010-0019',
+    fax: '(555) 010-9019',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5136,
     lng: -90.4437,
     hours: 'Mon–Fri 9am–5pm',
@@ -886,6 +957,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=21',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0021',
         focusAreas: [
           'Small Business Retirement Plans',
           'Women Investors',
@@ -911,6 +983,7 @@ export const locations: Location[] = [
     id: 'loc-20',
     name: 'Bridgeton Gateway',
     address: '3630 Pennridge Dr, Bridgeton, MO 63044',
+    phone: '(555) 010-0020',
     lat: 38.7684,
     lng: -90.4048,
     hours: 'Mon–Fri 8am–5pm',
@@ -922,6 +995,7 @@ export const locations: Location[] = [
         title: 'Financial Advisor',
         photoUrl: 'https://i.pravatar.cc/150?img=22',
         newClientStatus: 'accepting',
+        phone: '(555) 020-0022',
         focusAreas: [
           'Sudden Wealth Events',
           'Multigenerational Wealth Transfer',
