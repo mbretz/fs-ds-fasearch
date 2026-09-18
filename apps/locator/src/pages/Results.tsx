@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AdvisorSearchModule } from '../components/AdvisorSearchModule/AdvisorSearchModule';
 import { InProgress } from '../components/AdvisorSearchModule/InProgress';
+import { FilterFacets } from '../components/FilterFacets/FilterFacets';
 import { ResultsList } from '../components/ResultsList/ResultsList';
 import { useFilteredLocations } from '../components/ResultsList/useFilteredLocations';
 import { ProspectPortal } from '../components/ProspectPortal/ProspectPortal';
@@ -114,6 +115,11 @@ export function Results() {
           mx-[clamp(var(--density-layout-fixed-large),calc((100vw-768px)*88/494),88px)]
           min-[360px]:mx-[max(clamp(var(--density-layout-fixed-large),calc((100vw-768px)*88/494),88px),10vw)]
         "
+      />
+      <FilterFacets
+        selectedFocusAreas={selectedFocusAreas}
+        onSelectedFocusAreasChange={setSelectedFocusAreas}
+        className="mt-[var(--density-layout-fixed-large)]"
       />
       <ResultsList locations={filteredLocations} />
     </>
