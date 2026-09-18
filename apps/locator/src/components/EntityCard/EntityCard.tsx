@@ -1,0 +1,115 @@
+import type { CSSProperties, ReactNode } from 'react';
+import { Card } from 'ds';
+import { cn } from '../../utils/cn';
+
+export interface EntityCardProps {
+  /** The header/actions column -- always rendered, never hidden by width. */
+  children: ReactNode;
+  /**
+   * 0-2 side panels (`FocusAreasPanel`, `OfficeDetailsPanel`,
+   * `AdvisorsAtLocationPanel`). Below the container-query threshold each
+   * one stacks full-width under `children`, in order; above it, each
+   * renders as its own column *beside* `children` and beside each other --
+   * matches Figma's `FA-Card-SidePanels`/`Branch-Card-SidePanels`, whose
+   * top-level layout is itself `mode: row` (Left Column + Focus Areas
+   * panel + Office panel side by side as three siblings), not a main
+   * column plus one side column holding two stacked panels. Omit entirely
+   * (or pass an empty array) for the panel-less case
+   * (`FA-Card-Mobile`/`Branch-Card-Mobile`), a single column at every width.
+   */
+  panels?: ReactNode[];
+  density?: 'roomy' | 'condensed';
+  className?: string;
+}
+
+// Row-vs-column flip driven by the card's own rendered width via a named
+// container query, not the viewport -- CSS Grid rather than Flexbox: `fr`
+// tracks give a clean, directly tunable proportional split (each panel a
+// fixed 25% share, `main` taking whatever's left) that's easier to adjust
+// once FocusAreasPanel/OfficeDetailsPanel exist with real content, versus
+// reverse-engineering the equivalent from flex-basis/grow/shrink.
+//
+// Track count varies with `panels.length` (0-2), which a single static
+// CSS rule can't express, so the *values* are computed in JS and threaded
+// through as a CSS custom property (`--entity-card-columns`) on
+// `Card.Root`, while a small `<style>` block -- same mechanism
+// AdvisorSearchModule/Start.tsx's own named-container rules already use
+// -- is what gates *applying* that property behind the container query,
+// so the grid stays single-column below the threshold regardless of the
+// inline property's value.
+//
+// Each panel is always exactly a 25% share of the card -- not "25% when
+// there happen to be two of them" -- so `main`'s own share shrinks to
+// match: 100% with none, 75% with one, 50% with two. The denominator
+// stays a constant 4 (`main = (4 - panelCount)fr`, each panel `1fr`) so a
+// panel's width never changes based on how many siblings it has.
+//
+// The outer `@container/entity-card` div is deliberately unstyled and
+// distinct from the grid it measures: a size container query can only
+// ever match a *descendant* of the element declaring `container-type`,
+// never that element itself (confirmed the hard way in
+// AdvisorSearchModule.tsx already) -- so `Card.Root` one level in is what
+// actually becomes the grid and reads the outer div's measurement.
+//
+// Threshold (680px) is a first-pass value sized off Figma's own
+// side-panel frames (250/450/274px wide panels inside ~700-850px-wide
+// card compositions), not yet confirmed against a real rendered card with
+// real panel content -- `FocusAreasPanel`/`OfficeDetailsPanel` don't
+// exist yet, so there's nothing to visually tune this against. Revisit
+// once they're built (the plan already flags this as a
+// build-time-not-guessed-up-front value).
+function gridColumns(panelCount: number) {
+  const mainShare = 4 - panelCount;
+  return [`${mainShare}fr`, ...Array<string>(panelCount).fill('1fr')].join(' ');
+}
+
+const gridStyles = `
+  @container entity-card (min-width: 680px) {
+    .entity-card-grid {
+      grid-template-columns: var(--entity-card-columns);
+      align-items: start;
+    }
+  }
+`;
+
+export function EntityCard({
+  children,
+  panels = [],
+  density,
+  className,
+}: EntityCardProps) {
+  return (
+    <div className="@container/entity-card">
+      <style>{gridStyles}</style>
+      <Card.Root
+        density={density}
+        style={
+          {
+            '--entity-card-columns': gridColumns(panels.length),
+          } as CSSProperties
+        }
+        className={cn(
+          // Figma's card border (`#CBCCCD`, consistent across every
+          // FA-Card-*/Branch-Card-* composition fetched) is an exact match
+          // for the `neutral-800` primitive, but no semantic-tier token
+          // resolves to that same value -- a documented primitives
+          // fallback (component -> semantic -> primitives -> hardcode),
+          // not a shortcut past the semantic tier.
+          'entity-card-grid grid grid-cols-1 gap-[var(--density-spacing-fixed-large)] border-[color:var(--primitives-ref-color-neutral-800)] p-[var(--density-spacing-fixed-large)]',
+          className,
+        )}
+      >
+        <div className="flex min-w-0 flex-col gap-[var(--density-spacing-fixed-large)]">
+          {children}
+        </div>
+        {panels.map((panel, index) => (
+          // Panels don't reorder/insert within a card's lifetime, so an
+          // index key is fine here.
+          <div key={index} className="min-w-0">
+            {panel}
+          </div>
+        ))}
+      </Card.Root>
+    </div>
+  );
+}
