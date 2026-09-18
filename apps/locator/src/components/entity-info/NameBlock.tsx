@@ -1,16 +1,20 @@
+import type { ReactNode } from 'react';
 import { cn } from '../../utils/cn';
 
 export interface NameBlockProps {
   /** An FA's name on AdvisorCard, or a location's address on LocationCard --
    * Figma's `.FA-Name+Accreditations` (`1:611`) repurposes the same slot
-   * for both. */
-  heading: string;
+   * for both. `ReactNode`, not just `string`, so LocationCard can split
+   * its address across two forced lines (street, then city/state/zip)
+   * rather than one plain string. */
+  heading: ReactNode;
   /**
-   * Designations ("CFP®, CLU®") on AdvisorCard, or a branch summary
-   * ("6 Financial Advisors / 2 Administrative Staff") on LocationCard.
-   * Omitted entirely when there's nothing to show.
+   * Designations ("CFP®, CLU®") on AdvisorCard, or a branch summary on
+   * LocationCard (an intro sentence + a list of counts, `ReactNode` for
+   * that reason, not just `string`). Omitted entirely when there's
+   * nothing to show.
    */
-  subheading?: string;
+  subheading?: ReactNode;
   className?: string;
 }
 
@@ -34,9 +38,9 @@ export function NameBlock({ heading, subheading, className }: NameBlockProps) {
         {heading}
       </span>
       {subheading && (
-        <span className="text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--semantic-content-common-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
+        <div className="text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--semantic-content-common-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
           {subheading}
-        </span>
+        </div>
       )}
     </div>
   );

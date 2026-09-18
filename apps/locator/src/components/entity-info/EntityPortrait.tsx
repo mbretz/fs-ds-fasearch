@@ -55,6 +55,15 @@ export interface EntityPortraitProps {
    * an automatic rule.
    */
   badgeMode?: 'default' | 'inverse';
+  /**
+   * Overrides the underlying DS `Avatar`'s own size classes -- needed
+   * when a caller's real dimension (e.g. LocationCard's 240x240px, from
+   * Figma's `AvatarGroup` measurement) falls outside `Avatar`'s size
+   * scale entirely (`xs`...`2xl` tops out at 144px). `size` above still
+   * has to be set to something for `Avatar.Root`'s own required prop,
+   * but this wins the conflicting size classes via `cn`'s tailwind-merge.
+   */
+  avatarClassName?: string;
   className?: string;
 }
 
@@ -65,6 +74,7 @@ export function EntityPortrait({
   variant = 'associate',
   status,
   badgeMode = 'default',
+  avatarClassName,
   className,
 }: EntityPortraitProps) {
   const initials = name
@@ -77,7 +87,11 @@ export function EntityPortrait({
 
   return (
     <div className={cn('relative inline-flex shrink-0', className)}>
-      <Avatar.Root size={avatarSizeBySize[size]} variant={variant}>
+      <Avatar.Root
+        size={avatarSizeBySize[size]}
+        variant={variant}
+        className={avatarClassName}
+      >
         {photoUrl && <Avatar.Image src={photoUrl} alt="" />}
         <Avatar.Fallback>{initials}</Avatar.Fallback>
       </Avatar.Root>

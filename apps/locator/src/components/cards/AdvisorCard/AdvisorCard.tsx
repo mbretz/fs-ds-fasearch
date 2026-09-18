@@ -1,4 +1,5 @@
 import { HyperlinkLink, Share } from 'icons';
+import { Separator } from 'ds';
 import type { Advisor, Location } from '../../../data/locations';
 import { EntityCard } from '../EntityCard/EntityCard';
 import { EntityPortrait } from '../../entity-info/EntityPortrait';
@@ -52,9 +53,11 @@ export function AdvisorCard({
       className={className}
       panels={[
         <FocusAreasPanel key="focus-areas" focusAreas={advisor.focusAreas} />,
+        // `officePhotoUrl` deliberately not passed here -- per the user,
+        // the branch photo is reserved for the full Office Details panel
+        // on profile pages, not any card context.
         <OfficeDetailsPanel
           key="office-details"
-          officePhotoUrl={location.officePhotoUrl}
           address={location.address}
           hours={location.hours}
           phone={phone}
@@ -134,6 +137,23 @@ export function AdvisorCard({
         </div>
       )}
 
+      {/* Matches `.FA-Card-Actions-Block`: a `Separator` directly above
+          Actions, inset 16px on each side (that block's own horizontal
+          padding in Figma) rather than spanning the column's full width.
+          `w-auto` overrides Separator's own default `w-full` -- combined
+          with `mx-*`, `w-full` would overflow the column by 32px (an
+          explicit 100% width ignores margins), whereas `w-auto` lets the
+          parent flex column's default `align-items: stretch` size it to
+          fill the *remaining* width after the margins instead. `mt-auto`
+          lives on the separator, not `EntityActions` itself, per the
+          user -- it pins the divider (and everything after it) to the
+          bottom of the main column, which is now stretched to match the
+          side panels' height (EntityCard's `align-items: stretch`).
+          Everything above stays stacked at its own natural height (the
+          outer wrapper's default `justify-content: flex-start` already
+          keeps it pinned top on its own), and the gap right before the
+          separator absorbs the extra space. */}
+      <Separator className="mt-auto mx-[var(--density-spacing-fixed-large)] w-auto" />
       <EntityActions
         primaryLabel="View Profile"
         onPrimaryAction={onViewProfile}

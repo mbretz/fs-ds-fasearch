@@ -2,13 +2,15 @@ import { Link } from 'ds';
 import type { BranchSupportStaff } from '../../data/locations';
 import { EntityPortrait } from './EntityPortrait';
 import { cn } from '../../utils/cn';
+import { splitAddressLines } from '../../utils/splitAddressLines';
 
 export interface OfficeDetailsPanelProps {
+  /** Matches Figma's "Show Component Heading" property -- defaults to
+   * shown, since every confirmed usage of this panel keeps it visible. */
+  showTitle?: boolean;
   /** Matches Figma's "Branch Image" slot -- `Location.officePhotoUrl`. */
   officePhotoUrl?: string;
   address?: string;
-  /** Defaults to a Google Maps search URL built from `address`. */
-  addressHref?: string;
   /** `Location.hours`' existing single display string (e.g. "Mon-Fri
    * 8am-5pm") -- per-day hours are out of scope, see docs/PLAN.md. */
   hours?: string;
@@ -27,8 +29,15 @@ export interface OfficeDetailsPanelProps {
   className?: string;
 }
 
-function telHref(phone: string) {
-  return `tel:${phone.replace(/[^\d+]/g, '')}`;
+// Neither a real <a> nor DS `Link` has a native `disabled` attribute, so
+// this fakes it the same way Start.tsx/SiteHeader.tsx/ProspectPortal do
+// for every other not-really-wired-up destination in this app: an inert
+// `href="#"`, aria-disabled, tabIndex -1, onClick preventDefault, and a
+// `cursor-not-allowed` override. Per the user, address/phone links stay
+// inactive for this prototype rather than actually opening Google Maps
+// or dialing a fake `555` number.
+function preventDisabledClick(event: { preventDefault: () => void }) {
+  event.preventDefault();
 }
 
 const headingClassName =
@@ -44,13 +53,24 @@ const bodyClassName =
 // "Show Branch Team" properties. Deliberately excludes "Branch Social"
 // (low-fidelity placeholder images in Figma, unrelated to the real
 // per-advisor LinkedIn/Facebook links, which live on AdvisorCard's own
-// header instead). The address link is a single `Link` with `newWindow`,
-// not a pin icon + link like `ContactLinks` -- Figma's own Office Address
-// instance has no icon here.
+// header instead). The address link is a single `Link`, not a pin icon +
+// link like `ContactLinks` -- Figma's own Office Address instance has no
+// icon here. Its street/city-state-zip split (`splitAddressLines`) and
+// `newWindow` treatment match LocationCard's own card-title heading, per
+// the user.
+//
+// The address and phone links are inert (per the user, deliberately
+// inactive for this prototype) -- same `href="#"`/aria-disabled/
+// tabIndex -1/preventDefault convention Start.tsx/SiteHeader.tsx/
+// ProspectPortal already use for every other not-really-wired-up
+// destination in this app, rather than actually opening Google Maps or
+// dialing a fake `555` number. `newWindow` is still safe to combine with
+// that -- the click is prevented before any navigation would occur, so
+// `target="_blank"` never actually fires.
 export function OfficeDetailsPanel({
+  showTitle = true,
   officePhotoUrl,
   address,
-  addressHref,
   hours,
   hoursLabel = 'Office Hours',
   phone,
@@ -72,13 +92,15 @@ export function OfficeDetailsPanel({
   return (
     <div
       className={cn(
-        'flex flex-col gap-[var(--density-spacing-fixed-large)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
+        'flex h-full flex-col gap-[var(--density-spacing-fixed-large)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
         className,
       )}
     >
-      <span className="text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
-        Office Information
-      </span>
+      {showTitle && (
+        <span className="text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
+          Office Information
+        </span>
+      )}
 
       {officePhotoUrl && (
         <img
@@ -88,22 +110,43 @@ export function OfficeDetailsPanel({
         />
       )}
 
-      {address && (
-        <Link
-          href={
-            addressHref ??
-            `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
-          }
-          newWindow
-        >
-          {address}
-        </Link>
-      )}
+      {address &&
+        (() => {
+          const { street, cityStateZip } = splitAddressLines(address);
+          return (
+            <div className="flex flex-col gap-[var(--density-spacing-fixed-x-small)]">
+              <span className={headingClassName}>Office Address</span>
+              <Link
+                href="#"
+                aria-disabled="true"
+                tabIndex={-1}
+                onClick={preventDisabledClick}
+                newWindow
+                className="cursor-not-allowed"
+              >
+                {street}
+                <br />
+                {cityStateZip}
+              </Link>
+            </div>
+          );
+        })()}
 
       {hours && (
         <div className="flex flex-col gap-[var(--density-spacing-fixed-x-small)]">
           <span className={headingClassName}>{hoursLabel}</span>
-          <span className={bodyClassName}>{hours}</span>
+          {/* `Location.hours` packs multiple day-range entries into one
+              comma-separated display string (e.g. "Mon-Fri 8am-6pm, Sat
+              9am-1pm") -- each one gets its own line here rather than
+              running together as a single wrapped sentence, per the
+              user. */}
+          <div className="flex flex-col">
+            {hours.split(',').map((entry) => (
+              <span key={entry} className={bodyClassName}>
+                {entry.trim()}
+              </span>
+            ))}
+          </div>
         </div>
       )}
 
@@ -112,7 +155,15 @@ export function OfficeDetailsPanel({
           {phone && (
             <div className="flex flex-col gap-[var(--density-spacing-fixed-x-small)]">
               <span className={headingClassName}>Phone</span>
-              <Link href={telHref(phone)}>{phone}</Link>
+              <Link
+                href="#"
+                aria-disabled="true"
+                tabIndex={-1}
+                onClick={preventDisabledClick}
+                className="cursor-not-allowed"
+              >
+                {phone}
+              </Link>
             </div>
           )}
           {fax && (

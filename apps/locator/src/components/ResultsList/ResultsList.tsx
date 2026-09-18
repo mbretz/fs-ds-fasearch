@@ -1,40 +1,53 @@
 import type { Location } from '../../data/locations';
+import { AdvisorCard } from '../cards/AdvisorCard/AdvisorCard';
+import { LocationCard } from '../cards/LocationCard/LocationCard';
+import { cn } from '../../utils/cn';
 
 interface ResultsListProps {
   locations: Location[];
+  className?: string;
 }
 
-// Deliberately plain text, not a DS `Card`-composed `LocationCard` -- this
-// exists to prove the query/focus-area/accepting-new-clients filtering
-// logic (`useFilteredLocations`) is wired correctly before investing in the
-// polished list UI (docs/PLAN.md §2.2 items 1-3/5, the map, and the real
-// `LocationCard`), which is separate, larger, not-yet-scoped work. Lives
-// outside `AdvisorSearchModule` (a sibling in `Results.tsx`, per the
-// planned selected-focus-area chip row landing in the same place) rather
-// than inside `InProgress.tsx`.
-export function ResultsList({ locations }: ResultsListProps) {
+// Matches the "Locator/Desktop/List/FocusAreas-Display" reference
+// (`693:18125`): a `Branch-Card-SidePanels` (LocationCard) row first, then
+// the matching `FA-Card-*` (AdvisorCard) rows below -- not a flat
+// AdvisorCard-only list. Filtering happens at the location level
+// (`useFilteredLocations` keeps every advisor at a matching branch, not
+// just the one that matched), so every filtered location renders its own
+// LocationCard, followed by every one of its advisors as its own
+// AdvisorCard.
+//
+// Horizontal margin: 8px (`layout.fixed.small`) below `md`, none at `md`+
+// -- `<main>` (SiteShell.tsx) has zero padding of its own below `md`, so
+// mobile needs an explicit inset here; at `md`+ this matches
+// AdvisorSearchModule's own behavior (see SiteShell.tsx's `<main>`
+// comment), which adds no margin of its own there either, relying
+// entirely on `<main>`'s ambient padding -- so a bare `md:mx-0` override
+// lines this up with it for free rather than needing a second value.
+export function ResultsList({ locations, className }: ResultsListProps) {
   if (locations.length === 0) {
-    return <p>No locations match the current filters.</p>;
+    return <p className={className}>No advisors match the current filters.</p>;
   }
 
   return (
-    <ul>
+    <div
+      className={cn(
+        'mx-[var(--density-layout-fixed-small)] flex flex-col gap-[var(--density-spacing-fixed-xxx-large)] md:mx-0',
+        className,
+      )}
+    >
       {locations.map((location) => (
-        <li key={location.id}>
-          <p>
-            <strong>{location.name}</strong> — {location.address}
-          </p>
-          <ul>
-            {location.advisors.map((advisor) => (
-              <li key={advisor.id}>
-                {advisor.name}, {advisor.title} ({advisor.newClientStatus})
-                {advisor.focusAreas.length > 0 &&
-                  ` — ${advisor.focusAreas.join(', ')}`}
-              </li>
-            ))}
-          </ul>
-        </li>
+        <LocationCard key={location.id} location={location} />
       ))}
-    </ul>
+      <ul className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
+        {locations.flatMap((location) =>
+          location.advisors.map((advisor) => (
+            <li key={advisor.id}>
+              <AdvisorCard advisor={advisor} location={location} />
+            </li>
+          )),
+        )}
+      </ul>
+    </div>
   );
 }

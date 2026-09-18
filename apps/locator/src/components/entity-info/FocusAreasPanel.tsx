@@ -15,6 +15,11 @@ export interface FocusAreasPanelProps {
 // own default styling -- no per-category swatch colors to derive or
 // maintain. Renders nothing when there's nothing to show, rather than an
 // empty panel shell, so `EntityCard` never reserves a column for it.
+//
+// The "Focus Areas" heading uses the same Heavy-style tokens as
+// OfficeDetailsPanel's own sub-headings ("Phone"/"Office Hours"/etc, not
+// that panel's larger "Office Information" title), per the user, rather
+// than the larger `subheading` tokens this used previously.
 export function FocusAreasPanel({
   focusAreas,
   className,
@@ -24,11 +29,11 @@ export function FocusAreasPanel({
   return (
     <div
       className={cn(
-        'flex flex-col gap-[var(--density-spacing-fixed-small)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
+        'flex h-full flex-col gap-[var(--density-spacing-fixed-small)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
         className,
       )}
     >
-      <span className="text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
+      <span className="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
         Focus Areas
       </span>
       <div className="flex flex-wrap gap-[var(--density-spacing-fixed-small)]">

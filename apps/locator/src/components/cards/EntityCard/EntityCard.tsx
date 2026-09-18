@@ -44,6 +44,16 @@ export interface EntityCardProps {
 // stays a constant 4 (`main = (4 - panelCount)fr`, each panel `1fr`) so a
 // panel's width never changes based on how many siblings it has.
 //
+// `align-items: stretch` (not `start`) once panels/main sit side by
+// side -- confirmed against Figma's own `FA-Card-SidePanels`/
+// `Branch-Card-SidePanels`, whose top-level row is itself
+// `alignItems: "stretch"`, so every column (main and each panel) matches
+// the row's tallest one rather than sitting at its own natural height.
+// Each panel component gives its own root element `h-full` so its
+// background/border actually extends to fill that stretched grid cell --
+// a stretched grid item's own box grows, but a plain block child inside
+// it doesn't inherit that height for free.
+//
 // The outer `@container/entity-card` div is deliberately unstyled and
 // distinct from the grid it measures: a size container query can only
 // ever match a *descendant* of the element declaring `container-type`,
@@ -63,11 +73,26 @@ function gridColumns(panelCount: number) {
   return [`${mainShare}fr`, ...Array<string>(panelCount).fill('1fr')].join(' ');
 }
 
+// Card.Root's own padding is the *panel* inset (8px on every side,
+// including a panel's own outer top/bottom and the last panel's own
+// right edge against the card boundary) -- `main` needs a deeper 16px
+// inset on three of its four sides (top/bottom/left; its right side
+// borders a panel via the grid gap, not the card edge, so it doesn't
+// need compensating), per the user. That compensating padding only
+// applies once panels/main are actually side by side (this same
+// container-query threshold): below it everything stacks full-width in
+// one column, where `main` is just one more stacked item like any panel,
+// not a conceptually distinct left column needing deeper insets.
 const gridStyles = `
   @container entity-card (min-width: 680px) {
     .entity-card-grid {
       grid-template-columns: var(--entity-card-columns);
-      align-items: start;
+      align-items: stretch;
+    }
+    .entity-card-main {
+      padding-top: var(--density-spacing-fixed-small);
+      padding-bottom: var(--density-spacing-fixed-small);
+      padding-left: var(--density-spacing-fixed-small);
     }
   }
 `;
@@ -95,11 +120,11 @@ export function EntityCard({
           // resolves to that same value -- a documented primitives
           // fallback (component -> semantic -> primitives -> hardcode),
           // not a shortcut past the semantic tier.
-          'entity-card-grid grid grid-cols-1 gap-[var(--density-spacing-fixed-large)] border-[color:var(--primitives-ref-color-neutral-800)] p-[var(--density-spacing-fixed-large)]',
+          'entity-card-grid grid grid-cols-1 gap-[var(--density-spacing-fixed-large)] border-[color:var(--primitives-ref-color-neutral-800)] p-[var(--density-spacing-fixed-small)]',
           className,
         )}
       >
-        <div className="flex min-w-0 flex-col gap-[var(--density-spacing-fixed-large)]">
+        <div className="entity-card-main flex min-w-0 flex-col gap-[var(--density-spacing-fixed-large)]">
           {children}
         </div>
         {panels.map((panel, index) => (

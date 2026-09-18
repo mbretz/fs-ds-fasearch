@@ -66,12 +66,16 @@ export interface Location {
   /** Optional — only set on a handful of locations. */
   fax?: string;
   /**
-   * Office Details panel's exterior/interior photo (Figma's Office
-   * Details "Branch Image" slot). Optional — only set on a handful of
-   * locations, same ones as `fax`, since it's currently a single shared
-   * placeholder asset rather than a real per-branch photo.
+   * The branch's photo — currently a single shared placeholder asset
+   * rather than a real per-branch photo, but required (not optional):
+   * LocationCard's own avatar always renders this image, never its
+   * initials fallback, per the user. Deliberately excluded from
+   * OfficeDetailsPanel wherever that panel appears inside a card
+   * (AdvisorCard or LocationCard) — Figma's "Branch Image" slot there is
+   * reserved for the full, standalone Office Details panel on profile
+   * pages (not yet built).
    */
-  officePhotoUrl?: string;
+  officePhotoUrl: string;
   lat: number;
   lng: number;
   hours: string;
@@ -219,6 +223,7 @@ export const locations: Location[] = [
     name: 'Chesterfield Valley',
     address: '17330 N Outer Forty Rd, Chesterfield, MO 63005',
     phone: '(555) 010-0003',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6631,
     lng: -90.5771,
     hours: 'Mon–Fri 9am–5pm',
@@ -264,6 +269,7 @@ export const locations: Location[] = [
     name: 'Kirkwood Main Street',
     address: '111 W Argonne Dr, Kirkwood, MO 63122',
     phone: '(555) 010-0004',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5834,
     lng: -90.4068,
     hours: 'Mon–Fri 8am–5pm',
@@ -305,6 +311,7 @@ export const locations: Location[] = [
     name: 'Webster Groves',
     address: '8 W Lockwood Ave, Webster Groves, MO 63119',
     phone: '(555) 010-0005',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5895,
     lng: -90.3568,
     hours: 'Mon–Fri 9am–5pm',
@@ -347,6 +354,7 @@ export const locations: Location[] = [
     name: 'Ballwin Plaza',
     address: '14855 Manchester Rd, Ballwin, MO 63011',
     phone: '(555) 010-0006',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5951,
     lng: -90.5462,
     hours: 'Mon–Fri 8am–5pm',
@@ -398,6 +406,7 @@ export const locations: Location[] = [
     name: "O'Fallon Crossing",
     address: '1300 Highway K, O’Fallon, MO 63366',
     phone: '(555) 010-0007',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.8106,
     lng: -90.6998,
     hours: 'Mon–Fri 9am–6pm',
@@ -525,6 +534,7 @@ export const locations: Location[] = [
     name: 'Maplewood Commons',
     address: '7260 Manchester Rd, Maplewood, MO 63143',
     phone: '(555) 010-0009',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6134,
     lng: -90.3238,
     hours: 'Mon–Fri 9am–5pm',
@@ -567,6 +577,7 @@ export const locations: Location[] = [
     name: 'Florissant Square',
     address: '1050 Waterford Dr, Florissant, MO 63033',
     phone: '(555) 010-0010',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7892,
     lng: -90.3223,
     hours: 'Mon–Fri 8am–5pm',
@@ -606,6 +617,7 @@ export const locations: Location[] = [
     name: 'University City',
     address: '6660 Delmar Blvd, University City, MO 63130',
     phone: '(555) 010-0011',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6581,
     lng: -90.3095,
     hours: 'Mon–Fri 9am–6pm',
@@ -649,6 +661,7 @@ export const locations: Location[] = [
     name: 'Manchester Corners',
     address: '14275 Manchester Rd, Manchester, MO 63011',
     phone: '(555) 010-0012',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5975,
     lng: -90.5087,
     hours: 'Mon–Fri 8am–5pm',
@@ -688,6 +701,7 @@ export const locations: Location[] = [
     name: 'Ferguson Heights',
     address: '1 N Florissant Rd, Ferguson, MO 63135',
     phone: '(555) 010-0013',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7442,
     lng: -90.3054,
     hours: 'Mon–Fri 9am–5pm',
@@ -776,6 +790,7 @@ export const locations: Location[] = [
     name: 'Sunset Hills',
     address: '3853 S Lindbergh Blvd, Sunset Hills, MO 63127',
     phone: '(555) 010-0015',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5439,
     lng: -90.3898,
     hours: 'Mon–Fri 9am–5pm',
@@ -822,6 +837,7 @@ export const locations: Location[] = [
     name: 'Affton Village',
     address: '9800 Gravois Rd, Affton, MO 63123',
     phone: '(555) 010-0016',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5589,
     lng: -90.3298,
     hours: 'Mon–Fri 8am–5pm',
@@ -858,6 +874,7 @@ export const locations: Location[] = [
     name: 'Wentzville Trailhead',
     address: '1550 Wentzville Pkwy, Wentzville, MO 63385',
     phone: '(555) 010-0017',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.8114,
     lng: -90.8529,
     hours: 'Mon–Fri 9am–6pm',
@@ -897,6 +914,7 @@ export const locations: Location[] = [
     name: 'Arnold Riverside',
     address: '2100 Arnold Tenbrook Rd, Arnold, MO 63010',
     phone: '(555) 010-0018',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.4342,
     lng: -90.3765,
     hours: 'Mon–Fri 8am–5pm',
@@ -984,6 +1002,7 @@ export const locations: Location[] = [
     name: 'Bridgeton Gateway',
     address: '3630 Pennridge Dr, Bridgeton, MO 63044',
     phone: '(555) 010-0020',
+    officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7684,
     lng: -90.4048,
     hours: 'Mon–Fri 8am–5pm',
