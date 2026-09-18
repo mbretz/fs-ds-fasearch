@@ -1,9 +1,11 @@
 import { Link } from 'ds';
 import type { BranchSupportStaff } from '../../data/locations';
-import { EntityPortrait } from '../entity-info/EntityPortrait';
+import { EntityPortrait } from './EntityPortrait';
 import { cn } from '../../utils/cn';
 
 export interface OfficeDetailsPanelProps {
+  /** Matches Figma's "Branch Image" slot -- `Location.officePhotoUrl`. */
+  officePhotoUrl?: string;
   address?: string;
   /** Defaults to a Google Maps search URL built from `address`. */
   addressHref?: string;
@@ -36,16 +38,17 @@ const bodyClassName =
 
 // Matches `BranchInfo-1Column-wBranchTeamPhotos` (`1:317`), shared by both
 // AdvisorCard (the advisor's own office) and LocationCard (the branch
-// itself) -- Address/Hours/Phone+Fax/Support-staff are each independently
-// conditional, same as Figma's own "Show Office Address"/"Show Office
-// Hours"/"Show OfficeContact-Inline"/"Show Branch Team" properties.
-// Deliberately excludes: the optional branch photo (no field in the data
-// model, out of scope) and "Branch Social" (low-fidelity placeholder
-// images in Figma, unrelated to the real per-advisor LinkedIn/Facebook
-// links, which live on AdvisorCard's own header instead). The address
-// link is a single `Link` with `newWindow`, not a pin icon + link like
-// `ContactLinks` -- Figma's own Office Address instance has no icon here.
+// itself) -- Branch Image/Address/Hours/Phone+Fax/Support-staff are each
+// independently conditional, same as Figma's own "Show Branch Image"/
+// "Show Office Address"/"Show Office Hours"/"Show OfficeContact-Inline"/
+// "Show Branch Team" properties. Deliberately excludes "Branch Social"
+// (low-fidelity placeholder images in Figma, unrelated to the real
+// per-advisor LinkedIn/Facebook links, which live on AdvisorCard's own
+// header instead). The address link is a single `Link` with `newWindow`,
+// not a pin icon + link like `ContactLinks` -- Figma's own Office Address
+// instance has no icon here.
 export function OfficeDetailsPanel({
+  officePhotoUrl,
   address,
   addressHref,
   hours,
@@ -56,7 +59,13 @@ export function OfficeDetailsPanel({
   className,
 }: OfficeDetailsPanelProps) {
   const hasContact = phone || fax;
-  if (!address && !hours && !hasContact && supportStaff.length === 0) {
+  if (
+    !officePhotoUrl &&
+    !address &&
+    !hours &&
+    !hasContact &&
+    supportStaff.length === 0
+  ) {
     return null;
   }
 
@@ -70,6 +79,14 @@ export function OfficeDetailsPanel({
       <span className="text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
         Office Information
       </span>
+
+      {officePhotoUrl && (
+        <img
+          src={officePhotoUrl}
+          alt=""
+          className="h-[210px] w-full rounded-[var(--semantic-surface-border-radius)] object-cover"
+        />
+      )}
 
       {address && (
         <Link

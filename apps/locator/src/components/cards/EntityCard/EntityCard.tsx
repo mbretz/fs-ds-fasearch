@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { Card } from 'ds';
-import { cn } from '../../utils/cn';
+import { cn } from '../../../utils/cn';
 
 export interface EntityCardProps {
   /** The header/actions column -- always rendered, never hidden by width. */

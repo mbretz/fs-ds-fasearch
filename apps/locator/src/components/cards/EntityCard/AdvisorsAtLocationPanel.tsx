@@ -1,6 +1,6 @@
-import type { Advisor } from '../../data/locations';
-import { EntityPortrait } from '../entity-info/EntityPortrait';
-import { cn } from '../../utils/cn';
+import type { Advisor } from '../../../data/locations';
+import { EntityPortrait } from '../../entity-info/EntityPortrait';
+import { cn } from '../../../utils/cn';
 
 export interface AdvisorsAtLocationPanelProps {
   advisors: Pick<Advisor, 'id' | 'name' | 'photoUrl'>[];
