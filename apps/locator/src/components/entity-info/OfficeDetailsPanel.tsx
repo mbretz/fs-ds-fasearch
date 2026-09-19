@@ -1,8 +1,14 @@
+import { Fragment } from 'react';
 import { Link } from 'ds';
-import type { BranchSupportStaff } from '../../data/locations';
-import { EntityPortrait } from './EntityPortrait';
+import type {
+  BranchSupportStaff,
+  DayHours,
+  DayOfWeek,
+  WeeklyHours,
+} from '../../data/locations';
 import { cn } from '../../utils/cn';
 import { splitAddressLines } from '../../utils/splitAddressLines';
+import { BranchTeamMemberRow } from './BranchTeamMemberRow';
 
 export interface OfficeDetailsPanelProps {
   /** Matches Figma's "Show Component Heading" property -- defaults to
@@ -11,9 +17,7 @@ export interface OfficeDetailsPanelProps {
   /** Matches Figma's "Branch Image" slot -- `Location.officePhotoUrl`. */
   officePhotoUrl?: string;
   address?: string;
-  /** `Location.hours`' existing single display string (e.g. "Mon-Fri
-   * 8am-5pm") -- per-day hours are out of scope, see docs/PLAN.md. */
-  hours?: string;
+  hours?: WeeklyHours;
   /**
    * Figma's `Office Hours` sub-component has a configurable heading, used
    * as "Advisor Hours" instead of "Office Hours" in the advisor-specific
@@ -40,8 +44,41 @@ function preventDisabledClick(event: { preventDefault: () => void }) {
   event.preventDefault();
 }
 
+// Matches Figma's `.Day` abbreviations exactly (`Tues`, not `Tue`).
+const dayLabels: Record<DayOfWeek, string> = {
+  mon: 'Mon',
+  tue: 'Tues',
+  wed: 'Wed',
+  thu: 'Thu',
+  fri: 'Fri',
+  sat: 'Sat',
+  sun: 'Sun',
+};
+const orderedDays: DayOfWeek[] = [
+  'mon',
+  'tue',
+  'wed',
+  'thu',
+  'fri',
+  'sat',
+  'sun',
+];
+
+function formatDayHours(day: DayHours): string {
+  switch (day.status) {
+    case 'open':
+      // `opens`/`closes` are already "8:00am"-style strings -- just
+      // uppercasing the meridiem matches Figma's "8:00AM" display exactly.
+      return `${day.opens.toUpperCase()} - ${day.closes.toUpperCase()}`;
+    case 'byAppointment':
+      return 'By Appointment Only';
+    case 'closed':
+      return 'Closed';
+  }
+}
+
 const headingClassName =
-  'text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]';
+  'uppercase text-[length:var(--semantic-content-nanoheading-font-size)] leading-[length:var(--semantic-content-nanoheading-line-height)] font-[number:var(--semantic-content-nanoheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]';
 const bodyClassName =
   'text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--semantic-content-common-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]';
 
@@ -92,10 +129,27 @@ export function OfficeDetailsPanel({
   return (
     <div
       className={cn(
-        'flex h-full flex-col gap-[var(--density-spacing-fixed-large)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
+        'office-details-panel flex h-full flex-col gap-[var(--density-spacing-fixed-large)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
         className,
       )}
     >
+      {/* Hides this panel outright once its `EntityCard` ancestor is too
+          narrow for side-by-side panels (the same `@container/entity-card`
+          threshold that flips `EntityCard`'s own grid to stacked) -- per
+          the user, office info isn't worth keeping once there's no room
+          for it, unlike `FocusAreasPanel`, which still stacks below main
+          rather than disappearing. Visible by default (not gated behind a
+          matching container query) so a future standalone usage outside
+          any `EntityCard` -- e.g. this comment's own "full Office Details
+          panel on profile pages" -- isn't silently hidden by a query that
+          never has an `entity-card` container to match against. */}
+      <style>{`
+        @container entity-card (max-width: 679.98px) {
+          .office-details-panel {
+            display: none;
+          }
+        }
+      `}</style>
       {showTitle && (
         <span className="text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
           Office Information
@@ -135,23 +189,34 @@ export function OfficeDetailsPanel({
       {hours && (
         <div className="flex flex-col gap-[var(--density-spacing-fixed-x-small)]">
           <span className={headingClassName}>{hoursLabel}</span>
-          {/* `Location.hours` packs multiple day-range entries into one
-              comma-separated display string (e.g. "Mon-Fri 8am-6pm, Sat
-              9am-1pm") -- each one gets its own line here rather than
-              running together as a single wrapped sentence, per the
-              user. */}
-          <div className="flex flex-col">
-            {hours.split(',').map((entry) => (
-              <span key={entry} className={bodyClassName}>
-                {entry.trim()}
-              </span>
+          {/* Matches Figma's `.DayRow` table (`1:347`): a two-column grid,
+              day abbreviation + hours, one row per day, `Closed` shown
+              explicitly rather than omitting the day. `auto` (not a fixed
+              px) sizes the day column to its widest label ("Tues") -- no
+              real sizing token lands on Figma's own 28px measurement, and
+              intrinsic sizing here gets the same tabular alignment without
+              hardcoding an off-token value. */}
+          <div className="grid grid-cols-[auto_1fr] gap-x-[var(--density-spacing-fixed-large)] gap-y-[var(--density-spacing-fixed-xx-small)]">
+            {orderedDays.map((day) => (
+              <Fragment key={day}>
+                <span className={bodyClassName}>{dayLabels[day]}</span>
+                <span className={bodyClassName}>
+                  {formatDayHours(hours[day])}
+                </span>
+              </Fragment>
             ))}
           </div>
         </div>
       )}
 
       {hasContact && (
-        <div className="flex flex-wrap gap-[var(--density-spacing-fixed-xx-large)]">
+        // Narrower gap than the xx-large used elsewhere in this panel --
+        // this panel's own column is a container-query-driven 25% slice of
+        // the card (`EntityCard`'s grid), often just ~200px net after its
+        // padding, so Phone/Fax's `flex-wrap` fit-or-stack outcome is
+        // already tight; a smaller gap buys more of that budget back for
+        // sitting side by side, per the user.
+        <div className="flex flex-wrap gap-[var(--density-spacing-fixed-large)]">
           {phone && (
             <div className="flex flex-col gap-[var(--density-spacing-fixed-x-small)]">
               <span className={headingClassName}>Phone</span>
@@ -176,26 +241,17 @@ export function OfficeDetailsPanel({
       )}
 
       {supportStaff.length > 0 && (
-        <div className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
+        // Heading-to-list gap is half the item-to-item gap (`fixed-small`,
+        // 8px, is exactly half of `fixed-large`, 16px, in both density
+        // modes) -- matches AdvisorsAtLocationPanel's own "Branch Team"
+        // block, per the user.
+        <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
           <span className={headingClassName}>Branch Team</span>
-          {supportStaff.map((staff) => (
-            <div
-              key={staff.id}
-              className="flex items-center gap-[var(--density-spacing-fixed-med)]"
-            >
-              <EntityPortrait
-                name={staff.name}
-                photoUrl={staff.photoUrl}
-                size="sm"
-              />
-              <div className="flex flex-col">
-                <span className={bodyClassName}>{staff.name}</span>
-                <span className="text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] font-[number:var(--semantic-content-microcopy-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
-                  {staff.title}
-                </span>
-              </div>
-            </div>
-          ))}
+          <ul className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
+            {supportStaff.map((staff) => (
+              <BranchTeamMemberRow key={staff.id} staff={staff} />
+            ))}
+          </ul>
         </div>
       )}
     </div>

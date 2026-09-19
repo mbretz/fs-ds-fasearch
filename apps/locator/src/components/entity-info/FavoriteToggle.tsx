@@ -31,7 +31,7 @@ export function FavoriteToggle({
       }
       onClick={() => setFavorited((prev) => !prev)}
       className={cn(
-        'inline-flex cursor-pointer items-center justify-center rounded-full text-[color:var(--semantic-content-common-text-color-default)]',
+        'inline-flex cursor-pointer items-center justify-center rounded-full text-[color:var(--semantic-control-action-color-default)]',
         className,
       )}
     >

@@ -677,6 +677,8 @@ The locator is the proof that the DS composes well. Make sure each of these is v
 - **Variant extension via cva**: the `LocationCard` extends `Card`'s cva recipe to add a `selected` variant — demonstrates the DS doesn't lock you in.
 - **Reused across contexts**: the locator-local `newClientStatus` `Badge` (and its color coding, resolved through DS tokens) appears in both the map legend and the popovers, unmodified — proves one component/token pairing can drive two different surfaces consistently, even for a component that itself lives outside the DS package boundary.
 
+**Deviation from plan (2026-09-19): `EntityCard` uses `h-full` + Flexbox `grow` for cross-card height alignment in `ResultsList`, not CSS Subgrid, after subgrid was built, tested, and reverted.** An element cannot simultaneously be a `container-type` container (which `EntityCard`'s outer wrapper needs, for `Card.Root` to read its own width) and a `grid-template-rows: subgrid` item — confirmed via isolated Playwright/Chromium reproduction, not assumed. Full investigation, root cause, and verification method in `docs/SUBGRID_CONTAINER_QUERY_CONFLICT.md`.
+
 ### 2.4 Phase 2 Exit Criteria
 
 - All seven UX features working end-to-end.

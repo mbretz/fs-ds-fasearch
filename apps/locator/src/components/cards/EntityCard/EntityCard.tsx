@@ -23,11 +23,14 @@ export interface EntityCardProps {
 }
 
 // Row-vs-column flip driven by the card's own rendered width via a named
-// container query, not the viewport -- CSS Grid rather than Flexbox: `fr`
-// tracks give a clean, directly tunable proportional split (each panel a
-// fixed 25% share, `main` taking whatever's left) that's easier to adjust
-// once FocusAreasPanel/OfficeDetailsPanel exist with real content, versus
-// reverse-engineering the equivalent from flex-basis/grow/shrink.
+// container query, not the viewport. Row mode (side by side) switches to
+// CSS Grid specifically for that layout: `fr` tracks give a clean,
+// directly tunable proportional split (each panel a fixed 25% share,
+// `main` taking whatever's left) that's easier to adjust than
+// reverse-engineering the equivalent from flex-basis/grow/shrink. Stacked
+// mode stays Flexbox (the base layout below) instead, since that's what
+// lets the first panel absorb a taller sibling card's leftover height via
+// `grow` -- see `gridStyles`' own comment.
 //
 // Track count varies with `panels.length` (0-2), which a single static
 // CSS rule can't express, so the *values* are computed in JS and threaded
@@ -83,9 +86,18 @@ function gridColumns(panelCount: number) {
 // container-query threshold): below it everything stacks full-width in
 // one column, where `main` is just one more stacked item like any panel,
 // not a conceptually distinct left column needing deeper insets.
+// Base layout is `flex flex-col`, not grid -- `display: grid` (with the
+// `fr`-based column split) only turns on at the row-mode threshold below.
+// Flexbox in stacked mode is deliberate, not just "whatever stacks
+// things": it lets the first panel (`grow`, see below) claim any leftover
+// vertical height a taller sibling card forces onto this one -- CSS
+// Grid's rows don't do that for free, since every row shares the grid's
+// own row-track sizing rather than absorbing a container's excess height
+// the way a flex item's `flex-grow` does.
 const gridStyles = `
   @container entity-card (min-width: 680px) {
     .entity-card-grid {
+      display: grid;
       grid-template-columns: var(--entity-card-columns);
       align-items: stretch;
     }
@@ -93,6 +105,27 @@ const gridStyles = `
       padding-top: var(--density-spacing-fixed-small);
       padding-bottom: var(--density-spacing-fixed-small);
       padding-left: var(--density-spacing-fixed-small);
+    }
+  }
+
+  /* Stacked mode: the first panel (FocusAreasPanel on AdvisorCard,
+     AdvisorsAtLocationPanel on LocationCard) grows to fill the card's
+     leftover height, per the user -- paired with a narrower 4px bottom
+     inset (vs. the card's own 8px on every other side) so that panel
+     lands within 4px of the card's bottom edge instead of 8px. */
+  @container entity-card (max-width: 679.98px) {
+    .entity-card-grid {
+      padding-bottom: var(--density-spacing-fixed-x-small);
+    }
+    /* OfficeDetailsPanel already hides its own content at this width
+       (see its own component), but that leaves this wrapper div behind
+       as an empty flex child -- and Flexbox's own \`gap\` still inserts a
+       full gap before an empty item, eating into the space the growing
+       first panel above is supposed to fill down to. Hiding the wrapper
+       itself (not just its content) removes that wasted gap so the first
+       panel actually reaches the 4px-from-bottom target above. */
+    .entity-card-grid > div:has(> .office-details-panel) {
+      display: none;
     }
   }
 `;
@@ -104,7 +137,13 @@ export function EntityCard({
   className,
 }: EntityCardProps) {
   return (
-    <div className="@container/entity-card">
+    // `h-full` on both this div and `Card.Root` below -- needed so the
+    // card's own visible box actually reaches a taller grid row's
+    // stretched height (a stretched grid *item*, i.e. the `<li>` a
+    // caller like ResultsList renders, doesn't hand that height to its
+    // children for free; each level in between has to opt in), per the
+    // user's "all cards in a row should match the tallest" ask.
+    <div className="@container/entity-card h-full">
       <style>{gridStyles}</style>
       <Card.Root
         density={density}
@@ -120,7 +159,7 @@ export function EntityCard({
           // resolves to that same value -- a documented primitives
           // fallback (component -> semantic -> primitives -> hardcode),
           // not a shortcut past the semantic tier.
-          'entity-card-grid grid grid-cols-1 gap-[var(--density-spacing-fixed-large)] border-[color:var(--primitives-ref-color-neutral-800)] p-[var(--density-spacing-fixed-small)]',
+          'entity-card-grid flex h-full flex-col gap-[var(--density-spacing-fixed-large)] border-[color:var(--primitives-ref-color-neutral-800)] p-[var(--density-spacing-fixed-small)]',
           className,
         )}
       >
@@ -130,7 +169,7 @@ export function EntityCard({
         {panels.map((panel, index) => (
           // Panels don't reorder/insert within a card's lifetime, so an
           // index key is fine here.
-          <div key={index} className="min-w-0">
+          <div key={index} className={cn('min-w-0', index === 0 && 'grow')}>
             {panel}
           </div>
         ))}

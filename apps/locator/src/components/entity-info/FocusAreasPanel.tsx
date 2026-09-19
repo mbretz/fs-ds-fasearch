@@ -16,10 +16,10 @@ export interface FocusAreasPanelProps {
 // maintain. Renders nothing when there's nothing to show, rather than an
 // empty panel shell, so `EntityCard` never reserves a column for it.
 //
-// The "Focus Areas" heading uses the same Heavy-style tokens as
+// The "Focus Areas" heading uses the same nanoheading/uppercase tokens as
 // OfficeDetailsPanel's own sub-headings ("Phone"/"Office Hours"/etc, not
-// that panel's larger "Office Information" title), per the user, rather
-// than the larger `subheading` tokens this used previously.
+// that panel's larger "Office Information" title) and
+// AdvisorsAtLocationPanel's "Branch Advisors"/"Branch Team", per the user.
 export function FocusAreasPanel({
   focusAreas,
   className,
@@ -33,7 +33,7 @@ export function FocusAreasPanel({
         className,
       )}
     >
-      <span className="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
+      <span className="uppercase text-[length:var(--semantic-content-nanoheading-font-size)] leading-[length:var(--semantic-content-nanoheading-line-height)] font-[number:var(--semantic-content-nanoheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
         Focus Areas
       </span>
       <div className="flex flex-wrap gap-[var(--density-spacing-fixed-small)]">

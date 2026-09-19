@@ -18,9 +18,11 @@ asset for whoever eventually does that contribution.
 
 ## Contribution backlog
 
-| Icon               | Component           | Figma node                                                                                               | Used by                  | Notes                                                 |
-| ------------------ | ------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------ | ----------------------------------------------------- |
-| Briefcase (tenure) | `IconBriefcase.tsx` | `303:4188` (a raw vector group inside `.FA-Card-Header-Content`, not a reusable Icons-library component) | `entity-card/TenureLine` | Source SVG is `icon-briefcase.svg` in this directory. |
+| Icon                   | Component            | Figma node                                                                                                                | Used by                                   | Notes                                                                                                  |
+| ---------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Briefcase (tenure)     | `IconBriefcase.tsx`  | `303:4188` (a raw vector group inside `.FA-Card-Header-Content`, not a reusable Icons-library component)                  | `entity-card/TenureLine`                  | Source SVG is `icon-briefcase.svg` in this directory.                                                  |
+| Invitation (accepting) | `IconInvitation.tsx` | `1:458` (the `Badge` component set's "accepting" glyph, `202:3542`)                                                       | `entity-info/statusMeta` (`accepting`)    | Source SVG is `icon-invitation.svg`. Previously wrongly mapped to `packages/icons`' `MessageEnvelope`. |
+| Referral               | `IconReferral.tsx`   | `3:3609` (the `Badge` component set's "referral" glyph, `202:3542`) -- a star with a partial orbit/loop, not a share icon | `entity-info/statusMeta` (`referralOnly`) | Source SVG is `icon-referral.svg`. Previously wrongly mapped to `packages/icons`' `Share`.             |
 
 When one of these lands in `packages/icons` for real: delete the local
 `.tsx`/`.svg` pair, swap the importing component to `import { X } from

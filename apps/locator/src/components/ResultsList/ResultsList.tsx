@@ -17,6 +17,16 @@ interface ResultsListProps {
 // LocationCard, followed by every one of its advisors as its own
 // AdvisorCard.
 //
+// One shared 2-column (`md`+) / 3-column (`lg`+, 1024px -- the closest
+// Tailwind breakpoint to 920px) grid, not a LocationCard section followed
+// by a separately-gridded advisor `<ul>`, per the user -- `col-span-full`
+// only means something relative to a shared set of column tracks, so
+// LocationCard has to be part of the same grid the advisor cards use to
+// span all of its columns. A side effect: the gap between the location
+// row(s) and the advisor cards below is now the same `fixed-large` gap
+// used between advisor cards, not the larger `fixed-xxx-large` gap the
+// previous two-container layout had.
+//
 // Horizontal margin: 8px (`layout.fixed.small`) below `md`, none at `md`+
 // -- `<main>` (SiteShell.tsx) has zero padding of its own below `md`, so
 // mobile needs an explicit inset here; at `md`+ this matches
@@ -30,24 +40,44 @@ export function ResultsList({ locations, className }: ResultsListProps) {
   }
 
   return (
-    <div
+    <ul
       className={cn(
-        'mx-[var(--density-layout-fixed-small)] flex flex-col gap-[var(--density-spacing-fixed-xxx-large)] md:mx-0',
+        'mx-[var(--density-layout-fixed-small)] grid grid-cols-1 gap-[var(--density-spacing-fixed-large)] md:mx-0 md:grid-cols-2 lg:grid-cols-3',
         className,
       )}
     >
+      {/* `col-span-full`, per the user -- LocationCard rows span every
+          current column (whatever the active breakpoint's count is)
+          rather than living in a separate 1-column container, so they
+          need to be part of the *same* grid the advisor cards use
+          (spanning only means something relative to a shared set of
+          column tracks). */}
       {locations.map((location) => (
-        <LocationCard key={location.id} location={location} />
+        <li key={location.id} className="col-span-full">
+          <LocationCard location={location} />
+        </li>
       ))}
-      <ul className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
-        {locations.flatMap((location) =>
-          location.advisors.map((advisor) => (
-            <li key={advisor.id}>
-              <AdvisorCard advisor={advisor} location={location} />
-            </li>
-          )),
-        )}
-      </ul>
-    </div>
+      {/* 2 columns at `md`+, 3 at `lg`+, each rendering well under
+          `EntityCard`'s own 680px side-panel threshold, so every
+          `AdvisorCard` naturally drops into its stacked/portrait layout
+          (`OfficeDetailsPanel` hidden, `FocusAreasPanel` stacked below
+          main) purely from the width change -- no separate prop needed
+          to ask for that layout. */}
+      {locations.flatMap((location) =>
+        location.advisors.map((advisor) => (
+          <li key={advisor.id}>
+            {/* `showPortraitBadge={false}` -- per the user, `StatusTag`
+                (above the portrait) already shows this advisor's status
+                here, so the portrait's own corner badge would just
+                repeat it. */}
+            <AdvisorCard
+              advisor={advisor}
+              location={location}
+              showPortraitBadge={false}
+            />
+          </li>
+        )),
+      )}
+    </ul>
   );
 }

@@ -16,6 +16,11 @@ export interface NameBlockProps {
    */
   subheading?: ReactNode;
   className?: string;
+  /** Override for the subheading's own classes -- AdvisorCard needs its
+   * designations line at the token-accurate 18px line-height without
+   * affecting LocationCard's branch-summary subheading, which shares this
+   * component but keeps the default. */
+  subheadingClassName?: string;
 }
 
 // No single semantic content-token bundle matches Figma's exact heading
@@ -26,7 +31,12 @@ export interface NameBlockProps {
 // the closest existing bundles by font-size, same "pick the nearest whole
 // bundle rather than reconstruct an unlisted combination" approach
 // FilterFacets already used for its own microcopy text.
-export function NameBlock({ heading, subheading, className }: NameBlockProps) {
+export function NameBlock({
+  heading,
+  subheading,
+  className,
+  subheadingClassName,
+}: NameBlockProps) {
   return (
     <div
       className={cn(
@@ -38,7 +48,12 @@ export function NameBlock({ heading, subheading, className }: NameBlockProps) {
         {heading}
       </span>
       {subheading && (
-        <div className="text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--semantic-content-common-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
+        <div
+          className={cn(
+            'text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--semantic-content-common-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]',
+            subheadingClassName,
+          )}
+        >
           {subheading}
         </div>
       )}

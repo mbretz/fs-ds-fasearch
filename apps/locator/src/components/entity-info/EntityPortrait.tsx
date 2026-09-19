@@ -1,31 +1,48 @@
 import { Avatar } from 'ds';
 import type { NewClientStatus } from '../../data/locations';
 import { statusMeta } from './statusMeta';
+import { Badge } from './Badge';
 import { cn } from '../../utils/cn';
+import { getInitials } from '../../utils/getInitials';
 
 type PortraitSize = 'sm' | 'md' | 'lg' | 'xl';
 
-// Figma's FA-Portrait (`1:640`) badge frame sizes (LG 52px / MD+SM 40px /
-// XS 28px) aren't a clean percentage of their avatar circle, and don't
-// land on the `sizing.fixed` scale either -- this maps each size to the
-// closest step on that scale (rather than an arbitrary Tailwind value) so
-// the badge still resolves through a real token, capping at `xx-large`
-// (24px, the tier's own ceiling) for `xl` instead of reaching into the
-// unrelated `layout` tier just because its larger numbered steps
-// (`4x-large` etc.) happen to match Figma's pixel values -- that tier is
-// documented for page-level composition spacing, not component sizing.
-const badgeSizeClassName: Record<PortraitSize, string> = {
-  sm: 'size-[var(--density-sizing-fixed-large)]',
-  md: 'size-[var(--density-sizing-fixed-x-large)]',
-  lg: 'size-[var(--density-sizing-fixed-xx-large)]',
-  xl: 'size-[var(--density-sizing-fixed-xx-large)]',
-};
+// 32px badge + a 4px white ring = 40px total, per the user -- no real
+// token lands on either 32 or 40 (`density-sizing-fixed` tops out at
+// `xx-large`, 24px), same "no clean token, arbitrary value with a
+// comment" precedent as AdvisorCard's own 104px+4px avatar override.
+// `box-content` puts the ring outside the 32px badge instead of the
+// `border-box` default eating into it. Fixed rather than scaled by
+// `size` -- the badge only ever renders at `xl` today (AdvisorCard); a
+// second real consumer at a different portrait size can reintroduce a
+// per-size scale then.
+const badgeContentSize = 'size-[32px]';
+const badgeRingClassName =
+  'box-content rounded-full border-[4px] border-[color:var(--semantic-surface-base-default)]';
 
 const avatarSizeBySize: Record<PortraitSize, 'sm' | 'md' | 'lg' | 'xl'> = {
   sm: 'sm',
   md: 'md',
   lg: 'lg',
   xl: 'xl',
+};
+
+// Content-box white border around the avatar, per the user -- `associate`
+// only (FA-Portrait is the associate-photo component; `entity`, e.g.
+// LocationCard's branch avatar, isn't part of it and Figma shows no
+// border there). Scaled off Figma's FA-Portrait component set (`1:640`):
+// `xl` (104px) is a locked-in 4px per the user (Figma's own closest real
+// size, "SM", uses 6px, but 4px was the explicit call here); `lg` (80px)
+// is a real Figma anchor too (its "XS" variant, 80px avatar, 4px border,
+// matches exactly). `sm`/`md` have no Figma equivalent at all (Figma's
+// ladder starts at 80px) -- 2px there is `xl`'s ~4/104 ratio applied and
+// rounded to the nearest real `sizing.fixed` step, not a value read off
+// the design file.
+const avatarBorderClassName: Record<PortraitSize, string> = {
+  sm: 'box-content border-[length:var(--density-sizing-fixed-xx-small)] border-[color:var(--semantic-surface-base-default)]',
+  md: 'box-content border-[length:var(--density-sizing-fixed-xx-small)] border-[color:var(--semantic-surface-base-default)]',
+  lg: 'box-content border-[length:var(--density-sizing-fixed-x-small)] border-[color:var(--semantic-surface-base-default)]',
+  xl: 'box-content border-[length:var(--density-sizing-fixed-x-small)] border-[color:var(--semantic-surface-base-default)]',
 };
 
 export interface EntityPortraitProps {
@@ -55,6 +72,10 @@ export interface EntityPortraitProps {
    * an automatic rule.
    */
   badgeMode?: 'default' | 'inverse';
+  /** Set false to suppress the badge even when `status` is set -- e.g.
+   * AdvisorCard on the Results page, where `StatusTag` already shows the
+   * same status above the portrait, per the user. Defaults to true. */
+  showBadge?: boolean;
   /**
    * Overrides the underlying DS `Avatar`'s own size classes -- needed
    * when a caller's real dimension (e.g. LocationCard's 240x240px, from
@@ -74,15 +95,12 @@ export function EntityPortrait({
   variant = 'associate',
   status,
   badgeMode = 'default',
+  showBadge = true,
   avatarClassName,
   className,
 }: EntityPortraitProps) {
-  const initials = name
-    .split(' ')
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join('');
-  const meta = status ? statusMeta[status] : undefined;
+  const initials = getInitials(name);
+  const meta = showBadge && status ? statusMeta[status] : undefined;
   const BadgeIcon = meta?.icon;
 
   return (
@@ -90,31 +108,31 @@ export function EntityPortrait({
       <Avatar.Root
         size={avatarSizeBySize[size]}
         variant={variant}
-        className={avatarClassName}
+        className={cn(
+          variant === 'associate' && avatarBorderClassName[size],
+          avatarClassName,
+        )}
       >
         {photoUrl && <Avatar.Image src={photoUrl} alt="" />}
         <Avatar.Fallback>{initials}</Avatar.Fallback>
       </Avatar.Root>
       {meta && BadgeIcon && (
+        // Flush at the avatar's own top-left corner, rendered on top of
+        // it (no negative offset straddling the edge) -- DOM order alone
+        // puts it above the avatar since neither element sets a z-index.
         <span
-          aria-hidden="true"
           className={cn(
-            'absolute top-0 left-0 inline-flex -translate-x-1/4 -translate-y-1/4 items-center justify-center rounded-full border-[length:var(--component-tag-border-width)]',
-            badgeSizeClassName[size],
+            'absolute top-0 left-0 inline-flex items-center justify-center',
+            badgeContentSize,
+            badgeRingClassName,
           )}
-          style={{
-            borderColor: meta.borderColorVar,
-            backgroundColor:
-              badgeMode === 'inverse'
-                ? meta.borderColorVar
-                : 'var(--semantic-surface-base-default)',
-            color:
-              badgeMode === 'inverse'
-                ? 'var(--semantic-content-common-text-color-reverse)'
-                : meta.borderColorVar,
-          }}
         >
-          <BadgeIcon className="size-1/2" />
+          <Badge
+            icon={BadgeIcon}
+            colorVar={meta.borderColorVar}
+            mode={badgeMode}
+            className="size-full"
+          />
         </span>
       )}
     </div>

@@ -12,6 +12,7 @@ import { EntityActions } from '../../entity-info/EntityActions';
 import { FocusAreasPanel } from '../../entity-info/FocusAreasPanel';
 import { OfficeDetailsPanel } from '../../entity-info/OfficeDetailsPanel';
 import { cn } from '../../../utils/cn';
+import { useSession } from '../../../session/useSession';
 
 export interface AdvisorCardProps {
   advisor: Advisor;
@@ -19,14 +20,21 @@ export interface AdvisorCardProps {
    * card shows alongside the advisor's own info (address, hours,
    * support staff); an advisor has no separate office of their own. */
   location: Location;
-  onViewProfile?: () => void;
   onNewClientInquiry?: () => void;
+  /** Forwarded to `EntityPortrait`'s own `showBadge` -- see its doc
+   * comment. Defaults to true; ResultsList sets this false since
+   * `StatusTag` already shows the same status there. */
+  showPortraitBadge?: boolean;
   className?: string;
 }
 
 function preventDisabledClick(event: { preventDefault: () => void }) {
   event.preventDefault();
 }
+
+// Fallback so the button still renders (per status) when no caller has
+// wired a real inquiry handler yet.
+function noop() {}
 
 // Assembles Figma's `.FA-Card-Stacked`/`.FA-Card-Header` +
 // `.FA-Card-SidePanels`-class compositions from the entity-info/EntityCard
@@ -39,14 +47,23 @@ function preventDisabledClick(event: { preventDefault: () => void }) {
 export function AdvisorCard({
   advisor,
   location,
-  onViewProfile,
   onNewClientInquiry,
+  showPortraitBadge,
   className,
 }: AdvisorCardProps) {
+  const { signedIn } = useSession();
   // Advisor's own direct line takes precedence; falls back to the
   // branch's main line (see `Advisor.phone`'s own doc comment).
   const phone = advisor.phone ?? location.phone;
   const hasSocial = advisor.linkedIn || advisor.facebook;
+  // Per the user: only advisors actively taking new clients or holding a
+  // waitlist spot get the secondary button -- `referralOnly` advisors
+  // don't. Shown regardless of whether a caller wired a real handler yet
+  // (same inert-until-real-destination pattern as the social icons above),
+  // since the button's presence is status-driven, not caller-opt-in.
+  const showsNewClientInquiry =
+    advisor.newClientStatus === 'accepting' ||
+    advisor.newClientStatus === 'waitlist';
 
   return (
     <EntityCard
@@ -56,40 +73,57 @@ export function AdvisorCard({
         // `officePhotoUrl` deliberately not passed here -- per the user,
         // the branch photo is reserved for the full Office Details panel
         // on profile pages, not any card context.
+        // `address`/`phone` deliberately omitted -- per the user, the main
+        // card panel above (NameBlock/ContactLinks) already shows these,
+        // so this panel only adds what's not already visible there
+        // (hours, fax, support staff). LocationCard still passes both,
+        // since its own header/panels don't repeat them.
         <OfficeDetailsPanel
           key="office-details"
-          address={location.address}
           hours={location.hours}
-          phone={phone}
           fax={location.fax}
           supportStaff={location.supportStaff}
+          showTitle={false}
         />,
       ]}
     >
       <div className="flex items-start justify-between gap-[var(--density-spacing-fixed-large)]">
-        <div className="flex items-start gap-[var(--density-spacing-fixed-large)]">
-          <EntityPortrait
-            name={advisor.name}
-            photoUrl={advisor.photoUrl}
-            status={advisor.newClientStatus}
-            size="lg"
-          />
-          <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
-            <NameBlock
-              heading={advisor.name}
-              subheading={
-                advisor.designations.length > 0
-                  ? advisor.designations.join(', ')
-                  : undefined
-              }
-            />
-            <TenureLine years={advisor.tenureYears} />
-          </div>
-        </div>
-        <FavoriteToggle name={advisor.name} />
+        <StatusTag status={advisor.newClientStatus} size="sm" />
+        {/* Favoriting requires a signed-in prospect (`ProspectPortal`'s
+            spoofed session), per the user -- hidden entirely rather than
+            disabled for a signed-out visitor. */}
+        {signedIn && <FavoriteToggle name={advisor.name} />}
       </div>
 
-      <StatusTag status={advisor.newClientStatus} />
+      <div className="flex items-start gap-[var(--density-spacing-fixed-large)]">
+        {/* `xl` is Avatar's own real 104px step (`--component-avatar-
+            size-x-large`) -- kept as-is (font-size/icon-size ratio and
+            all) rather than an arbitrary override. The 4px white border
+            (112px total) is `EntityPortrait`'s own default for `xl` now,
+            not a per-call override. */}
+        <EntityPortrait
+          name={advisor.name}
+          photoUrl={advisor.photoUrl}
+          status={advisor.newClientStatus}
+          size="xl"
+          showBadge={showPortraitBadge}
+        />
+        <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
+          <NameBlock
+            heading={advisor.name}
+            subheading={
+              advisor.designations.length > 0
+                ? advisor.designations.join(', ')
+                : undefined
+            }
+            subheadingClassName="leading-[length:var(--semantic-content-size-x-small-line-height)]"
+          />
+          <TenureLine
+            years={advisor.tenureYears}
+            className="leading-[length:var(--semantic-content-size-x-small-line-height)]"
+          />
+        </div>
+      </div>
 
       <ContactLinks address={location.address} phone={phone} />
 
@@ -154,10 +188,16 @@ export function AdvisorCard({
           keeps it pinned top on its own), and the gap right before the
           separator absorbs the extra space. */}
       <Separator className="mt-auto mx-[var(--density-spacing-fixed-large)] w-auto" />
+      {/* Real link, not inert -- per the user, every advisor gets an
+          individual profile page later, so `/advisor/:id` renders as a
+          genuine href now even though `router.tsx` has no matching route
+          yet, unlike the LinkedIn/Facebook placeholders above. */}
       <EntityActions
         primaryLabel="View Profile"
-        onPrimaryAction={onViewProfile}
-        onNewClientInquiry={onNewClientInquiry}
+        primaryHref={`/advisor/${advisor.id}`}
+        onNewClientInquiry={
+          showsNewClientInquiry ? (onNewClientInquiry ?? noop) : undefined
+        }
       />
     </EntityCard>
   );

@@ -78,7 +78,9 @@ export interface Location {
   officePhotoUrl: string;
   lat: number;
   lng: number;
-  hours: string;
+  /** Per-day schedule, same `WeeklyHours` type `Advisor.hours` uses for
+   * its own divergent-schedule override. */
+  hours: WeeklyHours;
   open: boolean;
   advisors: Advisor[];
   supportStaff: BranchSupportStaff[];
@@ -94,14 +96,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6273,
     lng: -90.1889,
-    hours: 'Mon–Fri 8am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      tue: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      thu: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      fri: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-1',
         name: 'Alex Whitfield',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=1',
+        photoUrl:
+          'https://plus.unsplash.com/premium_photo-1677368597077-009727e906db?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0001',
         focusAreas: [
@@ -134,14 +145,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6459,
     lng: -90.3374,
-    hours: 'Mon–Fri 8am–6pm, Sat 9am–1pm',
+    hours: {
+      mon: { status: 'open', opens: '8:00am', closes: '6:30pm' },
+      tue: { status: 'open', opens: '8:00am', closes: '6:00pm' },
+      wed: { status: 'open', opens: '8:30am', closes: '6:00pm' },
+      thu: { status: 'open', opens: '8:00am', closes: '6:30pm' },
+      fri: { status: 'open', opens: '8:00am', closes: '6:00pm' },
+      sat: { status: 'open', opens: '9:30am', closes: '1:00pm' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-2',
         name: 'Jordan Delgado',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=2',
+        photoUrl:
+          'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0002',
         focusAreas: [
@@ -155,11 +175,11 @@ export const locations: Location[] = [
         facebook: false,
         personalInterests: ['gardening', 'travel', 'woodworking'],
         hours: {
-          mon: { status: 'open', opens: '8am', closes: '6pm' },
-          tue: { status: 'open', opens: '8am', closes: '6pm' },
+          mon: { status: 'open', opens: '8:00am', closes: '6:30pm' },
+          tue: { status: 'open', opens: '8:00am', closes: '6:00pm' },
           wed: { status: 'closed' },
-          thu: { status: 'open', opens: '8am', closes: '6pm' },
-          fri: { status: 'open', opens: '8am', closes: '6pm' },
+          thu: { status: 'open', opens: '8:30am', closes: '6:00pm' },
+          fri: { status: 'open', opens: '8:00am', closes: '6:30pm' },
           sat: { status: 'byAppointment' },
           sun: { status: 'closed' },
         },
@@ -168,7 +188,8 @@ export const locations: Location[] = [
         id: 'adv-3',
         name: 'Taylor Nair',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=3',
+        photoUrl:
+          'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'waitlist',
         phone: '(555) 020-0003',
         focusAreas: [
@@ -189,12 +210,12 @@ export const locations: Location[] = [
           'sailing',
         ],
         hours: {
-          mon: { status: 'closed' },
-          tue: { status: 'open', opens: '8am', closes: '6pm' },
-          wed: { status: 'open', opens: '8am', closes: '6pm' },
-          thu: { status: 'open', opens: '8am', closes: '6pm' },
-          fri: { status: 'open', opens: '8am', closes: '6pm' },
-          sat: { status: 'open', opens: '9am', closes: '1pm' },
+          mon: { status: 'byAppointment' },
+          tue: { status: 'open', opens: '8:00am', closes: '6:00pm' },
+          wed: { status: 'open', opens: '8:30am', closes: '6:00pm' },
+          thu: { status: 'open', opens: '8:00am', closes: '6:30pm' },
+          fri: { status: 'open', opens: '8:00am', closes: '6:00pm' },
+          sat: { status: 'open', opens: '9:30am', closes: '1:00pm' },
           sun: { status: 'closed' },
         },
       },
@@ -208,7 +229,8 @@ export const locations: Location[] = [
       {
         id: 'staff-3',
         name: 'Priya Chandra',
-        photoUrl: 'https://i.pravatar.cc/150?img=30',
+        photoUrl:
+          'https://images.unsplash.com/photo-1699899657680-421c2c2d5064?w=200&h=200&fit=crop&crop=faces&q=80',
         title: 'Branch Office Administrator',
       },
       {
@@ -226,14 +248,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6631,
     lng: -90.5771,
-    hours: 'Mon–Fri 9am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      tue: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      fri: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: false,
     advisors: [
       {
         id: 'adv-4',
         name: 'Morgan Bennett',
         title: 'Senior Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=4',
+        photoUrl:
+          'https://plus.unsplash.com/premium_photo-1688740375397-34605b6abe48?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'referralOnly',
         phone: '(555) 020-0004',
         focusAreas: [
@@ -246,10 +277,10 @@ export const locations: Location[] = [
         facebook: true,
         personalInterests: ['distance running', 'fishing'],
         hours: {
-          mon: { status: 'open', opens: '9am', closes: '5pm' },
-          tue: { status: 'open', opens: '9am', closes: '5pm' },
+          mon: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+          tue: { status: 'open', opens: '9:00am', closes: '5:30pm' },
           wed: { status: 'byAppointment' },
-          thu: { status: 'open', opens: '9am', closes: '5pm' },
+          thu: { status: 'open', opens: '9:00am', closes: '5:00pm' },
           fri: { status: 'closed' },
           sat: { status: 'closed' },
           sun: { status: 'closed' },
@@ -272,14 +303,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5834,
     lng: -90.4068,
-    hours: 'Mon–Fri 8am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      tue: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      wed: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      fri: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-5',
         name: 'Casey Ashford',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=5',
+        photoUrl:
+          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0005',
         focusAreas: [
@@ -301,7 +341,8 @@ export const locations: Location[] = [
       {
         id: 'staff-6',
         name: 'Trevor Nakamura',
-        photoUrl: 'https://i.pravatar.cc/150?img=31',
+        photoUrl:
+          'https://images.unsplash.com/photo-1685760259914-ee8d2c92d2e0?w=200&h=200&fit=crop&crop=faces&q=80',
         title: 'Branch Office Administrator',
       },
     ],
@@ -314,14 +355,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5895,
     lng: -90.3568,
-    hours: 'Mon–Fri 9am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      tue: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      thu: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      fri: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-6',
         name: 'Riley Okafor',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=6',
+        photoUrl:
+          'https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0006',
         focusAreas: [
@@ -357,14 +407,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5951,
     lng: -90.5462,
-    hours: 'Mon–Fri 8am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      tue: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      fri: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-7',
         name: 'Avery Carrow',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=7',
+        photoUrl:
+          'https://plus.unsplash.com/premium_photo-1688350839154-1a131bccd78a?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'waitlist',
         phone: '(555) 020-0007',
         focusAreas: [
@@ -383,13 +442,13 @@ export const locations: Location[] = [
         facebook: true,
         personalInterests: ['skiing', 'chess'],
         hours: {
-          mon: { status: 'open', opens: '8am', closes: '5pm' },
-          tue: { status: 'open', opens: '8am', closes: '5pm' },
+          mon: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+          tue: { status: 'open', opens: '8:00am', closes: '5:30pm' },
           wed: { status: 'closed' },
-          thu: { status: 'open', opens: '8am', closes: '5pm' },
-          fri: { status: 'open', opens: '8am', closes: '5pm' },
+          thu: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+          fri: { status: 'open', opens: '8:30am', closes: '5:00pm' },
           sat: { status: 'closed' },
-          sun: { status: 'closed' },
+          sun: { status: 'byAppointment' },
         },
       },
     ],
@@ -409,14 +468,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.8106,
     lng: -90.6998,
-    hours: 'Mon–Fri 9am–6pm',
+    hours: {
+      mon: { status: 'open', opens: '9:00am', closes: '6:30pm' },
+      tue: { status: 'open', opens: '9:00am', closes: '6:00pm' },
+      wed: { status: 'open', opens: '9:30am', closes: '6:00pm' },
+      thu: { status: 'open', opens: '9:00am', closes: '6:30pm' },
+      fri: { status: 'open', opens: '9:00am', closes: '6:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-8',
         name: 'Quinn Marsh',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=8',
+        photoUrl:
+          'https://images.unsplash.com/photo-1701096374092-bb70915fdc5c?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0008',
         focusAreas: [
@@ -436,7 +504,8 @@ export const locations: Location[] = [
       {
         id: 'staff-9',
         name: 'Simone Alvarez',
-        photoUrl: 'https://i.pravatar.cc/150?img=32',
+        photoUrl:
+          'https://plus.unsplash.com/premium_photo-1733302828477-80e6cccb0911?w=200&h=200&fit=crop&crop=faces&q=80',
         title: 'Branch Office Administrator',
       },
     ],
@@ -450,14 +519,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7828,
     lng: -90.4877,
-    hours: 'Mon–Fri 8am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      tue: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      wed: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      fri: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-9',
         name: 'Rowan Ferrante',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=9',
+        photoUrl:
+          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0009',
         focusAreas: [
@@ -480,10 +558,10 @@ export const locations: Location[] = [
           'cycling',
         ],
         hours: {
-          mon: { status: 'open', opens: '8am', closes: '5pm' },
-          tue: { status: 'open', opens: '8am', closes: '5pm' },
-          wed: { status: 'open', opens: '8am', closes: '5pm' },
-          thu: { status: 'open', opens: '8am', closes: '5pm' },
+          mon: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+          tue: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+          wed: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+          thu: { status: 'open', opens: '8:00am', closes: '5:00pm' },
           fri: { status: 'byAppointment' },
           sat: { status: 'closed' },
           sun: { status: 'closed' },
@@ -493,7 +571,8 @@ export const locations: Location[] = [
         id: 'adv-10',
         name: 'Skyler Castellano',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=10',
+        photoUrl:
+          'https://plus.unsplash.com/premium_photo-1661521277742-f8756af10deb?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0010',
         focusAreas: [
@@ -507,11 +586,11 @@ export const locations: Location[] = [
         personalInterests: ['live music', 'hiking'],
         hours: {
           mon: { status: 'closed' },
-          tue: { status: 'open', opens: '8am', closes: '5pm' },
-          wed: { status: 'open', opens: '8am', closes: '5pm' },
-          thu: { status: 'open', opens: '8am', closes: '5pm' },
-          fri: { status: 'open', opens: '8am', closes: '5pm' },
-          sat: { status: 'closed' },
+          tue: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+          wed: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+          thu: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+          fri: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+          sat: { status: 'byAppointment' },
           sun: { status: 'closed' },
         },
       },
@@ -537,14 +616,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6134,
     lng: -90.3238,
-    hours: 'Mon–Fri 9am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      tue: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      fri: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: false,
     advisors: [
       {
         id: 'adv-11',
         name: 'Reese Ibarra',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=11',
+        photoUrl:
+          'https://images.unsplash.com/photo-1705645930353-0e335311ef20?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'referralOnly',
         phone: '(555) 020-0011',
         focusAreas: [
@@ -567,7 +655,8 @@ export const locations: Location[] = [
       {
         id: 'staff-12',
         name: 'Julian Voss',
-        photoUrl: 'https://i.pravatar.cc/150?img=33',
+        photoUrl:
+          'https://images.unsplash.com/photo-1613181013804-1dcba09e6a9d?w=200&h=200&fit=crop&crop=faces&q=80',
         title: 'Senior Branch Office Administrator',
       },
     ],
@@ -580,14 +669,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7892,
     lng: -90.3223,
-    hours: 'Mon–Fri 8am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      tue: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      wed: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      fri: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-12',
         name: 'Emerson Thackeray',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=12',
+        photoUrl:
+          'https://images.unsplash.com/photo-1718209881007-c0ecdfc00f9d?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0012',
         focusAreas: [
@@ -620,14 +718,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6581,
     lng: -90.3095,
-    hours: 'Mon–Fri 9am–6pm',
+    hours: {
+      mon: { status: 'open', opens: '9:00am', closes: '6:00pm' },
+      tue: { status: 'open', opens: '9:30am', closes: '6:00pm' },
+      wed: { status: 'open', opens: '9:00am', closes: '6:30pm' },
+      thu: { status: 'open', opens: '9:00am', closes: '6:00pm' },
+      fri: { status: 'open', opens: '9:30am', closes: '6:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-13',
         name: 'Finley Rashid',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=13',
+        photoUrl:
+          'https://plus.unsplash.com/premium_photo-1722859210044-5ca8a393b001?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0013',
         focusAreas: [
@@ -664,14 +771,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5975,
     lng: -90.5087,
-    hours: 'Mon–Fri 8am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      tue: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      fri: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-14',
         name: 'Hayden Lindqvist',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=14',
+        photoUrl:
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'waitlist',
         phone: '(555) 020-0014',
         focusAreas: [
@@ -691,7 +807,8 @@ export const locations: Location[] = [
       {
         id: 'staff-15',
         name: 'Odessa Marlowe',
-        photoUrl: 'https://i.pravatar.cc/150?img=34',
+        photoUrl:
+          'https://images.unsplash.com/photo-1573497161161-c3e73707e25c?w=200&h=200&fit=crop&crop=faces&q=80',
         title: 'Branch Office Administrator',
       },
     ],
@@ -704,14 +821,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7442,
     lng: -90.3054,
-    hours: 'Mon–Fri 9am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+      tue: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      wed: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+      fri: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-15',
         name: 'Jamie Solheim',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=15',
+        photoUrl:
+          'https://plus.unsplash.com/premium_photo-1690294614341-cf346ba0a637?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0015',
         focusAreas: [
@@ -746,14 +872,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6659,
     lng: -90.4437,
-    hours: 'Mon–Fri 8am–6pm',
+    hours: {
+      mon: { status: 'open', opens: '8:00am', closes: '6:00pm' },
+      tue: { status: 'open', opens: '8:30am', closes: '6:00pm' },
+      wed: { status: 'open', opens: '8:00am', closes: '6:30pm' },
+      thu: { status: 'open', opens: '8:00am', closes: '6:00pm' },
+      fri: { status: 'open', opens: '8:30am', closes: '6:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-16',
         name: 'Kai Okonkwo',
         title: 'Senior Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=16',
+        photoUrl:
+          'https://images.unsplash.com/photo-1609436132311-e4b0c9370469?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0016',
         focusAreas: [
@@ -767,10 +902,10 @@ export const locations: Location[] = [
         facebook: true,
         personalInterests: ['woodworking', 'community theater'],
         hours: {
-          mon: { status: 'open', opens: '8am', closes: '6pm' },
-          tue: { status: 'open', opens: '8am', closes: '6pm' },
-          wed: { status: 'open', opens: '8am', closes: '6pm' },
-          thu: { status: 'open', opens: '8am', closes: '6pm' },
+          mon: { status: 'open', opens: '8:00am', closes: '6:30pm' },
+          tue: { status: 'open', opens: '8:00am', closes: '6:00pm' },
+          wed: { status: 'open', opens: '8:30am', closes: '6:00pm' },
+          thu: { status: 'open', opens: '8:00am', closes: '6:30pm' },
           fri: { status: 'byAppointment' },
           sat: { status: 'closed' },
           sun: { status: 'closed' },
@@ -793,14 +928,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5439,
     lng: -90.3898,
-    hours: 'Mon–Fri 9am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      tue: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      thu: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      fri: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: false,
     advisors: [
       {
         id: 'adv-17',
         name: 'Logan Ashcombe',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=17',
+        photoUrl:
+          'https://images.unsplash.com/photo-1588178454780-441fa5b99fa5?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'referralOnly',
         phone: '(555) 020-0017',
         focusAreas: [
@@ -827,7 +971,8 @@ export const locations: Location[] = [
       {
         id: 'staff-18',
         name: 'Miles Corbett',
-        photoUrl: 'https://i.pravatar.cc/150?img=35',
+        photoUrl:
+          'https://images.unsplash.com/photo-1609371497456-3a55a205d5eb?w=200&h=200&fit=crop&crop=faces&q=80',
         title: 'Branch Office Administrator',
       },
     ],
@@ -840,14 +985,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5589,
     lng: -90.3298,
-    hours: 'Mon–Fri 8am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      tue: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      fri: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-18',
         name: 'Parker Trent',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=18',
+        photoUrl:
+          'https://images.unsplash.com/photo-1573497491207-618cc224f243?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0018',
         focusAreas: [
@@ -877,14 +1031,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.8114,
     lng: -90.8529,
-    hours: 'Mon–Fri 9am–6pm',
+    hours: {
+      mon: { status: 'open', opens: '9:30am', closes: '6:00pm' },
+      tue: { status: 'open', opens: '9:00am', closes: '6:30pm' },
+      wed: { status: 'open', opens: '9:00am', closes: '6:00pm' },
+      thu: { status: 'open', opens: '9:30am', closes: '6:00pm' },
+      fri: { status: 'open', opens: '9:00am', closes: '6:30pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-19',
         name: 'Louis Everhart',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=51',
+        photoUrl:
+          'https://images.unsplash.com/photo-1697063882499-f7fca7d2d713?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0019',
         focusAreas: [
@@ -917,14 +1080,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.4342,
     lng: -90.3765,
-    hours: 'Mon–Fri 8am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      tue: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      thu: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      fri: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-20',
         name: 'Charlie Faulkner',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=20',
+        photoUrl:
+          'https://images.unsplash.com/photo-1580411415491-a672219c801b?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'waitlist',
         phone: '(555) 020-0020',
         focusAreas: [
@@ -952,7 +1124,8 @@ export const locations: Location[] = [
       {
         id: 'staff-21',
         name: 'Dahlia Renner',
-        photoUrl: 'https://i.pravatar.cc/150?img=36',
+        photoUrl:
+          'https://plus.unsplash.com/premium_photo-1688739379441-fa764e016555?w=200&h=200&fit=crop&crop=faces&q=80',
         title: 'Branch Office Administrator',
       },
     ],
@@ -966,14 +1139,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5136,
     lng: -90.4437,
-    hours: 'Mon–Fri 9am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      tue: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      wed: { status: 'open', opens: '9:30am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '9:00am', closes: '5:30pm' },
+      fri: { status: 'open', opens: '9:00am', closes: '5:00pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-21',
         name: 'Drew Vasquez',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=21',
+        photoUrl:
+          'https://images.unsplash.com/photo-1648146394230-9f0076ee1056?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0021',
         focusAreas: [
@@ -1005,14 +1187,23 @@ export const locations: Location[] = [
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7684,
     lng: -90.4048,
-    hours: 'Mon–Fri 8am–5pm',
+    hours: {
+      mon: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      tue: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      wed: { status: 'open', opens: '8:00am', closes: '5:00pm' },
+      thu: { status: 'open', opens: '8:30am', closes: '5:00pm' },
+      fri: { status: 'open', opens: '8:00am', closes: '5:30pm' },
+      sat: { status: 'closed' },
+      sun: { status: 'closed' },
+    },
     open: true,
     advisors: [
       {
         id: 'adv-22',
         name: 'Elliot Loomis',
         title: 'Financial Advisor',
-        photoUrl: 'https://i.pravatar.cc/150?img=22',
+        photoUrl:
+          'https://plus.unsplash.com/premium_photo-1664297951506-135f601fefbb?w=200&h=200&fit=crop&crop=faces&q=80',
         newClientStatus: 'accepting',
         phone: '(555) 020-0022',
         focusAreas: [

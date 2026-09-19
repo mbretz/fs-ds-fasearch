@@ -10,7 +10,6 @@ import { splitAddressLines } from '../../../utils/splitAddressLines';
 
 export interface LocationCardProps {
   location: Location;
-  onViewBranch?: () => void;
   className?: string;
 }
 
@@ -29,11 +28,7 @@ export interface LocationCardProps {
 //
 // No `ContactLinks` here, per the user -- the address/phone links already
 // live in the Office Information panel, so the header doesn't repeat them.
-export function LocationCard({
-  location,
-  onViewBranch,
-  className,
-}: LocationCardProps) {
+export function LocationCard({ location, className }: LocationCardProps) {
   const advisorCount = location.advisors.length;
   const staffCount = location.supportStaff.length;
   const { street, cityStateZip } = splitAddressLines(location.address);
@@ -42,7 +37,14 @@ export function LocationCard({
     <EntityCard
       className={className}
       panels={[
-        <AdvisorsAtLocationPanel key="advisors" advisors={location.advisors} />,
+        // `supportStaff` moved here (underneath the advisors), per the
+        // user -- `OfficeDetailsPanel` below no longer renders it for this
+        // card.
+        <AdvisorsAtLocationPanel
+          key="advisors"
+          advisors={location.advisors}
+          supportStaff={location.supportStaff}
+        />,
         // `officePhotoUrl` deliberately not passed here -- per the user,
         // the branch photo is reserved for the full Office Details panel
         // on profile pages, not any card context. `showTitle={false}`:
@@ -56,7 +58,6 @@ export function LocationCard({
           hours={location.hours}
           phone={location.phone}
           fax={location.fax}
-          supportStaff={location.supportStaff}
         />,
       ]}
     >
@@ -128,9 +129,13 @@ export function LocationCard({
           portrait+name lockup above stays pinned to the top, and the gap
           right before the separator absorbs the extra height. */}
       <Separator className="mt-auto mx-[var(--density-spacing-fixed-large)] w-auto" />
+      {/* Real link, not inert -- same as AdvisorCard's "View Profile":
+          every branch gets an individual page later, so `/branch/:id`
+          renders as a genuine href now even though `router.tsx` has no
+          matching route yet. */}
       <EntityActions
         primaryLabel="View Branch"
-        onPrimaryAction={onViewBranch}
+        primaryHref={`/branch/${location.id}`}
       />
     </EntityCard>
   );

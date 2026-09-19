@@ -1,11 +1,25 @@
-import type { Advisor } from '../../../data/locations';
-import { EntityPortrait } from '../../entity-info/EntityPortrait';
+import { Avatar } from 'ds';
+import type { Advisor, BranchSupportStaff } from '../../../data/locations';
 import { cn } from '../../../utils/cn';
+import { getInitials } from '../../../utils/getInitials';
+import { BranchTeamMemberRow } from '../../entity-info/BranchTeamMemberRow';
 
 export interface AdvisorsAtLocationPanelProps {
   advisors: Pick<Advisor, 'id' | 'name' | 'photoUrl'>[];
+  /**
+   * Renders a "Branch Team" heading + entries underneath the advisors,
+   * per the user -- `OfficeDetailsPanel` still supports rendering this
+   * same content itself (e.g. AdvisorCard's own Office Details panel),
+   * this is just LocationCard's own placement choice.
+   */
+  supportStaff?: BranchSupportStaff[];
   className?: string;
 }
+
+const headingClassName =
+  'uppercase text-[length:var(--semantic-content-nanoheading-font-size)] leading-[length:var(--semantic-content-nanoheading-line-height)] font-[number:var(--semantic-content-nanoheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]';
+const bodyClassName =
+  'text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-size-x-small-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]';
 
 // Matches `Branch-Card-Advisors-Panel` (`892:22192`), location-card only:
 // a "Branch Advisors" heading + one avatar+name row per advisor -- name
@@ -17,35 +31,58 @@ export interface AdvisorsAtLocationPanelProps {
 // empty panel shell, so `EntityCard` never reserves a column for it.
 export function AdvisorsAtLocationPanel({
   advisors,
+  supportStaff = [],
   className,
 }: AdvisorsAtLocationPanelProps) {
-  if (advisors.length === 0) return null;
+  if (advisors.length === 0 && supportStaff.length === 0) return null;
 
   return (
     <div
       className={cn(
-        'flex h-full flex-col gap-[var(--density-spacing-fixed-large)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
+        'flex h-full flex-col gap-[var(--density-spacing-fixed-xx-large)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
         className,
       )}
     >
-      <span className="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
-        Branch Advisors
-      </span>
-      {advisors.map((advisor) => (
-        <div
-          key={advisor.id}
-          className="flex items-center gap-[var(--density-spacing-fixed-med)]"
-        >
-          <EntityPortrait
-            name={advisor.name}
-            photoUrl={advisor.photoUrl}
-            size="sm"
-          />
-          <span className="text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--semantic-content-common-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
-            {advisor.name}
-          </span>
+      {advisors.length > 0 && (
+        // Heading-to-list gap is half the item-to-item gap (`fixed-small`,
+        // 8px, is exactly half of `fixed-large`, 16px, in both density
+        // modes), per the user -- nested so that halving doesn't also
+        // compress the rows' own spacing.
+        <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
+          <span className={headingClassName}>Branch Advisors</span>
+          <ul className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
+            {advisors.map((advisor) => (
+              <li
+                key={advisor.id}
+                className="flex items-center gap-[var(--density-spacing-fixed-med)]"
+              >
+                <Avatar.Root size="xs">
+                  {advisor.photoUrl && (
+                    <Avatar.Image src={advisor.photoUrl} alt="" />
+                  )}
+                  <Avatar.Fallback>{getInitials(advisor.name)}</Avatar.Fallback>
+                </Avatar.Root>
+                <span className={bodyClassName}>{advisor.name}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-      ))}
+      )}
+
+      {/* Rows are `BranchTeamMemberRow` -- shared with `OfficeDetailsPanel`'s
+          own "Branch Team" block, which still renders it independently for
+          contexts that want it there (e.g. AdvisorCard's Office Details
+          panel). */}
+      {supportStaff.length > 0 && (
+        <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
+          <span className={headingClassName}>Branch Team</span>
+          <ul className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
+            {supportStaff.map((staff) => (
+              <BranchTeamMemberRow key={staff.id} staff={staff} />
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
