@@ -1,11 +1,23 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { AdvisorSearchModule } from '../components/AdvisorSearchModule/AdvisorSearchModule';
 import { InProgress } from '../components/AdvisorSearchModule/InProgress';
 import { FilterFacets } from '../components/FilterFacets/FilterFacets';
 import { ResultsList } from '../components/ResultsList/ResultsList';
 import { useFilteredLocations } from '../components/ResultsList/useFilteredLocations';
+import {
+  ResultsToolbar,
+  type ResultsView,
+} from '../components/ResultsToolbar/ResultsToolbar';
 import { ProspectPortal } from '../components/ProspectPortal/ProspectPortal';
+
+// Left-to-right order the SegmentedControl (desktop)/RadioGroup (mobile)
+// buttons render in (see ResultsToolbar.tsx) -- `changeView`'s slide
+// direction below walks this same order, so the transition always
+// matches whichever side of the currently-selected button the user
+// clicked.
+const RESULTS_VIEW_ORDER: ResultsView[] = ['list', 'map', 'dual'];
 
 // query/selectedFocusAreas/acceptingNewClients live here, not inside
 // InProgress.tsx -- InProgress (the search field, FilterMenu, Checkbox)
@@ -25,17 +37,108 @@ export function Results() {
   const [query, setQuery] = useState(() => searchParams.get('q') ?? '');
   const [selectedFocusAreas, setSelectedFocusAreas] = useState<string[]>([]);
   const [acceptingNewClients, setAcceptingNewClients] = useState(false);
+  // Defaults to 'list' -- the only view with real content built out so
+  // far (see ResultsToolbar.tsx) -- rather than docs/PLAN.md's eventual
+  // "desktop defaults to Dual View", per the user, until Map/Dual exist.
+  const [view, setView] = useState<ResultsView>('list');
+  const resultsContentRef = useRef<HTMLDivElement>(null);
+  // Set only while viewing Map/Dual -- see `changeView` below for why.
+  const [reservedContentHeight, setReservedContentHeight] = useState<
+    number | undefined
+  >(undefined);
 
   const filteredLocations = useFilteredLocations(
     query,
     selectedFocusAreas,
     acceptingNewClients,
   );
+  // Every card ResultsList renders: one LocationCard per matching branch
+  // plus one AdvisorCard per advisor at each of those branches, per the
+  // user -- not just a location or advisor count alone.
+  const resultsCount =
+    filteredLocations.length +
+    filteredLocations.reduce(
+      (sum, location) => sum + location.advisors.length,
+      0,
+    );
 
   function submitSearch(value: string) {
     const trimmed = value.trim();
     if (!trimmed) return;
     setSearchParams({ q: trimmed });
+  }
+
+  // Map/Dual are inert placeholder text (see ResultsToolbar.tsx), far
+  // shorter than a real ResultsList -- switching to one without this
+  // would collapse the page's scrollable height out from under the
+  // user, clamping their scroll position back up near the top
+  // regardless of where they'd scrolled to, per the user. Rather than
+  // guessing a fixed placeholder height, this measures List's own real
+  // rendered height right before leaving it and floors the
+  // results-content wrapper at that value for as long as Map/Dual is
+  // showing, so the page never gets shorter than it already was and the
+  // user's scroll position stays put. Cleared on returning to List,
+  // which always has its own real (and possibly since-changed, e.g. a
+  // filter edit) height to stand on instead of an artificial floor.
+  // Map<->Dual: `currentHeight` is whichever placeholder's own
+  // (already-reserved) height, so this is a no-op re-application, not a
+  // second shrink.
+  //
+  // TODO(map/dual build-out): once Map/Dual render real content with
+  // their own set height, blindly flooring at List's *measured* height
+  // stops being right -- a large result set's List height can far
+  // exceed that set height, and this would force the wrapper (and a lot
+  // of dead blank space below the real map) up to match it instead of
+  // just letting the page settle to Map/Dual's own natural size. At
+  // that point, cap `nextReservedHeight` at
+  // `Math.min(currentHeight, mapDualSetHeight)` instead of using
+  // `currentHeight` alone -- preserves scroll only up to Map/Dual's own
+  // real height (a normal, expected tab-switch scroll adjustment
+  // beyond that, not a bug), rather than manufacturing space to avoid
+  // any adjustment at all.
+  function changeView(next: ResultsView) {
+    const currentHeight =
+      resultsContentRef.current?.getBoundingClientRect().height;
+    const nextReservedHeight = next === 'list' ? undefined : currentHeight;
+
+    function commit() {
+      setReservedContentHeight(nextReservedHeight);
+      setView(next);
+    }
+
+    // Wraps the view switch in `document.startViewTransition()` so the
+    // results-content pane (below, `[view-transition-name:results-
+    // content]`) slides left/right instead of hard-cutting -- same View
+    // Transitions precedent as Start.tsx's own route change, except this
+    // is a local state change, not a router navigation, so there's no
+    // `viewTransition: true` router option to lean on; `flushSync` is
+    // what makes `commit`'s DOM update happen synchronously inside the
+    // callback, which `startViewTransition` requires in order to
+    // capture the "new" state correctly rather than snapshotting the
+    // same (still-old) DOM twice. Unsupported browsers (feature-detected
+    // below) just get the instant switch. `prefers-reduced-motion` is
+    // already handled globally, not repeated here -- see
+    // apps/locator/src/view-transitions.css.
+    if (!document.startViewTransition) {
+      commit();
+      return;
+    }
+
+    // Read via `document.documentElement` (`<html>`), not `setState` --
+    // the actual slide-direction CSS lives in view-transitions.css,
+    // keyed off this same attribute, since `::view-transition-*`
+    // pseudo-elements are rooted there rather than under any regular DOM
+    // node this component renders (see that file's own comment).
+    document.documentElement.dataset.resultsTransitionDirection =
+      RESULTS_VIEW_ORDER.indexOf(next) > RESULTS_VIEW_ORDER.indexOf(view)
+        ? 'forward'
+        : 'backward';
+    const transition = document.startViewTransition(() => {
+      flushSync(commit);
+    });
+    transition.finished.finally(() => {
+      delete document.documentElement.dataset.resultsTransitionDirection;
+    });
   }
 
   return (
@@ -121,7 +224,49 @@ export function Results() {
         onSelectedFocusAreasChange={setSelectedFocusAreas}
         className="mt-[var(--density-layout-fixed-large)]"
       />
-      <ResultsList locations={filteredLocations} />
+      {/* Same horizontal-inset convention as ResultsList directly below it
+          (8px/`layout.fixed.small` under `md`, none at `md`+ -- `<main>`
+          already provides it there, see ResultsList's own comment) so
+          this row's edges line up exactly with the results grid.
+
+          Top margin is double every other gap on this page (`xxx-large`,
+          32px -- exactly 2x `large`, 16px, rather than a `calc()`, per
+          the user), so this row reads as its own section break from
+          FilterFacets above it instead of stacking at the same rhythm as
+          every other sibling gap here. */}
+      <ResultsToolbar
+        resultsCount={resultsCount}
+        view={view}
+        onViewChange={changeView}
+        className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-layout-fixed-xxx-large)] md:mx-0"
+      />
+      {/* `[view-transition-name:results-content]` scopes the cross-fade
+          to just this region (not the whole page/header) -- see
+          `changeView` above. `ref`+`style` are the height-reservation
+          mechanism described there, not styling. */}
+      <div
+        ref={resultsContentRef}
+        className="[view-transition-name:results-content]"
+        style={{ minHeight: reservedContentHeight }}
+      >
+        {view === 'list' && (
+          <ResultsList
+            locations={filteredLocations}
+            className="mt-[var(--density-spacing-fixed-large)]"
+          />
+        )}
+        {/* Placeholders only -- see ResultsToolbar.tsx's own comment. */}
+        {view === 'map' && (
+          <p className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-large)] md:mx-0">
+            Map view placeholder
+          </p>
+        )}
+        {view === 'dual' && (
+          <p className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-large)] md:mx-0">
+            Dual view placeholder
+          </p>
+        )}
+      </div>
     </>
   );
 }

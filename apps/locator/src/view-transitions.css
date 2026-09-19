@@ -10,3 +10,80 @@
     animation: none !important;
   }
 }
+
+/*
+  Results.tsx's List/Map/Dual view switch (`[view-transition-name:results-
+  content]`) uses a directional push-slide instead of the UA stylesheet's
+  default cross-fade, per the user -- direction matches the corresponding
+  SegmentedControl/RadioGroup button's left-to-right order (List, Map,
+  Dual), driven by a `data-results-transition-direction` attribute
+  Results.tsx sets on `<html>` (the pseudo-element tree's real root, same
+  reason this file itself isn't scoped to a component) right before
+  calling `document.startViewTransition()`, and clears once the
+  transition's own `finished` promise settles.
+
+  `mix-blend-mode: normal` overrides the UA stylesheet's default
+  `plus-lighter` (which exists to make a *cross-fade*'s overlapping alpha
+  math look right) -- a push-slide has no fading/overlap to correct for
+  (old and new tile the box edge-to-edge at every frame, never
+  overlapping), so plain alpha compositing is what's wanted instead;
+  leaving `plus-lighter` in place here would tint the slide toward white
+  wherever the two snapshots' edges anti-alias against each other.
+  `overflow: hidden` on the image-pair is already the UA stylesheet's own
+  default (confirmed in Chrome/Firefox/Safari devtools), but is repeated
+  explicitly rather than relied on silently, since it's load-bearing here
+  (without it, the sliding-out/in snapshot would spill outside its own
+  box while off-screen instead of being clipped to it).
+*/
+::view-transition-image-pair(results-content) {
+  overflow: hidden;
+}
+
+::view-transition-old(results-content),
+::view-transition-new(results-content) {
+  animation-duration: 300ms;
+  animation-timing-function: ease-in-out;
+  mix-blend-mode: normal;
+}
+
+html[data-results-transition-direction='forward']::view-transition-old(
+    results-content
+  ) {
+  animation-name: results-view-slide-out-to-left;
+}
+html[data-results-transition-direction='forward']::view-transition-new(
+    results-content
+  ) {
+  animation-name: results-view-slide-in-from-right;
+}
+html[data-results-transition-direction='backward']::view-transition-old(
+    results-content
+  ) {
+  animation-name: results-view-slide-out-to-right;
+}
+html[data-results-transition-direction='backward']::view-transition-new(
+    results-content
+  ) {
+  animation-name: results-view-slide-in-from-left;
+}
+
+@keyframes results-view-slide-out-to-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes results-view-slide-in-from-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes results-view-slide-out-to-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes results-view-slide-in-from-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
