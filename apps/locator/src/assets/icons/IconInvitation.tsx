@@ -1,0 +1,73 @@
+import type { Ref, SVGProps } from 'react';
+import { forwardRef } from 'react';
+
+/**
+ * Locator-local stand-in for Figma's "invitation 1" (`1:458`, the
+ * `Badge` component set's "accepting" glyph). Not a `packages/icons`
+ * export -- see this directory's README for why, and for the running
+ * list of icons staged here pending a real contribution to that package.
+ *
+ * Hand-written to match `packages/icons`' own generated-component shape
+ * (forwardRef, spread `SVGProps`, `currentColor` swapped in for the
+ * source SVG's literal `#247E58` stroke) so swapping to the real package
+ * export later is a type-compatible drop-in.
+ */
+const IconInvitation = (
+  props: SVGProps<SVGSVGElement>,
+  ref: Ref<SVGSVGElement>,
+) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={16}
+    height={16}
+    viewBox="0 0 16 16"
+    fill="none"
+    ref={ref}
+    {...props}
+  >
+    <g clipPath="url(#icon-invitation-clip)">
+      <path
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8 9H2.5C2.23478 9 1.98043 8.89464 1.79289 8.70711C1.60536 8.51957 1.5 8.26522 1.5 8V1.5C1.5 1.23478 1.60536 0.98043 1.79289 0.792893C1.98043 0.605357 2.23478 0.5 2.5 0.5H13.5C13.7652 0.5 14.0196 0.605357 14.2071 0.792893C14.3946 0.98043 14.5 1.23478 14.5 1.5V8C14.5 8.26522 14.3946 8.51957 14.2071 8.70711C14.0196 8.89464 13.7652 9 13.5 9H10.5"
+      />
+      <path
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.59998 2.5H12.5"
+      />
+      <path
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M10.5 9V6.25C10.5 5.91848 10.3683 5.60054 10.1339 5.36612C9.89945 5.1317 9.58151 5 9.24999 5C8.91847 5 8.60052 5.1317 8.3661 5.36612C8.13168 5.60054 7.99999 5.91848 7.99999 6.25V9.65L7.67465 10.9493C7.50168 11.5878 7.50168 12.2608 7.67465 12.8993C7.91375 13.3547 8.18978 13.7897 8.49999 14.2V15.5H13C13 12.5573 12.874 12.9873 13.3713 10.9667"
+      />
+      <path
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M7.75533 10.6273C7.55102 11.1484 7.19995 11.5991 6.74467 11.9247C6.35133 12.1307 5.5 12.0013 5.5 11.2747V9"
+      />
+      <path
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 5.75C5.82843 5.75 6.5 5.07843 6.5 4.25C6.5 3.42157 5.82843 2.75 5 2.75C4.17157 2.75 3.5 3.42157 3.5 4.25C3.5 5.07843 4.17157 5.75 5 5.75Z"
+      />
+    </g>
+    <defs>
+      <clipPath id="icon-invitation-clip">
+        <rect width={16} height={16} fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+export default forwardRef(IconInvitation);

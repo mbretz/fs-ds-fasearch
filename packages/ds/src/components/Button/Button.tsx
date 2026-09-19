@@ -11,7 +11,7 @@ import type {
 // Fill variants (primary): background/border track the same var so both
 // always match, per Figma (border color never diverges from the fill).
 export const buttonRootVariants = cva(
-  'inline-flex min-h-[var(--component-button-min-height)] shrink-0 items-center justify-center gap-[var(--component-button-gap)] rounded-[var(--component-button-border-radius)] border-[length:var(--component-button-border-width)] text-[length:var(--component-button-font-size)] leading-[length:var(--component-button-line-height)] font-[number:var(--component-button-font-weight)] outline-none disabled:cursor-not-allowed disabled:border-disabled-subtle disabled:bg-disabled-subtle disabled:text-disabled-text',
+  'inline-flex min-h-[var(--component-button-min-height)] shrink-0 cursor-pointer items-center justify-center gap-[var(--component-button-gap)] rounded-[var(--component-button-border-radius)] border-[length:var(--component-button-border-width)] text-[length:var(--component-button-font-size)] leading-[length:var(--component-button-line-height)] font-[number:var(--component-button-font-weight)] outline-none disabled:cursor-not-allowed disabled:border-disabled-subtle disabled:bg-disabled-subtle disabled:text-disabled-text',
   {
     variants: {
       iconOnly: {
