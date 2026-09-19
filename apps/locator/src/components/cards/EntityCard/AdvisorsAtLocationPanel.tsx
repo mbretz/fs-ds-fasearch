@@ -72,8 +72,10 @@ export function AdvisorsAtLocationPanel({
       {/* Rows are `BranchTeamMemberRow` -- shared with `OfficeDetailsPanel`'s
           own "Branch Team" block, which still renders it independently for
           contexts that want it there (e.g. AdvisorCard's Office Details
-          panel). */}
-      {supportStaff.length > 0 && (
+          panel). Suppressed once a location has 5+ advisors, per the user --
+          large advisor rosters crowd the panel enough that Branch Team drops
+          rather than compressing further. */}
+      {advisors.length < 5 && supportStaff.length > 0 && (
         <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
           <span className={headingClassName}>Branch Team</span>
           <ul className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
