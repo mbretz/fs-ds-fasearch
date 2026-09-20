@@ -1,19 +1,5 @@
 import { Separator } from 'ds';
 import type { Advisor, Location } from '../../../data/locations';
-// Official brand marks (LinkedIn/Facebook), not `packages/icons` glyphs --
-// see this directory's own `../../../assets/icons/README.md` for the
-// source-asset provenance (`linkedin-badge-source.png` is the literal
-// official download; `-cropped` removes its bundled ® mark down to a
-// square badge, since packaged brand-asset exports aren't pre-cropped to
-// just the icon). Same vite-imagetools, build-time-only responsive-image
-// convention Start.tsx's hero image uses: the plain, query-free import
-// is both the `<img>`'s fallback `src` and the browser-decides-nothing
-// baseline, `?w=16;32;48&format=webp&as=srcset` covers 1x-3x DPR at this
-// icon's fixed 16px (`density.sizing.fixed.large`) display size.
-import linkedinIcon from '../../../assets/icons/linkedin-badge-cropped.png';
-import linkedinIconSrcset from '../../../assets/icons/linkedin-badge-cropped.png?w=16;32;48&format=webp&as=srcset';
-import facebookIcon from '../../../assets/icons/facebook-logo-source.png';
-import facebookIconSrcset from '../../../assets/icons/facebook-logo-source.png?w=16;32;48&format=webp&as=srcset';
 import { EntityCard } from '../EntityCard/EntityCard';
 import { EntityPortrait } from '../../entity-info/EntityPortrait';
 import { NameBlock } from '../../entity-info/NameBlock';
@@ -24,7 +10,6 @@ import { FavoriteToggle } from '../../entity-info/FavoriteToggle';
 import { EntityActions } from '../../entity-info/EntityActions';
 import { FocusAreasPanel } from '../../entity-info/FocusAreasPanel';
 import { OfficeDetailsPanel } from '../../entity-info/OfficeDetailsPanel';
-import { cn } from '../../../utils/cn';
 import { getFullName } from '../../../utils/getFullName';
 import { useSession } from '../../../session/useSession';
 
@@ -40,10 +25,6 @@ export interface AdvisorCardProps {
    * `StatusTag` already shows the same status there. */
   showPortraitBadge?: boolean;
   className?: string;
-}
-
-function preventDisabledClick(event: { preventDefault: () => void }) {
-  event.preventDefault();
 }
 
 // Fallback so the button still renders (per status) when no caller has
@@ -69,11 +50,9 @@ export function AdvisorCard({
   // Advisor's own direct line takes precedence; falls back to the
   // branch's main line (see `Advisor.phone`'s own doc comment).
   const phone = advisor.phone ?? location.phone;
-  const hasSocial = advisor.linkedIn || advisor.facebook;
   // Per the user: only advisors actively taking new clients or holding a
   // waitlist spot get the secondary button -- `referralOnly` advisors
-  // don't. Shown regardless of whether a caller wired a real handler yet
-  // (same inert-until-real-destination pattern as the social icons above),
+  // don't. Shown regardless of whether a caller wired a real handler yet,
   // since the button's presence is status-driven, not caller-opt-in.
   const showsNewClientInquiry =
     advisor.newClientStatus === 'accepting' ||
@@ -110,20 +89,38 @@ export function AdvisorCard({
         {signedIn && <FavoriteToggle name={fullName} />}
       </div>
 
-      <div className="flex items-start gap-[var(--density-spacing-fixed-large)]">
+      <div className="flex gap-[var(--density-spacing-fixed-large)]">
         {/* `xl` is Avatar's own real 104px step (`--component-avatar-
             size-x-large`) -- kept as-is (font-size/icon-size ratio and
             all) rather than an arbitrary override. The 4px white border
             (112px total) is `EntityPortrait`'s own default for `xl` now,
-            not a per-call override. */}
+            not a per-call override.
+
+            `self-start` on the avatar + `self-center` on the name column
+            (not `items-center`/`items-start` on the row itself), per the
+            user: with plain `items-center`, once the name column grows
+            taller than the avatar (long designations/a wrapped name), the
+            *avatar* is what would drift down to stay centered against it
+            -- the avatar defines the row's height whenever it's the
+            taller of the two, so `align-self: start` on it always pins it
+            to the top with zero visible effect in that case (it's already
+            sitting at position 0). It only visibly matters in the
+            opposite case: once the name column *is* the taller item (and
+            so defines the row's own height), `self-center` would center
+            the column *within its own height* -- a no-op -- while the
+            avatar, still `self-start`, stays pinned at the top and the
+            column overflows past its bottom edge, per the user, rather
+            than the whole row growing to re-center everything around a
+            now-much-taller box. */}
         <EntityPortrait
           name={fullName}
           photoUrl={advisor.photoUrl}
           status={advisor.newClientStatus}
           size="xl"
           showBadge={showPortraitBadge}
+          className="self-start"
         />
-        <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
+        <div className="flex flex-col gap-[var(--density-spacing-fixed-small)] self-center">
           <NameBlock
             heading={fullName}
             subheading={
@@ -131,65 +128,31 @@ export function AdvisorCard({
                 ? advisor.designations.join(', ')
                 : undefined
             }
+            // Tighter than NameBlock's own default 8px (`fixed-small`) --
+            // per the user, name-to-designations reads better at 4px
+            // (`fixed-x-small`) than the space LocationCard's own
+            // address-to-summary gap uses, which keeps the default.
+            className="gap-[var(--density-spacing-fixed-x-small)]"
             subheadingClassName="leading-[length:var(--semantic-content-size-x-small-line-height)]"
           />
           <TenureLine
             years={advisor.tenureYears}
             className="leading-[length:var(--semantic-content-size-x-small-line-height)]"
           />
-          {/* Real LinkedIn/Facebook brand marks (see the imports' own
-              comment) -- no real profile URL exists in the data model
-              (`Advisor.linkedIn`/`.facebook` are booleans, not links), so
-              these still render inert like every other not-yet-real
-              destination in this app (SiteHeader, Start.tsx's promo
-              CTAs). Sits beneath TenureLine, inside the same NameBlock
-              column, per the user -- not alongside ContactLinks below. */}
-          {hasSocial && (
-            <div className="flex gap-[var(--density-spacing-fixed-med)]">
-              {advisor.linkedIn && (
-                <a
-                  href="#"
-                  aria-disabled="true"
-                  aria-label={`${fullName} on LinkedIn`}
-                  tabIndex={-1}
-                  onClick={preventDisabledClick}
-                  className={cn('cursor-not-allowed')}
-                >
-                  <img
-                    src={linkedinIcon}
-                    srcSet={linkedinIconSrcset}
-                    sizes="16px"
-                    alt=""
-                    aria-hidden="true"
-                    className="size-[var(--density-sizing-fixed-large)]"
-                  />
-                </a>
-              )}
-              {advisor.facebook && (
-                <a
-                  href="#"
-                  aria-disabled="true"
-                  aria-label={`${fullName} on Facebook`}
-                  tabIndex={-1}
-                  onClick={preventDisabledClick}
-                  className="cursor-not-allowed"
-                >
-                  <img
-                    src={facebookIcon}
-                    srcSet={facebookIconSrcset}
-                    sizes="16px"
-                    alt=""
-                    aria-hidden="true"
-                    className="size-[var(--density-sizing-fixed-large)]"
-                  />
-                </a>
-              )}
-            </div>
-          )}
+          {/* SocialLinks split out to its own entity-info component
+              (2026-09-20, per the user) -- no longer rendered here at
+              all; reserved for the individual advisor profile page
+              instead. */}
         </div>
       </div>
 
-      <ContactLinks address={location.address} phone={phone} />
+      {/* 32px (`fixed-xxx-large`) inset -- 16px more than the Separator's
+          own 16px (`fixed-large`) below, per the user, not the same inset. */}
+      <ContactLinks
+        address={location.address}
+        phone={phone}
+        className="mx-[var(--density-spacing-fixed-xxx-large)]"
+      />
 
       {/* Matches `.FA-Card-Actions-Block`: a `Separator` directly above
           Actions, inset 16px on each side (that block's own horizontal

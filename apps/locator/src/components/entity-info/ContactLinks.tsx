@@ -1,6 +1,7 @@
 import { Link } from 'ds';
 import { MapPinLarge, Phone } from 'icons';
 import { cn } from '../../utils/cn';
+import { splitAddressLines } from '../../utils/splitAddressLines';
 
 export interface ContactLinksProps {
   address?: string;
@@ -43,23 +44,34 @@ export function ContactLinks({ address, phone, className }: ContactLinksProps) {
         className,
       )}
     >
-      {address && (
-        <div className="flex items-start gap-[var(--density-spacing-fixed-x-small)]">
-          <MapPinLarge
-            aria-hidden="true"
-            className="mt-[0.15em] size-[var(--density-sizing-fixed-large)] shrink-0 text-[color:var(--component-link-text-color-default)]"
-          />
-          <Link
-            href="#"
-            aria-disabled="true"
-            tabIndex={-1}
-            onClick={preventDisabledClick}
-            className="cursor-not-allowed"
-          >
-            {address}
-          </Link>
-        </div>
-      )}
+      {address &&
+        (() => {
+          const { street, cityStateZip } = splitAddressLines(address);
+          return (
+            <div className="flex items-start gap-[var(--density-spacing-fixed-x-small)]">
+              <MapPinLarge
+                aria-hidden="true"
+                className="mt-[0.15em] size-[var(--density-sizing-fixed-large)] shrink-0 text-[color:var(--component-link-text-color-default)]"
+              />
+              {/* Street/city-state-zip split + `newWindow` match
+                  OfficeDetailsPanel's own address link (and LocationCard's
+                  card-title heading) -- same wrap point everywhere an
+                  address appears, per the user. */}
+              <Link
+                href="#"
+                aria-disabled="true"
+                tabIndex={-1}
+                onClick={preventDisabledClick}
+                newWindow
+                className="cursor-not-allowed"
+              >
+                {street}
+                <br />
+                {cityStateZip}
+              </Link>
+            </div>
+          );
+        })()}
       {phone && (
         <div className="flex items-center gap-[var(--density-spacing-fixed-x-small)]">
           <Phone
