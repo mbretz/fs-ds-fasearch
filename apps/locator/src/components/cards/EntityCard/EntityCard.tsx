@@ -18,6 +18,20 @@ export interface EntityCardProps {
    * (`FA-Card-Mobile`/`Branch-Card-Mobile`), a single column at every width.
    */
   panels?: ReactNode[];
+  /**
+   * Container width (px) below which the row-mode grid gives every
+   * column -- `main` and each panel alike -- an equal share, instead of
+   * `main`'s usual larger `(4 - panelCount)fr` share. For a caller whose
+   * own `main` content stacks/shrinks internally somewhere in that same
+   * narrower band (see LocationCard.tsx's portrait+name row), so `main`
+   * no longer needs the extra width there and the panels -- which are
+   * otherwise squeezed to a flat 25% share regardless of how roomy the
+   * card gets -- can use it instead. Omitted (default): always uses the
+   * proportional split once row mode activates (680px), unchanged
+   * behavior for a caller like AdvisorCard whose own `main` content
+   * doesn't stack this way. Per the user, 2026-09-19.
+   */
+  equalColumnsBelow?: number;
   density?: 'roomy' | 'condensed';
   className?: string;
 }
@@ -76,6 +90,12 @@ function gridColumns(panelCount: number) {
   return [`${mainShare}fr`, ...Array<string>(panelCount).fill('1fr')].join(' ');
 }
 
+// `equalColumnsBelow`'s own equal-share variant -- `main` included, so
+// `repeat(panelCount + 1, 1fr)`, not just the panels.
+function equalGridColumns(panelCount: number) {
+  return `repeat(${panelCount + 1}, 1fr)`;
+}
+
 // Card.Root's own padding is the *panel* inset (8px on every side,
 // including a panel's own outer top/bottom and the last panel's own
 // right edge against the card boundary) -- `main` needs a deeper 16px
@@ -94,7 +114,12 @@ function gridColumns(panelCount: number) {
 // Grid's rows don't do that for free, since every row shares the grid's
 // own row-track sizing rather than absorbing a container's excess height
 // the way a flex item's `flex-grow` does.
-const gridStyles = `
+// A function, not a module-level constant, since `equalColumnsBelow` is
+// per-instance -- the extra rule it adds is only emitted for a caller
+// that actually passes it (e.g. LocationCard), leaving AdvisorCard's own
+// `<style>` output identical to before.
+function gridStyles(equalColumnsBelow: number | undefined) {
+  return `
   @container entity-card (min-width: 680px) {
     .entity-card-grid {
       display: grid;
@@ -106,6 +131,38 @@ const gridStyles = `
       padding-bottom: var(--density-spacing-fixed-small);
       padding-left: var(--density-spacing-fixed-small);
     }
+  }
+
+  ${
+    equalColumnsBelow
+      ? `/* Narrower slice of row mode (680px-${equalColumnsBelow}px): equal
+       columns instead of the default proportional split -- see this
+       prop's own doc comment above.
+
+       \`[data-equal-columns-below]\`, not bare \`.entity-card-grid\` --
+       EVERY EntityCard instance on a page (e.g. every LocationCard AND
+       every AdvisorCard in ResultsList) renders its own copy of this
+       \`<style>\` tag, and \`<style>\` content is never scoped to where
+       it's rendered -- it's a plain global stylesheet rule matched by
+       selector, same as a stylesheet file. Two instances' rules for the
+       identically-named \`.entity-card-grid\` class, at equal
+       specificity, resolve by DOM order across ALL instances combined,
+       not per-instance -- so an AdvisorCard's own (unconditioned, no
+       \`equalColumnsBelow\`) copy of the base rule rendering AFTER a
+       LocationCard's in the DOM was silently winning the cascade for
+       EVERY \`.entity-card-grid\` on the page, LocationCards' included,
+       since ResultsList renders every LocationCard before any
+       AdvisorCard (confirmed the hard way -- this shipped broken on the
+       first attempt). Adding \`[data-equal-columns-below]\` (set on
+       Card.Root only when this prop is provided) raises this rule's
+       specificity above the base rule's, so it always wins regardless of
+       instance render order, instead of depending on it. */
+  @container entity-card (min-width: 680px) and (max-width: ${equalColumnsBelow - 0.02}px) {
+    .entity-card-grid[data-equal-columns-below] {
+      grid-template-columns: var(--entity-card-columns-equal);
+    }
+  }`
+      : ''
   }
 
   /* Stacked mode: the first panel (FocusAreasPanel on AdvisorCard,
@@ -129,10 +186,12 @@ const gridStyles = `
     }
   }
 `;
+}
 
 export function EntityCard({
   children,
   panels = [],
+  equalColumnsBelow,
   density,
   className,
 }: EntityCardProps) {
@@ -144,12 +203,20 @@ export function EntityCard({
     // children for free; each level in between has to opt in), per the
     // user's "all cards in a row should match the tallest" ask.
     <div className="@container/entity-card h-full">
-      <style>{gridStyles}</style>
+      <style>{gridStyles(equalColumnsBelow)}</style>
       <Card.Root
         density={density}
+        // Selector hook for the `equalColumnsBelow` CSS rule above -- see
+        // its own comment for why this (not a bare class) is what makes
+        // that rule win regardless of instance render order. `undefined`
+        // when the prop isn't set, so React omits the attribute entirely
+        // (not `data-equal-columns-below="undefined"`), matching every
+        // other EntityCard consumer's unchanged behavior.
+        data-equal-columns-below={equalColumnsBelow}
         style={
           {
             '--entity-card-columns': gridColumns(panels.length),
+            '--entity-card-columns-equal': equalGridColumns(panels.length),
           } as CSSProperties
         }
         className={cn(
