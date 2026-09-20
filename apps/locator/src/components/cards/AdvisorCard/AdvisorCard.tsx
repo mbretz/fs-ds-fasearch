@@ -1,6 +1,19 @@
-import { HyperlinkLink, Share } from 'icons';
 import { Separator } from 'ds';
 import type { Advisor, Location } from '../../../data/locations';
+// Official brand marks (LinkedIn/Facebook), not `packages/icons` glyphs --
+// see this directory's own `../../../assets/icons/README.md` for the
+// source-asset provenance (`linkedin-badge-source.png` is the literal
+// official download; `-cropped` removes its bundled ® mark down to a
+// square badge, since packaged brand-asset exports aren't pre-cropped to
+// just the icon). Same vite-imagetools, build-time-only responsive-image
+// convention Start.tsx's hero image uses: the plain, query-free import
+// is both the `<img>`'s fallback `src` and the browser-decides-nothing
+// baseline, `?w=16;32;48&format=webp&as=srcset` covers 1x-3x DPR at this
+// icon's fixed 16px (`density.sizing.fixed.large`) display size.
+import linkedinIcon from '../../../assets/icons/linkedin-badge-cropped.png';
+import linkedinIconSrcset from '../../../assets/icons/linkedin-badge-cropped.png?w=16;32;48&format=webp&as=srcset';
+import facebookIcon from '../../../assets/icons/facebook-logo-source.png';
+import facebookIconSrcset from '../../../assets/icons/facebook-logo-source.png?w=16;32;48&format=webp&as=srcset';
 import { EntityCard } from '../EntityCard/EntityCard';
 import { EntityPortrait } from '../../entity-info/EntityPortrait';
 import { NameBlock } from '../../entity-info/NameBlock';
@@ -122,54 +135,59 @@ export function AdvisorCard({
             years={advisor.tenureYears}
             className="leading-[length:var(--semantic-content-size-x-small-line-height)]"
           />
+          {/* Real LinkedIn/Facebook brand marks (see the imports' own
+              comment) -- no real profile URL exists in the data model
+              (`Advisor.linkedIn`/`.facebook` are booleans, not links), so
+              these still render inert like every other not-yet-real
+              destination in this app (SiteHeader, Start.tsx's promo
+              CTAs). Sits beneath TenureLine, inside the same NameBlock
+              column, per the user -- not alongside ContactLinks below. */}
+          {hasSocial && (
+            <div className="flex gap-[var(--density-spacing-fixed-med)]">
+              {advisor.linkedIn && (
+                <a
+                  href="#"
+                  aria-disabled="true"
+                  aria-label={`${advisor.name} on LinkedIn`}
+                  tabIndex={-1}
+                  onClick={preventDisabledClick}
+                  className={cn('cursor-not-allowed')}
+                >
+                  <img
+                    src={linkedinIcon}
+                    srcSet={linkedinIconSrcset}
+                    sizes="16px"
+                    alt=""
+                    aria-hidden="true"
+                    className="size-[var(--density-sizing-fixed-large)]"
+                  />
+                </a>
+              )}
+              {advisor.facebook && (
+                <a
+                  href="#"
+                  aria-disabled="true"
+                  aria-label={`${advisor.name} on Facebook`}
+                  tabIndex={-1}
+                  onClick={preventDisabledClick}
+                  className="cursor-not-allowed"
+                >
+                  <img
+                    src={facebookIcon}
+                    srcSet={facebookIconSrcset}
+                    sizes="16px"
+                    alt=""
+                    aria-hidden="true"
+                    className="size-[var(--density-sizing-fixed-large)]"
+                  />
+                </a>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       <ContactLinks address={location.address} phone={phone} />
-
-      {/* LinkedIn/Facebook icons are a placeholder (`HyperlinkLink`/
-          `Share`, generic icons) -- packages/icons has neither brand icon
-          yet, per the user's direction to use a stand-in rather than
-          block on sourcing them. No real profile URL exists in the data
-          model (`Advisor.linkedIn`/`.facebook` are booleans, not links),
-          so these render inert like every other not-yet-real destination
-          in this app (SiteHeader, Start.tsx's promo CTAs). */}
-      {hasSocial && (
-        <div className="flex gap-[var(--density-spacing-fixed-med)]">
-          {advisor.linkedIn && (
-            <a
-              href="#"
-              aria-disabled="true"
-              aria-label={`${advisor.name} on LinkedIn`}
-              tabIndex={-1}
-              onClick={preventDisabledClick}
-              className={cn(
-                'cursor-not-allowed text-[color:var(--semantic-content-common-text-color-default)]',
-              )}
-            >
-              <HyperlinkLink
-                aria-hidden="true"
-                className="size-[var(--density-sizing-fixed-x-large)]"
-              />
-            </a>
-          )}
-          {advisor.facebook && (
-            <a
-              href="#"
-              aria-disabled="true"
-              aria-label={`${advisor.name} on Facebook`}
-              tabIndex={-1}
-              onClick={preventDisabledClick}
-              className="cursor-not-allowed text-[color:var(--semantic-content-common-text-color-default)]"
-            >
-              <Share
-                aria-hidden="true"
-                className="size-[var(--density-sizing-fixed-x-large)]"
-              />
-            </a>
-          )}
-        </div>
-      )}
 
       {/* Matches `.FA-Card-Actions-Block`: a `Separator` directly above
           Actions, inset 16px on each side (that block's own horizontal

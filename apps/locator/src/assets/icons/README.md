@@ -27,3 +27,21 @@ asset for whoever eventually does that contribution.
 When one of these lands in `packages/icons` for real: delete the local
 `.tsx`/`.svg` pair, swap the importing component to `import { X } from
 'icons'`, and remove its row above.
+
+## Brand marks
+
+Unlike the contribution-backlog glyphs above, these are third-party
+trademarked logos (official LinkedIn/Facebook brand-assets downloads,
+2026-09-20) -- they belong here permanently, not as a stand-in for a
+future `packages/icons` contribution, since a generic design-system
+icon library is the wrong home for another company's trademark. Kept as
+plain PNGs (not SVGR'd to a `currentColor` component like the glyphs
+above) since a brand mark's colors are fixed by the trademark owner, not
+something a consuming component should be able to recolor.
+
+| Mark     | Source (as downloaded)      | Used-from asset              | Used by             | Notes                                                                                                                                                                         |
+| -------- | --------------------------- | ---------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| LinkedIn | `linkedin-badge-source.png` | `linkedin-badge-cropped.png` | `cards/AdvisorCard` | Source canvas includes a trailing ® mark outside the badge itself; `-cropped` is a hand pixel-crop to just the square badge (0,0,540,540), see git history for the crop tool. |
+| Facebook | `facebook-logo-source.png`  | `facebook-logo-source.png`   | `cards/AdvisorCard` | Source is already a square, transparent-background mark -- no crop needed, imported directly.                                                                                 |
+
+Both are consumed via `vite-imagetools` query-param imports (`?w=…&as=srcset`), same build-time-responsive-image convention as `AdvisorSearchModule/Start.tsx`'s hero image -- see `AdvisorCard.tsx`'s own import comment.
