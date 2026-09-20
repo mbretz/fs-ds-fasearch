@@ -5,7 +5,11 @@
       "mcp__figma__download_figma_images",
       "Bash(pnpm --filter locator exec tsc --noEmit)",
       "Bash(pnpm --filter ds theme:check)",
-      "Bash(node __drive-fallback.mjs)"
+      "Bash(node __drive-fallback.mjs)",
+      "Bash(git checkout *)",
+      "Bash(git pull *)",
+      "Bash(git branch *)",
+      "Bash(git push *)"
     ]
   }
 }
