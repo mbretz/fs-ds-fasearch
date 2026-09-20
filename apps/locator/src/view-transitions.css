@@ -2,7 +2,21 @@
    to wherever a `view-transition-name` is declared, so this override lives
    in its own global stylesheet rather than a component-local <style> block.
    Disables the morph/cross-fade animation for users who've asked for
-   reduced motion; the DOM update (route change) itself still happens. */
+   reduced motion; the DOM update (route change) itself still happens.
+
+   `!important` is deliberate, not a shortcut -- it's what lets this
+   kill-switch beat ANY future view-transition rule added anywhere in the
+   app (e.g. the results-content slide rules below, or Start.tsx/
+   InProgress.tsx's own `advisor-search-*` names), no matter how specific,
+   without this file needing to know about them. The alternative is CSS
+   Cascade Layers (`@layer`) -- wrap every transition-animation rule in a
+   named layer and leave this block unlayered, since unlayered rules
+   always beat layered ones regardless of specificity/order. That gives
+   the same guarantee without `!important`, but only if every future
+   transition rule remembers to opt into a layer -- an unenforced
+   convention instead of a structural one, so `!important` was kept here
+   on purpose (per the user, 2026-09-19). Revisit if that convention ever
+   actually becomes a maintenance problem. */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
