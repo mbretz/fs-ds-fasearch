@@ -25,7 +25,8 @@ export interface BranchSupportStaff {
 
 export interface Advisor {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   title: string;
   photoUrl: string;
   newClientStatus: NewClientStatus;
@@ -61,6 +62,16 @@ export interface Location {
    */
   name: string;
   address: string;
+  /**
+   * Structured alongside `address` (not derived from it at match time) so
+   * the broad city search added 2026-09-20 (docs/PLAN.md §2.2's "explicit
+   * submit" note) can match on a real field instead of re-parsing the
+   * freeform string. `address` itself stays the display string — cards
+   * still render it, not these three.
+   */
+  city: string;
+  state: string;
+  zip: string;
   /** Branch main line. Optional — set on most, not all, locations. */
   phone?: string;
   /** Optional — only set on a handful of locations. */
@@ -91,6 +102,9 @@ export const locations: Location[] = [
     id: 'loc-1',
     name: 'St. Louis Downtown',
     address: '211 N Broadway, St. Louis, MO 63102',
+    city: 'St. Louis',
+    state: 'MO',
+    zip: '63102',
     phone: '(555) 010-0001',
     fax: '(555) 010-9001',
     officePhotoUrl: officePhotoPlaceholder,
@@ -109,7 +123,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-1',
-        name: 'Alex Whitfield',
+        firstName: 'Alex',
+        lastName: 'Whitfield',
         title: 'Financial Advisor',
         photoUrl:
           'https://plus.unsplash.com/premium_photo-1677368597077-009727e906db?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -140,6 +155,9 @@ export const locations: Location[] = [
     id: 'loc-2',
     name: 'Clayton Central',
     address: '7701 Forsyth Blvd, Clayton, MO 63105',
+    city: 'Clayton',
+    state: 'MO',
+    zip: '63105',
     phone: '(555) 010-0002',
     fax: '(555) 010-9002',
     officePhotoUrl: officePhotoPlaceholder,
@@ -158,7 +176,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-2',
-        name: 'Jordan Delgado',
+        firstName: 'Jordan',
+        lastName: 'Delgado',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -186,7 +205,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-3',
-        name: 'Taylor Nair',
+        firstName: 'Taylor',
+        lastName: 'Nair',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -221,7 +241,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-23',
-        name: 'Sam Okorie',
+        firstName: 'Sam',
+        lastName: 'Okorie',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -263,6 +284,9 @@ export const locations: Location[] = [
     id: 'loc-3',
     name: 'Chesterfield Valley',
     address: '17330 N Outer Forty Rd, Chesterfield, MO 63005',
+    city: 'Chesterfield',
+    state: 'MO',
+    zip: '63005',
     phone: '(555) 010-0003',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6631,
@@ -280,7 +304,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-4',
-        name: 'Morgan Bennett',
+        firstName: 'Morgan',
+        lastName: 'Bennett',
         title: 'Senior Financial Advisor',
         photoUrl:
           'https://plus.unsplash.com/premium_photo-1688740375397-34605b6abe48?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -318,6 +343,9 @@ export const locations: Location[] = [
     id: 'loc-4',
     name: 'Kirkwood Main Street',
     address: '111 W Argonne Dr, Kirkwood, MO 63122',
+    city: 'Kirkwood',
+    state: 'MO',
+    zip: '63122',
     phone: '(555) 010-0004',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5834,
@@ -335,7 +363,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-5',
-        name: 'Casey Ashford',
+        firstName: 'Casey',
+        lastName: 'Ashford',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -370,6 +399,9 @@ export const locations: Location[] = [
     id: 'loc-5',
     name: 'Webster Groves',
     address: '8 W Lockwood Ave, Webster Groves, MO 63119',
+    city: 'Webster Groves',
+    state: 'MO',
+    zip: '63119',
     phone: '(555) 010-0005',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5895,
@@ -387,7 +419,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-6',
-        name: 'Riley Okafor',
+        firstName: 'Riley',
+        lastName: 'Okafor',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -422,6 +455,9 @@ export const locations: Location[] = [
     id: 'loc-6',
     name: 'Ballwin Plaza',
     address: '14855 Manchester Rd, Ballwin, MO 63011',
+    city: 'Ballwin',
+    state: 'MO',
+    zip: '63011',
     phone: '(555) 010-0006',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5951,
@@ -439,7 +475,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-7',
-        name: 'Avery Carrow',
+        firstName: 'Avery',
+        lastName: 'Carrow',
         title: 'Financial Advisor',
         photoUrl:
           'https://plus.unsplash.com/premium_photo-1688350839154-1a131bccd78a?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -483,6 +520,9 @@ export const locations: Location[] = [
     id: 'loc-7',
     name: "O'Fallon Crossing",
     address: '1300 Highway K, O’Fallon, MO 63366',
+    city: 'O’Fallon',
+    state: 'MO',
+    zip: '63366',
     phone: '(555) 010-0007',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.8106,
@@ -500,7 +540,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-8',
-        name: 'Quinn Marsh',
+        firstName: 'Quinn',
+        lastName: 'Marsh',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1701096374092-bb70915fdc5c?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -533,6 +574,9 @@ export const locations: Location[] = [
     id: 'loc-8',
     name: 'St. Charles Riverfront',
     address: '425 S Main St, St. Charles, MO 63301',
+    city: 'St. Charles',
+    state: 'MO',
+    zip: '63301',
     phone: '(555) 010-0008',
     fax: '(555) 010-9008',
     officePhotoUrl: officePhotoPlaceholder,
@@ -551,7 +595,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-9',
-        name: 'Rowan Ferrante',
+        firstName: 'Rowan',
+        lastName: 'Ferrante',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -588,7 +633,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-10',
-        name: 'Skyler Castellano',
+        firstName: 'Skyler',
+        lastName: 'Castellano',
         title: 'Financial Advisor',
         photoUrl:
           'https://plus.unsplash.com/premium_photo-1661521277742-f8756af10deb?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -615,7 +661,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-24',
-        name: 'Cameron Whitby',
+        firstName: 'Cameron',
+        lastName: 'Whitby',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -634,7 +681,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-25',
-        name: 'Dakota Reyes',
+        firstName: 'Dakota',
+        lastName: 'Reyes',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -668,6 +716,9 @@ export const locations: Location[] = [
     id: 'loc-9',
     name: 'Maplewood Commons',
     address: '7260 Manchester Rd, Maplewood, MO 63143',
+    city: 'Maplewood',
+    state: 'MO',
+    zip: '63143',
     phone: '(555) 010-0009',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6134,
@@ -685,7 +736,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-11',
-        name: 'Reese Ibarra',
+        firstName: 'Reese',
+        lastName: 'Ibarra',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1705645930353-0e335311ef20?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -708,7 +760,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-26',
-        name: 'Robin Achebe',
+        firstName: 'Robin',
+        lastName: 'Achebe',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -727,7 +780,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-27',
-        name: 'Frankie Sutter',
+        firstName: 'Frankie',
+        lastName: 'Sutter',
         title: 'Senior Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -747,7 +801,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-28',
-        name: 'Blake Marchetti',
+        firstName: 'Blake',
+        lastName: 'Marchetti',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -762,7 +817,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-29',
-        name: 'Devon Larsson',
+        firstName: 'Devon',
+        lastName: 'Larsson',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -794,6 +850,9 @@ export const locations: Location[] = [
     id: 'loc-10',
     name: 'Florissant Square',
     address: '1050 Waterford Dr, Florissant, MO 63033',
+    city: 'Florissant',
+    state: 'MO',
+    zip: '63033',
     phone: '(555) 010-0010',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7892,
@@ -811,7 +870,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-12',
-        name: 'Emerson Thackeray',
+        firstName: 'Emerson',
+        lastName: 'Thackeray',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1718209881007-c0ecdfc00f9d?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -843,6 +903,9 @@ export const locations: Location[] = [
     id: 'loc-11',
     name: 'University City',
     address: '6660 Delmar Blvd, University City, MO 63130',
+    city: 'University City',
+    state: 'MO',
+    zip: '63130',
     phone: '(555) 010-0011',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.6581,
@@ -860,7 +923,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-13',
-        name: 'Finley Rashid',
+        firstName: 'Finley',
+        lastName: 'Rashid',
         title: 'Financial Advisor',
         photoUrl:
           'https://plus.unsplash.com/premium_photo-1722859210044-5ca8a393b001?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -896,6 +960,9 @@ export const locations: Location[] = [
     id: 'loc-12',
     name: 'Manchester Corners',
     address: '14275 Manchester Rd, Manchester, MO 63011',
+    city: 'Manchester',
+    state: 'MO',
+    zip: '63011',
     phone: '(555) 010-0012',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5975,
@@ -913,7 +980,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-14',
-        name: 'Hayden Lindqvist',
+        firstName: 'Hayden',
+        lastName: 'Lindqvist',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -946,6 +1014,9 @@ export const locations: Location[] = [
     id: 'loc-13',
     name: 'Ferguson Heights',
     address: '1 N Florissant Rd, Ferguson, MO 63135',
+    city: 'Ferguson',
+    state: 'MO',
+    zip: '63135',
     phone: '(555) 010-0013',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7442,
@@ -963,7 +1034,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-15',
-        name: 'Jamie Solheim',
+        firstName: 'Jamie',
+        lastName: 'Solheim',
         title: 'Financial Advisor',
         photoUrl:
           'https://plus.unsplash.com/premium_photo-1690294614341-cf346ba0a637?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -996,6 +1068,9 @@ export const locations: Location[] = [
     id: 'loc-14',
     name: 'Creve Coeur Lakeside',
     address: '11477 Olde Cabin Rd, Creve Coeur, MO 63141',
+    city: 'Creve Coeur',
+    state: 'MO',
+    zip: '63141',
     phone: '(555) 010-0014',
     fax: '(555) 010-9014',
     officePhotoUrl: officePhotoPlaceholder,
@@ -1014,7 +1089,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-16',
-        name: 'Kai Okonkwo',
+        firstName: 'Kai',
+        lastName: 'Okonkwo',
         title: 'Senior Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1609436132311-e4b0c9370469?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1042,7 +1118,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-30',
-        name: 'Remy Kowalski',
+        firstName: 'Remy',
+        lastName: 'Kowalski',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1521119989659-a83eee488004?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1061,7 +1138,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-31',
-        name: 'Peyton Osei',
+        firstName: 'Peyton',
+        lastName: 'Osei',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1076,7 +1154,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-32',
-        name: 'Ellis Bramwell',
+        firstName: 'Ellis',
+        lastName: 'Bramwell',
         title: 'Senior Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1096,7 +1175,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-33',
-        name: 'Harper Doyle',
+        firstName: 'Harper',
+        lastName: 'Doyle',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1115,7 +1195,8 @@ export const locations: Location[] = [
       },
       {
         id: 'adv-34',
-        name: 'Micah Vantongeren',
+        firstName: 'Micah',
+        lastName: 'Vantongeren',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1145,6 +1226,9 @@ export const locations: Location[] = [
     id: 'loc-15',
     name: 'Sunset Hills',
     address: '3853 S Lindbergh Blvd, Sunset Hills, MO 63127',
+    city: 'Sunset Hills',
+    state: 'MO',
+    zip: '63127',
     phone: '(555) 010-0015',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5439,
@@ -1162,7 +1246,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-17',
-        name: 'Logan Ashcombe',
+        firstName: 'Logan',
+        lastName: 'Ashcombe',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1588178454780-441fa5b99fa5?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1202,6 +1287,9 @@ export const locations: Location[] = [
     id: 'loc-16',
     name: 'Affton Village',
     address: '9800 Gravois Rd, Affton, MO 63123',
+    city: 'Affton',
+    state: 'MO',
+    zip: '63123',
     phone: '(555) 010-0016',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.5589,
@@ -1219,7 +1307,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-18',
-        name: 'Parker Trent',
+        firstName: 'Parker',
+        lastName: 'Trent',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1573497491207-618cc224f243?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1248,6 +1337,9 @@ export const locations: Location[] = [
     id: 'loc-17',
     name: 'Wentzville Trailhead',
     address: '1550 Wentzville Pkwy, Wentzville, MO 63385',
+    city: 'Wentzville',
+    state: 'MO',
+    zip: '63385',
     phone: '(555) 010-0017',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.8114,
@@ -1265,7 +1357,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-19',
-        name: 'Louis Everhart',
+        firstName: 'Louis',
+        lastName: 'Everhart',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1697063882499-f7fca7d2d713?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1297,6 +1390,9 @@ export const locations: Location[] = [
     id: 'loc-18',
     name: 'Arnold Riverside',
     address: '2100 Arnold Tenbrook Rd, Arnold, MO 63010',
+    city: 'Arnold',
+    state: 'MO',
+    zip: '63010',
     phone: '(555) 010-0018',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.4342,
@@ -1314,7 +1410,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-20',
-        name: 'Charlie Faulkner',
+        firstName: 'Charlie',
+        lastName: 'Faulkner',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1580411415491-a672219c801b?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1355,6 +1452,9 @@ export const locations: Location[] = [
     id: 'loc-19',
     name: 'Fenton Corporate Park',
     address: '1050 Gravois Bluffs Blvd, Fenton, MO 63026',
+    city: 'Fenton',
+    state: 'MO',
+    zip: '63026',
     phone: '(555) 010-0019',
     fax: '(555) 010-9019',
     officePhotoUrl: officePhotoPlaceholder,
@@ -1373,7 +1473,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-21',
-        name: 'Drew Vasquez',
+        firstName: 'Drew',
+        lastName: 'Vasquez',
         title: 'Financial Advisor',
         photoUrl:
           'https://images.unsplash.com/photo-1648146394230-9f0076ee1056?w=200&h=200&fit=crop&crop=faces&q=80',
@@ -1404,6 +1505,9 @@ export const locations: Location[] = [
     id: 'loc-20',
     name: 'Bridgeton Gateway',
     address: '3630 Pennridge Dr, Bridgeton, MO 63044',
+    city: 'Bridgeton',
+    state: 'MO',
+    zip: '63044',
     phone: '(555) 010-0020',
     officePhotoUrl: officePhotoPlaceholder,
     lat: 38.7684,
@@ -1421,7 +1525,8 @@ export const locations: Location[] = [
     advisors: [
       {
         id: 'adv-22',
-        name: 'Elliot Loomis',
+        firstName: 'Elliot',
+        lastName: 'Loomis',
         title: 'Financial Advisor',
         photoUrl:
           'https://plus.unsplash.com/premium_photo-1664297951506-135f601fefbb?w=200&h=200&fit=crop&crop=faces&q=80',

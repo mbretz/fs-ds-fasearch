@@ -25,6 +25,7 @@ import { EntityActions } from '../../entity-info/EntityActions';
 import { FocusAreasPanel } from '../../entity-info/FocusAreasPanel';
 import { OfficeDetailsPanel } from '../../entity-info/OfficeDetailsPanel';
 import { cn } from '../../../utils/cn';
+import { getFullName } from '../../../utils/getFullName';
 import { useSession } from '../../../session/useSession';
 
 export interface AdvisorCardProps {
@@ -77,6 +78,7 @@ export function AdvisorCard({
   const showsNewClientInquiry =
     advisor.newClientStatus === 'accepting' ||
     advisor.newClientStatus === 'waitlist';
+  const fullName = getFullName(advisor);
 
   return (
     <EntityCard
@@ -105,7 +107,7 @@ export function AdvisorCard({
         {/* Favoriting requires a signed-in prospect (`ProspectPortal`'s
             spoofed session), per the user -- hidden entirely rather than
             disabled for a signed-out visitor. */}
-        {signedIn && <FavoriteToggle name={advisor.name} />}
+        {signedIn && <FavoriteToggle name={fullName} />}
       </div>
 
       <div className="flex items-start gap-[var(--density-spacing-fixed-large)]">
@@ -115,7 +117,7 @@ export function AdvisorCard({
             (112px total) is `EntityPortrait`'s own default for `xl` now,
             not a per-call override. */}
         <EntityPortrait
-          name={advisor.name}
+          name={fullName}
           photoUrl={advisor.photoUrl}
           status={advisor.newClientStatus}
           size="xl"
@@ -123,7 +125,7 @@ export function AdvisorCard({
         />
         <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
           <NameBlock
-            heading={advisor.name}
+            heading={fullName}
             subheading={
               advisor.designations.length > 0
                 ? advisor.designations.join(', ')
@@ -148,7 +150,7 @@ export function AdvisorCard({
                 <a
                   href="#"
                   aria-disabled="true"
-                  aria-label={`${advisor.name} on LinkedIn`}
+                  aria-label={`${fullName} on LinkedIn`}
                   tabIndex={-1}
                   onClick={preventDisabledClick}
                   className={cn('cursor-not-allowed')}
@@ -167,7 +169,7 @@ export function AdvisorCard({
                 <a
                   href="#"
                   aria-disabled="true"
-                  aria-label={`${advisor.name} on Facebook`}
+                  aria-label={`${fullName} on Facebook`}
                   tabIndex={-1}
                   onClick={preventDisabledClick}
                   className="cursor-not-allowed"

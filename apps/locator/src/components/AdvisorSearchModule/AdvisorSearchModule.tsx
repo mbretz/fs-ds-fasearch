@@ -31,8 +31,25 @@ export function AdvisorSearchModule({ children }: { children: ReactNode }) {
     // `<main>`'s content box — which is what keeps its measurement in
     // exact sync with `<main>`'s own ambient padding with zero extra
     // compensation math (see the inner div's comment for why that matters).
-    <div className="@container/module">
+    <div className="@container/module relative z-10">
       {/*
+        `relative z-10`: `@container/module` (this containment) and the
+        inner div's `view-transition-name` (below) each force this whole
+        subtree into its own isolated stacking context (CSS Containment /
+        View Transitions spec) at an implicit `z-index: auto`. ResultsList's
+        own `[view-transition-name:results-content]` wrapper (Results.tsx)
+        gets the same forced isolation and sits later in the DOM at that
+        same implicit level, so without an explicit z-index here it paints
+        over this entire subtree -- including FocusAreaFilter's popover
+        nested deep inside (InProgress.tsx), whose own `z-index-popover`
+        (304) is scoped to *this* stacking context and never gets compared
+        against `results-content` directly. That silently ate every click
+        on the popover's "Apply Filters" button once real result cards
+        existed underneath it (caught via an automated browser click that
+        landed on a card link instead) -- checking boxes never actually
+        committed a selection. `z-10` alone is enough since the only
+        competing sibling is `results-content` at implicit 0.
+
         The actual card: background, corner radius, and the mobile-breakout
         bleed all live here, one level inside the named container above, so
         `@[768px]/module:rounded-…` is a valid descendant query.
