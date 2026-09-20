@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { locations, type Advisor, type Location } from '../../data/locations';
+import { getFullName } from '../../utils/getFullName';
 
 export type LocationSearchResult =
   | {
@@ -43,11 +44,12 @@ export function useLocationSearch(query: string): LocationSearchResult[] {
       }
 
       for (const advisor of location.advisors) {
-        if (advisor.name.toLowerCase().includes(lower)) {
+        const fullName = getFullName(advisor);
+        if (fullName.toLowerCase().includes(lower)) {
           results.push({
             type: 'advisor',
             id: advisor.id,
-            label: advisor.name,
+            label: fullName,
             advisor,
             location,
           });

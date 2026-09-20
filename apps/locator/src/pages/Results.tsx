@@ -47,8 +47,14 @@ export function Results() {
     number | undefined
   >(undefined);
 
+  // `searchParams`'s `q` only ever changes inside `submitSearch` below (or a
+  // typeahead pick, which routes through the same `onSubmit` path) -- never
+  // on every keystroke of `query` itself. Passing this, not `query`, into
+  // `useFilteredLocations` is what keeps the results grid from updating
+  // until an explicit action happens (see that hook's own comment).
+  const submittedQuery = searchParams.get('q') ?? '';
   const filteredLocations = useFilteredLocations(
-    query,
+    submittedQuery,
     selectedFocusAreas,
     acceptingNewClients,
   );

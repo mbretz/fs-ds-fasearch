@@ -2,10 +2,11 @@ import { Avatar } from 'ds';
 import type { Advisor, BranchSupportStaff } from '../../../data/locations';
 import { cn } from '../../../utils/cn';
 import { getInitials } from '../../../utils/getInitials';
+import { getFullName } from '../../../utils/getFullName';
 import { BranchTeamMemberRow } from '../../entity-info/BranchTeamMemberRow';
 
 export interface AdvisorsAtLocationPanelProps {
-  advisors: Pick<Advisor, 'id' | 'name' | 'photoUrl'>[];
+  advisors: Pick<Advisor, 'id' | 'firstName' | 'lastName' | 'photoUrl'>[];
   /**
    * Renders a "Branch Team" heading + entries underneath the advisors,
    * per the user -- `OfficeDetailsPanel` still supports rendering this
@@ -51,20 +52,23 @@ export function AdvisorsAtLocationPanel({
         <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
           <span className={headingClassName}>Branch Advisors</span>
           <ul className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
-            {advisors.map((advisor) => (
-              <li
-                key={advisor.id}
-                className="flex items-center gap-[var(--density-spacing-fixed-med)]"
-              >
-                <Avatar.Root size="xs">
-                  {advisor.photoUrl && (
-                    <Avatar.Image src={advisor.photoUrl} alt="" />
-                  )}
-                  <Avatar.Fallback>{getInitials(advisor.name)}</Avatar.Fallback>
-                </Avatar.Root>
-                <span className={bodyClassName}>{advisor.name}</span>
-              </li>
-            ))}
+            {advisors.map((advisor) => {
+              const fullName = getFullName(advisor);
+              return (
+                <li
+                  key={advisor.id}
+                  className="flex items-center gap-[var(--density-spacing-fixed-med)]"
+                >
+                  <Avatar.Root size="xs">
+                    {advisor.photoUrl && (
+                      <Avatar.Image src={advisor.photoUrl} alt="" />
+                    )}
+                    <Avatar.Fallback>{getInitials(fullName)}</Avatar.Fallback>
+                  </Avatar.Root>
+                  <span className={bodyClassName}>{fullName}</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
