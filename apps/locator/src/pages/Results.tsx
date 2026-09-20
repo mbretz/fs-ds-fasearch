@@ -224,10 +224,12 @@ export function Results() {
         onSelectedFocusAreasChange={setSelectedFocusAreas}
         className="mt-[var(--density-layout-fixed-large)]"
       />
-      {/* Same horizontal-inset convention as ResultsList directly below it
-          (8px/`layout.fixed.small` under `md`, none at `md`+ -- `<main>`
-          already provides it there, see ResultsList's own comment) so
-          this row's edges line up exactly with the results grid.
+      {/* Unlike ResultsList/AdvisorSearchModule/FilterFacets, this row
+          keeps a flat 16px (`layout.fixed.large`) horizontal margin at
+          every breakpoint instead of deferring to `<main>`'s own
+          ambient padding at `md`+ (`mx-0`) -- per the user, this row
+          should read as indented relative to the results grid and
+          search module above it, not flush with their edges.
 
           Top margin is double every other gap on this page (`xxx-large`,
           32px -- exactly 2x `large`, 16px, rather than a `calc()`, per
@@ -238,12 +240,17 @@ export function Results() {
         resultsCount={resultsCount}
         view={view}
         onViewChange={changeView}
-        className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-layout-fixed-xxx-large)] md:mx-0"
+        className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-layout-fixed-xxx-large)]"
       />
       {/* `[view-transition-name:results-content]` scopes the cross-fade
           to just this region (not the whole page/header) -- see
           `changeView` above. `ref`+`style` are the height-reservation
           mechanism described there, not styling. */}
+      {/* 8px (`spacing.fixed.small`) gap to ResultsToolbar above -- much
+          tighter than every other gap on this page, per the user, so the
+          toolbar reads as glued to the content it's controlling rather
+          than stacking at the same rhythm as the section-level gaps
+          elsewhere on this page. */}
       <div
         ref={resultsContentRef}
         className="[view-transition-name:results-content]"
@@ -252,17 +259,17 @@ export function Results() {
         {view === 'list' && (
           <ResultsList
             locations={filteredLocations}
-            className="mt-[var(--density-spacing-fixed-large)]"
+            className="mt-[var(--density-spacing-fixed-small)]"
           />
         )}
         {/* Placeholders only -- see ResultsToolbar.tsx's own comment. */}
         {view === 'map' && (
-          <p className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-large)] md:mx-0">
+          <p className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-small)] md:mx-0">
             Map view placeholder
           </p>
         )}
         {view === 'dual' && (
-          <p className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-large)] md:mx-0">
+          <p className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-small)] md:mx-0">
             Dual view placeholder
           </p>
         )}
