@@ -11,10 +11,10 @@ interface ResultsListProps {
 // Matches the "Locator/Desktop/List/FocusAreas-Display" reference
 // (`693:18125`): a `Branch-Card-SidePanels` (LocationCard) row first, then
 // the matching `FA-Card-*` (AdvisorCard) rows below -- not a flat
-// AdvisorCard-only list. Filtering happens at the location level
-// (`useFilteredLocations` keeps every advisor at a matching branch, not
-// just the one that matched), so every filtered location renders its own
-// LocationCard, followed by every one of its advisors as its own
+// AdvisorCard-only list. `useFilteredLocations` already narrows each
+// location's `advisors` array down to just the advisors matching the active
+// facet filters (2026-09-20), so every filtered location renders its own
+// LocationCard, followed by only its matching advisors as their own
 // AdvisorCard.
 //
 // One shared 2-column (`md`+) / 3-column (`lg`+, 1024px -- the closest

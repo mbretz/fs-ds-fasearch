@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { locations, type Location } from '../../data/locations';
+import { locations, type Advisor, type Location } from '../../data/locations';
 import { getFullName } from '../../utils/getFullName';
 
 // Strips punctuation locations.city can carry ("St. Louis", "O'Fallon") so a
@@ -12,31 +12,40 @@ function normalizePlace(value: string): string {
     .trim();
 }
 
-function matchesFocusAreasAndAcceptingOnly(
-  location: Location,
+function advisorMatchesFacets(
+  advisor: Advisor,
   selectedFocusAreas: string[],
   acceptingNewClientsOnly: boolean,
 ): boolean {
-  // A location stays if at least one advisor matches at least one selected
-  // focus area -- not every selected area needs a match, and not every
-  // advisor needs to match.
   const matchesFocusAreas =
     selectedFocusAreas.length === 0 ||
-    location.advisors.some((advisor) =>
-      advisor.focusAreas.some((area) => selectedFocusAreas.includes(area)),
-    );
+    advisor.focusAreas.some((area) => selectedFocusAreas.includes(area));
   if (!matchesFocusAreas) return false;
 
-  if (
-    acceptingNewClientsOnly &&
-    !location.advisors.some(
-      (advisor) => advisor.newClientStatus === 'accepting',
-    )
-  ) {
+  if (acceptingNewClientsOnly && advisor.newClientStatus !== 'accepting') {
     return false;
   }
 
   return true;
+}
+
+// A location stays only if at least one of its advisors matches the active
+// facet filters, and only that location's *matching* advisors are kept --
+// per the user (2026-09-20), checking "Accepting New Clients" or applying a
+// focus area should shrink the advisor cards actually shown at a branch,
+// not just decide whether the branch appears at all.
+function applyFacetFilters(
+  location: Location,
+  selectedFocusAreas: string[],
+  acceptingNewClientsOnly: boolean,
+): Location | null {
+  const matchingAdvisors = location.advisors.filter((advisor) =>
+    advisorMatchesFacets(advisor, selectedFocusAreas, acceptingNewClientsOnly),
+  );
+  if (matchingAdvisors.length === 0) return null;
+  return matchingAdvisors.length === location.advisors.length
+    ? location
+    : { ...location, advisors: matchingAdvisors };
 }
 
 // The existing, narrow literal-substring match against name/address/advisor
@@ -92,27 +101,29 @@ export function useFilteredLocations(
   return useMemo(() => {
     const trimmedLowerQuery = searchQuery.trim().toLowerCase();
 
-    const narrowMatches = locations.filter(
-      (location) =>
-        matchesNarrowQuery(location, trimmedLowerQuery) &&
-        matchesFocusAreasAndAcceptingOnly(
+    const narrowMatches = locations
+      .filter((location) => matchesNarrowQuery(location, trimmedLowerQuery))
+      .map((location) =>
+        applyFacetFilters(
           location,
           selectedFocusAreas,
           acceptingNewClientsOnly,
         ),
-    );
+      )
+      .filter((location): location is Location => location !== null);
     if (narrowMatches.length > 0 || !trimmedLowerQuery) return narrowMatches;
 
     // Narrow found nothing for a real (non-empty) submitted query -- per
     // the user's dispatch choice, fall back to the broader city/name match.
-    return locations.filter(
-      (location) =>
-        matchesBroadQuery(location, trimmedLowerQuery) &&
-        matchesFocusAreasAndAcceptingOnly(
+    return locations
+      .filter((location) => matchesBroadQuery(location, trimmedLowerQuery))
+      .map((location) =>
+        applyFacetFilters(
           location,
           selectedFocusAreas,
           acceptingNewClientsOnly,
         ),
-    );
+      )
+      .filter((location): location is Location => location !== null);
   }, [searchQuery, selectedFocusAreas, acceptingNewClientsOnly]);
 }
