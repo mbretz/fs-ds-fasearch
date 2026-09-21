@@ -44,10 +44,21 @@ function branchLineItems(location: Location) {
   ].filter((line): line is string => Boolean(line));
 }
 
-function BranchLineItems({ location }: { location: Location }) {
+function BranchLineItems({
+  location,
+  className,
+}: {
+  location: Location;
+  className?: string;
+}) {
   const lines = branchLineItems(location);
   return (
-    <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
+    <div
+      className={cn(
+        'flex flex-col gap-[var(--density-spacing-fixed-small)]',
+        className,
+      )}
+    >
       <span className="text-[16px] leading-[1.5em] font-medium text-[color:var(--semantic-content-common-text-color-default)]">
         At this Edward Jones branch:
       </span>
@@ -84,37 +95,105 @@ function LocationHeroDesktop({
   const { street, cityStateZip } = splitAddressLines(location.address);
   return (
     <div className={cn('hidden md:block', className)}>
-      <div className="relative rounded-[8px] bg-[color:var(--color-response-neutral-strong)] pt-[32px] pr-[32px] pb-[20px] pl-[320px]">
+      {/* CSS Grid for the background/text columns, but the portrait
+          itself is `position: absolute` (NOT a row-spanning grid item)
+          -- matching AdvisorHero.tsx's own desktop treatment, see that
+          file's own comment for the full reasoning. Short version: a
+          row-spanning grid item's own intrinsic size gets distributed
+          into the rows it spans whenever it exceeds their combined
+          natural height (spec-compliant CSS Grid track-sizing, not a
+          quirk), which `items-start` does NOT prevent -- confirmed live
+          (Playwright) that this banner's own 240px portrait (+40px
+          margin = 280px) exceeded row 1+2's combined natural height and
+          inflated the background/banner height well past what the
+          address text alone needed. `position: absolute` sidesteps this
+          entirely (zero contribution to grid track sizing), so it's the
+          version that's actually guaranteed correct regardless of
+          content length.
+          `--location-hero-portrait-size` is declared on
+          LocationProfile.tsx's own page-level grid, not here -- same
+          reasoning as AdvisorHero.tsx's own (the rail panel needs to
+          read it too, and it's a sibling, not a descendant). Flat 240px
+          (this banner's original fixed size) below that file's own
+          container-query threshold; a `clamp()`'d fluid value down to a
+          180px floor above it. Left inset (40px) and the portrait-to-
+          text gap (32px) stay FIXED here, unlike AdvisorHero's own
+          gutter -- there's no status-tag-style pill in this banner's
+          content that forced gutters to shrink too, so keeping this
+          simpler (only the portrait itself is fluid) was the more
+          proportionate port, per the user. */}
+      <div className="relative grid grid-cols-[calc(40px+var(--location-hero-portrait-size))_1fr] items-start gap-x-[32px]">
+        {/* Decorative background only -- see AdvisorHero.tsx's own
+            comment for the full reasoning (no intrinsic height of its
+            own, `self-stretch` fills row 1's real height, `col-start-1`
+            is required alongside `col-span-2` to avoid the same
+            implicit-column placement bug documented there). */}
+        <div
+          aria-hidden="true"
+          className="col-start-1 col-span-2 row-start-1 self-stretch rounded-[8px] bg-[color:var(--color-response-neutral-strong)]"
+        />
         <EntityPortrait
           name={location.name}
           photoUrl={location.officePhotoUrl}
           variant="entity"
           size="xl"
-          // Pinned 40px from the banner's own top and left edges, per the
-          // user -- `left-[-280px]` already lands exactly there (measured:
-          // the absolutely-positioned avatar's containing block is
-          // EntityPortrait's own zero-size inline wrapper, itself sitting
-          // exactly at the container's own `pl-[320px]`, so `320-280=40`
-          // falls out directly with no extra offset needed). `top-[-10px]`
-          // needed the same kind of live measurement `top` usually does
-          // here -- the wrapper's vertical position is offset ~18px below
-          // the container's padded top by ordinary inline baseline
-          // alignment (see AdvisorHero's own avatar comments for the full
-          // explanation of that quirk), so a flat `top-[40px]` would land
-          // ~19px too low; `-10px` was measured live to land the avatar's
-          // own top edge (now bordered, same as `associate`) exactly 40px
-          // below the container's top edge.
-          avatarClassName="absolute top-[-10px] left-[-280px] size-[240px] rounded-[4px]"
+          // `top-[40px] left-[40px]` -- same reasoning as AdvisorHero.tsx's
+          // own portrait (see its own comment for the full derivation);
+          // the grid container above is now `relative` (its own padding-
+          // box is this element's containing block), column 1 starts
+          // flush at that container's own left edge, so these are
+          // direct offsets, not derived from anything fluid (the left
+          // inset here is a fixed 40px, see this function's own top
+          // comment on why it isn't tied to a shrinking gutter).
+          // `rounded-[4px]`, not `rounded-full` -- this shape has no
+          // circularity concern as size changes (unlike AdvisorHero's
+          // circular avatar, which needed an explicit `rounded-full`
+          // override once its own fluid range exceeded 160px), so no
+          // equivalent override is needed here regardless of size.
+          className="absolute top-[40px] left-[40px]"
+          avatarClassName="size-[var(--location-hero-portrait-size)] rounded-[4px]"
         />
-        <span className="mb-[12px] block text-[20px] leading-[30px] font-medium text-white">
-          {street}
-          <br />
-          {cityStateZip}
-        </span>
-        <GoldUnderline />
-      </div>
-      <div className="pt-[8px] pb-[8px] pl-[320px]">
-        <BranchLineItems location={location} />
+        {/* `pr-[32px]` default / `@[940px]/location-hero:pr-[440px]`
+            override -- same reasoning as AdvisorHero.tsx's own text
+            item (see its own comment): below LocationProfile.tsx's own
+            container-query threshold the rail panel is hidden (moved
+            below, see that file's comment) and this text runs the
+            banner's full width; at/above it, the rail's 400px column
+            plus a 40px clearance is reserved instead.
+            `flex flex-col justify-end` + `pb-[16px]` (no `pt`) -- same
+            reasoning as AdvisorHero.tsx's own text item (see its own
+            comment): the address/underline must stay anchored exactly
+            16px above the banner's own bottom edge even when
+            `min-h-[148px]` below adds slack -- a plain block box's
+            `pt`/`pb` alone does NOT do this (confirmed live there), so
+            `justify-end` is what actually anchors it regardless of how
+            much extra height the box ends up with.
+            `min-h-[148px]` -- same reasoning as AdvisorHero.tsx's own
+            `min-h-[125px]` (see its own comment), but per the user this
+            banner needed "a bit more" than that flat +24px bump: this
+            address always renders as (at least) two lines already (the
+            street/city-state-zip split, see this component's own top
+            comment), unlike AdvisorHero's single-line name, so the
+            extra headroom here is +32px (this banner's own natural
+            116px height, confirmed live via Playwright, plus a real
+            `density-spacing-fixed-xxx-large` token) rather than +24px
+            -- still just a floor, not a cap, if the address wraps
+            further. */}
+        <div className="col-start-2 row-start-1 flex min-h-[148px] flex-col justify-end pr-[32px] pb-[16px] @[940px]/location-hero:pr-[440px]">
+          <span className="mb-[4px] block text-[20px] leading-[30px] font-medium text-white">
+            {street}
+            <br />
+            {cityStateZip}
+          </span>
+          <GoldUnderline />
+        </div>
+        {/* Same conditional `pr` as the text item above -- `col-start-2
+            row-start-2` places this directly below it, sharing the same
+            grid (and so the same column-1 width). */}
+        <BranchLineItems
+          location={location}
+          className="col-start-2 row-start-2 pt-[8px] pr-[32px] pb-[8px] @[940px]/location-hero:pr-[440px]"
+        />
       </div>
     </div>
   );
@@ -192,7 +271,7 @@ function LocationHeroMobile({ location }: { location: Location }) {
               avatarClassName="rounded-[4px]"
             />
             <div>
-              <span className="mb-[8px] block text-[18px] leading-[26px] font-medium text-white">
+              <span className="mb-[4px] block text-[18px] leading-[26px] font-medium text-white">
                 {street}
                 <br />
                 {cityStateZip}
