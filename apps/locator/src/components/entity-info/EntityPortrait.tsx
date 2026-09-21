@@ -27,10 +27,14 @@ const avatarSizeBySize: Record<PortraitSize, 'sm' | 'md' | 'lg' | 'xl'> = {
   xl: 'xl',
 };
 
-// Content-box white border around the avatar, per the user -- `associate`
-// only (FA-Portrait is the associate-photo component; `entity`, e.g.
-// LocationCard's branch avatar, isn't part of it and Figma shows no
-// border there). Scaled off Figma's FA-Portrait component set (`1:640`):
+// Content-box white border around the avatar -- applies to both
+// `associate` and `entity` (2026-09-21 correction: originally `associate`
+// only, since FA-Portrait, the component this scale was measured off, is
+// the associate-photo component and `entity` avatars like LocationCard's
+// branch photo weren't part of it and showed no border in Figma at the
+// time; the user has since confirmed `entity` should carry the same
+// border too, superseding that earlier read). Scaled off Figma's
+// FA-Portrait component set (`1:640`):
 // `xl` (104px) is a locked-in 4px per the user (Figma's own closest real
 // size, "SM", uses 6px, but 4px was the explicit call here); `lg` (80px)
 // is a real Figma anchor too (its "XS" variant, 80px avatar, 4px border,
@@ -108,10 +112,7 @@ export function EntityPortrait({
       <Avatar.Root
         size={avatarSizeBySize[size]}
         variant={variant}
-        className={cn(
-          variant === 'associate' && avatarBorderClassName[size],
-          avatarClassName,
-        )}
+        className={cn(avatarBorderClassName[size], avatarClassName)}
       >
         {photoUrl && <Avatar.Image src={photoUrl} alt="" />}
         <Avatar.Fallback>{initials}</Avatar.Fallback>

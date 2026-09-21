@@ -2,6 +2,7 @@ import { Tag } from 'ds';
 import type { NewClientStatus } from '../../data/locations';
 import { statusMeta } from './statusMeta';
 import { Badge } from './Badge';
+import { cn } from '../../utils/cn';
 
 export interface StatusTagProps {
   status: NewClientStatus;
@@ -39,7 +40,16 @@ export function StatusTag({
     <Tag.Root
       variant="generic"
       size={size}
-      className={className}
+      className={cn(
+        // Figma's Status Tag (`1562:20180`, `Show Slot Start: true`) has an
+        // asymmetric `8px 24px 8px 6px` padding -- 6px inline-start next to
+        // the badge, vs. Tag's own symmetric 24px `padding-inline-large`.
+        // 6px doesn't match any `spacing.fixed.*` step (nearest are 4/8px),
+        // so this is a documented literal, not a semantic-token repoint.
+        displayBadge &&
+          '[--component-status-tag-padding-inline-start:6px] pl-[var(--component-status-tag-padding-inline-start)]',
+        className,
+      )}
       style={{ borderColor: meta.borderColorVar }}
     >
       {displayBadge && (
