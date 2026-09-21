@@ -6,6 +6,9 @@ export interface FavoriteToggleProps {
   /** The advisor/location's display name, used to build the accessible name. */
   name: string;
   defaultFavorited?: boolean;
+  /** Renders a visible "Favorite" text label next to the icon -- Figma's
+   * Hero "Favorite Action" instance, unlike the icon-only card treatment. */
+  showLabel?: boolean;
   className?: string;
 }
 
@@ -17,6 +20,7 @@ export interface FavoriteToggleProps {
 export function FavoriteToggle({
   name,
   defaultFavorited = false,
+  showLabel,
   className,
 }: FavoriteToggleProps) {
   const [favorited, setFavorited] = useState(defaultFavorited);
@@ -31,7 +35,10 @@ export function FavoriteToggle({
       }
       onClick={() => setFavorited((prev) => !prev)}
       className={cn(
-        'inline-flex cursor-pointer items-center justify-center rounded-full text-[color:var(--semantic-control-action-color-default)]',
+        'inline-flex cursor-pointer items-center rounded-full text-[color:var(--semantic-control-action-color-default)]',
+        showLabel
+          ? 'gap-[var(--density-spacing-fixed-x-small)]'
+          : 'justify-center',
         className,
       )}
     >
@@ -39,6 +46,11 @@ export function FavoriteToggle({
         aria-hidden="true"
         className="size-[var(--density-sizing-fixed-x-large)]"
       />
+      {showLabel && (
+        <span className="text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)]">
+          {favorited ? 'Favorited' : 'Favorite'}
+        </span>
+      )}
     </button>
   );
 }

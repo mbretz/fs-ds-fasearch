@@ -10,7 +10,9 @@
       "Bash(git pull *)",
       "Bash(git branch *)",
       "Bash(git push *)",
-      "Bash(gh pr *)"
+      "Bash(gh pr *)",
+      "Bash(npx -y modern-web-guidance@latest retrieve *)",
+      "Read(//tmp/**)"
     ]
   }
 }
