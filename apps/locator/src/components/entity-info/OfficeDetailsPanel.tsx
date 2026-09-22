@@ -8,6 +8,7 @@ import type {
 } from '../../data/locations';
 import { cn } from '../../utils/cn';
 import { splitAddressLines } from '../../utils/splitAddressLines';
+import { sortSupportStaff } from '../../utils/sortSupportStaff';
 import { BranchTeamMemberRow } from './BranchTeamMemberRow';
 
 export interface OfficeDetailsPanelProps {
@@ -321,7 +322,10 @@ export function OfficeDetailsPanel({
           <div className="office-details-team flex flex-col gap-[var(--density-spacing-fixed-small)]">
             <span className={headingClassName}>Branch Team</span>
             <ul className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
-              {supportStaff.map((staff) => (
+              {/* Senior roles first, then alphabetical by last name within
+                  each group, per the user -- see `sortSupportStaff`'s own
+                  comment. */}
+              {sortSupportStaff(supportStaff).map((staff) => (
                 <BranchTeamMemberRow key={staff.id} staff={staff} />
               ))}
             </ul>
