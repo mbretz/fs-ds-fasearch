@@ -806,6 +806,10 @@
   --semantic-content-paragraph-color: #191a1a;
   --semantic-content-paragraph-font-size: 16px;
   --semantic-content-paragraph-font-weight: 400;
+  --semantic-content-paragraph-large-color: #191a1a;
+  --semantic-content-paragraph-large-font-size: 18px;
+  --semantic-content-paragraph-large-font-weight: 400;
+  --semantic-content-paragraph-large-line-height: 36px;
   --semantic-content-paragraph-line-height: 24px;
   --semantic-content-size-ginormous-font-size: 64px;
   --semantic-content-size-ginormous-line-height: 96px;

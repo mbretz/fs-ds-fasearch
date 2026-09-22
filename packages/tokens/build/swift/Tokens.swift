@@ -915,6 +915,10 @@ public enum LightRoomyTokens {
     public static let semanticContentParagraphColor: String = "#191a1a"
     public static let semanticContentParagraphFontSize: Double = 16
     public static let semanticContentParagraphFontWeight: Double = 400
+    public static let semanticContentParagraphLargeColor: String = "#191a1a"
+    public static let semanticContentParagraphLargeFontSize: Double = 18
+    public static let semanticContentParagraphLargeFontWeight: Double = 400
+    public static let semanticContentParagraphLargeLineHeight: Double = 36
     public static let semanticContentParagraphLineHeight: Double = 24
     public static let semanticContentSizeGinormousFontSize: Double = 64
     public static let semanticContentSizeGinormousLineHeight: Double = 96
@@ -1968,6 +1972,10 @@ public enum DarkRoomyTokens {
     public static let semanticContentParagraphColor: String = "#191a1a"
     public static let semanticContentParagraphFontSize: Double = 16
     public static let semanticContentParagraphFontWeight: Double = 400
+    public static let semanticContentParagraphLargeColor: String = "#191a1a"
+    public static let semanticContentParagraphLargeFontSize: Double = 18
+    public static let semanticContentParagraphLargeFontWeight: Double = 400
+    public static let semanticContentParagraphLargeLineHeight: Double = 36
     public static let semanticContentParagraphLineHeight: Double = 24
     public static let semanticContentSizeGinormousFontSize: Double = 64
     public static let semanticContentSizeGinormousLineHeight: Double = 96
@@ -3021,6 +3029,10 @@ public enum LightCondensedTokens {
     public static let semanticContentParagraphColor: String = "#191a1a"
     public static let semanticContentParagraphFontSize: Double = 16
     public static let semanticContentParagraphFontWeight: Double = 400
+    public static let semanticContentParagraphLargeColor: String = "#191a1a"
+    public static let semanticContentParagraphLargeFontSize: Double = 18
+    public static let semanticContentParagraphLargeFontWeight: Double = 400
+    public static let semanticContentParagraphLargeLineHeight: Double = 36
     public static let semanticContentParagraphLineHeight: Double = 24
     public static let semanticContentSizeGinormousFontSize: Double = 64
     public static let semanticContentSizeGinormousLineHeight: Double = 96
@@ -4074,6 +4086,10 @@ public enum DarkCondensedTokens {
     public static let semanticContentParagraphColor: String = "#191a1a"
     public static let semanticContentParagraphFontSize: Double = 16
     public static let semanticContentParagraphFontWeight: Double = 400
+    public static let semanticContentParagraphLargeColor: String = "#191a1a"
+    public static let semanticContentParagraphLargeFontSize: Double = 18
+    public static let semanticContentParagraphLargeFontWeight: Double = 400
+    public static let semanticContentParagraphLargeLineHeight: Double = 36
     public static let semanticContentParagraphLineHeight: Double = 24
     public static let semanticContentSizeGinormousFontSize: Double = 64
     public static let semanticContentSizeGinormousLineHeight: Double = 96
