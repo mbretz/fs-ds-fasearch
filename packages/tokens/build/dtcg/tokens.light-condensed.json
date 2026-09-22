@@ -1896,6 +1896,28 @@
           "$description": "Semantic token for content paragraph font size."
         }
       },
+      "paragraphLarge": {
+        "color": {
+          "$value": "#191a1a",
+          "$type": "color",
+          "$description": "Semantic token for content paragraph large color."
+        },
+        "fontWeight": {
+          "$value": 400,
+          "$type": "fontWeight",
+          "$description": "Semantic token for content paragraph large font weight."
+        },
+        "lineHeight": {
+          "$value": "36px",
+          "$type": "dimension",
+          "$description": "Semantic token for content paragraph large line height."
+        },
+        "fontSize": {
+          "$value": "18px",
+          "$type": "dimension",
+          "$description": "Semantic token for content paragraph large font size."
+        }
+      },
       "microcopy": {
         "color": {
           "$value": "#646768",

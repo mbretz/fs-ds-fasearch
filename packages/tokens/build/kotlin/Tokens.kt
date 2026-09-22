@@ -915,6 +915,10 @@ object LightRoomyTokens {
     const val semanticContentParagraphColor: String = "#191a1a"
     const val semanticContentParagraphFontSize: Double = 16
     const val semanticContentParagraphFontWeight: Double = 400
+    const val semanticContentParagraphLargeColor: String = "#191a1a"
+    const val semanticContentParagraphLargeFontSize: Double = 18
+    const val semanticContentParagraphLargeFontWeight: Double = 400
+    const val semanticContentParagraphLargeLineHeight: Double = 36
     const val semanticContentParagraphLineHeight: Double = 24
     const val semanticContentSizeGinormousFontSize: Double = 64
     const val semanticContentSizeGinormousLineHeight: Double = 96
@@ -1968,6 +1972,10 @@ object DarkRoomyTokens {
     const val semanticContentParagraphColor: String = "#191a1a"
     const val semanticContentParagraphFontSize: Double = 16
     const val semanticContentParagraphFontWeight: Double = 400
+    const val semanticContentParagraphLargeColor: String = "#191a1a"
+    const val semanticContentParagraphLargeFontSize: Double = 18
+    const val semanticContentParagraphLargeFontWeight: Double = 400
+    const val semanticContentParagraphLargeLineHeight: Double = 36
     const val semanticContentParagraphLineHeight: Double = 24
     const val semanticContentSizeGinormousFontSize: Double = 64
     const val semanticContentSizeGinormousLineHeight: Double = 96
@@ -3021,6 +3029,10 @@ object LightCondensedTokens {
     const val semanticContentParagraphColor: String = "#191a1a"
     const val semanticContentParagraphFontSize: Double = 16
     const val semanticContentParagraphFontWeight: Double = 400
+    const val semanticContentParagraphLargeColor: String = "#191a1a"
+    const val semanticContentParagraphLargeFontSize: Double = 18
+    const val semanticContentParagraphLargeFontWeight: Double = 400
+    const val semanticContentParagraphLargeLineHeight: Double = 36
     const val semanticContentParagraphLineHeight: Double = 24
     const val semanticContentSizeGinormousFontSize: Double = 64
     const val semanticContentSizeGinormousLineHeight: Double = 96
@@ -4074,6 +4086,10 @@ object DarkCondensedTokens {
     const val semanticContentParagraphColor: String = "#191a1a"
     const val semanticContentParagraphFontSize: Double = 16
     const val semanticContentParagraphFontWeight: Double = 400
+    const val semanticContentParagraphLargeColor: String = "#191a1a"
+    const val semanticContentParagraphLargeFontSize: Double = 18
+    const val semanticContentParagraphLargeFontWeight: Double = 400
+    const val semanticContentParagraphLargeLineHeight: Double = 36
     const val semanticContentParagraphLineHeight: Double = 24
     const val semanticContentSizeGinormousFontSize: Double = 64
     const val semanticContentSizeGinormousLineHeight: Double = 96

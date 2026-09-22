@@ -2,7 +2,23 @@ import { useParams } from 'react-router-dom';
 import { findAdvisorById } from '../utils/findAdvisor';
 import { AdvisorHero } from '../components/hero/AdvisorHero';
 import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
+import { AdvisorProfileBody } from '../components/profile/AdvisorProfileBody';
 import { cn } from '../utils/cn';
+
+// Shared by both the mobile and desktop trees below -- the main profile
+// content section starts with a 2px brand-gold top border, 48px below the
+// Hero above it (per the user -- matches the 48px gap AdvisorProfileBody
+// itself already uses between its own subsections, e.g. Focus Areas to
+// Experience & Background, so the Hero-to-Focus-Areas gap now reads as
+// just one more instance of that same rhythm); the existing flex/grid
+// row-gap each tree already provides between siblings
+// (`density-layout-fixed-large`, 16px) is subtracted out of this `mt`
+// rather than stacking on top of it, so the two combine to the intended
+// flat 48px instead of 64px. `pt` below the border is also 48px, per the
+// user -- the border-to-Focus-Areas gap matches the Hero-to-border gap
+// above it, both now the same 48px rhythm as every other subsection gap.
+const profileBodySectionClassName =
+  'mt-[calc(var(--density-layout-fixed-6x-large)_-_var(--density-layout-fixed-large))] border-t-[2px] border-t-[color:var(--semantic-brand-primary-gold)] pt-[var(--density-layout-fixed-6x-large)]';
 
 // Two separate trees below a `md:`/`hidden` breakpoint switch -- not one
 // tree reused via responsive utility classes -- because the two
@@ -62,10 +78,13 @@ export function AdvisorProfile() {
             visible sticky banner below it, not just once. */}
         <ProspectPortalLite className="mt-[4px] mb-[calc(4px_-_(2*var(--density-layout-fixed-large)))]" />
         <AdvisorHero advisor={advisor} location={location} />
-        <p className="mx-[var(--density-layout-fixed-large)]">
-          Advisor profile body placeholder — bio, focus areas, and meeting
-          details to come.
-        </p>
+        <AdvisorProfileBody
+          advisor={advisor}
+          className={cn(
+            'mx-[var(--density-layout-fixed-large)]',
+            profileBodySectionClassName,
+          )}
+        />
         {/* Office Info / New Client Inquiry panel -- not yet built, see
             RESUME_NOTES.txt. */}
         <div className="mx-[var(--density-layout-fixed-large)]">
@@ -133,7 +152,15 @@ export function AdvisorProfile() {
             ever changes. */}
         <div
           className={cn(
-            'md:grid md:grid-cols-1 md:items-start md:gap-x-[var(--density-layout-fixed-xx-large)] md:gap-y-[var(--density-layout-fixed-large)]',
+            // `gap-x-[var(--advisor-hero-gutter)]`, not a flat density
+            // token -- per the user, the column gap between the body
+            // content and the rail (once it's a real column, at/above
+            // this grid's own 940px threshold) must shrink in lockstep
+            // with the same fluid gutter the Hero itself uses for its
+            // own internal clearance, not a separately-fixed value.
+            // Harmless below the threshold (`grid-cols-1` has no second
+            // column for a column-gap to apply between).
+            'md:grid md:grid-cols-1 md:items-start md:gap-x-[var(--advisor-hero-gutter)] md:gap-y-[var(--density-layout-fixed-large)]',
             '@[940px]/advisor-hero:grid-cols-[1fr_400px]',
             '[--advisor-hero-portrait-size:188px] [--advisor-hero-gutter:40px]',
             '@[940px]/advisor-hero:[--advisor-hero-portrait-size:clamp(144px,calc(-114.5px+27.5cqi),188px)]',
@@ -162,10 +189,31 @@ export function AdvisorProfile() {
             // stylesheet.
             className="md:col-start-1 md:row-start-1 @[940px]/advisor-hero:col-end-3"
           />
-          <p className="md:col-start-1 md:row-start-2">
-            Advisor profile body placeholder — bio, focus areas, and meeting
-            details to come.
-          </p>
+          {/* `ml-[var(--advisor-hero-gutter)]` -- the same fluid var the
+            Hero itself uses for its own left inset, so this section's
+            left edge stays flush with the Hero's own portrait/text start
+            regardless of which side of the 940px threshold the container
+            is on (per the user). Right side: at/above the threshold, this
+            item only occupies the grid's column 1 (unlike AdvisorHero
+            above, which spans both columns via `col-end-3` to paint its
+            banner behind the rail), so the grid's own
+            `gap-x-[var(--advisor-hero-gutter)]` (see this grid's own
+            comment above) already stops this column short of the rail by
+            exactly that same fluid amount -- adding a matching `mr` here
+            too would double it up. Below the threshold, with no second
+            column (and so no gap-x contribution) at all, this item
+            otherwise runs flush to the grid's own right edge instead of
+            matching its own left inset -- `md:mr-[var(--advisor-hero-gutter)]`
+            (cancelled by `@[940px]/advisor-hero:mr-0` once the rail/gap-x
+            are back) gives it the same right inset as its left one in
+            that state, per the user. */}
+          <AdvisorProfileBody
+            advisor={advisor}
+            className={cn(
+              'md:col-start-1 md:row-start-2 md:mr-[var(--advisor-hero-gutter)] md:ml-[var(--advisor-hero-gutter)] @[940px]/advisor-hero:mr-0',
+              profileBodySectionClassName,
+            )}
+          />
           {/* `relative` (z-index:auto) -- without it, this non-positioned
             card loses to the Hero's own `position: relative` banner in
             paint order regardless of DOM order (positioned elements
