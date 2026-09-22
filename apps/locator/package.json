@@ -13,10 +13,12 @@
     "ds": "workspace:*",
     "icons": "workspace:*",
     "maplibre-gl": "^5.24.0",
+    "radix-ui": "^1.6.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.3",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "tokens": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",

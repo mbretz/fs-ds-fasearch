@@ -100,13 +100,69 @@ function HeroContent({
           </Link>
         </div>
       )}
-      {showFavorite && (
+      {/* Always mounted (not `showFavorite && <FavoriteToggle />`), so
+          signing in/out animates rather than instantly inserting/removing
+          this row and jumping StatusTag below it -- per the user, they're
+          fine with a non-Baseline technique here since an instant jump is
+          still a perfectly fine fallback. `calc-size()`/`interpolate-size`
+          (modern-web-guidance's `animate-to-intrinsic-sizes` guide) is
+          Chrome/Edge-only; unsupported browsers just keep today's instant
+          toggle, `[block-size:0]`/`[block-size:auto]` applying with no
+          transition. `interpolate-size: allow-keywords` is scoped to this
+          one wrapper (not `:root`), since nothing else in this app needs
+          it.
+
+          `mt-0` / `mt-[-1*gap]` is load-bearing, not decorative -- this
+          flex column spaces every child via `gap` (this block's own
+          `gap-[var(--density-spacing-fixed-small)]` above), which still
+          applies on BOTH sides of this wrapper even when its own
+          `block-size` collapses to 0 (gap doesn't collapse just because
+          an item's content does). Left alone, collapsed state would show
+          gap+gap = 16px between the phone link and StatusTag instead of
+          the original unmounted look's single 8px gap. Animating this
+          wrapper's own `margin-top` to `-1 * gap` alongside `block-size`
+          cancels exactly one of those two gaps, landing back on the
+          original single-gap spacing once fully collapsed.
+
+          `inert` (not just `aria-hidden`) removes the toggle from the tab
+          order and blocks any interaction while collapsed -- `aria-hidden`
+          alone hides it from assistive tech but doesn't stop a sighted
+          keyboard user from tabbing into an invisible, zero-height
+          control. `motion-reduce:transition-none` per the guide's own
+          MANDATORY accessibility note. */}
+      <div
+        aria-hidden={!showFavorite}
+        inert={!showFavorite}
+        className={cn(
+          // `flex items-center` -- without it, this plain block div puts
+          // its `inline-flex` FavoriteToggle button into an anonymous
+          // inline formatting context, which pads it with the classic
+          // baseline/descender gap inline content gets below itself (the
+          // same phantom-whitespace effect `inline-block` images/buttons
+          // are known for). That both misaligns the button within this
+          // wrapper and inflates the wrapper's own `auto` height beyond
+          // the button's real content height. `flex` removes the inline
+          // formatting context entirely; `items-center` then centers the
+          // button within whatever height remains.
+          'flex items-center [interpolate-size:allow-keywords] overflow-hidden transition-[block-size,opacity,margin-top] duration-300 ease-in-out motion-reduce:transition-none',
+          showFavorite
+            ? '[block-size:auto] mt-0 opacity-100'
+            : '[block-size:0] mt-[calc(-1*var(--density-spacing-fixed-small))] opacity-0',
+        )}
+      >
         <FavoriteToggle
           name={fullName}
           showLabel
+          // `tagSize` already doubles as this content block's one "which
+          // device" signal (`lg` desktop / `sm` mobile) -- reusing it here
+          // instead of threading a second, separate prop through every
+          // caller for the same distinction. Matches Figma's own
+          // Favorited=False/True, Device=Desktop|Mobile variants (node
+          // 1302:48177) -- see FavoriteToggle.tsx's own comment.
+          variant={tagSize === 'lg' ? 'expanded' : 'compact'}
           className="text-[color:var(--component-link-text-color-default)]"
         />
-      )}
+      </div>
       <StatusTag
         status={advisor.newClientStatus}
         size={tagSize}
@@ -611,28 +667,43 @@ function AdvisorHeroMobile({
               one.
               `max(0px, calc(...))` added onto the base `mt` -- the
               designations/tenure block above is a fixed height regardless
-              of viewport (`separatorTop` sits a measured, constant 190px
-              below the banner's own top from 390px all the way to 768px),
-              while the portrait above the banner keeps growing with this
-              range's own fluid clamp (see the banner's own comment on why
-              it isn't reserved there instead) -- so only past ~727px does
-              the portrait's bottom edge actually reach this far down
-              (confirmed live: -9.5px of clearance to spare at 700px,
-              +14.8px short of it at 760px). `170px` = that measured
-              190px minus the portrait's own `20px` fixed offset from the
-              banner's top (`16px` top inset + `4px` box-content border);
-              `max(0px, ...)` keeps this a no-op everywhere the natural
-              gap already clears it, including the whole flat-size range
-              below 560px and the separate `max-[390px]:` flat-80px
-              portrait, both deeply negative here. This is also this
-              banner's real defense for the "tenure/designations hidden"
-              case flagged when this was reported -- today's fixture data
-              always renders both, so `separatorTop` never actually
-              shrinks below its measured 190px, but if a future advisor
-              record omits them, this still guarantees the Separator/
-              Actions row can't ride up into the portrait, independent of
-              how short the content above it gets. */}
-          <Separator className="mx-[var(--density-spacing-fixed-xx-large)] mt-[calc(var(--density-spacing-fixed-small)+max(0px,calc(clamp(104px,calc(-122.12px+40.38vw),188px)-170px)))] w-auto" />
+              of viewport, while the portrait above the banner keeps
+              growing with this range's own fluid clamp (see the banner's
+              own comment on why it isn't reserved there instead) -- so
+              only past a certain width does the portrait's bottom edge
+              actually reach this far down. `166px` was originally derived
+              as 190px (an early live measurement of `separatorTop`, since
+              corrected -- see below) minus the portrait's own `20px`
+              fixed offset from the banner's top (`16px` top inset + `4px`
+              box-content border); `max(0px, ...)` keeps this a no-op
+              everywhere the natural gap already clears it, including the
+              whole flat-size range below 560px and the separate
+              `max-[390px]:` flat-80px portrait, both deeply negative
+              here. This is also this banner's real defense for the
+              "tenure/designations hidden" case flagged when this was
+              reported -- today's fixture data always renders both, so
+              this clearance is never actually needed for that reason, but
+              if a future advisor record omits them, this still guarantees
+              the Separator/Actions row can't ride up into the portrait,
+              independent of how short the content above it gets.
+
+              Re-measured live (Playwright) at /advisor/adv-16 after a
+              user-reported ~4px overlap at 730px width: the original
+              170px constant left a flat, width-independent 4px of
+              overlap across the whole active range once the portrait's
+              growth outpaced this margin (confirmed at 715/730/745/760/
+              767px -- 0px or negative below ~715px, a flat +4px from
+              ~730px on). Since both the portrait's bottom edge and this
+              margin grow at the exact same 1:1 rate once both are past
+              their own thresholds, the overlap in that regime is a pure
+              width-independent constant equal to (this constant - actual
+              live-measured clearance need) -- so subtracting the
+              measured 4px overlap directly from the old 170px constant
+              (166px) cancels it exactly, with no re-derivation of the
+              190px/20px inputs required. Re-verify live if this banner's
+              content block (designations/tenure/phone/favorite) or the
+              portrait's own clamp() range ever changes. */}
+          <Separator className="mx-[var(--density-spacing-fixed-xx-large)] mt-[calc(var(--density-spacing-fixed-small)+max(0px,calc(clamp(104px,calc(-122.12px+40.38vw),188px)-166px)))] w-auto" />
           {/* Two EntityActions instances, toggled by viewport width, not
               one -- per the user, this row should be `inline` (side by
               side, or wrapped via that variant's own internal
