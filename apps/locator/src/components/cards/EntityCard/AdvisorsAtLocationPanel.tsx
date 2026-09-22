@@ -3,6 +3,7 @@ import type { Advisor, BranchSupportStaff } from '../../../data/locations';
 import { cn } from '../../../utils/cn';
 import { getInitials } from '../../../utils/getInitials';
 import { getFullName } from '../../../utils/getFullName';
+import { sortSupportStaff } from '../../../utils/sortSupportStaff';
 import { BranchTeamMemberRow } from '../../entity-info/BranchTeamMemberRow';
 
 export interface AdvisorsAtLocationPanelProps {
@@ -83,7 +84,10 @@ export function AdvisorsAtLocationPanel({
         <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
           <span className={headingClassName}>Branch Team</span>
           <ul className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
-            {supportStaff.map((staff) => (
+            {/* Senior roles first, then alphabetical by last name within
+                each group, per the user -- see `sortSupportStaff`'s own
+                comment. */}
+            {sortSupportStaff(supportStaff).map((staff) => (
               <BranchTeamMemberRow key={staff.id} staff={staff} />
             ))}
           </ul>

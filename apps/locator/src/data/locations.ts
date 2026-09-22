@@ -1220,6 +1220,25 @@ export const locations: Location[] = [
         name: 'Wren Sutherland',
         title: 'Branch Office Administrator',
       },
+      {
+        id: 'staff-24',
+        name: 'Dara Lindqvist',
+        photoUrl:
+          'https://images.unsplash.com/photo-1699899657680-421c2c2d5064?w=200&h=200&fit=crop&crop=faces&q=80',
+        title: 'Senior Branch Office Administrator',
+      },
+      {
+        id: 'staff-25',
+        name: 'Theo Marchetti',
+        photoUrl:
+          'https://images.unsplash.com/photo-1685760259914-ee8d2c92d2e0?w=200&h=200&fit=crop&crop=faces&q=80',
+        title: 'Branch Office Administrator',
+      },
+      {
+        id: 'staff-26',
+        name: 'Nadia Osei-Bonsu',
+        title: 'Branch Office Administrator',
+      },
     ],
   },
   {

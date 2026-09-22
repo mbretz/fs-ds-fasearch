@@ -147,14 +147,19 @@ function equalGridColumns(panelCount: number) {
 
 // Card.Root's own padding is the *panel* inset (8px on every side,
 // including a panel's own outer top/bottom and the last panel's own
-// right edge against the card boundary) -- `main` needs a deeper 16px
-// inset on three of its four sides (top/bottom/left; its right side
+// right edge against the card boundary) -- `main` needs a deeper inset
+// on three of its four sides (top/left 16px, bottom 24px; its right side
 // borders a panel via the grid gap, not the card edge, so it doesn't
-// need compensating), per the user. That compensating padding only
-// applies once panels/main are actually side by side (this same
-// container-query threshold): below it everything stacks full-width in
-// one column, where `main` is just one more stacked item like any panel,
-// not a conceptually distinct left column needing deeper insets.
+// need compensating), per the user. Bottom is deeper than top/left --
+// per the user, 2026-09-22, EntityActions' own row (the last thing in
+// `main`) read as too tight against the card's bottom edge in row mode
+// (mainly reachable on a phone by rotating to landscape, the narrowest
+// real-world width this threshold triggers row mode at) with the same
+// 16px both sides used. That compensating padding only applies once
+// panels/main are actually side by side (this same container-query
+// threshold): below it everything stacks full-width in one column,
+// where `main` is just one more stacked item like any panel, not a
+// conceptually distinct left column needing deeper insets.
 // Base layout is `flex flex-col`, not grid -- `display: grid` (with the
 // `fr`-based column split) only turns on at the row-mode threshold below.
 // Flexbox in stacked mode is deliberate, not just "whatever stacks
@@ -202,9 +207,21 @@ function gridStyles(
       grid-template-columns: var(--entity-card-columns);
       align-items: stretch;
     }
-    .entity-card-main${scope} {
+    /* \`.entity-card-grid${scope} > .entity-card-main\`, not a compound
+       \`.entity-card-main${scope}\` -- confirmed live (Playwright), this
+       was a real pre-existing bug: \`data-row-mode-threshold\` is set on
+       \`Card.Root\` (the SAME element as \`.entity-card-grid\`, see its own
+       comment above), not on \`.entity-card-main\`, which is a child DIV
+       one level in. A compound selector requires both the class and the
+       attribute on one element, so this rule silently never matched
+       anything -- \`main\`'s own top/bottom/left padding stayed 0 in row
+       mode this whole time, invisible only because Card.Root's own base
+       8px already gave reasonable-looking spacing without it. Matches
+       the \`> .entity-card-main\` child-combinator convention the
+       \`dropFirstPanelBelow\` rule below already uses correctly. */
+    .entity-card-grid${scope} > .entity-card-main {
       padding-top: var(--density-spacing-fixed-small);
-      padding-bottom: var(--density-spacing-fixed-small);
+      padding-bottom: var(--density-spacing-fixed-large);
       padding-left: var(--density-spacing-fixed-small);
     }
   }
