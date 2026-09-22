@@ -24,6 +24,20 @@ export interface AdvisorCardProps {
    * comment. Defaults to true; ResultsList sets this false since
    * `StatusTag` already shows the same status there. */
   showPortraitBadge?: boolean;
+  /**
+   * Whether the Office Details side panel (hours/fax/support staff)
+   * renders at all. Defaults to true; LocationProfileBody sets this false
+   * -- per the user, the location's own hours are already shown on that
+   * same page (LocationHero's branch-line items and the still-placeholder
+   * Location Information rail), and an interested visitor can drill into
+   * an individual advisor's own schedule from their profile page, so
+   * repeating it a third time on every card there is redundant. Dropping
+   * to a single panel also reduces `EntityCard`'s own panel count from 2
+   * to 1, which changes its row-mode split from 50/25/25 to 75/25 (see
+   * `EntityCard`'s own `gridColumns` comment) -- exactly the "main
+   * content and Focus Areas, 2 columns" layout the user asked for here,
+   * with no separate layout prop needed. */
+  showOfficeDetails?: boolean;
   className?: string;
 }
 
@@ -44,6 +58,7 @@ export function AdvisorCard({
   location,
   onNewClientInquiry,
   showPortraitBadge,
+  showOfficeDetails = true,
   className,
 }: AdvisorCardProps) {
   const { signedIn } = useSession();
@@ -59,27 +74,58 @@ export function AdvisorCard({
     advisor.newClientStatus === 'waitlist';
   const fullName = getFullName(advisor);
 
+  // A plain array push, not an inline `showOfficeDetails && <Panel />`
+  // entry filtered afterward -- `EntityCard`'s own column math reads
+  // `panels.length` directly (see its `gridColumns` comment), so a falsy
+  // placeholder element left in the array would still count as a second
+  // panel even though it renders nothing.
+  const panels = [
+    <FocusAreasPanel key="focus-areas" focusAreas={advisor.focusAreas} />,
+  ];
+  if (showOfficeDetails) {
+    // `officePhotoUrl` deliberately not passed here -- per the user, the
+    // branch photo is reserved for the full Office Details panel on
+    // profile pages, not any card context.
+    // `address`/`phone` deliberately omitted -- per the user, the main
+    // card panel above (NameBlock/ContactLinks) already shows these, so
+    // this panel only adds what's not already visible there (hours, fax,
+    // support staff). LocationCard still passes both, since its own
+    // header/panels don't repeat them.
+    panels.push(
+      <OfficeDetailsPanel
+        key="office-details"
+        hours={location.hours}
+        fax={location.fax}
+        supportStaff={location.supportStaff}
+        showTitle={false}
+      />,
+    );
+  }
+
   return (
     <EntityCard
       className={className}
-      panels={[
-        <FocusAreasPanel key="focus-areas" focusAreas={advisor.focusAreas} />,
-        // `officePhotoUrl` deliberately not passed here -- per the user,
-        // the branch photo is reserved for the full Office Details panel
-        // on profile pages, not any card context.
-        // `address`/`phone` deliberately omitted -- per the user, the main
-        // card panel above (NameBlock/ContactLinks) already shows these,
-        // so this panel only adds what's not already visible there
-        // (hours, fax, support staff). LocationCard still passes both,
-        // since its own header/panels don't repeat them.
-        <OfficeDetailsPanel
-          key="office-details"
-          hours={location.hours}
-          fax={location.fax}
-          supportStaff={location.supportStaff}
-          showTitle={false}
-        />,
-      ]}
+      panels={panels}
+      // Figma's `FA-Card-FocusAreasSidePanel-Inline` (`1:637`) -- the
+      // single-panel Focus-Areas-only composition -- fixes `main` at
+      // 400px and lets the Focus Areas panel fill the rest, the opposite
+      // of the general 3-panel component's proportional split (see
+      // `EntityCard`'s own `mainWidth` doc comment). Only applies once
+      // `showOfficeDetails` has actually dropped this card to that
+      // single-panel shape -- passing it alongside the 2-panel case would
+      // fight the proportional split's own 50/25/25 that composition
+      // still wants.
+      mainWidth={showOfficeDetails ? undefined : 400}
+      // Below 730px, three real columns (main + Focus Areas + Office
+      // Details) read as cramped -- per the user, that band now keeps
+      // Office Details beside main (still worth keeping visible) and
+      // only drops Focus Areas to its own full-width row below both,
+      // rather than squeezing all three into one row or hiding Office
+      // Details outright (see `EntityCard`'s own `dropFirstPanelBelow`
+      // doc comment). Only meaningful for the 2-panel case -- with
+      // `showOfficeDetails` false there's only one panel to begin with,
+      // so there's no "last panel" for this to keep beside main.
+      dropFirstPanelBelow={showOfficeDetails ? 730 : undefined}
     >
       <div className="flex items-start justify-between gap-[var(--density-spacing-fixed-large)]">
         <StatusTag status={advisor.newClientStatus} size="sm" />

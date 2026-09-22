@@ -101,3 +101,45 @@ html[data-results-transition-direction='backward']::view-transition-new(
     transform: translateX(-100%);
   }
 }
+
+/*
+  AdvisorHero.tsx's mobile Expanded<->Collapsed scroll transition (see its
+  own `advisor-hero-mobile-*` view-transition-names) -- per the user, the
+  portrait/name/underline should start morphing a fraction of a second
+  before the background bar's own shape change, not every piece moving in
+  lockstep. Delayed on all three of the bar's own pseudo-elements together
+  -- `::view-transition-group()` is what animates its size/position,
+  `::view-transition-old()`/`::view-transition-new()` do the old/new
+  cross-fade -- so they stay in sync with EACH OTHER, just started later
+  relative to the (undelayed, UA-default-timed) avatar/name/underline
+  groups. `animation-duration` is shortened on the delayed bar so it
+  doesn't run drastically longer than the undelayed groups' own UA-default
+  ~250ms -- 160ms delay + 140ms duration lands its own finish ~50ms after
+  theirs, a deliberate (per the user, widened from an initial, barely-
+  perceptible 90ms) short trailing beat rather than a simultaneous finish.
+
+  `html[data-stuck-transition-direction="stuck"]` -- COLLAPSING only
+  (useStuckSentinel.ts sets this right before the transition starts, see
+  its own comment), not the reverse. Letting the box lag behind on this
+  direction reads fine: it's already the larger of the two shapes and
+  only needs to shrink once its shrinking contents have cleared out of
+  the way. Letting it lag while EXPANDING (unstuck) does not -- confirmed
+  live (Playwright), the portrait/name grow to their full expanded size
+  while the still-small collapsed box hasn't started resizing yet, so
+  they visibly spill past its edges for a beat. Unscoped, this rule
+  applied to both directions; scoping it to "stuck" only drops the
+  expand direction back to the undelayed, UA-default ~250ms every group
+  already uses, so nothing there can outgrow its own box.
+*/
+html[data-stuck-transition-direction='stuck']::view-transition-group(
+    advisor-hero-mobile-bar
+  ),
+html[data-stuck-transition-direction='stuck']::view-transition-old(
+    advisor-hero-mobile-bar
+  ),
+html[data-stuck-transition-direction='stuck']::view-transition-new(
+    advisor-hero-mobile-bar
+  ) {
+  animation-delay: 160ms;
+  animation-duration: 140ms;
+}

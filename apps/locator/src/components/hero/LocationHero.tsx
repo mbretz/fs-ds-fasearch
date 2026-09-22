@@ -180,11 +180,23 @@ function LocationHeroDesktop({
             -- still just a floor, not a cap, if the address wraps
             further. */}
         <div className="col-start-2 row-start-1 flex min-h-[148px] flex-col justify-end pr-[32px] pb-[16px] @[940px]/location-hero:pr-[440px]">
-          <span className="mb-[4px] block text-[20px] leading-[30px] font-medium text-white">
+          {/* `h1` -- per the user, this page's own title. `location.name`
+              is never actually rendered as visible text anywhere on this
+              page (only passed to `EntityPortrait` for its alt/initials),
+              so the address -- the one thing genuinely shown as a title
+              here -- is what carries it, not the location's own name.
+              Tailwind preflight zeroes h1's UA-default font-size/weight/
+              margin (see AdvisorHero.tsx's own identical comment), so
+              this swap from a plain `span` is visual-no-op. Only one of
+              this or LocationHeroMobile's own two address renderings is
+              ever actually mounted+visible for a given breakpoint/scroll-
+              state at once, so there's no duplicate-h1-per-page conflict
+              despite each being written out separately below. */}
+          <h1 className="mb-[4px] block text-[20px] leading-[30px] font-medium text-white">
             {street}
             <br />
             {cityStateZip}
-          </span>
+          </h1>
           <GoldUnderline />
         </div>
         {/* Same conditional `pr` as the text item above -- `col-start-2
@@ -231,9 +243,11 @@ function LocationHeroMobile({ location }: { location: Location }) {
               avatarClassName="rounded-[4px]"
             />
             <div className="flex min-w-0 flex-col gap-[var(--density-spacing-fixed-x-small)] pb-[8px]">
-              <span className="truncate text-[18px] leading-[26px] font-medium text-white whitespace-pre-line">
+              {/* `h1` -- see LocationHeroDesktop's own comment on this
+                  same swap. */}
+              <h1 className="truncate text-[18px] leading-[26px] font-medium text-white whitespace-pre-line">
                 {location.address}
-              </span>
+              </h1>
               <GoldUnderline className="h-[2px] w-[100px]" />
             </div>
           </div>
@@ -271,11 +285,13 @@ function LocationHeroMobile({ location }: { location: Location }) {
               avatarClassName="rounded-[4px]"
             />
             <div>
-              <span className="mb-[4px] block text-[18px] leading-[26px] font-medium text-white">
+              {/* `h1` -- see LocationHeroDesktop's own comment on this
+                  same swap. */}
+              <h1 className="mb-[4px] block text-[18px] leading-[26px] font-medium text-white">
                 {street}
                 <br />
                 {cityStateZip}
-              </span>
+              </h1>
               <GoldUnderline className="h-[2px] w-[100px]" />
             </div>
           </div>
