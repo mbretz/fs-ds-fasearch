@@ -89,12 +89,6 @@ function HeroContent({
             aria-hidden="true"
             className="size-[var(--density-sizing-fixed-large)] shrink-0 text-[color:var(--component-link-text-color-default)]"
           />
-          {/* ContactLinks' own inert `href="#"` treatment (see
-              `preventDisabledClick`'s own comment above) -- per the
-              user, this reverses an earlier version where this Hero's
-              phone link was deliberately real `tel:` navigation, the
-              one exception to every other placeholder destination in
-              this prototype; it's no longer an exception. */}
           <Link
             href="#"
             aria-disabled="true"
@@ -491,6 +485,19 @@ function AdvisorHeroMobile({
           // reproduces the *exact* original 152px at the clamp's own
           // 104px floor (48+104=152) and grows from there as the
           // portrait does.
+          // No `min-h` here, deliberately -- an earlier version of this
+          // container sized itself to fully contain the portrait (up to
+          // 188px tall), which made the banner itself balloon up to ~212px
+          // near the top of this fluid range even though the name/
+          // underline it actually holds only need ~62px (pt-16 + 24px
+          // line-height + mb-4 + 2px underline + pb-16), per the user.
+          // Matching `AdvisorHeroDesktop`'s own precedent instead (see its
+          // `min-h-[125px]` comment above): the portrait stays
+          // `position: absolute` and is allowed to overflow past this
+          // banner's own natural, text-driven height, same as it already
+          // does past the container's top edge above. The clearance that
+          // overflow needs isn't reserved here -- see the `!stuck` block
+          // below's own `mt` comment for where it actually goes.
           <div className="relative bg-[color:var(--color-response-neutral-strong)] pt-[16px] pr-[var(--density-layout-fixed-large)] pb-[16px] pl-[calc(48px+clamp(104px,calc(-122.12px+40.38vw),188px))] max-[390px]:pl-[112px]">
             <EntityPortrait
               name={fullName}
@@ -553,7 +560,11 @@ function AdvisorHeroMobile({
         // already puts 16px between the banner above and this block,
         // before this block's own `pt-[8px]` adds on top of it. Without
         // the cancel, the designations/etc. sat 24px below the banner
-        // instead of the intended 8px.
+        // instead of the intended 8px. (The portrait's own overflow past
+        // the banner above needs separate clearance too, but that's
+        // reserved further down, right above the Separator -- see its own
+        // comment -- rather than here, so it doesn't also push the
+        // designations/tenure text away from its own fixed 8px gap.)
         <div className="-mt-[var(--density-layout-fixed-large)] max-[360px]:mt-[-2px] pr-[var(--density-layout-fixed-large)] max-[360px]:pr-[var(--density-spacing-fixed-xxx-large)] md:hidden">
           {/* `max-[360px]:pl-[var(--density-spacing-fixed-xxx-large)]` (32px)
               matches EntityActions' own block-orientation inset just below
@@ -597,8 +608,31 @@ function AdvisorHeroMobile({
               100% of the container and then the `mx-*` margins push it
               past the right edge instead of being subtracted from the
               width, leaving the left margin visible but not the right
-              one. */}
-          <Separator className="mx-[var(--density-spacing-fixed-xx-large)] mt-[var(--density-spacing-fixed-small)] w-auto" />
+              one.
+              `max(0px, calc(...))` added onto the base `mt` -- the
+              designations/tenure block above is a fixed height regardless
+              of viewport (`separatorTop` sits a measured, constant 190px
+              below the banner's own top from 390px all the way to 768px),
+              while the portrait above the banner keeps growing with this
+              range's own fluid clamp (see the banner's own comment on why
+              it isn't reserved there instead) -- so only past ~727px does
+              the portrait's bottom edge actually reach this far down
+              (confirmed live: -9.5px of clearance to spare at 700px,
+              +14.8px short of it at 760px). `170px` = that measured
+              190px minus the portrait's own `20px` fixed offset from the
+              banner's top (`16px` top inset + `4px` box-content border);
+              `max(0px, ...)` keeps this a no-op everywhere the natural
+              gap already clears it, including the whole flat-size range
+              below 560px and the separate `max-[390px]:` flat-80px
+              portrait, both deeply negative here. This is also this
+              banner's real defense for the "tenure/designations hidden"
+              case flagged when this was reported -- today's fixture data
+              always renders both, so `separatorTop` never actually
+              shrinks below its measured 190px, but if a future advisor
+              record omits them, this still guarantees the Separator/
+              Actions row can't ride up into the portrait, independent of
+              how short the content above it gets. */}
+          <Separator className="mx-[var(--density-spacing-fixed-xx-large)] mt-[calc(var(--density-spacing-fixed-small)+max(0px,calc(clamp(104px,calc(-122.12px+40.38vw),188px)-170px)))] w-auto" />
           {/* Two EntityActions instances, toggled by viewport width, not
               one -- per the user, this row should be `inline` (side by
               side, or wrapped via that variant's own internal
