@@ -19,8 +19,14 @@ function preventDisabledClick(event: { preventDefault: () => void }) {
   event.preventDefault();
 }
 
+// `mb-0 md:mb-[4px]` -- the 4px breathing room between "Work History"/
+// "Education History" and their own value lines below (added once those
+// value lines got tighter, see their own `leading-[24px]` comment) reads
+// as too much on mobile once the mobile-specific spacing below was tuned
+// against the real Figma frame -- per the user, 2026-09-22, mobile drops
+// it back to 0 while desktop keeps the original 4px.
 const subheadingClassName =
-  'text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-subheading-color)]';
+  'mb-0 text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-subheading-color)] md:mb-[4px]';
 
 // Figma's "Paragraph Large" text style (18px/36px/400) had no matching
 // token in packages/tokens as of this component's first build -- hand-
@@ -56,7 +62,13 @@ export function ExperienceAndBackgroundSection({
   return (
     <div
       className={cn(
-        'flex flex-col gap-[var(--density-layout-fixed-xx-large)]',
+        // 8px below `md`, 24px at `md`+ -- per the mobile "Experience"
+        // frame (`1445:51649`), whose root frame's own `gap: 8px` governs
+        // BOTH the icon+heading-row-to-Entries gap AND the Entries-to-
+        // BrokerCheck gap below, tighter than the desktop frame's
+        // (`1446:52145`) already-built 24px rhythm. Confirmed live,
+        // 2026-09-22.
+        'flex flex-col gap-[var(--density-layout-fixed-small)] md:gap-[var(--density-layout-fixed-xx-large)]',
         className,
       )}
     >
@@ -74,23 +86,70 @@ export function ExperienceAndBackgroundSection({
           Experience & Background
         </span>
       </div>
-      <div className="flex flex-wrap gap-x-[var(--density-layout-fixed-6x-large)] gap-y-[var(--density-layout-fixed-large)]">
+      {/* `leading-[24px]` overrides `paragraphClassName`'s own 36px line-
+          height on every value line here -- per the user, 2026-09-22,
+          these paired lines (org/date, school/degree) read tighter at
+          24px than the "Paragraph Large" style's own default, which was
+          sized for a single-line paragraph, not a stacked pair. The
+          BrokerCheck disclosure paragraph below gets the same 24px
+          override now too (added later the same session). */}
+      {/* `gap-y-[fixed-small]` (8px) below `md` -- the mobile frame's two
+          entry groups (`1445:51649`) literally stack with zero gap
+          between them, but per the user that read as too cramped once
+          built, so a small 8px gap was added back (not a literal Figma
+          match). `md:gap-y-[...]` keeps the existing 16px gap once
+          they're side by side instead of stacked. `gap-x` is unchanged --
+          it only applies once both groups fit on one row, which doesn't
+          happen below `md` regardless of its value. */}
+      {/* `pl-[52px] md:pl-0` -- per the user, every line below the heading
+          row (Work History/Education History AND the BrokerCheck
+          paragraph) aligns to the same left edge as the HEADING TEXT
+          above them, not the icon. 52px, not the mobile Figma frame's own
+          literal 40px -- that frame's icon is a smaller ~33px (see its
+          own "Icon" node), while this component keeps the same 44px icon
+          at every width (matching FocusAreasSection's own established
+          convention, per the user); 52px is 44px icon + 8px gap, i.e. the
+          real heading-text start for THIS icon size, confirmed live
+          (Playwright) against the actual rendered heading position.
+          Desktop's own frame keeps Work History/Education History/
+          BrokerCheck flush with the icon instead, so this indent is
+          mobile-only. */}
+      <div className="flex flex-wrap gap-x-[var(--density-layout-fixed-6x-large)] gap-y-[var(--density-layout-fixed-small)] pl-[52px] md:gap-y-[var(--density-layout-fixed-large)] md:pl-0">
         <div className="flex flex-col">
           <span className={subheadingClassName}>Work History</span>
-          <span className={paragraphClassName}>Edward Jones</span>
-          <span className={paragraphClassName}>
+          <span className={cn(paragraphClassName, 'leading-[24px]')}>
+            Edward Jones
+          </span>
+          <span className={cn(paragraphClassName, 'leading-[24px]')}>
             {getTenureStartLabel(advisor)}
           </span>
         </div>
         {education && (
           <div className="flex flex-col">
             <span className={subheadingClassName}>Education History</span>
-            <span className={paragraphClassName}>{education.school}</span>
-            <span className={paragraphClassName}>{education.degree}</span>
+            <span className={cn(paragraphClassName, 'leading-[24px]')}>
+              {education.school}
+            </span>
+            <span className={cn(paragraphClassName, 'leading-[24px]')}>
+              {education.degree}
+            </span>
           </div>
         )}
       </div>
-      <p className={paragraphClassName}>
+      {/* `mt-[var(--density-layout-fixed-large)] md:mt-0` -- extra 16px on
+          top of the outer wrapper's own 8px flex gap (see that gap's own
+          comment), widening the Entries-to-BrokerCheck gap to 24px on
+          mobile specifically, per the user, 2026-09-22 -- reads as too
+          tight otherwise once the entry groups themselves got the
+          spacing trims above. Desktop's own gap (already 24px, from the
+          wrapper's `md:gap-[...]` alone) is unaffected -- `md:mt-0` drops
+          this extra margin there instead of stacking on top of it. */}
+      <p
+        className={cn(
+          paragraphClassName,
+          'pl-[52px] leading-[24px] mt-[var(--density-layout-fixed-large)] md:mt-0 md:pl-0',
+        )}
+      >
         Check the background of this investment professional on{' '}
         <Link
           href="#"

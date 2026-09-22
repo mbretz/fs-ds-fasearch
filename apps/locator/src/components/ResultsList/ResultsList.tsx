@@ -34,6 +34,31 @@ interface ResultsListProps {
 // comment), which adds no margin of its own there either, relying
 // entirely on `<main>`'s ambient padding -- so a bare `md:mx-0` override
 // lines this up with it for free rather than needing a second value.
+//
+// `max-w-[729px] mx-auto` on each AdvisorCard `<li>` ONLY (not
+// LocationCard's own, which spans every column via `col-span-full` and
+// is deliberately the grid's widest, row-mode item by design -- see its
+// own comment) -- confirmed live (Playwright), 2026-09-22: below `md`
+// this grid is a single, full-width column, and at real tablet-portrait-
+// ish widths (roughly 600-767px) that one column is comfortably wide
+// enough to push an AdvisorCard past `EntityCard`'s own 730px
+// `dropFirstPanelBelow` ceiling into full 3-column row mode -- something
+// the 2/3-column tiers below `md` were deliberately kept clear of (see
+// their own comment), but this single-column band wasn't. Crossing `md`
+// (768px) then made each AdvisorCard's own width crash straight back
+// down to ~352px (a 2-column split of this grid's ~720px content width)
+// -- a jarring "blip" where the card's whole shape (a 3-column row) flips
+// to fully stacked in one pixel step, purely because a window got
+// slightly WIDER. 729px, not AdvisorCard's own base 680px row-mode
+// threshold -- capping at 680 would ALSO flatten the 680-729px
+// `dropFirstPanelBelow` tier (Office Details beside main, Focus Areas
+// full-width below) out of this single-column band entirely, hiding
+// Office Details in a range where it's meant to stay visible (confirmed
+// the hard way -- an initial 679px cap shipped broken this way). 729px
+// keeps that tier reachable while still removing the full-row overshoot
+// above it. `mx-auto` centers the capped card within its own (wider,
+// single-column) grid cell rather than leaving it flush left with dead
+// space to its right.
 export function ResultsList({ locations, className }: ResultsListProps) {
   if (locations.length === 0) {
     return <p className={className}>No advisors match the current filters.</p>;
@@ -65,7 +90,7 @@ export function ResultsList({ locations, className }: ResultsListProps) {
           to ask for that layout. */}
       {locations.flatMap((location) =>
         location.advisors.map((advisor) => (
-          <li key={advisor.id}>
+          <li key={advisor.id} className="mx-auto w-full max-w-[729px]">
             {/* `showPortraitBadge={false}` -- per the user, `StatusTag`
                 (above the portrait) already shows this advisor's status
                 here, so the portrait's own corner badge would just

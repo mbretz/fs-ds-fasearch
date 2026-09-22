@@ -354,9 +354,19 @@ function AdvisorHeroDesktop({
             `position: absolute` now (see its own comment above) and
             makes zero contribution to any of this sizing either way. */}
         <div className="col-start-2 row-start-1 flex min-h-[125px] flex-col justify-end pr-[32px] pb-[16px] @[940px]/advisor-hero:pr-[calc(400px+var(--advisor-hero-gutter))]">
-          <span className="mb-[4px] block text-[30px] leading-[1.5em] font-semibold text-white">
+          {/* `h1` -- per the user, this page's own title (Tailwind
+              preflight, part of theme.css's `@import "tailwindcss"`,
+              zeroes out h1's UA-default font-size/weight/margin, so this
+              swap from a plain `span` is visual-no-op; every size/weight/
+              color class here is already explicit). Only one of this,
+              AdvisorHeroMobile's own two name renderings, or (on the
+              Location route) LocationHero's own h1 is ever actually
+              mounted+visible for a given breakpoint/scroll-state at once,
+              so there's no duplicate-h1-per-page conflict despite each
+              being written out separately below. */}
+          <h1 className="mb-[4px] block text-[30px] leading-[1.5em] font-semibold text-white">
             {fullName}
-          </span>
+          </h1>
           <GoldUnderline />
         </div>
         {/* Same conditional `pr` rail clearance as the text item above --
@@ -445,29 +455,49 @@ function AdvisorHeroMobile({
   showsNewClientInquiry: boolean;
   onNewClientInquiry?: () => void;
 }) {
-  const { sentinelRef, stuck } = useStuckSentinel();
+  // `true` -- see this hook's own `viewTransition` doc comment.
+  const { sentinelRef, stuck } = useStuckSentinel(0, true);
 
   return (
     <>
       <div ref={sentinelRef} aria-hidden="true" className="md:hidden" />
+      {/* `[view-transition-name:advisor-hero-mobile-bar]` on both
+          branches' own root -- morphs the background rectangle's shape
+          directly (tall/padded expanded banner <-> short/rounded-bottom
+          collapsed bar) via the View Transitions API instead of an
+          instant swap, per the user. Only one of the two branches is ever
+          mounted at once (a plain `stuck ? ... : ...` ternary, not both
+          rendered simultaneously), so there's never 2 elements sharing
+          this name at once -- the one constraint the API enforces (see
+          `useStuckSentinel`'s own `viewTransition` comment). The avatar/
+          name/underline below carry their OWN separate names so the
+          browser morphs their position/size independently of this
+          background box rather than just letting them ride along inside
+          a single flattened snapshot of it. Unsupported browsers get the
+          exact same instant swap this already was -- these class names
+          are inert there. */}
       <div className="sticky top-0 z-10 md:hidden">
         {stuck ? (
           // Avatar + a "Banner Group" column (name+underline, then Actions
           // below it) -- per Figma's `421:6046`, Actions sits UNDER the
           // name, not beside it; an earlier version put them side by side
           // and crushed the name down to a couple of characters.
-          <div className="flex items-end gap-[var(--density-spacing-fixed-xxx-large)] rounded-b-[8px] bg-[color:var(--color-response-neutral-strong)] px-[16px] py-[8px] shadow-[0px_5px_5px_-3px_rgba(13,13,13,0.55),0px_6px_10px_0px_rgba(75,77,78,0.2)]">
+          <div className="[view-transition-name:advisor-hero-mobile-bar] flex items-end gap-[var(--density-spacing-fixed-xxx-large)] rounded-b-[8px] bg-[color:var(--color-response-neutral-strong)] px-[16px] py-[8px] shadow-[0px_5px_5px_-3px_rgba(13,13,13,0.55),0px_6px_10px_0px_rgba(75,77,78,0.2)]">
             <EntityPortrait
               name={fullName}
               photoUrl={advisor.photoUrl}
               size="lg"
               showBadge={false}
+              avatarClassName="[view-transition-name:advisor-hero-mobile-avatar]"
             />
             <div className="flex min-w-0 flex-1 flex-col gap-[var(--density-spacing-fixed-x-small)]">
-              <span className="truncate text-[20px] leading-[24px] font-medium text-white">
+              {/* `h1` -- see AdvisorHeroDesktop's own comment on this same
+                  swap; the `view-transition-name` pairing is unaffected,
+                  since it keys off the class, not the element type. */}
+              <h1 className="[view-transition-name:advisor-hero-mobile-name] truncate text-[20px] leading-[24px] font-medium text-white">
                 {fullName}
-              </span>
-              <GoldUnderline className="h-[2px] w-[100px]" />
+              </h1>
+              <GoldUnderline className="[view-transition-name:advisor-hero-mobile-underline] h-[2px] w-[100px]" />
               <div className="flex flex-wrap items-center gap-[var(--density-spacing-fixed-small)] pt-[var(--density-spacing-fixed-large)]">
                 {phone && (
                   // Compound API, not the flat `Button` -- `asChild` only
@@ -484,7 +514,21 @@ function AdvisorHeroMobile({
                   // `primaryAnchorProps` comment for why a plain
                   // `cursor-not-allowed` alone loses the cascade to
                   // `Button`'s own base `cursor-pointer` class here too.
-                  <Button.Root variant="primary" asChild className="min-w-0">
+                  // `density="condensed"` -- per the user, this collapsed
+                  // sticky bar's own buttons should read smaller than the
+                  // app's default `roomy` density (unlike every other
+                  // Button in this app, which relies on SiteShell's
+                  // ambient `data-density="roomy"` and never overrides it)
+                  // -- this bar is a compact, scroll-triggered summary
+                  // strip, not a normal content area, so its buttons get
+                  // their own explicit density instead of inheriting the
+                  // page default.
+                  <Button.Root
+                    variant="primary"
+                    density="condensed"
+                    asChild
+                    className="min-w-0"
+                  >
                     <a
                       href="#"
                       aria-disabled="true"
@@ -492,6 +536,13 @@ function AdvisorHeroMobile({
                       onClick={preventDisabledClick}
                       className="!cursor-not-allowed"
                     >
+                      {/* Matches the same phone icon used by HeroContent's
+                          own phone link and both EntityActions "Call"
+                          instances below -- per the user, this compact
+                          bar's own Call button was missing it. */}
+                      <Button.Icon>
+                        <Phone aria-hidden />
+                      </Button.Icon>
                       <Button.Label>Call</Button.Label>
                     </a>
                   </Button.Root>
@@ -499,6 +550,7 @@ function AdvisorHeroMobile({
                 {showsNewClientInquiry && (
                   <Button
                     variant="secondary"
+                    density="condensed"
                     onClick={onNewClientInquiry ?? noop}
                     className="min-w-0"
                   >
@@ -554,7 +606,7 @@ function AdvisorHeroMobile({
           // does past the container's top edge above. The clearance that
           // overflow needs isn't reserved here -- see the `!stuck` block
           // below's own `mt` comment for where it actually goes.
-          <div className="relative bg-[color:var(--color-response-neutral-strong)] pt-[16px] pr-[var(--density-layout-fixed-large)] pb-[16px] pl-[calc(48px+clamp(104px,calc(-122.12px+40.38vw),188px))] max-[390px]:pl-[112px]">
+          <div className="[view-transition-name:advisor-hero-mobile-bar] relative bg-[color:var(--color-response-neutral-strong)] pt-[16px] pr-[var(--density-layout-fixed-large)] pb-[16px] pl-[calc(48px+clamp(104px,calc(-122.12px+40.38vw),188px))] max-[390px]:pl-[112px]">
             <EntityPortrait
               name={fullName}
               photoUrl={advisor.photoUrl}
@@ -598,12 +650,13 @@ function AdvisorHeroMobile({
               // wider end of the range), so it needs the same explicit
               // override this component previously didn't, since its
               // original flat 104px ceiling never exceeded 160px.
-              avatarClassName="absolute top-[-18px] left-[calc(-32px-clamp(104px,calc(-122.12px+40.38vw),188px))] size-[clamp(104px,calc(-122.12px+40.38vw),188px)] rounded-full max-[390px]:left-[-96px] max-[390px]:size-[var(--component-avatar-size-large)]"
+              avatarClassName="[view-transition-name:advisor-hero-mobile-avatar] absolute top-[-18px] left-[calc(-32px-clamp(104px,calc(-122.12px+40.38vw),188px))] size-[clamp(104px,calc(-122.12px+40.38vw),188px)] rounded-full max-[390px]:left-[-96px] max-[390px]:size-[var(--component-avatar-size-large)]"
             />
-            <span className="mb-[4px] block truncate text-[20px] leading-[24px] font-medium text-white">
+            {/* `h1` -- see AdvisorHeroDesktop's own comment on this swap. */}
+            <h1 className="[view-transition-name:advisor-hero-mobile-name] mb-[4px] block truncate text-[20px] leading-[24px] font-medium text-white">
               {fullName}
-            </span>
-            <GoldUnderline className="h-[2px] w-[100px]" />
+            </h1>
+            <GoldUnderline className="[view-transition-name:advisor-hero-mobile-underline] h-[2px] w-[100px]" />
           </div>
         )}
       </div>

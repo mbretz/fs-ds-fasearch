@@ -3,22 +3,29 @@ import { findAdvisorById } from '../utils/findAdvisor';
 import { AdvisorHero } from '../components/hero/AdvisorHero';
 import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
 import { AdvisorProfileBody } from '../components/profile/AdvisorProfileBody';
+import { OfficeDetailsPanel } from '../components/entity-info/OfficeDetailsPanel';
 import { cn } from '../utils/cn';
 
+// Same rounded/bg/padding treatment the Office Info panel used before it
+// was real (still used here for the New Client Inquiry form -- not yet
+// built, see RESUME_NOTES.txt); `@[940px]/advisor-hero:shadow-elevation-
+// raised` matches OfficeDetailsPanel's own new treatment below it in the
+// same rail column, per the user -- both should read as the same kind of
+// floating card once actually overlapping the Hero.
+const railPlaceholderClassName =
+  'rounded-[4px] bg-[color:var(--semantic-surface-base-default)] p-[20px] text-[color:var(--semantic-content-common-text-color-default)] @[940px]/advisor-hero:shadow-elevation-raised';
+
 // Shared by both the mobile and desktop trees below -- the main profile
-// content section starts with a 2px brand-gold top border, 48px below the
-// Hero above it (per the user -- matches the 48px gap AdvisorProfileBody
-// itself already uses between its own subsections, e.g. Focus Areas to
-// Experience & Background, so the Hero-to-Focus-Areas gap now reads as
-// just one more instance of that same rhythm); the existing flex/grid
-// row-gap each tree already provides between siblings
-// (`density-layout-fixed-large`, 16px) is subtracted out of this `mt`
-// rather than stacking on top of it, so the two combine to the intended
-// flat 48px instead of 64px. `pt` below the border is also 48px, per the
-// user -- the border-to-Focus-Areas gap matches the Hero-to-border gap
-// above it, both now the same 48px rhythm as every other subsection gap.
+// content section starts with a 2px brand-gold top border directly below
+// the Hero above it, per the user, 2026-09-22 -- no extra `mt` beyond the
+// existing flex/grid row-gap each tree already provides between siblings
+// (`density-layout-fixed-large`, 16px), removed from an earlier flat-48px
+// Hero-to-border gap. `pt` below the border stays 48px -- the
+// border-to-Focus-Areas gap still matches the 48px rhythm
+// AdvisorProfileBody's own subsections use (Focus Areas to Experience &
+// Background, etc), only the gap ABOVE the border changed.
 const profileBodySectionClassName =
-  'mt-[calc(var(--density-layout-fixed-6x-large)_-_var(--density-layout-fixed-large))] border-t-[2px] border-t-[color:var(--semantic-brand-primary-gold)] pt-[var(--density-layout-fixed-6x-large)]';
+  'border-t-[2px] border-t-[color:var(--semantic-brand-primary-gold)] pt-[var(--density-layout-fixed-6x-large)]';
 
 // Two separate trees below a `md:`/`hidden` breakpoint switch -- not one
 // tree reused via responsive utility classes -- because the two
@@ -65,6 +72,14 @@ export function AdvisorProfile() {
   }
 
   const { advisor, location } = found;
+  // Same status check as AdvisorCard's/EntityActions' own -- per the
+  // user, only advisors actively taking new clients or holding a
+  // waitlist spot get a New Client Inquiry form (still to be built) in
+  // this rail; `referralOnly` advisors show just the Office Details
+  // panel alone.
+  const showsNewClientInquiry =
+    advisor.newClientStatus === 'accepting' ||
+    advisor.newClientStatus === 'waitlist';
 
   return (
     <>
@@ -85,13 +100,40 @@ export function AdvisorProfile() {
             profileBodySectionClassName,
           )}
         />
-        {/* Office Info / New Client Inquiry panel -- not yet built, see
-            RESUME_NOTES.txt. */}
-        <div className="mx-[var(--density-layout-fixed-large)]">
-          <p className="rounded-[4px] bg-[color:var(--semantic-surface-base-default)] p-[20px] text-[color:var(--semantic-content-common-text-color-default)] shadow-[0px_3px_3px_-2px_rgba(13,13,13,0.25),0px_4px_6px_0px_rgba(75,77,78,0.2)]">
-            Office information panel placeholder — office hours, contact, and
-            branch team to come.
-          </p>
+        {/* New Client Inquiry form (still to be built) stacked above
+            Office Details, 40px between them, only for advisors who
+            actually show that form -- `referralOnly` advisors get just
+            the Office Details panel alone, per the user. No shadow on
+            either card here -- this mobile tree always stacks the rail
+            below the body content in normal flow (it never overlaps the
+            Hero the way the desktop tree's own `@[940px]/advisor-hero:`
+            treatment below can), same reasoning as LocationProfile.tsx's
+            own mobile rail. `officePhotoUrl` IS shown here, unlike
+            LocationProfile's own panel -- AdvisorHero shows the
+            ADVISOR's own portrait, not this office photo, so there's no
+            redundancy to avoid (see data/locations.ts's own comment on
+            why LocationProfile omits it instead). `advisor.hours`/
+            `advisor.phone` (falling back to the branch's own) match
+            AdvisorCard's own precedent for showing THIS advisor's
+            office, not just the branch's -- `hoursLabel` switches to
+            "Advisor Hours" only when the advisor's own schedule actually
+            diverges from the branch's, per OfficeDetailsPanel's own doc
+            comment on that prop. */}
+        <div className="mx-[var(--density-layout-fixed-large)] flex flex-col gap-[40px]">
+          {showsNewClientInquiry && (
+            <p className={railPlaceholderClassName}>
+              New Client Inquiry form placeholder — coming soon.
+            </p>
+          )}
+          <OfficeDetailsPanel
+            officePhotoUrl={location.officePhotoUrl}
+            address={location.address}
+            hours={advisor.hours ?? location.hours}
+            hoursLabel={advisor.hours ? 'Advisor Hours' : 'Office Hours'}
+            phone={advisor.phone ?? location.phone}
+            fax={location.fax}
+            supportStaff={location.supportStaff}
+          />
         </div>
       </div>
       {/* `@container/advisor-hero` (named, `[container-type:inline-size]`)
@@ -249,11 +291,58 @@ export function AdvisorProfile() {
             in that first row), and `pr-[var(--advisor-hero-gutter)]`
             (the fluid strip of Hero background revealed past the
             panel's right edge, per the user). */}
-          <div className="relative md:col-start-1 md:row-start-3 @[940px]/advisor-hero:col-start-2 @[940px]/advisor-hero:row-start-1 @[940px]/advisor-hero:row-end-3 @[940px]/advisor-hero:mt-[36px] @[940px]/advisor-hero:pr-[var(--advisor-hero-gutter)]">
-            <p className="rounded-[4px] bg-[color:var(--semantic-surface-base-default)] p-[20px] text-[color:var(--semantic-content-common-text-color-default)] shadow-[0px_3px_3px_-2px_rgba(13,13,13,0.25),0px_4px_6px_0px_rgba(75,77,78,0.2)]">
-              Office information panel placeholder — office hours, contact, and
-              branch team to come.
-            </p>
+          {/* `flex flex-col gap-[40px]` -- per the user, the New Client
+              Inquiry form (when shown) and the Office Details panel below
+              it get 40px between them, distinct from this grid's own
+              16px `gap-y` rhythm elsewhere. Only ONE card in this column
+              ever gets `@[940px]/advisor-hero:shadow-elevation-raised` --
+              per the user, the shadow marks whichever card is actually
+              the one overlapping the Hero banner, not every card in the
+              column: when the New Client Inquiry form is present, IT
+              sits flush against the Hero (this wrapper's own `mt-[36px]`
+              overlap offset) and gets the shadow; Office Details below
+              it no longer touches the Hero at all (it's pushed down past
+              the form's own height + this 40px gap), so it stays
+              shadowless there regardless of width. Only when there's no
+              form -- Office Details is the column's sole, Hero-
+              overlapping occupant -- does IT get the shadow instead (see
+              its own `className` below).
+              `md:ml-[var(--advisor-hero-gutter)] md:mr-[var(--advisor-
+              hero-gutter)]` matches AdvisorProfileBody's own insets
+              exactly (see its comment above) -- per the user, once this
+              rail has dropped to the "simple stacking order" below
+              940px, it should share the same width/inset as the main
+              profile content, not run flush to the grid's own edges the
+              way it previously did there. `@[940px]/advisor-hero:ml-0
+              mr-0` drop both once the rail moves back to its own
+              column-2 position, where they'd otherwise double up with
+              (`ml`) or fight (`mr`) the grid's own `gap-x`/this
+              wrapper's own `pr-[var(--advisor-hero-gutter)]` reveal-
+              strip -- AdvisorProfileBody never needs an `ml-0`
+              counterpart since it stays in column 1 at every width,
+              unlike this rail panel. */}
+          <div className="relative md:col-start-1 md:row-start-3 md:mr-[var(--advisor-hero-gutter)] md:ml-[var(--advisor-hero-gutter)] @[940px]/advisor-hero:col-start-2 @[940px]/advisor-hero:row-start-1 @[940px]/advisor-hero:row-end-3 @[940px]/advisor-hero:mt-[36px] @[940px]/advisor-hero:mr-0 @[940px]/advisor-hero:ml-0 @[940px]/advisor-hero:pr-[var(--advisor-hero-gutter)] flex flex-col gap-[40px]">
+            {showsNewClientInquiry && (
+              <p className={railPlaceholderClassName}>
+                New Client Inquiry form placeholder — coming soon.
+              </p>
+            )}
+            {/* `officePhotoUrl` IS shown here -- see the mobile tree's own
+                identical comment above for why this diverges from
+                LocationProfile's panel. */}
+            <OfficeDetailsPanel
+              officePhotoUrl={location.officePhotoUrl}
+              address={location.address}
+              hours={advisor.hours ?? location.hours}
+              hoursLabel={advisor.hours ? 'Advisor Hours' : 'Office Hours'}
+              phone={advisor.phone ?? location.phone}
+              fax={location.fax}
+              supportStaff={location.supportStaff}
+              className={cn(
+                !showsNewClientInquiry &&
+                  '@[940px]/advisor-hero:shadow-elevation-raised',
+              )}
+            />
           </div>
         </div>
       </div>

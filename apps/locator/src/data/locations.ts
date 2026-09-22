@@ -80,11 +80,11 @@ export interface Location {
    * The branch's photo — currently a single shared placeholder asset
    * rather than a real per-branch photo, but required (not optional):
    * LocationCard's own avatar always renders this image, never its
-   * initials fallback, per the user. Deliberately excluded from
-   * OfficeDetailsPanel wherever that panel appears inside a card
-   * (AdvisorCard or LocationCard) — Figma's "Branch Image" slot there is
-   * reserved for the full, standalone Office Details panel on profile
-   * pages (not yet built).
+   * initials fallback, per the user. Deliberately excluded from every
+   * OfficeDetailsPanel usage, including the full, standalone panel on
+   * LocationProfile's own rail (2026-09-22) — LocationHero already shows
+   * this same photo on that page, so repeating it a second time read as
+   * redundant once the two were actually visible side by side.
    */
   officePhotoUrl: string;
   lat: number;
