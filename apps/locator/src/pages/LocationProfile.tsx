@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { findLocationById } from '../utils/findAdvisor';
 import { LocationHero } from '../components/hero/LocationHero';
+import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
 import { cn } from '../utils/cn';
 
 // Same mobile-flow/desktop-grid split as AdvisorProfile.tsx -- see its own
@@ -23,6 +24,11 @@ export function LocationProfile() {
   return (
     <>
       <div className="flex flex-col gap-y-[var(--density-layout-fixed-large)] [overflow-anchor:none] md:hidden">
+        {/* mb cancels TWO gap-y-large increments, not one -- see
+            AdvisorProfile.tsx's own comment on this same pattern:
+            LocationHero's Fragment has the same invisible sentinel div as
+            its own first child. */}
+        <ProspectPortalLite className="mt-[4px] mb-[calc(4px_-_(2*var(--density-layout-fixed-large)))]" />
         <LocationHero location={location} />
         <p className="mx-[var(--density-layout-fixed-large)]">
           Location profile body placeholder — advisor list and hours to come.
@@ -71,6 +77,7 @@ export function LocationProfile() {
           per the user, this is a proportionate port of the same
           structural approach, not a re-derivation against a concrete
           bug. */}
+      <ProspectPortalLite className="hidden md:flex mb-[4px]" />
       <div className="hidden md:block @container/location-hero">
         <div
           className={cn(

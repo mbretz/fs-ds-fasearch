@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { findAdvisorById } from '../utils/findAdvisor';
 import { AdvisorHero } from '../components/hero/AdvisorHero';
+import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
 import { cn } from '../utils/cn';
 
 // Two separate trees below a `md:`/`hidden` breakpoint switch -- not one
@@ -52,6 +53,14 @@ export function AdvisorProfile() {
   return (
     <>
       <div className="flex flex-col gap-y-[var(--density-layout-fixed-large)] [overflow-anchor:none] md:hidden">
+        {/* mb cancels TWO gap-y-large increments, not one: AdvisorHero
+            renders a Fragment whose own first child is an invisible,
+            zero-height sentinel div (`useStuckSentinel`'s scroll marker,
+            see AdvisorHero.tsx's own comment on why it can't be wrapped),
+            which becomes its own flex item here too -- so this column's
+            gap-y applies both around that sentinel AND between it and the
+            visible sticky banner below it, not just once. */}
+        <ProspectPortalLite className="mt-[4px] mb-[calc(4px_-_(2*var(--density-layout-fixed-large)))]" />
         <AdvisorHero advisor={advisor} location={location} />
         <p className="mx-[var(--density-layout-fixed-large)]">
           Advisor profile body placeholder — bio, focus areas, and meeting
@@ -85,6 +94,7 @@ export function AdvisorProfile() {
           SIBLING of AdvisorHero, not a descendant of it, and needs to
           read `--advisor-hero-gutter` too -- custom properties inherit
           down through descendants only. */}
+      <ProspectPortalLite className="hidden md:flex mb-[4px]" />
       <div className="hidden md:block @container/advisor-hero">
         {/* Below this container's own 940px width: single column
             (`grid-cols-1`), rail panel hidden entirely, and the
