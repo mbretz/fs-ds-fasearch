@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { findAdvisorById } from '../utils/findAdvisor';
 import { AdvisorHero } from '../components/hero/AdvisorHero';
+import { cn } from '../utils/cn';
 
 // Two separate trees below a `md:`/`hidden` breakpoint switch -- not one
 // tree reused via responsive utility classes -- because the two
@@ -65,26 +66,137 @@ export function AdvisorProfile() {
           </p>
         </div>
       </div>
-      <div className="hidden md:grid md:grid-cols-[1fr_400px] md:items-start md:gap-x-[var(--density-layout-fixed-xx-large)] md:gap-y-[var(--density-layout-fixed-large)]">
-        <AdvisorHero
-          advisor={advisor}
-          location={location}
-          className="md:col-span-2 md:col-start-1 md:row-start-1"
-        />
-        <p className="md:col-start-1 md:row-start-2">
-          Advisor profile body placeholder — bio, focus areas, and meeting
-          details to come.
-        </p>
-        {/* `relative` (z-index:auto) -- without it, this non-positioned
+      {/* `@container/advisor-hero` (named, `[container-type:inline-size]`)
+          lives on THIS wrapper, one level above the actual grid -- not on
+          the grid div itself. A CSS container query can't affect the
+          very element that establishes the container (confirmed live,
+          Playwright: with `@container/advisor-hero` and
+          `@[940px]/advisor-hero:grid-cols-[1fr_400px]` on the SAME
+          element, the override silently never applied at all, since a
+          container can't query its own size for its own layout
+          properties -- the grid fell back to a single auto-sized column
+          plus an unwanted implicit one for the rail). Splitting the
+          container-establishing element from the one consuming the
+          query fixes that; this wrapper's own width is otherwise
+          identical to the grid's (no padding/margin of its own), so the
+          numbers in the grid's own comment below still apply unchanged.
+          Declared on a shared ancestor of AdvisorHero and the rail panel
+          (not on AdvisorHero's own root) because the rail panel is a
+          SIBLING of AdvisorHero, not a descendant of it, and needs to
+          read `--advisor-hero-gutter` too -- custom properties inherit
+          down through descendants only. */}
+      <div className="hidden md:block @container/advisor-hero">
+        {/* Below this container's own 940px width: single column
+            (`grid-cols-1`), rail panel hidden entirely, and the
+            portrait/gutter custom properties are flat (188px/40px,
+            this banner's original fixed values) -- per the user, once
+            the rail panel is dropped there's no space pressure left to
+            shrink anything for, so the portrait resets to its full
+            original size and the name/content below runs the Hero's
+            own full width instead of stopping short for a rail
+            clearance that no longer exists.
+
+            At/above 940px: two columns (`grid-cols-[1fr_400px]`), rail
+            panel visible, and the portrait/gutter properties switch to
+            a `clamp()`'d fluid value -- confirmed live (Playwright)
+            that the rail's own 400px + clearance demand can make the
+            name/status-tag column too narrow for its content
+            (specifically, the "Accepting New Clients" status tag
+            wrapping to two lines) at container widths approaching
+            940px from above; shrinking the portrait/gutters there
+            relieves that pressure. Ceiling (188px/40px) is reached at
+            container=1100px; floor (144px/24px, exactly matching the
+            flat values used just below 940px) at container=940px -- a
+            160px-wide window, per the user (an earlier 100px-wide
+            window, floor at 900px, technically worked but left little
+            margin; this wider window starts relieving the pressure
+            earlier for more buffer). The portrait's slope (44px range /
+            160px window = 0.275) plus 3x the gutter's own slope (16px
+            range / 160px window = 0.1, applied 3x since the gutter
+            value is reused for the left inset, the portrait-to-text
+            gap, AND the rail clearance) sums to 0.575, safely under 1
+            -- the text column's width stays non-decreasing as the
+            container narrows throughout this window (no dip/wrap
+            glitch); see this comment's own earlier revision in git
+            history for the fuller explanation of why that inequality
+            matters. Re-verify it if either range or the window width
+            ever changes. */}
+        <div
+          className={cn(
+            'md:grid md:grid-cols-1 md:items-start md:gap-x-[var(--density-layout-fixed-xx-large)] md:gap-y-[var(--density-layout-fixed-large)]',
+            '@[940px]/advisor-hero:grid-cols-[1fr_400px]',
+            '[--advisor-hero-portrait-size:188px] [--advisor-hero-gutter:40px]',
+            '@[940px]/advisor-hero:[--advisor-hero-portrait-size:clamp(144px,calc(-114.5px+27.5cqi),188px)]',
+            '@[940px]/advisor-hero:[--advisor-hero-gutter:clamp(24px,calc(-70px+10cqi),40px)]',
+          )}
+        >
+          <AdvisorHero
+            advisor={advisor}
+            location={location}
+            // `@[940px]/advisor-hero:col-end-3` (not an unconditional
+            // `md:col-span-2`) -- below the grid's own 940px threshold
+            // there's only ONE explicit column (see the grid's own
+            // comment), and spanning 2 there would make the browser
+            // invent an unwanted implicit second column to satisfy it.
+            // `col-end-3`, not `col-span-2` -- confirmed live (Playwright):
+            // `col-span-2` sets the FULL `grid-column` shorthand
+            // (`span 2 / span 2`), which has no explicit start line of its
+            // own, so whenever that rule wins the cascade it also resets
+            // (clobbers) the separately-declared `md:col-start-1`'s own
+            // start line back to indefinite -- leaving this item's
+            // placement to auto-placement instead, which put it in the
+            // wrong column entirely. `col-end-3` sets only
+            // `grid-column-end`, a distinct longhand that can't collide
+            // with `col-start-1`'s `grid-column-start`, so both apply
+            // together regardless of which rule is later in the
+            // stylesheet.
+            className="md:col-start-1 md:row-start-1 @[940px]/advisor-hero:col-end-3"
+          />
+          <p className="md:col-start-1 md:row-start-2">
+            Advisor profile body placeholder — bio, focus areas, and meeting
+            details to come.
+          </p>
+          {/* `relative` (z-index:auto) -- without it, this non-positioned
             card loses to the Hero's own `position: relative` banner in
             paint order regardless of DOM order (positioned elements
             always paint above static ones); confirmed live, the rail was
-            fully hidden behind the banner without this. */}
-        <div className="relative md:col-start-2 md:row-start-1 md:row-span-2 md:mt-[36px]">
-          <p className="rounded-[4px] bg-[color:var(--semantic-surface-base-default)] p-[20px] text-[color:var(--semantic-content-common-text-color-default)] shadow-[0px_3px_3px_-2px_rgba(13,13,13,0.25),0px_4px_6px_0px_rgba(75,77,78,0.2)]">
-            Office information panel placeholder — office hours, contact, and
-            branch team to come.
-          </p>
+            fully hidden behind the banner without this -- still needed
+            at/above the 940px threshold where it overlaps the Hero, and
+            harmless below it where there's no overlap to lose either way.
+
+            Below the grid's own 940px container-query threshold, per the
+            user, the rail panel doesn't disappear -- it moves to a THIRD
+            stacked row below the body placeholder instead (the same
+            "flush below, not overlapping" treatment AdvisorHeroMobile's
+            own layout already uses), rather than the narrow single-
+            column layout just losing this content outright:
+            `md:col-start-1 md:row-start-3` places it there (the grid's
+            own implicit row-sizing handles a 3rd row with no explicit
+            `grid-template-rows` change needed); the grid's own
+            `md:gap-y-[...]` already provides normal spacing above it, so
+            no extra margin or rail-specific `pr` clearance is needed in
+            this state (that clearance existed only to reveal the Hero's
+            banner background past the panel in the overlapping layout,
+            which doesn't apply here).
+
+            At/above 940px, `@[940px]/advisor-hero:` overrides restore
+            the original overlapping treatment: `col-start-2` (the second
+            column, now that one exists), `row-start-1 row-end-3` (NOT
+            `row-span-2` -- same shorthand-clobbering reasoning as
+            AdvisorHero's own `col-end-3` above: `row-span-2` would reset
+            the separately-declared `row-start-1` back to indefinite
+            whenever it won the cascade), `mt-[36px]` (the "overlap 36px
+            up into the Hero's own row" offset, per the user's original
+            Figma-matching spec -- only meaningful once the rail is back
+            in that first row), and `pr-[var(--advisor-hero-gutter)]`
+            (the fluid strip of Hero background revealed past the
+            panel's right edge, per the user). */}
+          <div className="relative md:col-start-1 md:row-start-3 @[940px]/advisor-hero:col-start-2 @[940px]/advisor-hero:row-start-1 @[940px]/advisor-hero:row-end-3 @[940px]/advisor-hero:mt-[36px] @[940px]/advisor-hero:pr-[var(--advisor-hero-gutter)]">
+            <p className="rounded-[4px] bg-[color:var(--semantic-surface-base-default)] p-[20px] text-[color:var(--semantic-content-common-text-color-default)] shadow-[0px_3px_3px_-2px_rgba(13,13,13,0.25),0px_4px_6px_0px_rgba(75,77,78,0.2)]">
+              Office information panel placeholder — office hours, contact, and
+              branch team to come.
+            </p>
+          </div>
         </div>
       </div>
     </>

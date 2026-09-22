@@ -15,6 +15,18 @@ export interface EntityActionsProps {
    * Takes precedence over `onPrimaryAction` when both are passed.
    */
   primaryHref?: string;
+  /**
+   * Renders the primary action's `<a>` as inert (`href="#"`,
+   * `aria-disabled`, `tabIndex={-1}`, a `preventDefault`
+   * click handler, `cursor-not-allowed`) instead of real navigation --
+   * the same fake-disabled treatment ContactLinks.tsx/OfficeDetailsPanel.tsx
+   * use for every other not-really-wired-up destination in this
+   * prototype. Only meaningful alongside `primaryHref`; ignored when
+   * the primary action is `onPrimaryAction` instead, since that's
+   * already caller-controlled. Opt-in (default `false`) since this
+   * component has other, already-real-navigation callers.
+   */
+  primaryInert?: boolean;
   onPrimaryAction?: () => void;
   /**
    * Renders the secondary "New Client Inquiry" button when provided --
@@ -39,6 +51,11 @@ export interface EntityActionsProps {
 // button's label text changes meaningfully.
 const STACK_BELOW_PX = 312;
 
+// See `primaryInert`'s own doc comment above for why this exists.
+function preventDisabledClick(event: { preventDefault: () => void }) {
+  event.preventDefault();
+}
+
 // Matches `.FA-Card-Actions` (`1351:34797`) *and* the profile-page Hero's
 // own "Actions" row (`421:6266`, the Hero-FA-Mobile reference) -- the same
 // primary+secondary button shape reused in both places. The Hero swaps
@@ -50,11 +67,34 @@ export function EntityActions({
   primaryLabel,
   primaryIcon,
   primaryHref,
+  primaryInert = false,
   onPrimaryAction,
   onNewClientInquiry,
   orientation = 'inline',
   className,
 }: EntityActionsProps) {
+  // Computed once, reused by both the block and inline orientation's own
+  // `<a>` below, rather than duplicating this ternary in each -- a plain
+  // native `<a>` accepts any of these as valid attributes regardless of
+  // which branch is live, so spreading is type-safe here even though it
+  // wouldn't be onto a custom component with a narrower prop type.
+  // `!cursor-not-allowed` (not a plain `cursor-not-allowed`) -- confirmed
+  // live (Playwright), `Button`'s own base classes always include
+  // `cursor-pointer`, which won the cascade over a plain override
+  // regardless of DOM class-list order, since Tailwind's generated
+  // stylesheet places `.cursor-pointer` after `.cursor-not-allowed`
+  // (alphabetical within the utility group) -- the computed `cursor`
+  // stayed `pointer` despite this override being present in the class
+  // list. Tailwind's `!` important-modifier forces it to actually win.
+  const primaryAnchorProps = primaryInert
+    ? {
+        href: '#',
+        'aria-disabled': 'true' as const,
+        tabIndex: -1,
+        onClick: preventDisabledClick,
+        className: '!cursor-not-allowed',
+      }
+    : { href: primaryHref };
   // Block (stacked) only, per the user -- inline (side by side) keeps its
   // original natural-width, centered sizing untouched below. `flex-1` on
   // each button here grows it to fill the column's width (block's own
@@ -79,7 +119,7 @@ export function EntityActions({
         <div className="mx-[var(--density-spacing-fixed-large)] flex min-w-0 flex-1 flex-col items-stretch gap-[var(--density-spacing-fixed-large)]">
           {primaryHref ? (
             <Button.Root variant="primary" asChild className="min-w-0">
-              <a href={primaryHref}>
+              <a {...primaryAnchorProps}>
                 {primaryIcon && <Button.Icon>{primaryIcon}</Button.Icon>}
                 <Button.Label>{primaryLabel}</Button.Label>
               </a>
@@ -180,7 +220,7 @@ export function EntityActions({
               asChild
               className="entity-actions-button"
             >
-              <a href={primaryHref}>
+              <a {...primaryAnchorProps}>
                 {primaryIcon && <Button.Icon>{primaryIcon}</Button.Icon>}
                 <Button.Label>{primaryLabel}</Button.Label>
               </a>
