@@ -172,7 +172,10 @@ function HeroContent({
   );
 }
 
-function GoldUnderline({ className }: { className?: string }) {
+// Exported -- AdvisorHeroInert.tsx (the dedicated New Client Inquiry
+// screen's own sticky header) reuses this exact decorative element
+// rather than duplicating its markup.
+export function GoldUnderline({ className }: { className?: string }) {
   return (
     <span
       aria-hidden="true"
@@ -446,17 +449,146 @@ function AdvisorHeroMobile({
   signedIn,
   fullName,
   showsNewClientInquiry,
-  onNewClientInquiry,
 }: {
   advisor: Advisor;
   phone?: string;
   signedIn: boolean;
   fullName: string;
   showsNewClientInquiry: boolean;
-  onNewClientInquiry?: () => void;
 }) {
   // `true` -- see this hook's own `viewTransition` doc comment.
   const { sentinelRef, stuck } = useStuckSentinel(0, true);
+  // The mobile "New Client Inquiry" button is a real link, not a click
+  // handler, with two different destinations depending on viewport
+  // width -- per the user, 2026-09-23. On wider mobile/tablet widths
+  // (>=500px, the same threshold the EntityActions instances below
+  // already split on), it scrolls to the form already stacked inline on
+  // this same page (`AdvisorProfile.tsx`'s own `#new-client-inquiry`
+  // anchor). Below that, it navigates to a dedicated route instead --
+  // `AdvisorInquiry.tsx`, a standalone screen with just the sticky
+  // Inert Hero (`AdvisorHeroInert.tsx`) and the form, matching Figma's
+  // `FAProfilePage/Mobile/LoggedIn/InquiryForm` frame (`1639:50445`).
+  const scrollToFormHref = '#new-client-inquiry';
+  const dedicatedInquiryHref = `/advisor/${advisor.id}/inquiry`;
+  // Plain CSS `scroll-margin-top` (set on the form's own wrapper, see
+  // AdvisorProfile.tsx) doesn't reliably offset a native URL-fragment
+  // jump the way it does `Element.scrollIntoView()` -- confirmed live
+  // (Playwright), the fragment link landed the form flush at the
+  // viewport top, hiding its own heading behind this sticky collapsed
+  // bar, ignoring the target's `scroll-margin-top` entirely. Calling
+  // `scrollIntoView` directly respects it instead, so this intercepts
+  // the click and takes over -- `href` is left in place regardless, so
+  // a no-JS/JS-failure case still gets the native (merely un-offset)
+  // jump rather than a dead link.
+  //
+  // Scrolling AT ALL crosses `useStuckSentinel`'s 1px threshold and
+  // collapses this Hero, which unmounts the entire HeroContent/
+  // Separator/EntityActions block below the banner (see this
+  // component's own `{!stuck && (...)}` block) -- removing a large
+  // chunk of page height above the form and shifting its real position
+  // mid-scroll. Two earlier approaches were tried and rejected here,
+  // per the user, 2026-09-23:
+  // - Force the collapse with an instant/smooth nudge, then POLL
+  //   `getBoundingClientRect()` until it looked settled before the real
+  //   scroll: worked, but read as a visible pause right as the Hero
+  //   reached the site header -- exactly the moment the poll was
+  //   waiting, since it was guessing at a duration for something (the
+  //   collapse's own View Transition) with no fixed one.
+  // - Force the collapse via `useStuckSentinel`'s own state setter
+  //   directly (bypassing the poll with a real `finished` promise from
+  //   the transition itself) and only start scrolling once THAT
+  //   resolved: no more guessing, but now the collapse animation and
+  //   the scroll became two fully sequential phases -- confirmed live,
+  //   scrollY stayed at flat 0 for ~470ms while the collapse played
+  //   before any scrolling began, which read as a different (still
+  //   noticeable) dead beat rather than a fixed one.
+  //
+  // This instead drives the ENTIRE scroll itself, in a `rAF` loop that
+  // re-measures the target's own real position fresh every single
+  // frame -- so whenever the collapse actually fires mid-flight (at
+  // whatever point, over whatever duration), the very next frame just
+  // sees a new (smaller) remaining distance and keeps going toward it,
+  // with no separate wait/poll/await phase, no hard stop, and no
+  // corrective second call. `EASE_IN_MS` ramps the very first stretch
+  // from a standstill (per the user's own "ease-in start" ask) via a
+  // cubic `t^3` curve; past that, each frame closes a fixed fraction
+  // (`CHASE_RATE`) of whatever distance remains, which reads as a
+  // natural decelerating "settle" into the final position (a
+  // exponential approach, not a fixed duration, so it can't overshoot
+  // or need correcting) -- both phases read as one unbroken motion
+  // regardless of when, or how long, the collapse itself takes.
+  function scrollToInquiryForm(event: { preventDefault: () => void }) {
+    const target = document.getElementById('new-client-inquiry');
+    if (!target) return;
+    event.preventDefault();
+    const EASE_IN_MS = 220;
+    const CHASE_RATE = 0.12;
+    // Max runtime, not just a "close enough" distance check -- without
+    // this, sub-pixel jitter in `getBoundingClientRect()` could in
+    // theory keep `remaining` hovering just above the 1px cutoff
+    // forever, running this loop indefinitely.
+    const MAX_DURATION_MS = 2000;
+    const startTime = performance.now();
+    // Cancel the instant a real user scroll gesture happens -- per the
+    // user, 2026-09-23: without this, the loop kept re-measuring and
+    // re-correcting toward the target every single frame regardless of
+    // what the user was doing, which made it impossible to scroll back
+    // up while (or after, if it never actually terminated -- see
+    // `MAX_DURATION_MS` above) it was running. `{ once: true }` on each
+    // so a single gesture is enough; `passive: true` since nothing here
+    // needs to block the browser's own default scroll handling for
+    // these event types.
+    let cancelled = false;
+    const cancel = () => {
+      cancelled = true;
+    };
+    const interruptEvents = ['wheel', 'touchstart', 'pointerdown'] as const;
+    for (const type of interruptEvents) {
+      window.addEventListener(type, cancel, { once: true, passive: true });
+    }
+    const cleanup = () => {
+      for (const type of interruptEvents) {
+        window.removeEventListener(type, cancel);
+      }
+    };
+    const animate = (now: number) => {
+      if (cancelled || now - startTime > MAX_DURATION_MS) {
+        cleanup();
+        return;
+      }
+      // `target`'s own `scroll-margin-top` (see AdvisorProfile.tsx) is
+      // exactly what should be left between it and the viewport's top
+      // once "arrived" -- `getBoundingClientRect().top` alone doesn't
+      // account for it, so it's subtracted here to get the true
+      // remaining distance for THIS frame's fresh measurement.
+      const scrollMarginTop = parseFloat(
+        getComputedStyle(target).scrollMarginTop,
+      );
+      const remaining = target.getBoundingClientRect().top - scrollMarginTop;
+      if (Math.abs(remaining) < 1) {
+        cleanup();
+        return;
+      }
+      const elapsed = now - startTime;
+      const rate =
+        elapsed < EASE_IN_MS
+          ? CHASE_RATE * (elapsed / EASE_IN_MS) ** 3
+          : CHASE_RATE;
+      // `behavior: 'instant'` -- confirmed live (Playwright): even the
+      // bare two-argument `scrollBy(x, y)` form inherits the global
+      // `scroll-behavior: smooth` CSS (view-transitions.css) in this
+      // browser, turning every one of THIS loop's own per-frame deltas
+      // into its own ~300-500ms smooth-scroll animation that the very
+      // next frame's call then immediately interrupts -- only a sliver
+      // of each requested delta ever actually landed, and the whole
+      // chase crawled at a small fraction of its intended `CHASE_RATE`.
+      // This custom loop is already driving its own easing by design,
+      // so each step needs to land immediately, not smoothly.
+      window.scrollBy({ top: remaining * rate, behavior: 'instant' });
+      requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }
 
   return (
     <>
@@ -547,15 +679,38 @@ function AdvisorHeroMobile({
                     </a>
                   </Button.Root>
                 )}
+                {/* Two link instances, toggled by viewport width via the
+                    same `min-[500px]:` threshold the "not stuck" state's
+                    own two `EntityActions` below already split on --
+                    per the user, this sticky compact bar's own button
+                    needs the identical scroll-vs-navigate behavior,
+                    not just the expanded state's. `Button.Root asChild`
+                    (not the flat `Button`), same reasoning as the
+                    "Call" link just above -- a real `<a>`, not a click
+                    handler with nothing to actually call. */}
                 {showsNewClientInquiry && (
-                  <Button
+                  <Button.Root
                     variant="secondary"
                     density="condensed"
-                    onClick={onNewClientInquiry ?? noop}
-                    className="min-w-0"
+                    asChild
+                    className="hidden min-[500px]:block min-w-0"
                   >
-                    New Client Inquiry
-                  </Button>
+                    <a href={scrollToFormHref} onClick={scrollToInquiryForm}>
+                      <Button.Label>New Client Inquiry</Button.Label>
+                    </a>
+                  </Button.Root>
+                )}
+                {showsNewClientInquiry && (
+                  <Button.Root
+                    variant="secondary"
+                    density="condensed"
+                    asChild
+                    className="min-w-0 min-[500px]:hidden"
+                  >
+                    <a href={dedicatedInquiryHref}>
+                      <Button.Label>New Client Inquiry</Button.Label>
+                    </a>
+                  </Button.Root>
                 )}
               </div>
             </div>
@@ -776,9 +931,10 @@ function AdvisorHeroMobile({
             primaryHref={phone ? telHref(phone) : undefined}
             primaryIcon={<Phone aria-hidden />}
             primaryInert
-            onNewClientInquiry={
-              showsNewClientInquiry ? (onNewClientInquiry ?? noop) : undefined
+            newClientInquiryHref={
+              showsNewClientInquiry ? scrollToFormHref : undefined
             }
+            onNewClientInquiryClick={scrollToInquiryForm}
             orientation="inline"
             className="hidden min-[500px]:block mt-[var(--density-spacing-fixed-small)]"
           />
@@ -793,8 +949,8 @@ function AdvisorHeroMobile({
             // HeroContent's own phone link and the stuck sticky bar's
             // own "Call" button above.
             primaryInert
-            onNewClientInquiry={
-              showsNewClientInquiry ? (onNewClientInquiry ?? noop) : undefined
+            newClientInquiryHref={
+              showsNewClientInquiry ? dedicatedInquiryHref : undefined
             }
             orientation="block"
             className="min-[500px]:hidden mt-[var(--density-spacing-fixed-small)]"
@@ -835,7 +991,6 @@ export function AdvisorHero({
         signedIn={signedIn}
         fullName={fullName}
         showsNewClientInquiry={showsNewClientInquiry}
-        onNewClientInquiry={onNewClientInquiry}
       />
     </>
   );

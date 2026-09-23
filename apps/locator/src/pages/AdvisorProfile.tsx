@@ -111,7 +111,16 @@ export function AdvisorProfile() {
             diverges from the branch's, per OfficeDetailsPanel's own doc
             comment on that prop. */}
         <div className="mx-[var(--density-layout-fixed-large)] flex flex-col gap-[40px]">
-          {showsNewClientInquiry && <NewClientInquiryForm advisor={advisor} />}
+          {showsNewClientInquiry && (
+            <NewClientInquiryForm
+              advisor={advisor}
+              id="new-client-inquiry"
+              // 142px (the collapsed sticky bar's own real measured
+              // height) minus 24px -- per the user, 2026-09-23, a
+              // little tighter than flush against the bar's bottom edge.
+              className="scroll-mt-[118px]"
+            />
+          )}
           <OfficeDetailsPanel
             officePhotoUrl={location.officePhotoUrl}
             address={location.address}

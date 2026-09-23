@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import { Button } from 'ds';
 import { cn } from '../../utils/cn';
 
@@ -33,10 +33,37 @@ export interface EntityActionsProps {
    * identical label/behavior in both confirmed usages (AdvisorCard's
    * `.FA-Card-Actions` and the profile-page Hero's own "Actions" row),
    * gated by Figma's "Show New Client Inquiry"/"Show Inquiry Button"
-   * property in each, so this is modeled as "was a handler passed in"
-   * rather than a separate boolean prop.
+   * property in each, so this is modeled as "was a handler OR href
+   * passed in" rather than a separate boolean prop.
    */
   onNewClientInquiry?: () => void;
+  /**
+   * A same-page anchor (`#...`) or route href for the secondary action.
+   * When set, renders as a real link styled like a Button (same
+   * `Button.Root`/`.Icon`/`.Label` `asChild` pattern as `primaryHref`
+   * above) instead of the flat `Button` convenience component -- per
+   * the user, 2026-09-23: on mobile advisor profile pages, this button
+   * either scrolls to the inline New Client Inquiry form (a `#`
+   * fragment) or navigates to the dedicated inquiry route, depending on
+   * viewport width; neither is "a click handler with nothing to
+   * actually call" the way `onNewClientInquiry` alone models it. Takes
+   * precedence over `onNewClientInquiry` when both are passed.
+   */
+  newClientInquiryHref?: string;
+  /**
+   * Optional `onClick` for the `newClientInquiryHref` link (ignored when
+   * `newClientInquiryHref` is unset). Per the user, 2026-09-23: plain
+   * CSS `scroll-margin-top` on the scroll target doesn't reliably offset
+   * a native URL-fragment jump the way it does `Element.scrollIntoView()`
+   * (confirmed live -- the fragment link landed flush at the viewport
+   * top, ignoring the target's own `scroll-margin-top` entirely) --
+   * `AdvisorHero.tsx`'s scroll-to-form link passes a handler here that
+   * calls `scrollIntoView` directly instead. The `href` itself is kept
+   * regardless (this handler calls `preventDefault()` itself when it
+   * wants to take over), so a no-JS/JS-failure case still gets the
+   * native (un-offset) jump as a fallback rather than a dead link.
+   */
+  onNewClientInquiryClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   /** Matches Figma's Inline/Block orientation variants. */
   orientation?: 'inline' | 'block';
   className?: string;
@@ -70,9 +97,14 @@ export function EntityActions({
   primaryInert = false,
   onPrimaryAction,
   onNewClientInquiry,
+  newClientInquiryHref,
+  onNewClientInquiryClick,
   orientation = 'inline',
   className,
 }: EntityActionsProps) {
+  const showsNewClientInquiry = Boolean(
+    onNewClientInquiry || newClientInquiryHref,
+  );
   // Computed once, reused by both the block and inline orientation's own
   // `<a>` below, rather than duplicating this ternary in each -- a plain
   // native `<a>` accepts any of these as valid attributes regardless of
@@ -134,15 +166,25 @@ export function EntityActions({
               {primaryLabel}
             </Button>
           )}
-          {onNewClientInquiry && (
-            <Button
-              variant="secondary"
-              onClick={onNewClientInquiry}
-              className="min-w-0"
-            >
-              New Client Inquiry
-            </Button>
-          )}
+          {showsNewClientInquiry &&
+            (newClientInquiryHref ? (
+              <Button.Root variant="secondary" asChild className="min-w-0">
+                <a
+                  href={newClientInquiryHref}
+                  onClick={onNewClientInquiryClick}
+                >
+                  <Button.Label>New Client Inquiry</Button.Label>
+                </a>
+              </Button.Root>
+            ) : (
+              <Button
+                variant="secondary"
+                onClick={onNewClientInquiry}
+                className="min-w-0"
+              >
+                New Client Inquiry
+              </Button>
+            ))}
         </div>
         <div
           aria-hidden
@@ -235,15 +277,29 @@ export function EntityActions({
               {primaryLabel}
             </Button>
           )}
-          {onNewClientInquiry && (
-            <Button
-              variant="secondary"
-              onClick={onNewClientInquiry}
-              className="entity-actions-button"
-            >
-              New Client Inquiry
-            </Button>
-          )}
+          {showsNewClientInquiry &&
+            (newClientInquiryHref ? (
+              <Button.Root
+                variant="secondary"
+                asChild
+                className="entity-actions-button"
+              >
+                <a
+                  href={newClientInquiryHref}
+                  onClick={onNewClientInquiryClick}
+                >
+                  <Button.Label>New Client Inquiry</Button.Label>
+                </a>
+              </Button.Root>
+            ) : (
+              <Button
+                variant="secondary"
+                onClick={onNewClientInquiry}
+                className="entity-actions-button"
+              >
+                New Client Inquiry
+              </Button>
+            ))}
         </div>
         <div aria-hidden className="entity-actions-spacer shrink basis-0" />
       </div>

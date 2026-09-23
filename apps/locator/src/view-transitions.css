@@ -1,3 +1,19 @@
+/* Mobile advisor profile pages' "New Client Inquiry" link (see
+   AdvisorHero.tsx's `scrollToFormHref`) scrolls to a same-page anchor
+   on wider mobile/tablet widths (>=500px) -- plain CSS `scroll-behavior:
+   smooth`, not a JS `scrollIntoView({behavior:'smooth'})` call, since a
+   real `<a href="#...">` already does the scroll natively with zero JS;
+   this just upgrades the jump to an animated one. Global on `html`
+   (this file's own established home for page-root CSS, see its other
+   rules below) rather than scoped to one page, since any future
+   same-page anchor link in this app should get the same smooth
+   behavior for free. Baseline Widely Available, no fallback needed --
+   an unsupported browser just gets the instant jump every anchor link
+   already had. */
+html {
+  scroll-behavior: smooth;
+}
+
 /* View Transition pseudo-elements are generated on `document`, not scoped
    to wherever a `view-transition-name` is declared, so this override lives
    in its own global stylesheet rather than a component-local <style> block.
