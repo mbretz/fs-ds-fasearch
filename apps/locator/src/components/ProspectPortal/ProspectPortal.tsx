@@ -51,7 +51,10 @@ export function ProspectPortal({ className }: ProspectPortalProps) {
                 flat component always wraps children in its own
                 `Button.Label`, tripping Radix Slot's single-child rule). */}
             <Button.Root variant="secondary" density="condensed" asChild>
-              <a href="/favorites">
+              {/* `?from=` -- see ProspectPortalLite.types.ts's own
+                  `favoritesFromLabel` comment for why the label rides the
+                  URL instead of router state. */}
+              <a href="/favorites?from=Search%20Results">
                 <Button.Icon>
                   <HeartFilled aria-hidden />
                 </Button.Icon>

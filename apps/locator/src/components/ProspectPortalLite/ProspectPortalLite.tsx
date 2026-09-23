@@ -22,7 +22,10 @@ const CONTENT_SIDE_OFFSET = lightRoomyTokens.densitySpacingFixedXSmall;
 // condensed "Sign in" button (real, not inert -- calls `signIn` directly,
 // unlike "View favorites." below, which stays inert since the Saved
 // Advisors page isn't built yet).
-export function ProspectPortalLite({ className }: ProspectPortalLiteProps) {
+export function ProspectPortalLite({
+  favoritesFromLabel,
+  className,
+}: ProspectPortalLiteProps) {
   const { signedIn, fullName, signIn, signOut } = useSession();
 
   return (
@@ -102,7 +105,7 @@ export function ProspectPortalLite({ className }: ProspectPortalLiteProps) {
           {/* Real link now that `/favorites` exists -- unlike "Go to
               Prospect Portal." above, which still has nowhere real to go. */}
           <Link
-            href="/favorites"
+            href={`/favorites?from=${encodeURIComponent(favoritesFromLabel)}`}
             className="text-[length:var(--semantic-content-nanocopy-font-size)] font-[number:var(--semantic-content-nanocopy-font-weight)] leading-[var(--semantic-content-nanocopy-line-height)]"
           >
             View favorites.
