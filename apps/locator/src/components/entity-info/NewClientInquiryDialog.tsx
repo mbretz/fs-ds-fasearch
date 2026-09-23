@@ -8,20 +8,36 @@ import { getFullName } from '../../utils/getFullName';
 export interface NewClientInquiryDialogProps {
   advisor: Advisor;
   /**
-   * Render-prop child, not a plain `trigger` element -- every caller so
-   * far (AdvisorCard's `EntityActions`) only ever hands this component a
-   * plain `onClick`-style callback prop from an unrelated component, not
-   * a single element to wrap `Dialog.Trigger asChild` around (Radix's
-   * `Trigger` needs to BE the clicked element itself, and `EntityActions`
-   * renders its own primary+secondary buttons together as one block, so
-   * there's no single child here to attach it to). A controlled
-   * `Dialog.Root` (`open`/`onOpenChange`) sidesteps that: this component
-   * owns the open state and hands callers a stable `openDialog` callback
-   * to wire up as whatever trigger they render -- the same shape a map
-   * pin popover's own button, or AdvisorHero's desktop Actions row, will
-   * want later (see docs/PLAN.md item 5).
+   * Render-prop child, not a plain `trigger` element -- every self-
+   * triggering caller (AdvisorCard's `EntityActions`) only ever hands
+   * this component a plain `onClick`-style callback prop from an
+   * unrelated component, not a single element to wrap `Dialog.Trigger
+   * asChild` around (Radix's `Trigger` needs to BE the clicked element
+   * itself, and `EntityActions` renders its own primary+secondary
+   * buttons together as one block, so there's no single child here to
+   * attach it to). A controlled `Dialog.Root` (`open`/`onOpenChange`)
+   * sidesteps that: this component owns the open state by default and
+   * hands callers a stable `openDialog` callback to wire up as whatever
+   * trigger they render -- the same shape a map pin popover's own
+   * button, or AdvisorHero's desktop Actions row, will want later (see
+   * docs/PLAN.md item 5). Optional: omitted entirely when the caller
+   * passes `open`/`onOpenChange` instead (see below) and triggers this
+   * dialog from outside.
    */
-  children: (openDialog: () => void) => ReactNode;
+  children?: (openDialog: () => void) => ReactNode;
+  /**
+   * External control, for a caller that needs to open THIS dialog only
+   * after closing one of its own -- `FavoritesComparatorDialog`'s own
+   * desktop-in-dialog "New Client Inquiry" button can't use the default
+   * self-triggering mode above, since that would open this Dialog while
+   * the comparator's own Dialog is still open (a real nested-modal bug:
+   * duplicate scrims/focus traps). When set, `children` is typically
+   * omitted (there's no in-place trigger to render) and this component's
+   * own internal open state is bypassed entirely in favor of the
+   * caller's.
+   */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 /**
@@ -41,13 +57,20 @@ export interface NewClientInquiryDialogProps {
 export function NewClientInquiryDialog({
   advisor,
   children,
+  open: openProp,
+  onOpenChange: onOpenChangeProp,
 }: NewClientInquiryDialogProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = openProp !== undefined;
+  const open = isControlled ? openProp : internalOpen;
+  const setOpen = isControlled
+    ? (onOpenChangeProp ?? (() => {}))
+    : setInternalOpen;
   const fullName = getFullName(advisor);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      {children(() => setOpen(true))}
+      {children?.(() => setOpen(true))}
       <Dialog.Content
         // Figma's frame has no separate title row of its own -- the Hero
         // below already shows the advisor's name, and the form itself

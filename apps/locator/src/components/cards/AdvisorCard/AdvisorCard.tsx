@@ -127,7 +127,7 @@ export function AdvisorCard({
         {/* Favoriting requires a signed-in prospect (`ProspectPortal`'s
             spoofed session), per the user -- hidden entirely rather than
             disabled for a signed-out visitor. */}
-        {signedIn && <FavoriteToggle name={fullName} />}
+        {signedIn && <FavoriteToggle advisorId={advisor.id} name={fullName} />}
       </div>
 
       <div className="flex gap-[var(--density-spacing-fixed-large)]">

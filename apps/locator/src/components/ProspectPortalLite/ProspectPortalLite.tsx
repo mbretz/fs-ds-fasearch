@@ -22,7 +22,10 @@ const CONTENT_SIDE_OFFSET = lightRoomyTokens.densitySpacingFixedXSmall;
 // condensed "Sign in" button (real, not inert -- calls `signIn` directly,
 // unlike "View favorites." below, which stays inert since the Saved
 // Advisors page isn't built yet).
-export function ProspectPortalLite({ className }: ProspectPortalLiteProps) {
+export function ProspectPortalLite({
+  favoritesFromLabel,
+  className,
+}: ProspectPortalLiteProps) {
   const { signedIn, fullName, signIn, signOut } = useSession();
 
   return (
@@ -99,12 +102,11 @@ export function ProspectPortalLite({ className }: ProspectPortalLiteProps) {
           <span className="text-[length:var(--semantic-content-nanocopy-font-size)] font-[number:var(--semantic-content-nanocopy-font-weight)] leading-[var(--semantic-content-nanocopy-line-height)] text-[color:var(--semantic-content-common-text-color-default)]">
             Welcome, {fullName}!
           </span>
+          {/* Real link now that `/favorites` exists -- unlike "Go to
+              Prospect Portal." above, which still has nowhere real to go. */}
           <Link
-            href="#"
-            aria-disabled="true"
-            tabIndex={-1}
-            onClick={(event) => event.preventDefault()}
-            className="cursor-not-allowed text-[length:var(--semantic-content-nanocopy-font-size)] font-[number:var(--semantic-content-nanocopy-font-weight)] leading-[var(--semantic-content-nanocopy-line-height)]"
+            href={`/favorites?from=${encodeURIComponent(favoritesFromLabel)}`}
+            className="text-[length:var(--semantic-content-nanocopy-font-size)] font-[number:var(--semantic-content-nanocopy-font-weight)] leading-[var(--semantic-content-nanocopy-line-height)]"
           >
             View favorites.
           </Link>

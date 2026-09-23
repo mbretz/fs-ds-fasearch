@@ -42,7 +42,10 @@ export function LocationProfile() {
             AdvisorProfile.tsx's own comment on this same pattern:
             LocationHero's Fragment has the same invisible sentinel div as
             its own first child. */}
-        <ProspectPortalLite className="mt-[4px] mb-[calc(4px_-_(2*var(--density-layout-fixed-large)))]" />
+        <ProspectPortalLite
+          favoritesFromLabel={location.name}
+          className="mt-[4px] mb-[calc(4px_-_(2*var(--density-layout-fixed-large)))]"
+        />
         <LocationHero location={location} />
         <LocationProfileBody
           location={location}
@@ -108,7 +111,10 @@ export function LocationProfile() {
           per the user, this is a proportionate port of the same
           structural approach, not a re-derivation against a concrete
           bug. */}
-      <ProspectPortalLite className="hidden md:flex mb-[4px]" />
+      <ProspectPortalLite
+        favoritesFromLabel={location.name}
+        className="hidden md:flex mb-[4px]"
+      />
       <div className="hidden md:block @container/location-hero">
         {/* `gap-x-[var(--density-layout-fixed-4x-large)]` (40px, not the
             24px this used before) -- per the user, matches the 40px

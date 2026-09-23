@@ -5,6 +5,7 @@ import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPor
 import { AdvisorProfileBody } from '../components/profile/AdvisorProfileBody';
 import { OfficeDetailsPanel } from '../components/entity-info/OfficeDetailsPanel';
 import { NewClientInquiryForm } from '../components/entity-info/NewClientInquiryForm';
+import { getFullName } from '../utils/getFullName';
 import { cn } from '../utils/cn';
 
 // Shared by both the mobile and desktop trees below -- the main profile
@@ -82,7 +83,10 @@ export function AdvisorProfile() {
             which becomes its own flex item here too -- so this column's
             gap-y applies both around that sentinel AND between it and the
             visible sticky banner below it, not just once. */}
-        <ProspectPortalLite className="mt-[4px] mb-[calc(4px_-_(2*var(--density-layout-fixed-large)))]" />
+        <ProspectPortalLite
+          favoritesFromLabel={getFullName(advisor)}
+          className="mt-[4px] mb-[calc(4px_-_(2*var(--density-layout-fixed-large)))]"
+        />
         <AdvisorHero advisor={advisor} location={location} />
         <AdvisorProfileBody
           advisor={advisor}
@@ -151,7 +155,10 @@ export function AdvisorProfile() {
           SIBLING of AdvisorHero, not a descendant of it, and needs to
           read `--advisor-hero-gutter` too -- custom properties inherit
           down through descendants only. */}
-      <ProspectPortalLite className="hidden md:flex mb-[4px]" />
+      <ProspectPortalLite
+        favoritesFromLabel={getFullName(advisor)}
+        className="hidden md:flex mb-[4px]"
+      />
       <div className="hidden md:block @container/advisor-hero">
         {/* Below this container's own 940px width: single column
             (`grid-cols-1`), rail panel hidden entirely, and the

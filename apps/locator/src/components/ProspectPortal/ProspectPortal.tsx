@@ -1,6 +1,7 @@
 import { Button, Link } from 'ds';
 import { HeartFilled } from 'icons';
 import { useSession } from '../../session/useSession';
+import { useFavorites } from '../../favorites/useFavorites';
 import type { ProspectPortalProps } from './ProspectPortal.types';
 
 // Figma "Prospect portal" component set (LoggedIn=False/True), node
@@ -17,6 +18,7 @@ import type { ProspectPortalProps } from './ProspectPortal.types';
 // to navigate yet since the Saved Advisors page isn't built.
 export function ProspectPortal({ className }: ProspectPortalProps) {
   const { signedIn, firstName, signIn, signOut } = useSession();
+  const { favoriteIds } = useFavorites();
 
   return (
     <section
@@ -43,13 +45,25 @@ export function ProspectPortal({ className }: ProspectPortalProps) {
             </Link>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-[var(--density-spacing-fixed-med)]">
-            <Button
-              variant="secondary"
-              density="condensed"
-              iconStart={<HeartFilled aria-hidden />}
-            >
-              See My Favorites
-            </Button>
+            {/* Real link now that `/favorites` exists -- `Button.Root`
+                + `asChild`, not the flat `Button`, per the same reasoning
+                ProspectPortalLite's own sign-in link comment gives (the
+                flat component always wraps children in its own
+                `Button.Label`, tripping Radix Slot's single-child rule). */}
+            <Button.Root variant="secondary" density="condensed" asChild>
+              {/* `?from=` -- see ProspectPortalLite.types.ts's own
+                  `favoritesFromLabel` comment for why the label rides the
+                  URL instead of router state. */}
+              <a href="/favorites?from=Search%20Results">
+                <Button.Icon>
+                  <HeartFilled aria-hidden />
+                </Button.Icon>
+                <Button.Label>
+                  See My Favorites
+                  {favoriteIds.length > 0 && ` (${favoriteIds.length})`}
+                </Button.Label>
+              </a>
+            </Button.Root>
             <Link
               href="#"
               aria-disabled="true"
