@@ -247,3 +247,52 @@ body {
   /* role: popover, rank 4 (raised) -- SelectInput, FilterMenu, SearchInput's drawer */
   z-index: calc(300 + 4);
 }
+
+/*
+ * Dialog fade `@keyframes` -- added 2026-09-23. MUST live in this real,
+ * build-time stylesheet, not a component-rendered `<style>` tag (tried
+ * that first and reverted it): React 19 treats a `<style>` element as a
+ * managed "Resource" and garbage-collects its underlying DOM node once
+ * it decides the owning fiber is no longer rendering it. Radix's own
+ * `Presence` keeps `Dialog.Content`'s DOM node alive past that point
+ * specifically so its exit animation can play, but that trick only
+ * covers the element Presence directly manages -- it doesn't stop React
+ * from independently reclaiming a sibling `<style>` resource on the same
+ * pass. Confirmed live: the `@keyframes` (and thus the animation itself)
+ * silently vanished the instant Content's `data-state` flipped to
+ * "closed", even though Content's own node correctly stayed mounted and
+ * kept reporting the (now-dead) animation name in its computed style.
+ * A plain global rule here has no such lifecycle to be cleaned up.
+ */
+@keyframes dialog-scrim-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes dialog-scrim-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes dialog-content-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes dialog-content-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

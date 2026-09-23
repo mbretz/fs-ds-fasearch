@@ -13,6 +13,24 @@ export interface NewClientInquiryFormProps {
    * link on wider mobile/tablet widths). */
   id?: string;
   className?: string;
+  /**
+   * Whether the form's own card renders a border -- true by default,
+   * matching AdvisorCard's border (see `cardClassName`'s own comment
+   * below). `NewClientInquiryDialog` sets this false: `Dialog.Content`
+   * already draws its own border/rounded edge around this same content,
+   * so a second nested border directly inside it read as a redundant
+   * inset frame rather than a distinct card.
+   */
+  bordered?: boolean;
+  /**
+   * Overrides the submit button's own density -- unset by default (it
+   * inherits the ambient `data-density` cascade like every other control
+   * in this form). `NewClientInquiryDialog` sets this to `'roomy'`: per
+   * the user, 2026-09-23, the Dialog's own condensed density reads well
+   * for the form's fields, but the primary submit action should stay at
+   * the roomy (larger) size regardless.
+   */
+  submitButtonDensity?: 'roomy' | 'condensed';
 }
 
 // Figma's Checklist Group tree nests the first 2 options (Retirement,
@@ -38,8 +56,13 @@ const topicOptions = [
 // specific component (#B1B3B4, which has no matching semantic/component
 // token anywhere in the built token set -- confirmed via grep across the
 // full built tokens.css).
-const cardClassName =
-  'flex flex-col gap-[var(--density-spacing-fixed-xx-large)] rounded-[var(--semantic-surface-border-radius)] border-[length:var(--semantic-surface-border-width)] border-[color:var(--primitives-ref-color-neutral-800)] bg-[var(--semantic-surface-base-default)] p-[var(--density-spacing-fixed-xx-large)]';
+function cardClassName(bordered: boolean) {
+  return cn(
+    'flex flex-col gap-[var(--density-spacing-fixed-xx-large)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--semantic-surface-base-default)] p-[var(--density-spacing-fixed-xx-large)]',
+    bordered &&
+      'border-[length:var(--semantic-surface-border-width)] border-[color:var(--primitives-ref-color-neutral-800)]',
+  );
+}
 
 const headingClassName =
   'text-[length:var(--semantic-content-heading-font-size)] leading-[length:var(--semantic-content-heading-line-height)] font-[number:var(--semantic-content-heading-font-weight)] text-[color:var(--semantic-content-heading-color)]';
@@ -64,6 +87,8 @@ export function NewClientInquiryForm({
   advisor,
   id,
   className,
+  bordered = true,
+  submitButtonDensity,
 }: NewClientInquiryFormProps) {
   const { signedIn } = useSession();
   const [fullName, setFullName] = useState('');
@@ -135,7 +160,7 @@ export function NewClientInquiryForm({
           }
         }
       `}</style>
-      <form onSubmit={handleSubmit} className={cardClassName}>
+      <form onSubmit={handleSubmit} className={cardClassName(bordered)}>
         <div className="flex flex-col gap-[var(--density-spacing-fixed-small)]">
           <h3 className={headingClassName}>New Client Inquiry</h3>
           <p className={paragraphClassName}>
@@ -239,6 +264,7 @@ export function NewClientInquiryForm({
           <Button
             type="submit"
             variant="primary"
+            density={submitButtonDensity}
             iconEnd={<MessageSend aria-hidden />}
             aria-disabled="true"
             tabIndex={-1}

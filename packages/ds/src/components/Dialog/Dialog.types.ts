@@ -28,6 +28,21 @@ export interface DialogContentProps extends Omit<
   density?: 'roomy' | 'condensed';
   /** Overrides the default "Close" accessible name on the built-in close button. */
   closeButtonAriaLabel?: string;
+  /**
+   * Merged onto the built-in close button -- e.g. to swap its default
+   * tertiary-variant look (a white pill, tuned for Content's own white
+   * background) for something visible against a non-default background,
+   * such as a dark hero image filling Content's top edge.
+   */
+  closeButtonClassName?: string;
+  /**
+   * Visually hides the title (via `sr-only`) while keeping it in the
+   * accessibility tree -- Radix requires a `Dialog.Title` for its
+   * `aria-labelledby` regardless, but some content (e.g. a hero banner
+   * that already shows the same name/heading) renders its own visible
+   * heading in Content's body instead of using this title row for it.
+   */
+  visuallyHideTitle?: boolean;
   /** Whether the backdrop Scrim renders behind Content. Defaults to true. */
   showScrim?: boolean;
   /** Merged onto the backdrop Scrim — e.g. to override its default z-index-overlay if it conflicts with another stacking context. */

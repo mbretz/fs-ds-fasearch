@@ -14,19 +14,35 @@ import { cn } from '../../utils/cn';
 export interface AdvisorHeroProps {
   advisor: Advisor;
   location: Location;
-  onNewClientInquiry?: () => void;
   /** Applied to the desktop rendering's own root -- e.g. the page's grid
    * placement classes. The mobile rendering has no single root of its own
    * (see AdvisorHeroMobile's own comment), so it isn't a target here. */
   className?: string;
 }
 
-function noop() {}
-
 // `tel:` strips everything but digits/leading `+` -- the display string
 // itself (e.g. "(555) 850-1313") stays untouched.
 function telHref(phone: string) {
   return `tel:${phone.replace(/[^\d+]/g, '')}`;
+}
+
+// Desktop's own Hero never scroll-collapses (no `useStuckSentinel`, unlike
+// AdvisorHeroMobile), so unlike that component's own `scrollToInquiryForm`
+// there's no risk of the target's position shifting mid-scroll here -- a
+// single `Element.scrollIntoView()` call is enough, no rAF chase loop
+// needed. Still intercepts the click rather than relying on the plain
+// `#fragment` jump, for the same reason AdvisorHeroMobile's own version
+// does: `scrollIntoView()` respects the target's own `scroll-margin-top`
+// (were one ever added), a raw URL-fragment jump doesn't. Targets a
+// DIFFERENT id (`new-client-inquiry-desktop`) than the mobile tree's own
+// `new-client-inquiry` -- AdvisorProfile.tsx mounts both trees' own
+// `NewClientInquiryForm` simultaneously (CSS, not JS, decides which is
+// visible), so a shared id would be a duplicate in the DOM.
+function scrollToInquiryFormDesktop(event: { preventDefault: () => void }) {
+  const target = document.getElementById('new-client-inquiry-desktop');
+  if (!target) return;
+  event.preventDefault();
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Neither a real <a> nor DS `Link` has a native `disabled` attribute, so
@@ -196,7 +212,6 @@ function AdvisorHeroDesktop({
   signedIn,
   fullName,
   showsNewClientInquiry,
-  onNewClientInquiry,
   className,
 }: {
   advisor: Advisor;
@@ -204,7 +219,6 @@ function AdvisorHeroDesktop({
   signedIn: boolean;
   fullName: string;
   showsNewClientInquiry: boolean;
-  onNewClientInquiry?: () => void;
   className?: string;
 }) {
   return (
@@ -417,9 +431,20 @@ function AdvisorHeroDesktop({
           primaryHref={phone ? telHref(phone) : undefined}
           primaryIcon={<Phone aria-hidden />}
           primaryInert
-          onNewClientInquiry={
-            showsNewClientInquiry ? (onNewClientInquiry ?? noop) : undefined
+          // Per the user, 2026-09-23: below AdvisorProfile.tsx's own
+          // 940px container-query threshold (this instance's own
+          // `@[940px]/advisor-hero:hidden` below), the rail panel is
+          // stacked inline below the page body, not visible beside the
+          // Hero -- this button needs to actually scroll to it, the same
+          // real-link + scroll-handler treatment AdvisorHeroMobile's own
+          // equivalent instance already gets, not a plain callback with
+          // nothing wired up on the other end (this was previously
+          // `onNewClientInquiry`, which no caller ever passed a handler
+          // to -- confirmed dead).
+          newClientInquiryHref={
+            showsNewClientInquiry ? '#new-client-inquiry-desktop' : undefined
           }
+          onNewClientInquiryClick={scrollToInquiryFormDesktop}
           orientation="inline"
           className="col-start-2 row-start-3 mt-[var(--density-spacing-fixed-small)] @[940px]/advisor-hero:hidden [&_.entity-actions-inner]:justify-start"
         />
@@ -964,7 +989,6 @@ function AdvisorHeroMobile({
 export function AdvisorHero({
   advisor,
   location,
-  onNewClientInquiry,
   className,
 }: AdvisorHeroProps) {
   const { signedIn } = useSession();
@@ -982,7 +1006,6 @@ export function AdvisorHero({
         signedIn={signedIn}
         fullName={fullName}
         showsNewClientInquiry={showsNewClientInquiry}
-        onNewClientInquiry={onNewClientInquiry}
         className={className}
       />
       <AdvisorHeroMobile

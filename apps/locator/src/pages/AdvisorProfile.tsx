@@ -348,6 +348,15 @@ export function AdvisorProfile() {
             {showsNewClientInquiry && (
               <NewClientInquiryForm
                 advisor={advisor}
+                // Distinct id from the mobile tree's own
+                // `new-client-inquiry` -- both trees' forms are mounted
+                // simultaneously (CSS, not JS, decides which is visible),
+                // so a shared id would be a duplicate in the DOM. Lets
+                // AdvisorHero.tsx's own desktop "New Client Inquiry"
+                // button scroll to it below the 940px rail threshold,
+                // where this panel sits inline below the page body
+                // rather than beside the Hero.
+                id="new-client-inquiry-desktop"
                 className="@[940px]/advisor-hero:shadow-elevation-raised"
               />
             )}

@@ -118,6 +118,17 @@ describe('Dialog', () => {
       expect(screen.getByText('Dialog Title')).toBeInTheDocument();
     });
 
+    it('visually hides the title via sr-only when visuallyHideTitle is set', () => {
+      render(
+        <Dialog.Root defaultOpen>
+          <Dialog.Content title="Dialog Title" visuallyHideTitle>
+            <Dialog.Body>Body content</Dialog.Body>
+          </Dialog.Content>
+        </Dialog.Root>,
+      );
+      expect(screen.getByText('Dialog Title')).toHaveClass('sr-only');
+    });
+
     it('renders a description only when provided', () => {
       const { rerender } = render(
         <Dialog.Root defaultOpen>
@@ -211,6 +222,24 @@ describe('Dialog', () => {
       expect(
         screen.getByText('Dialog Title').closest('[data-density]'),
       ).toHaveAttribute('data-density', 'condensed');
+    });
+  });
+
+  describe('close button styling', () => {
+    it('merges closeButtonClassName onto the built-in close button', () => {
+      render(
+        <Dialog.Root defaultOpen>
+          <Dialog.Content
+            title="Dialog Title"
+            closeButtonClassName="text-white"
+          >
+            <Dialog.Body>Body content</Dialog.Body>
+          </Dialog.Content>
+        </Dialog.Root>,
+      );
+      expect(screen.getByRole('button', { name: 'Close' })).toHaveClass(
+        'text-white',
+      );
     });
   });
 

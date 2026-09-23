@@ -40,6 +40,8 @@ function DialogContent({
   // even nested Button's own padding) silently fails to resolve.
   density = 'roomy',
   closeButtonAriaLabel,
+  closeButtonClassName,
+  visuallyHideTitle = false,
   showScrim = true,
   scrimClassName,
   children,
@@ -49,16 +51,54 @@ function DialogContent({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   return (
     <DialogPrimitive.Portal>
+      {/* Plain named `@keyframes` (defined in theme.css, not a component-
+          rendered `<style>` tag here -- see that file's own comment on
+          this, a real bug hit live) keyed off `data-[state]`, not
+          `@starting-style`/`allow-discrete` (the native `<dialog>`/
+          Popover top-layer pattern) -- Content and Overlay aren't native
+          top-layer elements here, Radix's own `Presence` already handles
+          the "keep it mounted for the exit animation, then unmount"
+          problem for us via these elements' `data-state` attribute, so a
+          plain named `animation` is Radix's own idiomatic pattern:
+          Presence detects the running animation and waits for
+          `animationend` before actually unmounting. `motion-safe:` omits
+          the animation entirely under `prefers-reduced-motion: reduce`,
+          so Presence sees no animation to wait for and unmounts
+          immediately, per the same reduced-motion guidance a
+          `@starting-style`-based approach would also need. */}
       {showScrim && (
         <DialogPrimitive.Overlay asChild>
-          <Scrim className={cn('z-index-overlay', scrimClassName)} />
+          <Scrim
+            className={cn(
+              'z-index-overlay motion-safe:data-[state=open]:animate-[dialog-scrim-fade-in_200ms_ease-out] motion-safe:data-[state=closed]:animate-[dialog-scrim-fade-out_200ms_ease-in]',
+              scrimClassName,
+            )}
+          />
         </DialogPrimitive.Overlay>
       )}
+      {/* Content itself is the scroll container, not a separate wrapper
+          around it -- confirmed live, 2026-09-23, tried a wrapper div
+          approach first and reverted it: Radix's own body-scroll-lock
+          (`react-remove-scroll`, wired up internally by `Dialog.Content`)
+          only exempts scrolling *within Content's own subtree* from the
+          lock it applies to the rest of the page. A separate `overflow-
+          y-auto` ancestor wrapping Content doesn't count as "within," so
+          real wheel/trackpad scroll on it was silently swallowed even
+          though programmatic `scrollTop` still worked in isolation.
+          `top-[padding]` (not centered, no translate) anchors Content to
+          the same fixed distance from the viewport's top edge every
+          time, independent of where the page triggering it happens to
+          be scrolled; `max-h-[100vh-2*padding]` caps its own height
+          symmetrically so it can never grow taller than the viewport
+          (which is what let content get cut off at both edges with no
+          way to reach either one), and its own `overflow-y-auto` scrolls
+          internally once real content exceeds that cap -- exactly the
+          subtree Radix's scroll-lock already allows. */}
       <DialogPrimitive.Content
         ref={ref}
         data-density={density}
         className={cn(
-          'fixed left-1/2 top-1/2 z-index-modal grid w-full max-w-[var(--component-dialog-max-width)] -translate-x-1/2 -translate-y-1/2 rounded-[var(--component-dialog-border-radius)] border-[length:var(--component-dialog-border-width)] border-[color:var(--component-dialog-border-color)] bg-[var(--component-dialog-background-color)] shadow-elevation-suspended',
+          'fixed inset-x-0 top-[var(--component-dialog-spacing-padding)] z-index-modal mx-auto grid w-[calc(100%-2*var(--component-dialog-spacing-padding))] max-w-[var(--component-dialog-max-width)] max-h-[calc(100vh-2*var(--component-dialog-spacing-padding))] overflow-y-auto rounded-[var(--component-dialog-border-radius)] border-[length:var(--component-dialog-border-width)] border-[color:var(--component-dialog-border-color)] bg-[var(--component-dialog-background-color)] shadow-elevation-suspended motion-safe:data-[state=open]:animate-[dialog-content-fade-in_200ms_ease-out] motion-safe:data-[state=closed]:animate-[dialog-content-fade-out_200ms_ease-in]',
           className,
         )}
         // Default (per user direction, 2026-08-21): focus the close button on
@@ -82,7 +122,12 @@ function DialogContent({
             to clear the always-condensed close button, not a calc against
             the reactive base padding + ambient button height. */}
         <div className="col-start-1 row-start-1 flex flex-col gap-[var(--component-dialog-spacing-gap)] px-[var(--component-dialog-spacing-padding)] pb-[var(--component-dialog-spacing-padding)] pt-[var(--component-dialog-spacing-padding-top)]">
-          <DialogPrimitive.Title className="text-[length:var(--component-dialog-title-font-size)] font-[number:var(--component-dialog-title-font-weight)] text-[color:var(--component-dialog-text-color)]">
+          <DialogPrimitive.Title
+            className={cn(
+              'text-[length:var(--component-dialog-title-font-size)] font-[number:var(--component-dialog-title-font-weight)] text-[color:var(--component-dialog-text-color)]',
+              visuallyHideTitle && 'sr-only',
+            )}
+          >
             {title}
           </DialogPrimitive.Title>
           {description && (
@@ -98,6 +143,7 @@ function DialogContent({
               ref={closeButtonRef}
               density="condensed"
               aria-label={closeButtonAriaLabel}
+              className={closeButtonClassName}
             />
           </DialogPrimitive.Close>
         </div>
