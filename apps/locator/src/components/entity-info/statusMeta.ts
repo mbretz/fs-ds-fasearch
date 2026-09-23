@@ -1,8 +1,8 @@
 import type { ComponentType, SVGProps } from 'react';
-import { DateClock } from 'icons';
 import type { NewClientStatus } from '../../data/locations';
 import IconInvitation from '../../assets/icons/IconInvitation';
 import IconReferral from '../../assets/icons/IconReferral';
+import IconWaitlist from '../../assets/icons/IconWaitlist';
 
 /**
  * One mapping shared by `StatusTag` (the colored pill) and `EntityPortrait`
@@ -17,14 +17,14 @@ import IconReferral from '../../assets/icons/IconReferral';
  * `response.*` token since "by referral" isn't a warning/error/success
  * state, just Edward Jones' brand primary blue.
  *
- * Badge icons (`icon`): `accepting`/`referralOnly` are locator-local
- * (`assets/icons/`) real Figma vectors for the Badge component set's own
- * "invitation"/"Referral" glyphs (`202:3542`) -- previously wrongly mapped
- * to `packages/icons`' `MessageEnvelope`/`Share`, neither of which matches
- * Figma's actual glyphs (an envelope+hand illustration, and a star with a
- * partial orbit/loop, respectively). `waitlist`'s `DateClock` is a real
- * `packages/icons` export and a close match for Figma's "stopwatch" glyph,
- * so it's unchanged.
+ * Badge icons (`icon`): all three are locator-local (`assets/icons/`)
+ * real Figma vectors for the Badge component set's own "invitation"/
+ * "Referral"/"stopwatch" glyphs (`202:3542`) -- previously wrongly
+ * mapped to `packages/icons`' `MessageEnvelope`/`Share`/`DateClock`,
+ * none of which matches Figma's actual glyphs (an envelope+hand
+ * illustration, a star with a partial orbit/loop, and a stopwatch with
+ * a crown/stem and start button, respectively -- `DateClock` is a plain
+ * round clock face with no stopwatch stem at all).
  */
 export interface StatusMeta {
   label: string;
@@ -41,7 +41,7 @@ export const statusMeta: Record<NewClientStatus, StatusMeta> = {
   waitlist: {
     label: 'New Client Waitlist',
     borderColorVar: 'var(--color-response-warning-base)',
-    icon: DateClock,
+    icon: IconWaitlist,
   },
   referralOnly: {
     label: 'New Clients by Referral',

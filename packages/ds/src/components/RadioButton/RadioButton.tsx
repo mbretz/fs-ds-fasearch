@@ -14,7 +14,7 @@ import type { RadioButtonProps } from './RadioButton.types';
  * item.
  */
 export const radioButtonLabelVariants = cva(
-  'text-[length:var(--component-radio-label-font-size)] font-[number:var(--component-radio-label-font-weight)] text-[color:var(--component-radio-label-text-color-default)] peer-data-[disabled]:text-[color:var(--component-radio-label-text-color-disabled)]',
+  'text-[length:var(--component-radio-label-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--component-radio-label-font-weight)] text-[color:var(--component-radio-label-text-color-default)] peer-data-[disabled]:text-[color:var(--component-radio-label-text-color-disabled)]',
 );
 
 /**
@@ -56,7 +56,14 @@ function RadioButton({
   return (
     <label
       className={cn(
-        'inline-flex min-h-[var(--component-radio-min-height)] cursor-pointer items-center justify-center gap-[var(--component-radio-gap)] px-[var(--component-radio-padding-inline)] py-[var(--component-radio-padding-block)] has-[[data-disabled]]:cursor-not-allowed',
+        // `items-start`, not `items-center` -- same reasoning as
+        // Checkbox.tsx's own note: `--component-radio-size` (24px)
+        // exactly matches this label's own `leading-[...common-line-
+        // height]` (24px), so top-aligning the indicator with the row
+        // already reads as centered against the label's FIRST line;
+        // `items-center` instead centered it against the row's full
+        // (wrapped) height.
+        'inline-flex min-h-[var(--component-radio-min-height)] cursor-pointer items-start justify-center gap-[var(--component-radio-gap)] px-[var(--component-radio-padding-inline)] py-[var(--component-radio-padding-block)] has-[[data-disabled]]:cursor-not-allowed',
         className,
       )}
     >
@@ -71,8 +78,15 @@ function RadioButton({
           className={radioButtonIndicatorClassName}
         />
       </RadioGroupPrimitive.Item>
+      {/* `min-w-0` -- same fix as Checkbox.tsx's own label span, see its
+          note: without it this flex item's implicit `min-width: auto`
+          refuses to shrink below its unwrapped content width even once
+          RadioGroup.Root's own wrap fix constrains the row's available
+          width. */}
       {children && (
-        <span className={radioButtonLabelVariants()}>{children}</span>
+        <span className={cn('min-w-0', radioButtonLabelVariants())}>
+          {children}
+        </span>
       )}
     </label>
   );

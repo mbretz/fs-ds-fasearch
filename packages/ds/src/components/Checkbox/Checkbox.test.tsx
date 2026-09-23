@@ -109,7 +109,7 @@ describe('Checkbox', () => {
     it('applies the error label color without changing the box state', () => {
       render(<Checkbox error>Subscribe</Checkbox>);
       expect(screen.getByText('Subscribe').className).toBe(
-        cn(checkboxLabelVariants({ state: 'error' })),
+        cn('min-w-0', checkboxLabelVariants({ state: 'error' })),
       );
       expect(screen.getByRole('checkbox')).toHaveAttribute(
         'data-state',

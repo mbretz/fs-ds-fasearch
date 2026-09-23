@@ -53,11 +53,18 @@ export function StatusTag({
       style={{ borderColor: meta.borderColorVar }}
     >
       {displayBadge && (
+        // `size-[32px]`, not the `density-sizing-fixed-xx-large` (24px)
+        // this previously used -- per the user, 2026-09-23, after
+        // previewing both sizes live. No real token lands on 32px either
+        // (`density-sizing-fixed` tops out at `xx-large`, 24px), same
+        // "no clean token, arbitrary value with a comment" precedent as
+        // EntityPortrait's own `badgeContentSize` (see its comment) and
+        // AdvisorCard's 104px+4px avatar override.
         <Badge
           icon={meta.icon}
           colorVar={meta.borderColorVar}
           mode="inverse"
-          className="size-[var(--density-sizing-fixed-xx-large)]"
+          className="size-[32px]"
         />
       )}
       <Tag.Label>{meta.label}</Tag.Label>

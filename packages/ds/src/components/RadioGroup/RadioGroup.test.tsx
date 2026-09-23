@@ -40,13 +40,15 @@ describe('RadioGroup', () => {
   });
 
   describe('Root width', () => {
-    it('uses a minmax(max-content,1fr) grid column so content sets the minimum width', () => {
+    it('uses a minmax(min(max-content,100%),1fr) grid column so content sets the minimum width but can still wrap instead of overflowing', () => {
       render(<BasicRadioGroup />);
       const root = screen.getByRole('radiogroup');
       const classNames = root.className.split(' ');
       expect(classNames).toContain('grid');
       expect(classNames).toContain('w-fit');
-      expect(classNames).toContain('grid-cols-[minmax(max-content,1fr)]');
+      expect(classNames).toContain(
+        'grid-cols-[minmax(min(max-content,100%),1fr)]',
+      );
     });
 
     it('lets a consumer className override the default hug-to-content width', () => {
