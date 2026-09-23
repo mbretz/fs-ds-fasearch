@@ -14,7 +14,7 @@ import type { CheckboxProps } from './Checkbox.types';
  * being styled two different ways.
  */
 export const checkboxLabelVariants = cva(
-  'text-[length:var(--component-checkbox-input-value-font-size)] font-[number:var(--component-checkbox-input-value-font-weight)] peer-data-[disabled]:text-[color:var(--component-checkbox-text-color-disabled)]',
+  'text-[length:var(--component-checkbox-input-value-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--component-checkbox-input-value-font-weight)] peer-data-[disabled]:text-[color:var(--component-checkbox-text-color-disabled)]',
   {
     variants: {
       state: {
@@ -112,7 +112,17 @@ function Checkbox({
   return (
     <label
       className={cn(
-        'inline-flex min-h-[var(--component-checkbox-min-height)] items-center justify-center gap-[var(--component-checkbox-gap)] px-[var(--component-checkbox-padding-inline)] py-[var(--component-checkbox-padding-block)]',
+        // `items-start`, not `items-center` -- `--component-checkbox-size`
+        // (24px) exactly matches `checkboxLabelVariants`'s own
+        // `leading-[...common-line-height]` (24px, the same 16px/24px
+        // font-size/line-height pairing used elsewhere in this token set),
+        // so the box's top edge already lands flush with the label's own
+        // FIRST line box, reading as vertically centered against it.
+        // `items-center` centered the box against the row's full height
+        // instead, which drifts it down off the first line once a long
+        // label wraps to 2+ lines (confirmed live, apps/locator's New
+        // Client Inquiry form, 2026-09-23).
+        'inline-flex min-h-[var(--component-checkbox-min-height)] items-start justify-center gap-[var(--component-checkbox-gap)] px-[var(--component-checkbox-padding-inline)] py-[var(--component-checkbox-padding-block)]',
         disabled ? 'cursor-not-allowed' : 'cursor-pointer',
         className,
       )}
@@ -133,8 +143,20 @@ function Checkbox({
           </span>
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Root>
+      {/* `min-w-0` -- without it, this flex item's implicit `min-width:
+          auto` pins it to its own unwrapped content width, refusing to
+          shrink even once an ancestor (e.g. ChecklistGroup.Root's own
+          wrap fix, see that component's note) constrains the row's
+          available width. Confirmed live, apps/locator's New Client
+          Inquiry form, 2026-09-23 -- a long label just overflowed its
+          container instead of wrapping until this was added. */}
       {children && (
-        <span className={checkboxLabelVariants({ state: labelState })}>
+        <span
+          className={cn(
+            'min-w-0',
+            checkboxLabelVariants({ state: labelState }),
+          )}
+        >
           {children}
         </span>
       )}

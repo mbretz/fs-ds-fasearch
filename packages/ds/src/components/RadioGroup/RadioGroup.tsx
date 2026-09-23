@@ -14,6 +14,15 @@ import type {
  * Radix's Select.Root renders no DOM node of its own), Radix's
  * RadioGroup.Root already renders a real `<div role="radiogroup">` — so
  * this styles that element directly instead of wrapping it.
+ *
+ * The single grid column's minimum track size is `min(max-content,100%)`,
+ * not a bare `max-content` — same fix and reasoning as
+ * ChecklistGroup.Root's own note (a bare `max-content` floor overflows
+ * the container instead of wrapping a long option; capping it at the
+ * container's own available width once `max-content` would exceed it
+ * lets long options wrap while short lists still hug their content
+ * exactly as before). Pairs with RadioButton.tsx's own `min-w-0` fix one
+ * level down.
  */
 function RadioGroupRoot({
   className,
@@ -26,7 +35,7 @@ function RadioGroupRoot({
       ref={ref}
       data-density={density}
       className={cn(
-        'grid w-fit grid-cols-[minmax(max-content,1fr)] gap-[var(--component-radio-group-gap)]',
+        'grid w-fit grid-cols-[minmax(min(max-content,100%),1fr)] gap-[var(--component-radio-group-gap)]',
         className,
       )}
       {...props}

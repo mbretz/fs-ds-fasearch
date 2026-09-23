@@ -4,16 +4,8 @@ import { AdvisorHero } from '../components/hero/AdvisorHero';
 import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
 import { AdvisorProfileBody } from '../components/profile/AdvisorProfileBody';
 import { OfficeDetailsPanel } from '../components/entity-info/OfficeDetailsPanel';
+import { NewClientInquiryForm } from '../components/entity-info/NewClientInquiryForm';
 import { cn } from '../utils/cn';
-
-// Same rounded/bg/padding treatment the Office Info panel used before it
-// was real (still used here for the New Client Inquiry form -- not yet
-// built, see RESUME_NOTES.txt); `@[940px]/advisor-hero:shadow-elevation-
-// raised` matches OfficeDetailsPanel's own new treatment below it in the
-// same rail column, per the user -- both should read as the same kind of
-// floating card once actually overlapping the Hero.
-const railPlaceholderClassName =
-  'rounded-[4px] bg-[color:var(--semantic-surface-base-default)] p-[20px] text-[color:var(--semantic-content-common-text-color-default)] @[940px]/advisor-hero:shadow-elevation-raised';
 
 // Shared by both the mobile and desktop trees below -- the main profile
 // content section starts with a 2px brand-gold top border directly below
@@ -45,8 +37,8 @@ const profileBodySectionClassName =
 //   as normal-flow siblings in this same div keeps it tall for as long as
 //   the page has content, regardless of the Hero's own current height.
 // - Desktop: Hero, body, and rail are separate CSS Grid items instead,
-//   per the user -- the rail (Office Info / New Client Inquiry panel,
-//   not yet built) needs to `row-span` into the Hero's own row so it can
+//   per the user -- the rail (Office Info / New Client Inquiry panel)
+//   needs to `row-span` into the Hero's own row so it can
 //   overlap up into it (Figma's real page has the rail card starting
 //   ~36px into the Hero, not flush below it), which requires them to be
 //   siblings positioned by grid-column/row, not nested in one flow.
@@ -74,9 +66,8 @@ export function AdvisorProfile() {
   const { advisor, location } = found;
   // Same status check as AdvisorCard's/EntityActions' own -- per the
   // user, only advisors actively taking new clients or holding a
-  // waitlist spot get a New Client Inquiry form (still to be built) in
-  // this rail; `referralOnly` advisors show just the Office Details
-  // panel alone.
+  // waitlist spot get a New Client Inquiry form in this rail;
+  // `referralOnly` advisors show just the Office Details panel alone.
   const showsNewClientInquiry =
     advisor.newClientStatus === 'accepting' ||
     advisor.newClientStatus === 'waitlist';
@@ -100,7 +91,7 @@ export function AdvisorProfile() {
             profileBodySectionClassName,
           )}
         />
-        {/* New Client Inquiry form (still to be built) stacked above
+        {/* New Client Inquiry form stacked above
             Office Details, 40px between them, only for advisors who
             actually show that form -- `referralOnly` advisors get just
             the Office Details panel alone, per the user. No shadow on
@@ -120,11 +111,7 @@ export function AdvisorProfile() {
             diverges from the branch's, per OfficeDetailsPanel's own doc
             comment on that prop. */}
         <div className="mx-[var(--density-layout-fixed-large)] flex flex-col gap-[40px]">
-          {showsNewClientInquiry && (
-            <p className={railPlaceholderClassName}>
-              New Client Inquiry form placeholder — coming soon.
-            </p>
-          )}
+          {showsNewClientInquiry && <NewClientInquiryForm advisor={advisor} />}
           <OfficeDetailsPanel
             officePhotoUrl={location.officePhotoUrl}
             address={location.address}
@@ -204,6 +191,33 @@ export function AdvisorProfile() {
             // column for a column-gap to apply between).
             'md:grid md:grid-cols-1 md:items-start md:gap-x-[var(--advisor-hero-gutter)] md:gap-y-[var(--density-layout-fixed-large)]',
             '@[940px]/advisor-hero:grid-cols-[1fr_400px]',
+            // `grid-rows-[auto_1fr]`, added once the rail panel's real
+            // content (the New Client Inquiry form) made row 1 and row 2
+            // both plain implicit `auto` tracks -- confirmed live
+            // (Playwright measurement, apps/locator's advisor profile
+            // page, 2026-09-23): with the rail spanning `row-start-1
+            // row-end-3` into BOTH rows, and both tracks sized `auto`
+            // (infinite growth limit), the CSS Grid spec's "distribute
+            // extra space across spanned tracks" step splits the rail's
+            // overflow height roughly EQUALLY between row 1 and row 2
+            // rather than putting it all in row 2 -- row 1 measured
+            // 529px tall even though AdvisorHero's own content only
+            // needed 268px, and since AdvisorHero uses `items-start`
+            // (not `stretch`), that leftover row-1 space rendered as a
+            // ~277px blank gap between the Hero and AdvisorProfileBody.
+            // Explicitly marking row 2 as a flexible (`1fr`) track
+            // changes which step of the algorithm resolves the overflow:
+            // flexible tracks are excluded from that same-step "auto
+            // tracks split it evenly" distribution and instead absorb
+            // spanning overflow later, in the flexible-track sizing
+            // step, so row 1 goes back to sizing off AdvisorHero's own
+            // content alone. Safe outside this measured case too --
+            // the grid's overall height is intrinsic (no fixed viewport
+            // height to fill), so `1fr` here has no ambient free space
+            // to over-grow into; it only ever absorbs a spanning item's
+            // real overflow demand, same as `auto` would if growth
+            // weren't split across tracks in the first place.
+            '@[940px]/advisor-hero:grid-rows-[auto_1fr]',
             '[--advisor-hero-portrait-size:188px] [--advisor-hero-gutter:40px]',
             '@[940px]/advisor-hero:[--advisor-hero-portrait-size:clamp(144px,calc(-114.5px+27.5cqi),188px)]',
             '@[940px]/advisor-hero:[--advisor-hero-gutter:clamp(24px,calc(-70px+10cqi),40px)]',
@@ -323,9 +337,10 @@ export function AdvisorProfile() {
               unlike this rail panel. */}
           <div className="relative md:col-start-1 md:row-start-3 md:mr-[var(--advisor-hero-gutter)] md:ml-[var(--advisor-hero-gutter)] @[940px]/advisor-hero:col-start-2 @[940px]/advisor-hero:row-start-1 @[940px]/advisor-hero:row-end-3 @[940px]/advisor-hero:mt-[36px] @[940px]/advisor-hero:mr-0 @[940px]/advisor-hero:ml-0 @[940px]/advisor-hero:pr-[var(--advisor-hero-gutter)] flex flex-col gap-[40px]">
             {showsNewClientInquiry && (
-              <p className={railPlaceholderClassName}>
-                New Client Inquiry form placeholder — coming soon.
-              </p>
+              <NewClientInquiryForm
+                advisor={advisor}
+                className="@[940px]/advisor-hero:shadow-elevation-raised"
+              />
             )}
             {/* `officePhotoUrl` IS shown here -- see the mobile tree's own
                 identical comment above for why this diverges from

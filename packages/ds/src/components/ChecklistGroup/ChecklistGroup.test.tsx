@@ -41,7 +41,7 @@ describe('ChecklistGroup', () => {
   });
 
   describe('Root width', () => {
-    it('uses a minmax(max-content,1fr) grid column so content sets the minimum width', () => {
+    it('uses a minmax(min(max-content,100%),1fr) grid column so content sets the minimum width but can still wrap instead of overflowing', () => {
       render(
         <ChecklistGroup.Root data-testid="root">
           <ChecklistGroup.Label>
@@ -52,7 +52,9 @@ describe('ChecklistGroup', () => {
       const classNames = screen.getByTestId('root').className.split(' ');
       expect(classNames).toContain('grid');
       expect(classNames).toContain('w-fit');
-      expect(classNames).toContain('grid-cols-[minmax(max-content,1fr)]');
+      expect(classNames).toContain(
+        'grid-cols-[minmax(min(max-content,100%),1fr)]',
+      );
     });
 
     it('lets a consumer className override the default hug-to-content width', () => {

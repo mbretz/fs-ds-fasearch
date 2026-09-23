@@ -13,6 +13,18 @@ import type {
  * Figma's `Checklist Group` (92:691) `State=Default` frame reports a real
  * 8px `gap` between Label/Slot/Microcopy — unlike TextInput.Root, which
  * intentionally adds no gap (see TextInput.tsx's note).
+ *
+ * The single grid column's minimum track size is `min(max-content,100%)`,
+ * not a bare `max-content` — confirmed live (apps/locator's New Client
+ * Inquiry form, 2026-09-23): a bare `max-content` floor means the column
+ * can never shrink narrower than its widest single-line item, so a long
+ * option (e.g. "Help with Financial Strategy Following Major Life
+ * Event") just pushes the whole `w-fit` group wider than its container
+ * instead of wrapping. Capping the floor at the container's own
+ * available width (`100%`) once `max-content` would exceed it lets long
+ * items wrap while short lists still hug their content exactly as
+ * before. See Checkbox.tsx's own `min-w-0` note for the matching fix one
+ * level down (the label `<span>` inside each row).
  */
 function ChecklistGroupRoot({
   className,
@@ -25,7 +37,7 @@ function ChecklistGroupRoot({
       ref={ref}
       data-density={density}
       className={cn(
-        'grid w-fit grid-cols-[minmax(max-content,1fr)] gap-[var(--component-checklist-group-gap)]',
+        'grid w-fit grid-cols-[minmax(min(max-content,100%),1fr)] gap-[var(--component-checklist-group-gap)]',
         className,
       )}
       {...props}
