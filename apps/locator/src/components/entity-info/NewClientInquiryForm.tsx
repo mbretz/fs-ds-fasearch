@@ -7,6 +7,11 @@ import { cn } from '../../utils/cn';
 
 export interface NewClientInquiryFormProps {
   advisor: Advisor;
+  /** Forwarded to the outer wrapper -- lets a caller make this form a
+   * real scroll-anchor target (e.g. AdvisorProfile.tsx's mobile tree,
+   * for the "New Client Inquiry" button's own `#new-client-inquiry`
+   * link on wider mobile/tablet widths). */
+  id?: string;
   className?: string;
 }
 
@@ -57,6 +62,7 @@ const paragraphClassName =
  */
 export function NewClientInquiryForm({
   advisor,
+  id,
   className,
 }: NewClientInquiryFormProps) {
   const { signedIn } = useSession();
@@ -99,7 +105,7 @@ export function NewClientInquiryForm({
   }
 
   return (
-    <div className={cn('@container/inquiry-form', className)}>
+    <div id={id} className={cn('@container/inquiry-form', className)}>
       {/* Named container (`inquiry-form`, distinct from `office-details`/
           `entity-card`/`advisor-hero` elsewhere in this app) declared on
           this wrapper, one level above the actual <form> -- same split
