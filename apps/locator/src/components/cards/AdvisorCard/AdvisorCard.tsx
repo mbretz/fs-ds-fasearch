@@ -8,6 +8,7 @@ import { ContactLinks } from '../../entity-info/ContactLinks';
 import { StatusTag } from '../../entity-info/StatusTag';
 import { FavoriteToggle } from '../../entity-info/FavoriteToggle';
 import { EntityActions } from '../../entity-info/EntityActions';
+import { NewClientInquiryDialog } from '../../entity-info/NewClientInquiryDialog';
 import { FocusAreasPanel } from '../../entity-info/FocusAreasPanel';
 import { OfficeDetailsPanel } from '../../entity-info/OfficeDetailsPanel';
 import { getFullName } from '../../../utils/getFullName';
@@ -19,7 +20,6 @@ export interface AdvisorCardProps {
    * card shows alongside the advisor's own info (address, hours,
    * support staff); an advisor has no separate office of their own. */
   location: Location;
-  onNewClientInquiry?: () => void;
   /** Forwarded to `EntityPortrait`'s own `showBadge` -- see its doc
    * comment. Defaults to true; ResultsList sets this false since
    * `StatusTag` already shows the same status there. */
@@ -41,10 +41,6 @@ export interface AdvisorCardProps {
   className?: string;
 }
 
-// Fallback so the button still renders (per status) when no caller has
-// wired a real inquiry handler yet.
-function noop() {}
-
 // Assembles Figma's `.FA-Card-Stacked`/`.FA-Card-Header` +
 // `.FA-Card-SidePanels`-class compositions from the entity-info/EntityCard
 // pieces built earlier, rather than replicating `.FA-Card-Stacked`'s own
@@ -56,7 +52,6 @@ function noop() {}
 export function AdvisorCard({
   advisor,
   location,
-  onNewClientInquiry,
   showPortraitBadge,
   showOfficeDetails = true,
   className,
@@ -221,13 +216,22 @@ export function AdvisorCard({
           individual profile page later, so `/advisor/:id` renders as a
           genuine href now even though `router.tsx` has no matching route
           yet, unlike the LinkedIn/Facebook placeholders above. */}
-      <EntityActions
-        primaryLabel="View Profile"
-        primaryHref={`/advisor/${advisor.id}`}
-        onNewClientInquiry={
-          showsNewClientInquiry ? (onNewClientInquiry ?? noop) : undefined
-        }
-      />
+      {showsNewClientInquiry ? (
+        <NewClientInquiryDialog advisor={advisor}>
+          {(openInquiryDialog) => (
+            <EntityActions
+              primaryLabel="View Profile"
+              primaryHref={`/advisor/${advisor.id}`}
+              onNewClientInquiry={openInquiryDialog}
+            />
+          )}
+        </NewClientInquiryDialog>
+      ) : (
+        <EntityActions
+          primaryLabel="View Profile"
+          primaryHref={`/advisor/${advisor.id}`}
+        />
+      )}
     </EntityCard>
   );
 }

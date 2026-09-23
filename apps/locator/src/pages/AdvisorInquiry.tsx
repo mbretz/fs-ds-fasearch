@@ -1,4 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom';
+import { LinkNavigation } from 'ds';
 import { findAdvisorById } from '../utils/findAdvisor';
 import { AdvisorHeroInert } from '../components/hero/AdvisorHeroInert';
 import { NewClientInquiryForm } from '../components/entity-info/NewClientInquiryForm';
@@ -42,13 +43,27 @@ export function AdvisorInquiry() {
   return (
     <div className="flex flex-col [overflow-anchor:none]">
       <AdvisorHeroInert advisor={advisor} />
-      {/* 40px, not the app's usual 16px inter-section gap -- matches
-          Figma's own `Main Content` frame (`padding: 40px 0px 0px`,
-          node `1639:50449`), the space it reserves between this Hero
-          and the Contact Form starting right under it. */}
+      {/* Per the user, 2026-09-23: this dedicated route has no other way
+          back to the profile page it branched from (unlike the inline
+          form, which just lives on that same page) -- placed between the
+          Hero and the form, not inside either, since it's page-level
+          navigation, not part of the Hero or the Contact Form. */}
+      <LinkNavigation
+        href={`/advisor/${advisor.id}`}
+        direction="previous"
+        className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-layout-fixed-large)]"
+      >
+        Back to profile
+      </LinkNavigation>
+      {/* Matches the Back-to-profile link's own `mt` above -- per the
+          user, 2026-09-23, equal breathing room above and below the link
+          now that it sits between the Hero and the form, rather than
+          Figma's original 40px hero-to-form gap (`Main Content`'s own
+          `padding: 40px 0px 0px`, node `1639:50449`) authored before
+          this link existed. */}
       <NewClientInquiryForm
         advisor={advisor}
-        className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-layout-fixed-4x-large)]"
+        className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-layout-fixed-large)]"
       />
     </div>
   );
