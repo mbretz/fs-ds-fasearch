@@ -5,6 +5,7 @@ import { Results } from './pages/Results';
 import { AdvisorProfile } from './pages/AdvisorProfile';
 import { AdvisorInquiry } from './pages/AdvisorInquiry';
 import { LocationProfile } from './pages/LocationProfile';
+import { Favorites } from './pages/Favorites';
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
       { path: '/advisor/:id', element: <AdvisorProfile /> },
       { path: '/advisor/:id/inquiry', element: <AdvisorInquiry /> },
       { path: '/branch/:id', element: <LocationProfile /> },
+      { path: '/favorites', element: <Favorites /> },
     ],
   },
 ]);

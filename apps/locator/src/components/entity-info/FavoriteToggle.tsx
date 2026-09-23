@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Heart, HeartFilled } from 'icons';
 import { cn } from '../../utils/cn';
+import { useFavorites } from '../../favorites/useFavorites';
+import { FAVORITES_CAP } from '../../favorites/FavoritesContext.types';
 
 export interface FavoriteToggleProps {
+  /** The id `useFavorites` keys favorited/unfavorited state on. */
+  advisorId: string;
   /** The advisor/location's display name, used to build the accessible name. */
   name: string;
-  defaultFavorited?: boolean;
   /** Renders a visible "Favorite" text label next to the icon -- Figma's
    * Hero "Favorite Action" instance, unlike the icon-only card treatment. */
   showLabel?: boolean;
@@ -21,21 +24,48 @@ export interface FavoriteToggleProps {
   className?: string;
 }
 
-// Visual-only for this pass (confirmed with the user): local component
-// state, no persistence, no SessionContext changes. Wiring this to real
-// favorites state is left for the future Saved Advisors page work, same
-// as ProspectPortal's "Go to Portal"/"Learn More" staying inert until
-// their real destinations exist.
+const CAP_ERROR_DURATION_MS = 3000;
+
 export function FavoriteToggle({
+  advisorId,
   name,
-  defaultFavorited = false,
   showLabel,
   variant = 'compact',
   className,
 }: FavoriteToggleProps) {
-  const [favorited, setFavorited] = useState(defaultFavorited);
-  const toggle = () => setFavorited((prev) => !prev);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = isFavorite(advisorId);
+  const [capError, setCapError] = useState(false);
+  const capErrorTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => () => clearTimeout(capErrorTimeoutRef.current), []);
+
+  const toggle = () => {
+    const result = toggleFavorite(advisorId);
+    clearTimeout(capErrorTimeoutRef.current);
+    if (result === 'at-cap') {
+      setCapError(true);
+      capErrorTimeoutRef.current = setTimeout(
+        () => setCapError(false),
+        CAP_ERROR_DURATION_MS,
+      );
+    } else {
+      setCapError(false);
+    }
+  };
   const unfavoriteLabel = `Remove ${name} from favorites`;
+
+  // Rendered by both branches below -- the cap-exceeded message applies
+  // regardless of which layout this toggle currently renders (favorited
+  // state can't ever hit it, but the icon-only/expanded-idle branches can).
+  const capErrorMessage = capError && (
+    <span
+      role="status"
+      className="absolute top-full left-0 mt-[var(--density-spacing-fixed-x-small)] w-max max-w-[240px] text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] text-critical-strong"
+    >
+      You can only favorite up to {FAVORITES_CAP} advisors
+    </span>
+  );
 
   // Expanded + favorited (Figma's Favorited=True, Device=Desktop) is two
   // independent controls, not one -- per the user, clicking the heart icon
@@ -48,7 +78,7 @@ export function FavoriteToggle({
     return (
       <span
         className={cn(
-          'inline-flex items-center gap-[var(--density-spacing-fixed-x-small)] text-[color:var(--semantic-control-action-color-default)]',
+          'relative inline-flex items-center gap-[var(--density-spacing-fixed-x-small)] text-[color:var(--semantic-control-action-color-default)]',
           className,
         )}
       >
@@ -75,6 +105,7 @@ export function FavoriteToggle({
         >
           Remove
         </button>
+        {capErrorMessage}
       </span>
     );
   }
@@ -82,33 +113,35 @@ export function FavoriteToggle({
   const Icon = favorited ? HeartFilled : Heart;
 
   return (
-    <button
-      type="button"
-      aria-pressed={favorited}
-      aria-label={favorited ? unfavoriteLabel : `Add ${name} to favorites`}
-      onClick={toggle}
-      className={cn(
-        'inline-flex cursor-pointer items-center rounded-full text-[color:var(--semantic-control-action-color-default)]',
-        showLabel
-          ? 'gap-[var(--density-spacing-fixed-x-small)]'
-          : 'justify-center',
-        className,
-      )}
-    >
-      <Icon
-        aria-hidden="true"
-        className="size-[var(--density-sizing-fixed-x-large)]"
-      />
-      {showLabel &&
-        (variant === 'expanded' ? (
-          <span className="text-[18px] leading-[1.5em] font-medium underline">
-            Add to your Favorites
-          </span>
-        ) : (
-          <span className="text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)]">
-            {favorited ? 'Favorited' : 'Favorite'}
-          </span>
-        ))}
-    </button>
+    <span className={cn('relative inline-flex', className)}>
+      <button
+        type="button"
+        aria-pressed={favorited}
+        aria-label={favorited ? unfavoriteLabel : `Add ${name} to favorites`}
+        onClick={toggle}
+        className={cn(
+          'inline-flex cursor-pointer items-center rounded-full text-[color:var(--semantic-control-action-color-default)]',
+          showLabel
+            ? 'gap-[var(--density-spacing-fixed-x-small)]'
+            : 'justify-center',
+        )}
+      >
+        <Icon
+          aria-hidden="true"
+          className="size-[var(--density-sizing-fixed-x-large)]"
+        />
+        {showLabel &&
+          (variant === 'expanded' ? (
+            <span className="text-[18px] leading-[1.5em] font-medium underline">
+              Add to your Favorites
+            </span>
+          ) : (
+            <span className="text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)]">
+              {favorited ? 'Favorited' : 'Favorite'}
+            </span>
+          ))}
+      </button>
+      {capErrorMessage}
+    </span>
   );
 }

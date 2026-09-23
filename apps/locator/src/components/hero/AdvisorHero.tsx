@@ -167,6 +167,7 @@ function HeroContent({
         )}
       >
         <FavoriteToggle
+          advisorId={advisor.id}
           name={fullName}
           showLabel
           // `tagSize` already doubles as this content block's one "which
