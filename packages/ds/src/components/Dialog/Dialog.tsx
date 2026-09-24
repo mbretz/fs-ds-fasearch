@@ -121,7 +121,17 @@ function DialogContent({
             densities, matching Figma's literal "32px 12px 12px" spec) sized
             to clear the always-condensed close button, not a calc against
             the reactive base padding + ambient button height. */}
-        <div className="col-start-1 row-start-1 flex flex-col gap-[var(--component-dialog-spacing-gap)] px-[var(--component-dialog-spacing-padding)] pb-[var(--component-dialog-spacing-padding)] pt-[var(--component-dialog-spacing-padding-top)]">
+        {/* `min-w-0` -- without it, this grid item's implicit auto column
+            track sizes to its content's own max-content width rather than
+            Content's actual (explicit) width, so any consumer content wide
+            enough to want to shrink (e.g. a flex-nowrap row of cards)
+            silently overflows Content's box instead of ever seeing the
+            narrower available width to shrink against -- the classic CSS
+            Grid "blowout" gotcha, fixed the same way flexbox's analogous
+            min-width:0 fix works. No effect on any Dialog whose content
+            already fits its max-width, which is every existing consumer
+            today. */}
+        <div className="col-start-1 row-start-1 flex min-w-0 flex-col gap-[var(--component-dialog-spacing-gap)] px-[var(--component-dialog-spacing-padding)] pb-[var(--component-dialog-spacing-padding)] pt-[var(--component-dialog-spacing-padding-top)]">
           <DialogPrimitive.Title
             className={cn(
               'text-[length:var(--component-dialog-title-font-size)] font-[number:var(--component-dialog-title-font-weight)] text-[color:var(--component-dialog-text-color)]',

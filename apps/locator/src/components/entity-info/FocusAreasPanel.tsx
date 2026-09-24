@@ -29,14 +29,23 @@ export function FocusAreasPanel({
   return (
     <div
       className={cn(
-        'flex h-full flex-col gap-[var(--density-spacing-fixed-small)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
+        'flex h-full min-w-0 flex-col gap-[var(--density-spacing-fixed-small)] rounded-[var(--semantic-surface-border-radius)] bg-[var(--color-surface-background-color-neutral-1)] p-[var(--density-spacing-fixed-large)]',
         className,
       )}
     >
       <span className="uppercase text-[length:var(--semantic-content-nanoheading-font-size)] leading-[length:var(--semantic-content-nanoheading-line-height)] font-[number:var(--semantic-content-nanoheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
         Focus Areas
       </span>
-      <div className="flex flex-wrap gap-[var(--density-spacing-fixed-small)]">
+      {/* `min-w-0` -- without it, this flex-wrap row's own auto min-content
+          contribution (used when it's stretched to fill its ancestor
+          chain's width) is computed from its UNWRAPPED total chip width
+          rather than its widest single chip, so at a narrow enough card
+          width the row stops actually wrapping and spills its later chips
+          past the card's edge instead -- confirmed live down to
+          FavoriteCard's 220px floor. Same class of missing-min-width:0
+          bug as Dialog.tsx's grid item and Card.Root's own default
+          min-width (see both their own comments). */}
+      <div className="flex min-w-0 flex-wrap gap-[var(--density-spacing-fixed-small)]">
         {focusAreas.map((area) => (
           <Chip key={area}>{area}</Chip>
         ))}

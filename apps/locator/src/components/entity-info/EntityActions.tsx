@@ -66,6 +66,23 @@ export interface EntityActionsProps {
   onNewClientInquiryClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   /** Matches Figma's Inline/Block orientation variants. */
   orientation?: 'inline' | 'block';
+  /**
+   * Block orientation only. Default (`false`) keeps the row's two
+   * `shrink`-able spacers, which read as though they give up their own
+   * 16px each before the buttons need to squeeze -- but never actually
+   * do: they're `flex-grow-0` with a real `basis-[large]`, while the
+   * content between them is `flex-1` (`flex-basis: 0%`), so the content
+   * carries the entire negative-space share in the browser's flex-shrink
+   * math and the spacers stay pinned at exactly 16px at every width
+   * (confirmed live). `true` drops both spacers and folds the whole
+   * inset into one `clamp()`-based margin on the content div instead --
+   * a real floor that's actually reached at a narrow width, not just
+   * described in a comment. Opt-in so `AdvisorHero`'s own existing block
+   * usage (which never gets this narrow) keeps its current, unaffected
+   * rendering; added for `FavoriteCard`, per the user, whose 220px floor
+   * has no slack for a permanently-frozen 32px inset.
+   */
+  flexibleInset?: boolean;
   className?: string;
 }
 
@@ -100,6 +117,7 @@ export function EntityActions({
   newClientInquiryHref,
   onNewClientInquiryClick,
   orientation = 'inline',
+  flexibleInset = false,
   className,
 }: EntityActionsProps) {
   const showsNewClientInquiry = Boolean(
@@ -134,8 +152,72 @@ export function EntityActions({
   // extra *height*, not width, and there's no extra height to distribute
   // since each button's own content already sets the column's height).
   if (orientation === 'block') {
+    const buttons = (
+      <>
+        {primaryHref ? (
+          <Button.Root variant="primary" asChild className="min-w-0">
+            <a {...primaryAnchorProps}>
+              {primaryIcon && <Button.Icon>{primaryIcon}</Button.Icon>}
+              <Button.Label>{primaryLabel}</Button.Label>
+            </a>
+          </Button.Root>
+        ) : (
+          <Button
+            variant="primary"
+            iconStart={primaryIcon}
+            onClick={onPrimaryAction}
+            className="min-w-0"
+          >
+            {primaryLabel}
+          </Button>
+        )}
+        {showsNewClientInquiry &&
+          (newClientInquiryHref ? (
+            <Button.Root variant="secondary" asChild className="min-w-0">
+              <a href={newClientInquiryHref} onClick={onNewClientInquiryClick}>
+                <Button.Label>New Client Inquiry</Button.Label>
+              </a>
+            </Button.Root>
+          ) : (
+            <Button
+              variant="secondary"
+              onClick={onNewClientInquiry}
+              className="min-w-0"
+            >
+              New Client Inquiry
+            </Button>
+          ))}
+      </>
+    );
+
+    if (flexibleInset) {
+      // One `clamp()`-based margin standing in for the non-flexible
+      // branch's whole spacer+fixed-margin structure -- see this prop's
+      // own doc comment for why that structure doesn't actually shrink
+      // in practice. Calibrated (same `vw`-reads-the-viewport reasoning
+      // as `FavoritesComparatorDialog`'s own row gap, since a
+      // `FavoriteCard`'s width already tracks the viewport predictably
+      // across its real range) so the floor (8px, per the user --
+      // combined with `Card.Root`'s own fixed 8px padding, ~16px total
+      // from the card's outer edge) is actually reached by 768px -- the
+      // comparator's narrowest real viewport -- and the ceiling (32px,
+      // this row's own previous constant total) by 1440px, both
+      // confirmed live with a safety margin past each end rather than
+      // just asymptotically approaching them.
+      return (
+        <div
+          className={cn(
+            'flex min-w-0 flex-col items-stretch gap-[var(--density-spacing-fixed-large)] mx-[clamp(var(--density-spacing-fixed-small),calc(4.2vw_-_26px),var(--density-spacing-fixed-xxx-large))]',
+            className,
+          )}
+        >
+          {buttons}
+        </div>
+      );
+    }
+
     return (
-      <div className={cn('flex items-stretch', className)}>
+      <div className={cn('flex min-w-0 items-stretch', className)}>
         {/* Left/right spacers, not padding on the row itself: `mx-large`
             (16px) on the outer row is a fixed floor matching the
             Separator's own inset exactly (buttons never sit wider than
@@ -149,42 +231,7 @@ export function EntityActions({
           className="shrink basis-[var(--density-spacing-fixed-large)]"
         />
         <div className="mx-[var(--density-spacing-fixed-large)] flex min-w-0 flex-1 flex-col items-stretch gap-[var(--density-spacing-fixed-large)]">
-          {primaryHref ? (
-            <Button.Root variant="primary" asChild className="min-w-0">
-              <a {...primaryAnchorProps}>
-                {primaryIcon && <Button.Icon>{primaryIcon}</Button.Icon>}
-                <Button.Label>{primaryLabel}</Button.Label>
-              </a>
-            </Button.Root>
-          ) : (
-            <Button
-              variant="primary"
-              iconStart={primaryIcon}
-              onClick={onPrimaryAction}
-              className="min-w-0"
-            >
-              {primaryLabel}
-            </Button>
-          )}
-          {showsNewClientInquiry &&
-            (newClientInquiryHref ? (
-              <Button.Root variant="secondary" asChild className="min-w-0">
-                <a
-                  href={newClientInquiryHref}
-                  onClick={onNewClientInquiryClick}
-                >
-                  <Button.Label>New Client Inquiry</Button.Label>
-                </a>
-              </Button.Root>
-            ) : (
-              <Button
-                variant="secondary"
-                onClick={onNewClientInquiry}
-                className="min-w-0"
-              >
-                New Client Inquiry
-              </Button>
-            ))}
+          {buttons}
         </div>
         <div
           aria-hidden

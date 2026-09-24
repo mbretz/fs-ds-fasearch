@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { Dialog } from 'ds';
 import type { Advisor, Location } from '../../data/locations';
 import { FavoriteCard } from '../cards/FavoriteCard/FavoriteCard';
@@ -97,9 +97,31 @@ export function FavoritesComparatorDialog({
           // rather than shrinking cards past their own content's minimum
           // width, so this max-width is never reached in a way that could
           // force horizontal scroll.
-          style={{
-            maxWidth: `calc(${cardsWidthPx}px + 2*var(--component-dialog-spacing-padding) + 2*var(--component-dialog-border-width) + ${SCROLLBAR_SAFETY_PX}px)`,
-          }}
+          style={
+            {
+              // Overrides the shared Dialog token's own fixed 24px
+              // (roomy)/20px (condensed) value, scoped to just this
+              // Dialog instance via a plain inline-style custom property
+              // -- it cascades over the density-selector rule that
+              // otherwise sets it, with no change to Dialog.tsx or any
+              // other Dialog in the app, per the user. Governs BOTH this
+              // Content's own outer viewport-edge margin and its interior
+              // content padding (the same token drives both), which
+              // reads as one combined "left/right spacing" effect, not
+              // two independently-tunable ones.
+              // Calibrated the same way as the row gap/card insets above
+              // it: floor (8px, `--density-spacing-fixed-small`) actually
+              // reached by 768px (this Dialog's narrowest real viewport),
+              // ceiling (24px, the roomy density's own current value, a
+              // literal here rather than `var(...)` since referencing the
+              // property being overridden inside its own override value
+              // is a CSS-invalid cycle) reached by 1440px, both with a
+              // safety margin confirmed live past each end.
+              '--component-dialog-spacing-padding':
+                'clamp(var(--density-spacing-fixed-small), calc(3vw - 17px), 24px)',
+              maxWidth: `calc(${cardsWidthPx}px + 2*var(--component-dialog-spacing-padding) + 2*var(--component-dialog-border-width) + ${SCROLLBAR_SAFETY_PX}px)`,
+            } as CSSProperties
+          }
           className="bg-[color:var(--color-response-neutral-strong)]"
           // Content's built-in title reads `--component-dialog-text-color`,
           // tuned for its default light background -- there's no per-title
@@ -126,11 +148,56 @@ export function FavoritesComparatorDialog({
               <h2 className="text-center text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-white mb-[var(--density-spacing-fixed-large)]">
                 Comparing your favorited Financial Advisors:
               </h2>
-              {/* `flex-wrap` + `justify-center` -- when the dialog can't fit
-                every card at its natural 360px width on one row, cards
-                wrap onto additional rows instead of forcing the row (and
-                the dialog) to scroll horizontally, per the user. */}
-              <div className="flex flex-wrap items-stretch justify-center gap-[var(--density-spacing-fixed-xx-large)]">
+              {/* No `flex-wrap` -- per the user, cards must never wrap onto
+                additional rows. Instead each `FavoriteCard` is allowed to
+                shrink below its natural 360px, down to its own 260px
+                content floor (see `WIDTH_BY_VARIANT` in FavoriteCard.tsx),
+                so up to `FAVORITES_CAP` (3) of them stay on one line
+                within whatever width this Dialog actually has. The gap is
+                flexible too (`clamp()`, floored at `large` (16px) instead
+                of pinned to `xx-large` (24px), per the user) so it gives
+                up some of its own width first, before the cards
+                themselves need to shrink as much. `1.8vw` (not the more
+                obvious `1vw`-per-token-px-ish rate) is deliberately
+                calibrated, per the user, so the floor is actually reached
+                by 768px -- this Dialog's narrowest real (desktop-still)
+                viewport, `DESKTOP_QUERY` in Favorites.tsx, below which
+                `FavoritesComparatorMobile` takes over entirely -- rather
+                than just asymptotically approaching it without ever
+                actually getting there. `vw`
+                (not a container query unit) is deliberate here: this
+                row's own available width already tracks the viewport
+                near-1:1 (Dialog.Content's width is `100% - 2*padding` up
+                to its own max-width cap), so a container query would need
+                an extra wrapping element purely to establish containment
+                for no real gain over reading the viewport directly.
+                `min-w-0` undoes a real Dialog.Content grid-blowout bug
+                fixed alongside this (see Dialog.tsx's own comment) that
+                otherwise stopped this row from ever seeing its true
+                available width to shrink against.
+                `overflow-x-auto` is the fallback for whatever width still
+                can't fit 3 cards at their own 260px floor plus 2 gaps at
+                their own 16px floor -- confirmed live this is still
+                reached at the comparator's narrowest real viewport
+                (768px, `DESKTOP_QUERY` in Favorites.tsx) -- cards still
+                never wrap,
+                this row scrolls horizontally instead of clipping or
+                forcing the Dialog itself wider than the viewport.
+                `[justify-content:safe_center]` (an arbitrary property, no
+                Tailwind `justify-safe-center` utility exists), not plain
+                `justify-center` -- per the modern-web-guidance skill's own
+                flexbox guidance, unprefixed `center` on an overflowing
+                scroll container centers the content around a scroll
+                position of 0 rather than the start of it, silently
+                clipping the first card off-screen with no way to scroll
+                to it; `safe` falls back to start-alignment specifically
+                when the container is narrower than its content. Confirmed
+                live that both classes present together silently lost
+                (Tailwind's own `justify-center` utility cascades after
+                arbitrary-property utilities regardless of source order in
+                the class string) -- `justify-center` must stay out
+                entirely, not just come first. */}
+              <div className="flex min-w-0 flex-nowrap items-stretch [justify-content:safe_center] gap-[clamp(var(--density-spacing-fixed-large),1.8vw,var(--density-spacing-fixed-xx-large))] overflow-x-auto">
                 {favoriteAdvisors.map(({ advisor, location }) => (
                   <FavoriteCard
                     key={advisor.id}

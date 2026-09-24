@@ -40,31 +40,32 @@ export interface FavoriteCardProps {
 }
 
 // Desktop no longer gets a fixed width -- per the user, the comparator
-// dialog must never horizontal-scroll. `basis-[360px]` (down from Figma's
-// 379px) is its natural size on the row (`FavoritesComparatorDialog`'s row
-// is `flex-wrap`), `grow-0` keeps it from stretching past that on a row
-// with empty leftover space, and `max-w-[min(360px,100%)]` caps it at
-// *whichever is smaller* of 360px or its own container's width -- not a
-// plain `max-w-full` (100% of container, no matter how large): that let a
-// card with longer content than the original test fixtures (a longer
-// address/phone, confirmed live) grow past 360px, which silently inflated
-// `FavoritesComparatorDialog`'s row past the width its own max-width
-// calc assumed and forced an unwanted wrap even when the cards should
-// have fit on one line. `min(...)` still falls back to the container's
-// own width for the (desktop-breakpoint-adjacent) case where even one
-// card can't fit at 360px -- between `grow-0` and this cap, the card can
-// never be the thing forcing the row wider than its container, which is
-// what caused horizontal overflow before this: shrinking the flex item
-// itself (`min-w-0`/`flex-1`) hit a content-driven floor well above what
-// a narrow dialog can offer (its `EntityActions`/`ContactLinks` contents
-// have their own un-investigated min-content width), so wrapping instead
-// of continuing to force that shrink is what actually guarantees no
-// overflow regardless of where that inner floor is.
+// dialog's cards must never wrap onto another row, but should shrink to
+// fit however many are actually favorited (up to `FAVORITES_CAP`, 3) on
+// one line. `basis-[360px]` (down from Figma's 379px) is its natural size
+// on the row, `grow-0` keeps it from stretching past that on a row with
+// empty leftover space, and `shrink` (in place of the old `grow-0`-only,
+// non-shrinking pairing with the row's own `flex-wrap`) lets it actually
+// give up width once the row can't fit every card at 360px -- paired with
+// `FavoritesComparatorDialog`'s own row gap also shrinking first (see its
+// comment), so the cards don't have to give up as much of their own width
+// to still fit 3-across at the comparator's narrowest real viewport
+// (768px, `DESKTOP_QUERY` in Favorites.tsx). `min-w-[220px]` is a
+// deliberate floor, not `min-w-0`, per the user -- below that, individual
+// chip labels/button labels have their own un-investigated min-content
+// widths that would force real content overflow rather than a clean
+// shrink. It was originally set to 260px to stay clear of a real bug
+// (`FocusAreasPanel`'s own chip row stopped actually wrapping and spilled
+// past the card's edge below ~252px) -- that bug is now fixed at its
+// actual source (see `FocusAreasPanel.tsx`'s own comment, the same
+// missing-`min-width:0` class of issue as `Dialog.tsx`'s grid item and
+// `Card.Root`'s own default min-width, both also fixed alongside this),
+// so 220px is safe again.
 // Mobile keeps the fixed width + `shrink-0` -- its own carousel
 // (`FavoritesComparatorMobile`) is a deliberately horizontal-scrolling
 // snap list, not a container this rule applies to.
 const WIDTH_BY_VARIANT: Record<'desktop' | 'mobile', string> = {
-  desktop: 'basis-[360px] grow-0 max-w-[min(360px,100%)]',
+  desktop: 'basis-[360px] grow-0 shrink min-w-[220px]',
   mobile: 'w-[358px]',
 };
 
@@ -94,6 +95,10 @@ export function FavoriteCard({
     primaryLabel: 'View Profile',
     primaryHref: `/advisor/${advisor.id}`,
     orientation: 'block' as const,
+    // See `EntityActions`' own doc comment -- its default block-
+    // orientation inset never actually shrinks in practice; this opts
+    // into the real (clamped, 16px-floored) one instead, per the user.
+    flexibleInset: true,
   };
 
   const actions = !showsNewClientInquiry ? (
@@ -169,18 +174,32 @@ export function FavoriteCard({
           tallest card by the row's own `items-stretch`) is what actually
           makes the visible white card boxes end at the same height across
           the row, per the user -- the avatar/name above it stay their own
-          natural height, only this box grows. */}
-      <Card.Root className="w-full flex-1 items-stretch gap-[var(--density-spacing-fixed-xxx-large)] p-[var(--density-spacing-fixed-small)] pt-[var(--density-spacing-fixed-large)]">
+          natural height, only this box grows.
+          `min-w-0` overrides `Card.Root`'s own default
+          `min-w-[var(--component-card-min-width)]` (320px, Card.tsx's own
+          base className) -- confirmed live: without this, Card.Root sat
+          at a hard 320px regardless of how narrow the outer wrapper above
+          shrank to, which is what actually made the card *body* look like
+          it wasn't shrinking even once the wrapper's own width (and this
+          className's `w-full`) were both doing the right thing. Safe to
+          drop entirely here since `WIDTH_BY_VARIANT`'s own
+          `min-w-[220px]` on the wrapper (mobile's fixed `w-[358px]`,
+          always above 320) is what actually governs this card's floor
+          now, not Card's generic one. */}
+      <Card.Root className="w-full min-w-0 flex-1 items-stretch gap-[var(--density-spacing-fixed-xxx-large)] p-[var(--density-spacing-fixed-small)] pt-[var(--density-spacing-fixed-large)]">
         {actions}
-        {/* 24px extra inset beyond Card.Root's own 8px padding (32px
-            total from the card edge) -- matches Figma's `.FA-Card-Contact`
-            own 24px padding on top of CardBody's 8px, giving this block a
-            deliberately deeper indent than the flush-left action buttons
-            above it. */}
+        {/* Flush with `actions`' own left edge, not a deeper 24px indent
+            (Figma's `.FA-Card-Contact` static 24px padding) -- per the
+            user. The exact same clamp expression as `EntityActions`'
+            `flexibleInset` (see its own comment) applied directly as a
+            margin here, not a separate mechanism -- keeps this
+            permanently flush with `actions` at every width, since both
+            shrink through the identical floor/ceiling in lockstep rather
+            than two independently-tuned formulas that could drift apart. */}
         <ContactLinks
           address={location.address}
           phone={phone}
-          className="mx-[var(--density-spacing-fixed-xx-large)]"
+          className="mx-[clamp(var(--density-spacing-fixed-small),calc(4.2vw_-_26px),var(--density-spacing-fixed-xxx-large))]"
         />
         <FocusAreasPanel focusAreas={advisor.focusAreas} />
       </Card.Root>
