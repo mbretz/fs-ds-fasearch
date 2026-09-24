@@ -40,12 +40,24 @@ const OSM_STYLE: maplibregl.StyleSpecification = {
 const DEFAULT_ZOOM = 10;
 // Popover content picks its Large/Small variant off the map's own
 // rendered width, per the user -- full-width desktop Map view (~1214px)
-// gets Large, a ~half-width Dual view pane (~600px) or mobile (~350-
-// 390px) gets Small. A CSS container query can't do this: the popover
-// portals to `document.body` (Radix's `Popover.Portal`), outside this
-// component's DOM subtree entirely, so `ResizeObserver` + JS state is
-// the real fallback here, not a stopgap.
-const POPOVER_LARGE_MIN_WIDTH = 700;
+// gets Large, mobile (~350-390px) gets Small. A CSS container query
+// can't do this: the popover portals to `document.body` (Radix's
+// `Popover.Portal`), outside this component's DOM subtree entirely, so
+// `ResizeObserver` + JS state is the real fallback here, not a stopgap.
+//
+// 850px, not the original 700px -- per the user, Dual view's own map
+// pane should always get Small popovers, but Dual's ~2/3-of-the-row
+// share (Results.tsx's `.dual-view-map`, added once that pane stopped
+// being an even 50/50 split with List) can reach up to ~799px at this
+// app's own 1214px max content width (1214 - 16px gap, split 1/3 List /
+// 2/3 Map) -- above the original 700px threshold, which had started
+// handing Dual's map pane Large popovers at ordinary desktop widths
+// (confirmed: it crosses 700px around a 1114px viewport, well within
+// typical laptop range). 850px sits just above that ~799px Dual
+// ceiling, so Dual always lands Small regardless of viewport, while the
+// full-width single Map view (no sibling List eating into its width)
+// still comfortably clears it into Large.
+const POPOVER_LARGE_MIN_WIDTH = 850;
 // The full mock dataset's own lat/lng centroid (`data/locations.ts`'s 20
 // locations) -- used when there are no results to center on at all, per
 // the user: west of any single location (e.g. `loc-1`'s own St. Louis
@@ -228,9 +240,7 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
       {/* Shrunk down from Figma's own measured heights (497px mobile/
           751px desktop -- see `Map Component Mobile`/`Map Component
           Large`), then nudged back up ~100px from that first pass and
-          rounded to the nearest multiple of 4, per the user -- keep
-          `Results.tsx`'s `MOBILE_MAP_HEIGHT`/`DESKTOP_MAP_HEIGHT` in
-          sync if this changes again. */}
+          rounded to the nearest multiple of 4, per the user. */}
       <div ref={containerRef} className="h-[432px] w-full md:h-[600px]" />
       <MapLegend />
       {Object.entries(markerEls).map(([id, el]) => {
