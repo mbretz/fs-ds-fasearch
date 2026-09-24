@@ -16,6 +16,12 @@ export interface NameBlockProps {
    */
   subheading?: ReactNode;
   className?: string;
+  /** Override for the heading's own classes -- the map pin popover's
+   * name needs the real `Heavy` text style (`semantic.content.heavy`,
+   * 600/16px/24px) instead of this component's own default `subheading`
+   * bundle, per the user, without affecting every other caller that
+   * keeps the default. */
+  headingClassName?: string;
   /** Override for the subheading's own classes -- AdvisorCard needs its
    * designations line at the token-accurate 18px line-height without
    * affecting LocationCard's branch-summary subheading, which shares this
@@ -35,6 +41,7 @@ export function NameBlock({
   heading,
   subheading,
   className,
+  headingClassName,
   subheadingClassName,
 }: NameBlockProps) {
   return (
@@ -44,7 +51,12 @@ export function NameBlock({
         className,
       )}
     >
-      <span className="text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
+      <span
+        className={cn(
+          'text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]',
+          headingClassName,
+        )}
+      >
         {heading}
       </span>
       {subheading && (
