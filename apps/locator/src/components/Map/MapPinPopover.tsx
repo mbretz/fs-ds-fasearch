@@ -19,6 +19,12 @@ export interface MapPinPopoverProps {
    * (see this repo's Map build plan) -- built directly on
    * `PopoverPrimitive`, same as `FilterMenu`/`ProspectPortalLite`. */
   getAnchorRect: () => DOMRect;
+  /** The map surface's own outer element -- passed straight through as
+   * Popper's `collisionBoundary` so the popover flips/shifts to stay
+   * fully inside the visible map, not just the viewport (its default
+   * boundary, which let it overhang the map's own edges/rounded corners
+   * whenever a pin sat near them). */
+  collisionBoundary: Element | null;
   children: ReactNode;
 }
 
@@ -26,6 +32,7 @@ export function MapPinPopover({
   open,
   onOpenChange,
   getAnchorRect,
+  collisionBoundary,
   children,
 }: MapPinPopoverProps) {
   // A stable ref object whose `getBoundingClientRect` always calls
@@ -44,6 +51,8 @@ export function MapPinPopover({
           side="top"
           align="center"
           sideOffset={CONTENT_SIDE_OFFSET}
+          collisionBoundary={collisionBoundary}
+          collisionPadding={CONTENT_SIDE_OFFSET}
           onOpenAutoFocus={(event) => event.preventDefault()}
           className={cn(
             // 16px radius (`ample`), a 2px `primitives.ref.color.

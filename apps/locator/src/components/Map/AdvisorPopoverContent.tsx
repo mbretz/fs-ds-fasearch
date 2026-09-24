@@ -3,7 +3,6 @@ import { EntityPortrait } from '../entity-info/EntityPortrait';
 import { NameBlock } from '../entity-info/NameBlock';
 import { TenureLine } from '../entity-info/TenureLine';
 import { EntityActions } from '../entity-info/EntityActions';
-import { NewClientInquiryDialog } from '../entity-info/NewClientInquiryDialog';
 import { getFullName } from '../../utils/getFullName';
 
 export interface AdvisorPopoverContentProps {
@@ -17,6 +16,17 @@ export interface AdvisorPopoverContentProps {
    * breakpoint -- the popover portals to `document.body`, outside the
    * map's DOM subtree, so a CSS container query can't reach it. */
   size: 'sm' | 'lg';
+  /** Closes this popover and opens `NewClientInquiryDialog` at the `Map`
+   * level instead of self-triggering it in place -- a Dialog opened
+   * *inside* an open `MapPinPopover` rendered behind it (DS's z-index
+   * scale deliberately tiers `z-index-popover` above `z-index-modal`, so
+   * a popover-inside-a-dialog can float above its own ancestor modal,
+   * but that leaves a same-document-body *sibling* popover like this one
+   * outranking any dialog that opens beside it), per the user. Same
+   * externally-controlled-`NewClientInquiryDialog` pattern
+   * `FavoritesComparatorDialog` already uses to avoid two simultaneous
+   * Radix Dialogs, applied here to avoid a Dialog-behind-Popover instead. */
+  onNewClientInquiry: () => void;
 }
 
 // Matches Figma's `FA-Map-Tile` (444:5737) -- reuses the same
@@ -26,6 +36,7 @@ export interface AdvisorPopoverContentProps {
 export function AdvisorPopoverContent({
   advisor,
   size,
+  onNewClientInquiry,
 }: AdvisorPopoverContentProps) {
   const fullName = getFullName(advisor);
   const showsNewClientInquiry =
@@ -122,13 +133,7 @@ export function AdvisorPopoverContent({
           {/* 16px (`fixed-large`) down to Actions -- wider than the
               tighter name/creds/tenure group above, per the user. */}
           <div className="mt-[var(--density-spacing-fixed-large)]">
-            {showsNewClientInquiry ? (
-              <NewClientInquiryDialog advisor={advisor}>
-                {(openInquiryDialog) => actions(openInquiryDialog)}
-              </NewClientInquiryDialog>
-            ) : (
-              actions()
-            )}
+            {showsNewClientInquiry ? actions(onNewClientInquiry) : actions()}
           </div>
         </div>
       </div>
@@ -147,13 +152,7 @@ export function AdvisorPopoverContent({
         />
         <NameBlock heading={fullName} className="self-center" />
       </div>
-      {showsNewClientInquiry ? (
-        <NewClientInquiryDialog advisor={advisor}>
-          {(openInquiryDialog) => actions(openInquiryDialog)}
-        </NewClientInquiryDialog>
-      ) : (
-        actions()
-      )}
+      {showsNewClientInquiry ? actions(onNewClientInquiry) : actions()}
     </div>
   );
 }

@@ -9,12 +9,13 @@ import {
 import { createPortal } from 'react-dom';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import type { Location } from '../../data/locations';
+import type { Advisor, Location } from '../../data/locations';
 import { MapPin } from './MapPin';
 import { MapLegend } from './MapLegend';
 import { MapPinPopover } from './MapPinPopover';
 import { AdvisorPopoverContent } from './AdvisorPopoverContent';
 import { BranchPopoverContent } from './BranchPopoverContent';
+import { NewClientInquiryDialog } from '../entity-info/NewClientInquiryDialog';
 import { getPinType } from './pinType';
 import { cn } from '../../utils/cn';
 import type { MapHandle, MapProps } from './Map.types';
@@ -93,6 +94,16 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
     {},
   );
   const [popoverSize, setPopoverSize] = useState<'sm' | 'lg'>('lg');
+  // Tracks which advisor's `NewClientInquiryDialog` is open, lifted up
+  // here (out of `AdvisorPopoverContent`/`MapPinPopover`) rather than
+  // self-triggered in place -- same reasoning/pattern as
+  // `FavoritesComparatorDialog`'s own `inquiryAdvisor` state: a Dialog
+  // opened *inside* the popover rendered behind it (see
+  // `AdvisorPopoverContent`'s `onNewClientInquiry` doc comment), so
+  // opening it here instead, as a sibling that outlives the popover
+  // closing, is what keeps it above the popover and open at all once the
+  // popover unmounts.
+  const [inquiryAdvisor, setInquiryAdvisor] = useState<Advisor | null>(null);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -244,6 +255,7 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
             if (!open) onPinSelect(null);
           }}
           getAnchorRect={getAnchorRect}
+          collisionBoundary={wrapperRef.current}
         >
           {getPinType(selectedLocation) === 'branch' ? (
             <BranchPopoverContent
@@ -255,10 +267,24 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
               <AdvisorPopoverContent
                 advisor={selectedLocation.advisors[0]}
                 size={popoverSize}
+                onNewClientInquiry={() => {
+                  const advisor = selectedLocation.advisors[0];
+                  onPinSelect(null);
+                  if (advisor) setInquiryAdvisor(advisor);
+                }}
               />
             )
           )}
         </MapPinPopover>
+      )}
+      {inquiryAdvisor && (
+        <NewClientInquiryDialog
+          advisor={inquiryAdvisor}
+          open
+          onOpenChange={(open) => {
+            if (!open) setInquiryAdvisor(null);
+          }}
+        />
       )}
     </div>
   );
