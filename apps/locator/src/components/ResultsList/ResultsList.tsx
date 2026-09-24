@@ -5,6 +5,13 @@ import { cn } from '../../utils/cn';
 
 interface ResultsListProps {
   locations: Location[];
+  /** Highlights the matching LocationCard row and registers it as a
+   * `scrollIntoView()` target for map-pin selection sync (Dual view
+   * only -- see Results.tsx). All three are optional/no-ops when unset,
+   * since plain List view has no map to sync with. */
+  selectedLocationId?: string | null;
+  onSelectLocation?: (location: Location) => void;
+  registerItemRef?: (id: string, el: HTMLElement | null) => void;
   className?: string;
 }
 
@@ -59,7 +66,13 @@ interface ResultsListProps {
 // above it. `mx-auto` centers the capped card within its own (wider,
 // single-column) grid cell rather than leaving it flush left with dead
 // space to its right.
-export function ResultsList({ locations, className }: ResultsListProps) {
+export function ResultsList({
+  locations,
+  selectedLocationId,
+  onSelectLocation,
+  registerItemRef,
+  className,
+}: ResultsListProps) {
   if (locations.length === 0) {
     return <p className={className}>No advisors match the current filters.</p>;
   }
@@ -78,7 +91,16 @@ export function ResultsList({ locations, className }: ResultsListProps) {
           (spanning only means something relative to a shared set of
           column tracks). */}
       {locations.map((location) => (
-        <li key={location.id} className="col-span-full">
+        <li
+          key={location.id}
+          ref={(el) => registerItemRef?.(location.id, el)}
+          onClick={() => onSelectLocation?.(location)}
+          className={cn(
+            'col-span-full',
+            selectedLocationId === location.id &&
+              'ring-[length:var(--component-tag-border-width)] ring-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
+          )}
+        >
           <LocationCard location={location} />
         </li>
       ))}

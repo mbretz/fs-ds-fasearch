@@ -4,6 +4,12 @@ import { cn } from '../../utils/cn';
 export interface TenureLineProps {
   years: number;
   className?: string;
+  /** Override for the text span's own classes -- the map pin popover's
+   * tenure line needs 16px/18px (no semantic bundle combines those two
+   * values; this component's own default is the 14px/24px `microcopy`
+   * bundle) instead, per the user, without affecting every other caller
+   * that keeps the default. */
+  textClassName?: string;
 }
 
 // Figma pairs this with an "icon-briefcase" glyph -- packages/icons has no
@@ -26,7 +32,11 @@ export interface TenureLineProps {
 // comparison, not assumed). Firefox (no `text-box` support) falls back to
 // the untrimmed box; the offset below still reads close there, just not
 // pixel-exact.
-export function TenureLine({ years, className }: TenureLineProps) {
+export function TenureLine({
+  years,
+  className,
+  textClassName,
+}: TenureLineProps) {
   return (
     <span
       className={cn(
@@ -38,7 +48,12 @@ export function TenureLine({ years, className }: TenureLineProps) {
         aria-hidden="true"
         className="mt-[-3px] size-[var(--density-sizing-fixed-large)] shrink-0 self-start"
       />
-      <span className="text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] font-[number:var(--semantic-content-microcopy-font-weight)] text-[color:var(--semantic-content-common-text-color-default)] [text-box:trim-both_cap_alphabetic]">
+      <span
+        className={cn(
+          'text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] font-[number:var(--semantic-content-microcopy-font-weight)] text-[color:var(--semantic-content-common-text-color-default)] [text-box:trim-both_cap_alphabetic]',
+          textClassName,
+        )}
+      >
         {years} {years === 1 ? 'year' : 'years'} at Edward Jones
       </span>
     </span>

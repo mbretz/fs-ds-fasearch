@@ -83,6 +83,20 @@ export interface EntityActionsProps {
    * has no slack for a permanently-frozen 32px inset.
    */
   flexibleInset?: boolean;
+  /**
+   * Block orientation only. Drops the row's own horizontal
+   * inset/spacers entirely (buttons run edge-to-edge with their parent
+   * instead) -- for a map pin popover, per the user, whose own outer
+   * padding already insets everything including this row; ignored when
+   * `flexibleInset` is also set (that branch has no fixed inset to
+   * drop in the first place).
+   */
+  noInset?: boolean;
+  /** Forwarded to every `Button`/`Button.Root` this component renders --
+   * a map pin popover's own limited space wants `'condensed'`, per the
+   * user; every other caller leaves this unset (DS `Button`'s own
+   * default). */
+  density?: 'roomy' | 'condensed';
   className?: string;
 }
 
@@ -118,6 +132,8 @@ export function EntityActions({
   onNewClientInquiryClick,
   orientation = 'inline',
   flexibleInset = false,
+  noInset = false,
+  density,
   className,
 }: EntityActionsProps) {
   const showsNewClientInquiry = Boolean(
@@ -155,7 +171,12 @@ export function EntityActions({
     const buttons = (
       <>
         {primaryHref ? (
-          <Button.Root variant="primary" asChild className="min-w-0">
+          <Button.Root
+            variant="primary"
+            density={density}
+            asChild
+            className="min-w-0"
+          >
             <a {...primaryAnchorProps}>
               {primaryIcon && <Button.Icon>{primaryIcon}</Button.Icon>}
               <Button.Label>{primaryLabel}</Button.Label>
@@ -164,6 +185,7 @@ export function EntityActions({
         ) : (
           <Button
             variant="primary"
+            density={density}
             iconStart={primaryIcon}
             onClick={onPrimaryAction}
             className="min-w-0"
@@ -173,7 +195,12 @@ export function EntityActions({
         )}
         {showsNewClientInquiry &&
           (newClientInquiryHref ? (
-            <Button.Root variant="secondary" asChild className="min-w-0">
+            <Button.Root
+              variant="secondary"
+              density={density}
+              asChild
+              className="min-w-0"
+            >
               <a href={newClientInquiryHref} onClick={onNewClientInquiryClick}>
                 <Button.Label>New Client Inquiry</Button.Label>
               </a>
@@ -181,6 +208,7 @@ export function EntityActions({
           ) : (
             <Button
               variant="secondary"
+              density={density}
               onClick={onNewClientInquiry}
               className="min-w-0"
             >
@@ -208,6 +236,22 @@ export function EntityActions({
         <div
           className={cn(
             'flex min-w-0 flex-col items-stretch gap-[var(--density-spacing-fixed-large)] mx-[clamp(var(--density-spacing-fixed-small),calc(4.2vw_-_26px),var(--density-spacing-fixed-xxx-large))]',
+            className,
+          )}
+        >
+          {buttons}
+        </div>
+      );
+    }
+
+    if (noInset) {
+      // 8px (`fixed-small`), not this component's own default 16px
+      // (`fixed-large`) row gap -- per the user, for this tighter,
+      // no-inset (map pin popover) context specifically.
+      return (
+        <div
+          className={cn(
+            'flex min-w-0 flex-col items-stretch gap-[var(--density-spacing-fixed-small)]',
             className,
           )}
         >
@@ -306,6 +350,7 @@ export function EntityActions({
           {primaryHref ? (
             <Button.Root
               variant="primary"
+              density={density}
               asChild
               className="entity-actions-button"
             >
@@ -317,6 +362,7 @@ export function EntityActions({
           ) : (
             <Button
               variant="primary"
+              density={density}
               iconStart={primaryIcon}
               onClick={onPrimaryAction}
               className="entity-actions-button"
@@ -328,6 +374,7 @@ export function EntityActions({
             (newClientInquiryHref ? (
               <Button.Root
                 variant="secondary"
+                density={density}
                 asChild
                 className="entity-actions-button"
               >
@@ -341,6 +388,7 @@ export function EntityActions({
             ) : (
               <Button
                 variant="secondary"
+                density={density}
                 onClick={onNewClientInquiry}
                 className="entity-actions-button"
               >

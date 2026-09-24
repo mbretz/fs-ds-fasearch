@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { AdvisorSearchModule } from '../components/AdvisorSearchModule/AdvisorSearchModule';
@@ -11,6 +11,16 @@ import {
   type ResultsView,
 } from '../components/ResultsToolbar/ResultsToolbar';
 import { ProspectPortal } from '../components/ProspectPortal/ProspectPortal';
+import { Map as LocatorMap, type MapHandle } from '../components/Map';
+import type { Location } from '../data/locations';
+
+// Real (roughly) fixed heights Map.tsx renders at -- 432px mobile,
+// 600px desktop (see that file's own container className) -- used only
+// by `changeView`'s height-reservation cap below, once Map/Dual actually
+// have real content to cap against (see the TODO this replaced).
+const MOBILE_MAP_HEIGHT = 432;
+const DESKTOP_MAP_HEIGHT = 600;
+const DESKTOP_BREAKPOINT_PX = 768;
 
 // Left-to-right order the SegmentedControl (desktop)/RadioGroup (mobile)
 // buttons render in (see ResultsToolbar.tsx) -- `changeView`'s slide
@@ -46,6 +56,18 @@ export function Results() {
   const [reservedContentHeight, setReservedContentHeight] = useState<
     number | undefined
   >(undefined);
+  // Map/list<->map sync state (docs/PLAN.md §2.2): one `selectedLocationId`
+  // drives both a highlighted/scrolled-to ResultsList row (Dual view) and
+  // the matching pin's open popover (Map/Dual view) -- plain lifted state,
+  // not a Context, same reasoning as `query`/`selectedFocusAreas` above.
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
+    null,
+  );
+  const mapRef = useRef<MapHandle>(null);
+  // A plain object, not a `Map` instance -- `Map` is already this page's
+  // own map-component import name (see above); a `Record` sidesteps that
+  // collision entirely rather than aliasing one of the two.
+  const itemRefsRef = useRef<Record<string, HTMLElement | null>>({});
 
   // `searchParams`'s `q` only ever changes inside `submitSearch` below (or a
   // typeahead pick, which routes through the same `onSubmit` path) -- never
@@ -74,6 +96,34 @@ export function Results() {
     setSearchParams({ q: trimmed });
   }
 
+  const registerItemRef = useCallback((id: string, el: HTMLElement | null) => {
+    itemRefsRef.current[id] = el;
+  }, []);
+
+  // List row click (Dual view) -> select + fly the map to it + open its
+  // popover, per docs/PLAN.md §2.2's list->map sync.
+  function handleListSelect(location: Location) {
+    setSelectedLocationId(location.id);
+    mapRef.current?.flyTo(location);
+    mapRef.current?.setSelected(location.id);
+  }
+
+  // Pin click (or `MapPinPopover` closing) -> select/deselect + scroll
+  // the matching list row into view, per §2.2's pin->list sync. Native
+  // `Element.scrollIntoView()`, not a DS `ScrollArea` API -- confirmed
+  // elsewhere in this codebase that's already the established pattern.
+  // A no-op when the matching row isn't currently mounted (plain Map
+  // view, no ResultsList rendered).
+  const handlePinSelect = useCallback((id: string | null) => {
+    setSelectedLocationId(id);
+    if (id) {
+      itemRefsRef.current[id]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, []);
+
   // Map/Dual are inert placeholder text (see ResultsToolbar.tsx), far
   // shorter than a real ResultsList -- switching to one without this
   // would collapse the page's scrollable height out from under the
@@ -90,22 +140,27 @@ export function Results() {
   // (already-reserved) height, so this is a no-op re-application, not a
   // second shrink.
   //
-  // TODO(map/dual build-out): once Map/Dual render real content with
-  // their own set height, blindly flooring at List's *measured* height
-  // stops being right -- a large result set's List height can far
-  // exceed that set height, and this would force the wrapper (and a lot
-  // of dead blank space below the real map) up to match it instead of
-  // just letting the page settle to Map/Dual's own natural size. At
-  // that point, cap `nextReservedHeight` at
-  // `Math.min(currentHeight, mapDualSetHeight)` instead of using
-  // `currentHeight` alone -- preserves scroll only up to Map/Dual's own
-  // real height (a normal, expected tab-switch scroll adjustment
-  // beyond that, not a bug), rather than manufacturing space to avoid
-  // any adjustment at all.
+  // Map/Dual now render real content with a real (roughly) fixed height
+  // (`MOBILE_MAP_HEIGHT`/`DESKTOP_MAP_HEIGHT`, see Map.tsx's own
+  // container className) -- capping the floor there, not at List's own
+  // often-much-taller measured height, is what the earlier TODO here
+  // asked for once real content existed: a large result set's List
+  // height can far exceed Map/Dual's own set height, and blindly
+  // flooring at it would force the wrapper (and a lot of dead blank
+  // space below the real map) up to match instead of letting the page
+  // settle to Map/Dual's own natural size. Scroll adjustment beyond that
+  // cap is a normal, expected tab-switch effect, not a bug.
   function changeView(next: ResultsView) {
     const currentHeight =
       resultsContentRef.current?.getBoundingClientRect().height;
-    const nextReservedHeight = next === 'list' ? undefined : currentHeight;
+    const mapDualSetHeight =
+      window.innerWidth >= DESKTOP_BREAKPOINT_PX
+        ? DESKTOP_MAP_HEIGHT
+        : MOBILE_MAP_HEIGHT;
+    const nextReservedHeight =
+      next === 'list' || currentHeight === undefined
+        ? undefined
+        : Math.min(currentHeight, mapDualSetHeight);
 
     function commit() {
       setReservedContentHeight(nextReservedHeight);
@@ -268,16 +323,36 @@ export function Results() {
             className="mt-[var(--density-spacing-fixed-small)]"
           />
         )}
-        {/* Placeholders only -- see ResultsToolbar.tsx's own comment. */}
         {view === 'map' && (
-          <p className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-small)] md:mx-0">
-            Map view placeholder
-          </p>
+          <LocatorMap
+            ref={mapRef}
+            locations={filteredLocations}
+            selectedLocationId={selectedLocationId}
+            onPinSelect={handlePinSelect}
+            className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-small)] md:mx-0"
+          />
         )}
+        {/* Side by side at `lg`+ (DS `Stack` semantics via plain flex --
+            List scrolls independently of the fixed-height Map pane, per
+            docs/PLAN.md §2.2's "Side-by-side map+list" item), stacked
+            below it. */}
         {view === 'dual' && (
-          <p className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-small)] md:mx-0">
-            Dual view placeholder
-          </p>
+          <div className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-small)] flex flex-col gap-[var(--density-spacing-fixed-large)] md:mx-0 lg:flex-row">
+            <ResultsList
+              locations={filteredLocations}
+              selectedLocationId={selectedLocationId}
+              onSelectLocation={handleListSelect}
+              registerItemRef={registerItemRef}
+              className="lg:mx-0 lg:max-h-[600px] lg:flex-1 lg:overflow-y-auto"
+            />
+            <LocatorMap
+              ref={mapRef}
+              locations={filteredLocations}
+              selectedLocationId={selectedLocationId}
+              onPinSelect={handlePinSelect}
+              className="lg:flex-1"
+            />
+          </div>
         )}
       </div>
     </>

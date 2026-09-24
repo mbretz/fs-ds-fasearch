@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Avatar } from 'ds';
 import type { NewClientStatus } from '../../data/locations';
 import { statusMeta } from './statusMeta';
@@ -106,16 +107,94 @@ export function EntityPortrait({
   const initials = getInitials(name);
   const meta = showBadge && status ? statusMeta[status] : undefined;
   const BadgeIcon = meta?.icon;
+  // Tracks Radix's own `imageLoadingStatus` reaching `'error'` -- Radix
+  // renders `Avatar.Fallback` for `loading` AND `error` alike, so the
+  // `:has()` hide-until-loaded rule below can't tell "still loading" from
+  // "never going to load" on CSS alone; this is what tells it to reveal
+  // Fallback anyway rather than hiding the avatar forever on a genuinely
+  // broken photo URL.
+  const [imageErrored, setImageErrored] = useState(false);
 
   return (
     <div className={cn('relative inline-flex shrink-0', className)}>
+      {/* `Avatar.Root` always carries a solid background
+       * (`--component-avatar-background-color`, brand gold) -- Fallback's
+       * own opacity has no effect on that background, since it's painted
+       * by Root itself, not by Fallback; every earlier attempt here
+       * (Radix's own `delayMs`, then fading just Fallback's opacity) still
+       * left that gold circle visible underneath with no initials on top
+       * of it. Per the user: no gold should show at all while waiting on
+       * a photo -- only the resolved portrait should ever appear, no
+       * partial/placeholder state first.
+       *
+       * `:has()` (Baseline widely available, no fallback needed per this
+       * repo's browser policy) hides `Avatar.Root` ENTIRELY (not just
+       * Fallback) for as long as it still contains a `Fallback` child --
+       * i.e. for as long as `Avatar.Image` hasn't resolved to `loaded`
+       * yet -- then a plain `transition` fades it back in the instant
+       * Fallback unmounts (Image swaps in). Scoped to
+       * `.entity-portrait-has-photo` (set only when a `photoUrl` was
+       * actually passed) so a real no-photo avatar -- where Fallback is
+       * the permanent, only content, never replaced -- isn't hidden
+       * forever by the same rule.
+       *
+       * `.entity-portrait-errored` (driven by `imageErrored` state, via
+       * `onLoadingStatusChange` below) overrides that hide rule once the
+       * photo has genuinely failed rather than just being slow --
+       * higher specificity (two classes + `:has()`) wins over the plain
+       * hide rule without needing `!important`, revealing initials
+       * instead of hiding the avatar forever. */}
+      <style>{`
+        @keyframes entity-portrait-image-fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .entity-portrait-has-photo {
+          transition: opacity 150ms ease-out;
+        }
+        .entity-portrait-has-photo:has(.entity-portrait-fallback) {
+          opacity: 0;
+          transition: none;
+        }
+        .entity-portrait-has-photo.entity-portrait-errored:has(.entity-portrait-fallback) {
+          opacity: 1;
+          transition: opacity 150ms ease-out;
+        }
+        .entity-portrait-image {
+          animation: entity-portrait-image-fade-in 150ms ease-out;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .entity-portrait-has-photo {
+            transition: none;
+          }
+          .entity-portrait-image {
+            animation: none;
+          }
+        }
+      `}</style>
       <Avatar.Root
         size={avatarSizeBySize[size]}
         variant={variant}
-        className={cn(avatarBorderClassName[size], avatarClassName)}
+        className={cn(
+          avatarBorderClassName[size],
+          photoUrl && 'entity-portrait-has-photo',
+          imageErrored && 'entity-portrait-errored',
+          avatarClassName,
+        )}
       >
-        {photoUrl && <Avatar.Image src={photoUrl} alt="" />}
-        <Avatar.Fallback>{initials}</Avatar.Fallback>
+        {photoUrl && (
+          <Avatar.Image
+            src={photoUrl}
+            alt=""
+            className="entity-portrait-image"
+            onLoadingStatusChange={(loadingStatus) =>
+              setImageErrored(loadingStatus === 'error')
+            }
+          />
+        )}
+        <Avatar.Fallback className="entity-portrait-fallback">
+          {initials}
+        </Avatar.Fallback>
       </Avatar.Root>
       {meta && BadgeIcon && (
         // Flush at the avatar's own top-left corner, rendered on top of
