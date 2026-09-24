@@ -14,14 +14,6 @@ import { ProspectPortal } from '../components/ProspectPortal/ProspectPortal';
 import { Map as LocatorMap, type MapHandle } from '../components/Map';
 import type { Location } from '../data/locations';
 
-// Real (roughly) fixed heights Map.tsx renders at -- 432px mobile,
-// 600px desktop (see that file's own container className) -- used only
-// by `changeView`'s height-reservation cap below, once Map/Dual actually
-// have real content to cap against (see the TODO this replaced).
-const MOBILE_MAP_HEIGHT = 432;
-const DESKTOP_MAP_HEIGHT = 600;
-const DESKTOP_BREAKPOINT_PX = 768;
-
 // Left-to-right order the SegmentedControl (desktop)/RadioGroup (mobile)
 // buttons render in (see ResultsToolbar.tsx) -- `changeView`'s slide
 // direction below walks this same order, so the transition always
@@ -51,11 +43,6 @@ export function Results() {
   // far (see ResultsToolbar.tsx) -- rather than docs/PLAN.md's eventual
   // "desktop defaults to Dual View", per the user, until Map/Dual exist.
   const [view, setView] = useState<ResultsView>('list');
-  const resultsContentRef = useRef<HTMLDivElement>(null);
-  // Set only while viewing Map/Dual -- see `changeView` below for why.
-  const [reservedContentHeight, setReservedContentHeight] = useState<
-    number | undefined
-  >(undefined);
   // Map/list<->map sync state (docs/PLAN.md §2.2): one `selectedLocationId`
   // drives both a highlighted/scrolled-to ResultsList row (Dual view) and
   // the matching pin's open popover (Map/Dual view) -- plain lifted state,
@@ -63,6 +50,7 @@ export function Results() {
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
     null,
   );
+  // Clamps `window.scrollY` back down whenever a view switch shrinks the
   const mapRef = useRef<MapHandle>(null);
   // A plain object, not a `Map` instance -- `Map` is already this page's
   // own map-component import name (see above); a `Record` sidesteps that
@@ -124,47 +112,46 @@ export function Results() {
     }
   }, []);
 
-  // Map/Dual are inert placeholder text (see ResultsToolbar.tsx), far
-  // shorter than a real ResultsList -- switching to one without this
-  // would collapse the page's scrollable height out from under the
-  // user, clamping their scroll position back up near the top
-  // regardless of where they'd scrolled to, per the user. Rather than
-  // guessing a fixed placeholder height, this measures List's own real
-  // rendered height right before leaving it and floors the
-  // results-content wrapper at that value for as long as Map/Dual is
-  // showing, so the page never gets shorter than it already was and the
-  // user's scroll position stays put. Cleared on returning to List,
-  // which always has its own real (and possibly since-changed, e.g. a
-  // filter edit) height to stand on instead of an artificial floor.
-  // Map<->Dual: `currentHeight` is whichever placeholder's own
-  // (already-reserved) height, so this is a no-op re-application, not a
-  // second shrink.
+  // Map/Dual each render at a real (roughly) fixed height now (Map.tsx's
+  // own container className, ~432px mobile/600px desktop) -- an earlier
+  // pass here tried to pre-compute and floor the results-content
+  // wrapper's own `minHeight` at that value on every switch, to keep a
+  // scrolled-down List position from getting stranded once the page
+  // suddenly got shorter. Removed, per the user, 2026-09-24: it needed a
+  // hardcoded height constant to match Map/Dual's real rendered height
+  // exactly, and didn't actually fix the dead-space-below-the-footer bug
+  // it was meant to prevent (see `clampScroll` below, which does).
   //
-  // Map/Dual now render real content with a real (roughly) fixed height
-  // (`MOBILE_MAP_HEIGHT`/`DESKTOP_MAP_HEIGHT`, see Map.tsx's own
-  // container className) -- capping the floor there, not at List's own
-  // often-much-taller measured height, is what the earlier TODO here
-  // asked for once real content existed: a large result set's List
-  // height can far exceed Map/Dual's own set height, and blindly
-  // flooring at it would force the wrapper (and a lot of dead blank
-  // space below the real map) up to match instead of letting the page
-  // settle to Map/Dual's own natural size. Scroll adjustment beyond that
-  // cap is a normal, expected tab-switch effect, not a bug.
-  function changeView(next: ResultsView) {
-    const currentHeight =
-      resultsContentRef.current?.getBoundingClientRect().height;
-    const mapDualSetHeight =
-      window.innerWidth >= DESKTOP_BREAKPOINT_PX
-        ? DESKTOP_MAP_HEIGHT
-        : MOBILE_MAP_HEIGHT;
-    const nextReservedHeight =
-      next === 'list' || currentHeight === undefined
-        ? undefined
-        : Math.min(currentHeight, mapDualSetHeight);
+  // Clamps `window.scrollY` back down whenever a switch shrinks the page
+  // shorter than the scroll position the user was already at -- the
+  // browser doesn't do this on its own, so a scroll position from a tall
+  // List view can end up past the end of a much shorter Dual/Map page,
+  // leaving a real dead gap of blank canvas below the footer (confirmed
+  // via devtools, per the user: every element up through the footer
+  // measures correctly, so this was never a sizing bug). A no-op
+  // whenever the current scroll position is already within the new
+  // page's real scrollable range.
+  function clampScroll() {
+    const maxScrollY =
+      document.documentElement.scrollHeight - window.innerHeight;
+    if (window.scrollY > maxScrollY) {
+      window.scrollTo({ top: Math.max(maxScrollY, 0) });
+    }
+  }
 
+  function changeView(next: ResultsView) {
     function commit() {
-      setReservedContentHeight(nextReservedHeight);
       setView(next);
+      // Map/Dual each mount their own separate `LocatorMap` instance
+      // (see below) -- switching between them remounts a fresh map, but
+      // `selectedLocationId` lives up here and carries straight over, so
+      // the new instance immediately reopens that location's popover
+      // against its own (different-sized/positioned) map, which reads as
+      // the popover jumping to an unexpected spot. Closing it here on
+      // every view change is simpler and more robust than trying to
+      // preserve its on-screen position across two genuinely different
+      // map instances, per the user.
+      setSelectedLocationId(null);
     }
 
     // Wraps the view switch in `document.startViewTransition()` so the
@@ -180,8 +167,37 @@ export function Results() {
     // below) just get the instant switch. `prefers-reduced-motion` is
     // already handled globally, not repeated here -- see
     // apps/locator/src/view-transitions.css.
-    if (!document.startViewTransition) {
+    //
+    // Skipped entirely (same instant-switch fallback) whenever Dual is
+    // either end of the switch -- per the user, 2026-09-24. Confirmed
+    // via the browser console
+    // (`document.documentElement.scrollHeight` vs. `document.body.
+    // scrollHeight` diverging by tens of thousands of px -- real page
+    // content ends around 1300px, but `<html>`'s own reported
+    // scrollHeight was 23000+) that the "dead space below the footer"
+    // bug is a stuck `::view-transition` pseudo-element tree left
+    // behind by a Dual-involved switch: it renders outside `<body>` (so
+    // it never shows up as an inspectable element, and doesn't affect
+    // `body.scrollHeight`) but still counts toward `documentElement.
+    // scrollHeight`, creating scrollable blank space no `clampScroll`
+    // math can account for, since `scrollHeight` itself is inflated, not
+    // just `scrollY`. Two earlier passes here (a stale height-
+    // reservation floor, then various `clampScroll` timing/placement
+    // attempts) chased scroll-position and content-height theories that
+    // both turned out to be red herrings once this was actually
+    // measured. Dual is the one destination that mounts a whole second
+    // live component (a fresh `LocatorMap`/MapLibre GL instance)
+    // alongside ResultsList inside the same `flushSync`, not just
+    // swapping one for the other -- plausibly enough extra synchronous
+    // work inside the transition's own update callback to leave the
+    // browser's transition lifecycle in a state it doesn't clean up
+    // from properly. Bypassing View Transitions for Dual sidesteps that
+    // outright; List<->Map keeps its slide animation, only Dual loses
+    // it. A stuck ghost from *before* this fix won't self-clear --
+    // needs an actual page reload, not just further clicking around.
+    if (!document.startViewTransition || next === 'dual' || view === 'dual') {
       commit();
+      clampScroll();
       return;
     }
 
@@ -197,8 +213,16 @@ export function Results() {
     const transition = document.startViewTransition(() => {
       flushSync(commit);
     });
+    // `clampScroll` runs here, not in a `useEffect` keyed on `view` (an
+    // earlier pass here) -- per the user, 2026-09-24: an effect fires as
+    // soon as React commits, which for the View Transition path is
+    // *during* the ~300ms slide animation, before the browser's own
+    // transition machinery has settled on the new layout. Running it
+    // only once `finished` resolves is what actually stops the dead
+    // space below the footer from showing up.
     transition.finished.finally(() => {
       delete document.documentElement.dataset.resultsTransitionDirection;
+      clampScroll();
     });
   }
 
@@ -305,18 +329,13 @@ export function Results() {
       />
       {/* `[view-transition-name:results-content]` scopes the cross-fade
           to just this region (not the whole page/header) -- see
-          `changeView` above. `ref`+`style` are the height-reservation
-          mechanism described there, not styling. */}
+          `changeView` above. */}
       {/* 8px (`spacing.fixed.small`) gap to ResultsToolbar above -- much
           tighter than every other gap on this page, per the user, so the
           toolbar reads as glued to the content it's controlling rather
           than stacking at the same rhythm as the section-level gaps
           elsewhere on this page. */}
-      <div
-        ref={resultsContentRef}
-        className="[view-transition-name:results-content]"
-        style={{ minHeight: reservedContentHeight }}
-      >
+      <div className="[view-transition-name:results-content]">
         {view === 'list' && (
           <ResultsList
             locations={filteredLocations}
@@ -329,28 +348,83 @@ export function Results() {
             locations={filteredLocations}
             selectedLocationId={selectedLocationId}
             onPinSelect={handlePinSelect}
-            className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-small)] md:mx-0"
+            className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-spacing-fixed-small)] md:mx-0"
           />
         )}
-        {/* Side by side at `lg`+ (DS `Stack` semantics via plain flex --
+        {/* Side by side at 920px+ (a custom `min-[920px]:` arbitrary
+            variant, not a stock `md`/`lg` breakpoint) -- per the user,
+            this cutoff moved from the original `lg` (1024px) down to
+            `md` (768px) and then back up into the low 900s across a
+            couple of passes -- via plain flex (DS `Stack` semantics --
             List scrolls independently of the fixed-height Map pane, per
             docs/PLAN.md §2.2's "Side-by-side map+list" item), stacked
             below it. */}
         {view === 'dual' && (
-          <div className="mx-[var(--density-layout-fixed-small)] mt-[var(--density-spacing-fixed-small)] flex flex-col gap-[var(--density-spacing-fixed-large)] md:mx-0 lg:flex-row">
+          <div className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-spacing-fixed-small)] flex flex-col gap-[var(--density-spacing-fixed-large)] md:mx-0 min-[920px]:flex-row">
+            {/* `md:grid-cols-1 lg:grid-cols-1`, overriding ResultsList's
+                own defaults (`md:grid-cols-2`/`lg:grid-cols-3`) at those
+                same variants so tailwind-merge actually dedupes them --
+                per the user, Dual keeps a single column throughout
+                (sharing width with Map leaves even less room than the
+                previous 2-column pass assumed), not just a narrower
+                column count than List view's own. */}
+            {/* A dedicated `<style>` block, not two Tailwind flex-*
+                utilities layered across breakpoints -- relying on
+                Tailwind's own generated-stylesheet ordering to make a
+                `lg:` rule beat an arbitrary `min-[920px]:` one once both
+                match (1024px+) isn't a documented guarantee, so this
+                spells the cascade out explicitly instead: an even 50/50
+                split from 920px, widening to Map's own ~2/3 share (per
+                the user/Figma -- node 684:9043's "FA List" 414px beside
+                "Map" 774px) at 1024px+, where the later, more specific
+                media query is unambiguously what wins. */}
+            <style>{`
+              @media (min-width: 920px) {
+                .dual-view-list, .dual-view-map {
+                  flex: 1;
+                }
+              }
+              @media (min-width: 1024px) {
+                .dual-view-map {
+                  flex: 2;
+                }
+              }
+            `}</style>
+            {/* `min-[920px]:min-h-0` -- the actual fix for the "list
+                escapes its own max-h-[600px] cap" bug (traced to the
+                dead-space-below-the-footer report): a flex item's
+                `min-height` defaults to `auto`, not `0`, which for a
+                grid/scroll container like this `<ul>` resolves to a
+                content-based automatic minimum that can exceed
+                `max-height` -- and per the CSS box-sizing spec, a
+                conflicting `min-height` always wins over `max-height`,
+                so the cap was silently being ignored and the list grew
+                to its full, uncapped content height instead of scrolling
+                inside 600px. Forcing `min-height: 0` here is what
+                actually lets `max-h-[600px]`/`overflow-y-auto` below
+                take effect. */}
             <ResultsList
               locations={filteredLocations}
               selectedLocationId={selectedLocationId}
               onSelectLocation={handleListSelect}
               registerItemRef={registerItemRef}
-              className="lg:mx-0 lg:max-h-[600px] lg:flex-1 lg:overflow-y-auto"
+              className="dual-view-list min-[920px]:min-h-0 min-[920px]:max-h-[600px] min-[920px]:overflow-y-auto md:grid-cols-1 lg:grid-cols-1"
             />
+            {/* `md:rounded-tl-[...]`/`md:rounded-bl-[...]`, layered on
+                top of the base component's own uniform `md:rounded-
+                [large]` (24px, all four corners) -- per the user,
+                matching Figma's own Dual-view Map Component radius
+                ("8px 24px 24px 8px": only the two LEFT corners, which
+                border List, drop to the 8px `generous` token; the right
+                corners, on the outer edge, stay 24px). Dual-view-only:
+                the single-pane Map view keeps its base component's
+                uniform 24px, unaffected by this override. */}
             <LocatorMap
               ref={mapRef}
               locations={filteredLocations}
               selectedLocationId={selectedLocationId}
               onPinSelect={handlePinSelect}
-              className="lg:flex-1"
+              className="dual-view-map md:rounded-tl-[var(--semantic-border-radius-generous)] md:rounded-bl-[var(--semantic-border-radius-generous)]"
             />
           </div>
         )}

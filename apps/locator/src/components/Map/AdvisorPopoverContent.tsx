@@ -7,14 +7,14 @@ import { getFullName } from '../../utils/getFullName';
 
 export interface AdvisorPopoverContentProps {
   advisor: Advisor;
-  /** Matches Figma's `FA-Map-Tile` Large/Small variants -- Large is a
-   * two-column layout (portrait + status tag stacked on the left; name/
-   * designations/tenure/actions stacked on the right, per the user) with
-   * an 80px portrait; Small stays a single simpler row with a 48px
-   * portrait and no status tag/designations/tenure. Callers pick based
-   * on the map's own rendered width (see Map.tsx), not a viewport
-   * breakpoint -- the popover portals to `document.body`, outside the
-   * map's DOM subtree, so a CSS container query can't reach it. */
+  /** Matches Figma's `FA-Map-Tile` Large/Small variants -- both are the
+   * same two-column layout (portrait+badge on the left; name/actions on
+   * the right), Small just narrower overall with a 120x120 portrait,
+   * tighter padding/gap, and no designations/tenure line, per the
+   * user. Callers pick based on the map's own rendered width (see
+   * Map.tsx), not a viewport breakpoint -- the popover portals to
+   * `document.body`, outside the map's DOM subtree, so a CSS container
+   * query can't reach it. */
   size: 'sm' | 'lg';
   /** Closes this popover and opens `NewClientInquiryDialog` at the `Map`
    * level instead of self-triggering it in place -- a Dialog opened
@@ -88,6 +88,7 @@ export function AdvisorPopoverContent({
           name={fullName}
           photoUrl={advisor.photoUrl}
           status={advisor.newClientStatus}
+          badgeMode="inverse"
           size="lg"
           // 160x160 -- Figma's own FA-Portrait "Shape=Circle, Size=MD"
           // (`1:650`), per the user -- outside DS Avatar's own size
@@ -141,18 +142,38 @@ export function AdvisorPopoverContent({
   }
 
   return (
-    <div className="flex w-[260px] flex-col gap-[var(--density-spacing-fixed-small)] p-[var(--density-spacing-fixed-small)]">
-      <div className="flex gap-[var(--density-spacing-fixed-large)]">
-        <EntityPortrait
-          name={fullName}
-          photoUrl={advisor.photoUrl}
-          status={advisor.newClientStatus}
-          size="md"
-          showBadge={false}
+    // Mirrors the `lg` layout above (same badge and Actions treatment)
+    // but tighter and narrower overall -- a 120x120 portrait (per the
+    // user), shrunk from `lg`'s 400px down to 320px for a ~40/60
+    // portrait/text-column split (120px vs. ~178px, trying a less-equal
+    // ratio than the previous 280px/~138px pass, per the user), with
+    // less outer padding and a tighter column gap to match, plus no
+    // designations/tenure line, per the user.
+    <div className="flex w-[320px] gap-[var(--density-spacing-fixed-med)] p-[var(--density-spacing-fixed-x-small)] pr-[calc(var(--density-spacing-fixed-x-small)_+_var(--density-spacing-fixed-xx-small))]">
+      <EntityPortrait
+        name={fullName}
+        photoUrl={advisor.photoUrl}
+        status={advisor.newClientStatus}
+        badgeMode="inverse"
+        size="lg"
+        // 120x120 -- 0.75x the `lg` variant's own 160x160 override above,
+        // with the fallback-initials/icon sizes scaled by the same ratio
+        // (51px -> 38px, 96px -> 72px).
+        avatarClassName="size-[120px] text-[38px] [--avatar-icon-size:72px]"
+      />
+      {/* `justify-center` -- this column stretches to the row's full
+          height (the portrait's own 120px) by default, so centering its
+          content vertically against that height is what actually
+          centers it relative to the portrait, per the user. */}
+      <div className="flex min-w-0 flex-1 flex-col justify-center">
+        <NameBlock
+          heading={fullName}
+          headingClassName="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)]"
         />
-        <NameBlock heading={fullName} className="self-center" />
+        <div className="mt-[var(--density-spacing-fixed-small)]">
+          {showsNewClientInquiry ? actions(onNewClientInquiry) : actions()}
+        </div>
       </div>
-      {showsNewClientInquiry ? actions(onNewClientInquiry) : actions()}
     </div>
   );
 }

@@ -24,6 +24,18 @@ interface ResultsListProps {
 // LocationCard, followed by only its matching advisors as their own
 // AdvisorCard.
 //
+// Same single-vs-not split as the map's own `getPinType` (Map/pinType.ts)
+// -- a location with exactly one advisor never gets its own LocationCard
+// row, per the user: that card's own name is just the location's
+// address, which AdvisorCard already shows, so it'd be a fully redundant
+// row. Locations with 0 (support-staff-only) or 2+ advisors keep their
+// LocationCard, same as the map keeps those on a generic "branch" pin
+// rather than featuring one specific advisor. For a single-advisor
+// location, that advisor's own `<li>` below takes over the
+// LocationCard's row-level responsibilities instead (the `ref`/`onClick`/
+// selection-ring props map/list sync needs) -- see `isSingleAdvisor`
+// below.
+//
 // One shared 2-column (`md`+) / 3-column (`lg`+, 1024px -- the closest
 // Tailwind breakpoint to 920px) grid, not a LocationCard section followed
 // by a separately-gridded advisor `<ul>`, per the user -- `col-span-full`
@@ -34,9 +46,11 @@ interface ResultsListProps {
 // used between advisor cards, not the larger `fixed-xxx-large` gap the
 // previous two-container layout had.
 //
-// Horizontal margin: 8px (`layout.fixed.small`) below `md`, none at `md`+
+// Horizontal margin: 16px (`layout.fixed.large`) below `md`, none at `md`+
 // -- `<main>` (SiteShell.tsx) has zero padding of its own below `md`, so
-// mobile needs an explicit inset here; at `md`+ this matches
+// mobile needs an explicit inset here, matching ResultsToolbar/
+// FilterFacets/ProspectPortal's own 16px rather than the previous 8px,
+// per the user; at `md`+ this matches
 // AdvisorSearchModule's own behavior (see SiteShell.tsx's `<main>`
 // comment), which adds no margin of its own there either, relying
 // entirely on `<main>`'s ambient padding -- so a bare `md:mx-0` override
@@ -78,9 +92,27 @@ export function ResultsList({
   }
 
   return (
+    // `relative` -- root cause of the Dual-view "dead space below the
+    // footer" bug, traced via the browser console (per the user,
+    // 2026-09-24): every card renders at least one Tailwind `.sr-only`
+    // span (e.g. Link's own "(opens in a new window)" label) --
+    // `position: absolute` with no explicit inset, so it falls back to
+    // its "static position" (where it'd sit in normal flow). Without a
+    // `position: relative` ancestor to act as its containing block,
+    // that static-position calculation escapes all the way to the
+    // document root -- harmless in List view (nothing's clipped there,
+    // so it lands exactly where real content already is), but once
+    // Dual's `min-[920px]:max-h-[600px] overflow-y-auto` (below) clips
+    // and scrolls this list, those spans' *unclipped* static positions
+    // (still reflecting the full, un-scrolled layout) kept inflating
+    // `documentElement.scrollHeight` by tens of thousands of px while
+    // staying completely invisible to `document.body`'s own box model.
+    // `relative` here gives every descendant `.sr-only` span a LOCAL
+    // containing block instead, so its static position resolves within
+    // this scrollable box rather than escaping past it.
     <ul
       className={cn(
-        'mx-[var(--density-layout-fixed-small)] grid grid-cols-1 gap-[var(--density-spacing-fixed-large)] md:mx-0 md:grid-cols-2 lg:grid-cols-3',
+        'relative mx-[var(--density-layout-fixed-large)] grid grid-cols-1 gap-[var(--density-spacing-fixed-large)] md:mx-0 md:grid-cols-2 lg:grid-cols-3',
         className,
       )}
     >
@@ -89,30 +121,65 @@ export function ResultsList({
           rather than living in a separate 1-column container, so they
           need to be part of the *same* grid the advisor cards use
           (spanning only means something relative to a shared set of
-          column tracks). */}
-      {locations.map((location) => (
-        <li
-          key={location.id}
-          ref={(el) => registerItemRef?.(location.id, el)}
-          onClick={() => onSelectLocation?.(location)}
-          className={cn(
-            'col-span-full',
-            selectedLocationId === location.id &&
-              'ring-[length:var(--component-tag-border-width)] ring-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
-          )}
-        >
-          <LocationCard location={location} />
-        </li>
-      ))}
+          column tracks). Skips single-advisor locations entirely -- see
+          this file's own top comment. */}
+      {locations
+        .filter((location) => location.advisors.length !== 1)
+        .map((location) => (
+          <li
+            key={location.id}
+            ref={(el) => registerItemRef?.(location.id, el)}
+            onClick={() => onSelectLocation?.(location)}
+            className={cn(
+              'col-span-full',
+              selectedLocationId === location.id &&
+                // A real `border`, not a `ring` (box-shadow) -- per the
+                // user, the ring was only showing up as a faint sliver
+                // along the card's top edge rather than a full outline
+                // (Dual view's map<->list selection highlight). A border
+                // directly on this wrapper participates in the normal
+                // box model instead of an outside-the-box shadow, so it
+                // can't be partially covered the way the ring apparently
+                // was.
+                'relative z-10 border-[length:var(--component-tag-border-width)] border-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
+            )}
+          >
+            <LocationCard location={location} />
+          </li>
+        ))}
       {/* 2 columns at `md`+, 3 at `lg`+, each rendering well under
           `EntityCard`'s own 680px side-panel threshold, so every
           `AdvisorCard` naturally drops into its stacked/portrait layout
           (`OfficeDetailsPanel` hidden, `FocusAreasPanel` stacked below
           main) purely from the width change -- no separate prop needed
           to ask for that layout. */}
-      {locations.flatMap((location) =>
-        location.advisors.map((advisor) => (
-          <li key={advisor.id} className="mx-auto w-full max-w-[729px]">
+      {locations.flatMap((location) => {
+        // This location has no LocationCard row above (see this file's
+        // own top comment) -- its one advisor's `<li>` picks up that
+        // row's `ref`/`onClick`/selection-ring props instead, so map<->
+        // list sync (Results.tsx) still has something to target by this
+        // location's own id.
+        const isSingleAdvisor = location.advisors.length === 1;
+        return location.advisors.map((advisor) => (
+          <li
+            key={advisor.id}
+            ref={
+              isSingleAdvisor
+                ? (el) => registerItemRef?.(location.id, el)
+                : undefined
+            }
+            onClick={
+              isSingleAdvisor ? () => onSelectLocation?.(location) : undefined
+            }
+            className={cn(
+              'mx-auto w-full max-w-[729px]',
+              isSingleAdvisor &&
+                selectedLocationId === location.id &&
+                // Same border-not-ring fix as the LocationCard `<li>`
+                // above -- see its own comment.
+                'relative z-10 border-[length:var(--component-tag-border-width)] border-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
+            )}
+          >
             {/* `showPortraitBadge={false}` -- per the user, `StatusTag`
                 (above the portrait) already shows this advisor's status
                 here, so the portrait's own corner badge would just
@@ -123,8 +190,8 @@ export function ResultsList({
               showPortraitBadge={false}
             />
           </li>
-        )),
-      )}
+        ));
+      })}
     </ul>
   );
 }

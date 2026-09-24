@@ -32,6 +32,22 @@ export function LocationCard({ location, className }: LocationCardProps) {
   const advisorCount = location.advisors.length;
   const staffCount = location.supportStaff.length;
   const { street, cityStateZip } = splitAddressLines(location.address);
+  // Shared by two real DOM copies (the row's `<style>` block above has
+  // the full reasoning) -- one inside `NameBlock`, beside the avatar
+  // (the default placement), one its own full-width block below the
+  // whole avatar+address row (only shown in the 300-400px sub-range).
+  const branchSummary = (
+    <>
+      At this Edward Jones Branch:
+      <ul className="list-disc pl-[var(--density-spacing-fixed-large)]">
+        <li>
+          {advisorCount} Financial Advisor
+          {advisorCount === 1 ? '' : 's'}
+        </li>
+        <li>{staffCount} Administrative Staff</li>
+      </ul>
+    </>
+  );
 
   return (
     <EntityCard
@@ -78,35 +94,46 @@ export function LocationCard({ location, className }: LocationCardProps) {
     >
       {/* Row (`items-center`, the address heading + "at this branch"
           list vertically centered against the avatar) by default --
-          stacked (column) only in the two sub-ranges below where
-          `main`'s own available width can't comfortably fit the avatar
-          and text side by side: below 440px (`main` itself, not just
-          the row, is too narrow there -- see the row's `<style>` rule
-          below) and 680-900px (EntityCard's own side-panels squeeze,
-          680px threshold, see that file -- narrower still, since `main`
-          shares the card with two panels there). Row again in both
-          gaps between those: 440-680px (card itself still stacked,
-          panels below `main`, so `main` has the *whole* card's width to
-          itself and comfortably fits both) and >=900px (card roomy
-          enough that even `main`'s reduced side-panel share is plenty).
-          Per the user (2026-09-19: first stacked-below-900 throughout,
-          then reverted to row below 680px, then this -- 440px is where
-          live measurement showed `main` actually starts squeezing
-          avatar+text again below 680px, not 0px, so this is a real
-          four-zone stack/row/stack/row pattern, not a two-zone one).
+          stacked (column) only in the sub-range below 300px (`main`
+          itself, not just the row, is too narrow there -- see the row's
+          `<style>` rule below) and in 680-900px (EntityCard's own side-
+          panels squeeze, 680px threshold, see that file -- narrower
+          still, since `main` shares the card with two panels there).
+          Row again in both gaps between those: 300-680px (card itself
+          still stacked, panels below `main`, so `main` has the *whole*
+          card's width to itself and comfortably fits both, now with a
+          smaller avatar through most of that range -- see its own
+          `clamp()` comment below) and >=900px (card roomy enough that
+          even `main`'s reduced side-panel share is plenty).
+
+          The lower boundary moved from 440px down to 300px, and the
+          avatar's own default clamp (below) now keeps shrinking it
+          through a wider span of that row zone instead of maxing out
+          early, per the user, 2026-09-24: Dual view's own List/Map split
+          leaves LocationCard rendering right around 320-480px wide there
+          (see Results.tsx's Dual-view flex ratios), which used to fall
+          inside the old 0-440px stacked band -- the user wanted that
+          specific width range to show address beside a somewhat smaller
+          image instead. Deliberately a plain width-based change, not
+          scoped to Dual specifically (e.g. via a data attribute) -- per
+          the user, even though this width range also covers real mobile-
+          phone viewports (the old 440px threshold was originally tuned
+          against phone testing specifically, per this file's earlier
+          comments), so a phone-width LocationCard now gets this same
+          smaller-avatar row treatment too, not just Dual's.
+          680-900px and >=900px (the "landscape"/side-panel-row card
+          shape) are untouched -- see the avatar clamp's own comment for
+          why raising its ceiling doesn't reach into those.
 
           A clean discrete container-query toggle at each boundary, not
-          a continuously-shrinking avatar clamp through the row zones --
-          per the user, revisiting the mobile case specifically:
+          a continuously-shrinking avatar clamp through the *whole* row
+          span -- per the user, revisiting the mobile case specifically:
           shrinking the avatar to fit alongside text (this file's
           previous approach here) can only ever reach an exact,
           zero-slack fit at its own upper bound by construction, which
           reads as visibly cramped even though nothing technically
           overflows; stacking removes the row-sharing constraint
-          entirely instead of fitting it exactly, so both row zones can
-          just use the avatar's own full natural size -- see its own
-          comment below for the (now merely defensive-floor) clamp this
-          leaves it with. */}
+          entirely below 300px instead of fitting it exactly. */}
       {/* `!important`, not a higher-specificity selector -- same
           reasoning as view-transitions.css's own reduced-motion
           kill-switch, and the same bug it was written to avoid:
@@ -148,10 +175,61 @@ export function LocationCard({ location, className }: LocationCardProps) {
             --location-avatar-size: clamp(112px, calc(33.53cqi - 26.3px), 240px) !important;
           }
         }
-        @container entity-card (max-width: 439.98px) {
+        @container entity-card (max-width: 299.98px) {
           .location-portrait-row {
             flex-direction: column !important;
             align-items: flex-start !important;
+          }
+        }
+        /* At the narrow end of the row zone (300-400px), just above
+           where the row flips to fully stacked: the "At this Edward
+           Jones Branch" advisor/staff-count list moves out from beside
+           the avatar to its own full-width row underneath the whole
+           lockup instead, and the address heading itself drops from the
+           default \`subheading\` text bundle (20px/30px) down to
+           \`heavy\` (16px/24px) -- per the user, 2026-09-24: even with
+           the avatar's own smaller size there (see its clamp above), the
+           row still read tight with the full-size address AND the
+           branch-summary list both beside it, but the user wants the
+           summary kept (not dropped, an earlier pass here), just
+           relocated. Two real DOM copies of the summary content, not one
+           CSS-repositioned copy (\`.location-branch-summary\` inside
+           \`NameBlock\`, alongside the avatar; \`.location-branch-
+           summary-below\`, its own full-width block after the row) --
+           same "duplicate + toggle via container query" convention
+           already used elsewhere (e.g. ResultsToolbar's SegmentedControl/
+           RadioGroup) -- since plain CSS can't move a flex child from
+           inside one flex container (NameBlock's own column, itself
+           inside the avatar+address row) out to a sibling of that whole
+           row. Row mode (not the full-stack <300px case, where the whole
+           card's width is already free for text below the avatar) is
+           the only place any of this is needed. */
+        @container entity-card (min-width: 300px) and (max-width: 399.98px) {
+          .location-branch-summary {
+            display: none !important;
+          }
+          .location-branch-summary-below {
+            display: block !important;
+          }
+          .location-address-heading {
+            font-size: var(--semantic-content-heavy-font-size) !important;
+            line-height: var(--semantic-content-heavy-line-height) !important;
+          }
+          /* A third, dedicated override for this same sub-range -- same
+             pattern as the 680-794.18px one above -- shrinking the
+             avatar further than the default clamp would (112px at
+             300px, up to 160px at 400px, vs. ~163-206px from the default
+             clamp there) so the address gets more of the row's width,
+             per the user, 2026-09-24. This lands right at the default
+             clamp's own 112px floor at the 300px boundary -- continuous
+             with it there -- but is a real, deliberate discontinuous
+             DROP from the full-stack case just below 300px (avatar
+             ~163px there, off the default clamp, since row mode is what
+             actually needs the squeeze) -- same "drop, not gradual"
+             shape as the 680px boundary's own override, per that
+             clamp's comment above. */
+          .location-avatar {
+            --location-avatar-size: clamp(112px, calc(48cqi - 32px), 160px) !important;
           }
         }
         @container entity-card (min-width: 680px) and (max-width: 899.98px) {
@@ -184,18 +262,12 @@ export function LocationCard({ location, className }: LocationCardProps) {
             at 240px, cutting the address/count text off next to it at
             tablet-range card widths, per the user (2026-09-19).
 
-            The portrait+name row is now stacked (column) across BOTH
-            of its own squeeze sub-ranges (below 440px and 680-900px --
-            see the row's own comment above), not just the 680-900px
-            one -- so the avatar never actually shares its row with text
-            at a width narrow enough to matter. `NameBlock` still keeps
-            its own `min-w-0` fix (see its own comment) as a defensive
-            measure for the two row zones (440-680px, >=900px), but
-            confirmed live, `main`'s width is comfortably roomy at every
-            width tested in both of those (>=422px), so it isn't
-            actually load-bearing there either -- this clamp is now
-            purely the same narrow, pathological-width-only defensive
-            floor described below, nothing more.
+            The portrait+name row is stacked (column) below 300px and
+            across the 680-900px squeeze (see the row's own comment
+            above) -- so the avatar never shares its row with text in
+            either of those. `NameBlock` still keeps its own `min-w-0`
+            fix (see its own comment) as a defensive measure for the row
+            zones (300-680px, >=900px).
 
             (An earlier version of this clamp instead widened itself to
             shrink the avatar continuously through the whole mobile row
@@ -205,7 +277,11 @@ export function LocationCard({ location, className }: LocationCardProps) {
             upper bound by construction, which read as visibly cramped
             even though nothing technically overflowed -- stacking the
             row instead of shrinking the avatar sidesteps that
-            entirely, same as it already did for the 680-900px range.)
+            entirely, same as it already did for the 680-900px range.
+            This clamp's own ceiling moved back out again later, per the
+            user, 2026-09-24 -- see below -- but that's a much gentler
+            scale-down across a wider span, not a return to fitting an
+            exact zero-slack width.)
 
             `--location-avatar-size` uses `cqi` (container-query inline-
             size), not `vw` -- this is a decision about the *card's own
@@ -221,16 +297,19 @@ export function LocationCard({ location, className }: LocationCardProps) {
             naming that container the way an `@container entity-card (...)`
             *rule* can.
 
-            `clamp(112px, calc(128cqi - 118.4px), 240px)`: linear
-            between a 112px floor at a 180px card width and a 240px
-            ceiling at 280px -- both far narrower than the 440px stack
-            threshold above, so this stays flat at 240px across every
-            width this clamp is actually reachable at (stacked mode,
-            alone on its own row, comfortably fits 240px down to a
-            measured 320px card width already, per the row's own
-            comment) -- kept only as a defensive floor for a
-            pathological/reused-in-a-narrower-host case, not because
-            it's expected to engage in practice.
+            `clamp(112px, calc(42.67cqi + 35.2px), 240px)`: linear
+            between a 112px floor at a 180px card width (unchanged,
+            still narrower than anywhere this clamp is actually
+            reachable, so still a dormant defensive floor) and a 240px
+            ceiling now reached at 480px, not the previous 280px -- per
+            the user, 2026-09-24, so the avatar keeps genuinely shrinking
+            (rather than sitting maxed at 240px) across Dual view's own
+            ~320-480px LocationCard width (see the row's own comment
+            above), landing around 172-240px through that span instead.
+            Still flat at 240px well before either "landscape" card
+            shape (680-900px's own separate override clamp below,
+            or >=900px) is reached, so neither of those is affected by
+            this ceiling move.
 
             Font-size and `--avatar-icon-size` derive from
             `--location-avatar-size` via `calc()`, not their own separate
@@ -259,27 +338,29 @@ export function LocationCard({ location, className }: LocationCardProps) {
           photoUrl={location.officePhotoUrl}
           variant="entity"
           size="lg"
-          avatarClassName="location-avatar [--location-avatar-size:clamp(112px,calc(128cqi-118.4px),240px)] size-[var(--location-avatar-size)] text-[calc(var(--location-avatar-size)*76/240)] [--avatar-icon-size:calc(var(--location-avatar-size)*0.6)]"
+          avatarClassName="location-avatar [--location-avatar-size:clamp(112px,calc(42.67cqi+35.2px),240px)] size-[var(--location-avatar-size)] text-[calc(var(--location-avatar-size)*76/240)] [--avatar-icon-size:calc(var(--location-avatar-size)*0.6)]"
         />
         {/* `min-w-0` -- without it, this flex item's default `min-width:
             auto` refuses to shrink below its own content's intrinsic
             min-width (the widest unbreakable word/token, e.g.
-            "Administrative"), so in either row zone (440-680px,
+            "Administrative"), so in either row zone (300-680px,
             >=900px -- see the row's own comment above) it would
             overflow straight past `main`'s edge instead of wrapping to
             fit, the same way it did back when the row was still row-
             oriented all the way down to 0px (confirmed live at the
             time: a constant, non-shrinking 123px measured width
             regardless of how much narrower `main` got, spilling up to
-            77px past its edge at a 320px viewport). Kept as a defensive
-            measure now that 440px stacking means neither current row
-            zone actually gets that narrow in practice, same reasoning
-            as the avatar's own now-dormant clamp below. `EntityCard.tsx`'s
-            own `.entity-card-main` already carries this same fix for the
+            77px past its edge at a 320px viewport). Still mostly
+            defensive at >=900px, but genuinely load-bearing now in the
+            300-680px zone too, alongside the avatar's own shrinking
+            (not dormant) clamp below -- both now actively make room for
+            each other through that span. `EntityCard.tsx`'s own
+            `.entity-card-main` already carries this same fix for the
             same reason (see its className) -- this is that same fix one
             level deeper, on the child that actually needs to shrink. */}
         <NameBlock
           className="min-w-0"
+          headingClassName="location-address-heading"
           heading={
             <>
               {street}
@@ -287,19 +368,20 @@ export function LocationCard({ location, className }: LocationCardProps) {
               {cityStateZip}
             </>
           }
-          subheading={
-            <>
-              At this Edward Jones Branch:
-              <ul className="list-disc pl-[var(--density-spacing-fixed-large)]">
-                <li>
-                  {advisorCount} Financial Advisor
-                  {advisorCount === 1 ? '' : 's'}
-                </li>
-                <li>{staffCount} Administrative Staff</li>
-              </ul>
-            </>
-          }
+          subheadingClassName="location-branch-summary"
+          subheading={branchSummary}
         />
+      </div>
+      {/* The 300-400px-only sibling copy of `branchSummary` -- see the
+          row's own `<style>` block above for why this needs to be a real
+          second copy rather than one repositioned element, and `hidden`
+          (Tailwind, not a bespoke class) for its own default-off state,
+          overridden by that same container-query rule. Text classes
+          match `NameBlock`'s own default subheading bundle exactly
+          (common, 16px/24px) so this reads identically to the in-row
+          copy it stands in for at every width it's actually shown. */}
+      <div className="location-branch-summary-below hidden text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-[number:var(--semantic-content-common-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
+        {branchSummary}
       </div>
 
       {/* Matches `.FA-Card-Actions-Block`: a `Separator` directly above

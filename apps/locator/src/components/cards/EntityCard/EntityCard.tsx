@@ -206,6 +206,17 @@ function gridStyles(
       display: grid;
       grid-template-columns: var(--entity-card-columns);
       align-items: stretch;
+      /* Overrides Card.Root's own base \`gap\` (\`fixed-large\`, 16px --
+         shared with stacked mode's own vertical rhythm) down to
+         \`fixed-small\` (8px) for row mode's column gaps only -- per the
+         user, so the gap between panels (main<->Focus Areas<->Office
+         Details alike, a single \`column-gap\` applies uniformly across
+         every column boundary) matches Card.Root's own 8px outer
+         padding above/below/around the whole grid, rather than reading
+         wider than that surrounding inset. \`column-gap\`, not \`gap\` --
+         leaves row-gap (relevant only to \`dropFirstPanelBelow\`'s own
+         2-row shape below) at the base 16px, untouched by this. */
+      column-gap: var(--density-spacing-fixed-small);
     }
     /* \`.entity-card-grid${scope} > .entity-card-main\`, not a compound
        \`.entity-card-main${scope}\` -- confirmed live (Playwright), this
@@ -306,9 +317,39 @@ function gridStyles(
        full gap before an empty item, eating into the space the growing
        first panel above is supposed to fill down to. Hiding the wrapper
        itself (not just its content) removes that wasted gap so the first
-       panel actually reaches the 4px-from-bottom target above. */
-    .entity-card-grid${scope} > div:has(> .office-details-panel) {
+       panel actually reaches the 4px-from-bottom target above.
+       \`:has(.office-details-panel)\`, not \`:has(> .office-details-panel)\`
+       -- this was a real selector bug: OfficeDetailsPanel's own root
+       element is a *different* div (its own \`@container/office-details\`
+       wrapper, one level further in than this comment originally
+       assumed) than the \`.office-details-panel\`-classed div the hide
+       rule above targets, so \`.office-details-panel\` is actually a
+       GRANDCHILD of this \`<div>\`, not a direct child -- the \`>\`
+       combinator inside \`:has()\` never matched anything, so this
+       wrapper never actually hid and the gap it explains above was never
+       fixed. Dropping the \`>\` matches it as a descendant instead,
+       regardless of how many wrapper levels sit in between. */
+    .entity-card-grid${scope} > div:has(.office-details-panel) {
       display: none;
+    }
+    /* First panel's own trailing space, distinct from the card's outer
+       padding-bottom above -- per the user, once the office-details
+       wrapper is actually hidden (the fix directly above) the first
+       panel now grows flush to that 4px card padding with nothing of
+       its own beneath it, which read as too tight; this adds 4px back
+       as the panel's own margin rather than restoring the old (16px,
+       \`fixed-large\`) flex \`gap\` the hidden wrapper used to contribute.
+       Applies whenever the first panel ends up the last VISIBLE one in
+       stacked mode -- i.e. always, since a second (office-details) panel
+       is either absent to begin with or hidden by the rule above.
+       \`:nth-child(2)\`, not \`:first-of-type\` -- \`.entity-card-main\` (the
+       header/actions column, always child 1) is ALSO a \`div\`, so
+       \`:first-of-type\` would match it instead of the first panel
+       wrapper; \`:nth-child(2)\` (the first panel wrapper's real position)
+       is the same counting convention \`dropFirstPanelBelow\`'s own rules
+       above already use. */
+    .entity-card-grid${scope} > div:nth-child(2) {
+      margin-bottom: var(--density-spacing-fixed-x-small);
     }
   }
 `;
