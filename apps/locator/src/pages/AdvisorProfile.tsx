@@ -1,4 +1,5 @@
-import { useParams } from 'react-router-dom';
+import { useLayoutEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import { findAdvisorById } from '../utils/findAdvisor';
 import { AdvisorHero } from '../components/hero/AdvisorHero';
 import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
@@ -7,6 +8,14 @@ import { OfficeDetailsPanel } from '../components/entity-info/OfficeDetailsPanel
 import { NewClientInquiryForm } from '../components/entity-info/NewClientInquiryForm';
 import { getFullName } from '../utils/getFullName';
 import { cn } from '../utils/cn';
+
+// Only ever passed to the *mobile*-tree `<AdvisorHero>` call below, not
+// the desktop-tree one further down -- `AdvisorHero` always renders both
+// its Desktop and Mobile trees internally regardless of which call site
+// renders it, and both are simultaneously present in the DOM (a CSS
+// breakpoint hides one, not a conditional mount), so passing this to
+// both calls would put the same `id` on two elements at once.
+const ADVISOR_HERO_TOP_ID = 'advisor-hero-top';
 
 // Shared by both the mobile and desktop trees below -- the main profile
 // content section starts with a 2px brand-gold top border directly below
@@ -55,6 +64,44 @@ const profileBodySectionClassName =
 export function AdvisorProfile() {
   const { id } = useParams<{ id: string }>();
   const found = id ? findAdvisorById(id) : undefined;
+  const routerLocation = useLocation();
+
+  // Restores scroll position when arriving back from the dedicated
+  // `AdvisorInquiry.tsx` route (`state: { scrollToHeroTop: true }`, set
+  // by that route's own "Back to profile" link) -- per the user,
+  // 2026-09-25: lands with the Hero's own top flush against the
+  // viewport's top edge, Prospect Portal Lite scrolled past, rather than
+  // wherever the browser happens to leave scroll position after an SPA
+  // route change. A no-op on desktop widths (`ADVISOR_HERO_TOP_ID` only
+  // exists in the mobile tree below) and for every other navigation to
+  // this page (`state` unset).
+  //
+  // `useLayoutEffect`, not `useEffect` -- this needs to land *before* the
+  // browser paints the post-navigation frame, same reasoning as
+  // `Results.tsx`'s own `changeView` deferring its post-transition work:
+  // React Router's `navigate(..., { viewTransition: true })` (see
+  // `AdvisorInquiry.tsx`'s own `navigateBackToProfile`) captures the
+  // "new" state for its slide animation around this same commit, so the
+  // scroll needs to already be applied by then rather than showing up as
+  // a second, separate jump after the slide finishes. `behavior:
+  // 'instant'` overrides `view-transitions.css`'s own global `scroll-
+  // behavior: smooth` -- this is a position *restore*, not a scroll a
+  // user should watch happen.
+  useLayoutEffect(() => {
+    const state = routerLocation.state as
+      | { scrollToHeroTop?: boolean }
+      | null
+      | undefined;
+    if (!state?.scrollToHeroTop) return;
+    const target = document.getElementById(ADVISOR_HERO_TOP_ID);
+    if (!target) return;
+    // 24px past a fully flush landing -- per the user, 2026-09-25,
+    // confirmed live against the actual rendered result (not a
+    // token-driven value; nothing in this page's own spacing scale
+    // corresponds to it).
+    const top = target.getBoundingClientRect().top + window.scrollY + 24;
+    window.scrollTo({ top, behavior: 'instant' });
+  }, [routerLocation.state]);
 
   if (!found) {
     return (
@@ -87,7 +134,11 @@ export function AdvisorProfile() {
           favoritesFromLabel={getFullName(advisor)}
           className="mt-[4px] mb-[calc(4px_-_(2*var(--density-layout-fixed-large)))]"
         />
-        <AdvisorHero advisor={advisor} location={location} />
+        <AdvisorHero
+          advisor={advisor}
+          location={location}
+          topId={ADVISOR_HERO_TOP_ID}
+        />
         <AdvisorProfileBody
           advisor={advisor}
           className={cn(

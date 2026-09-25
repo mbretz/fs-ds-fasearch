@@ -1,4 +1,4 @@
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { LinkNavigation } from 'ds';
 import { findAdvisorById } from '../utils/findAdvisor';
 import { AdvisorHeroInert } from '../components/hero/AdvisorHeroInert';
@@ -18,6 +18,35 @@ import { NewClientInquiryForm } from '../components/entity-info/NewClientInquiry
 export function AdvisorInquiry() {
   const { id } = useParams<{ id: string }>();
   const found = id ? findAdvisorById(id) : undefined;
+  const navigate = useNavigate();
+
+  // Same `navigate(to, { viewTransition: true })` + direction-attribute
+  // precedent as `AdvisorHero.tsx`'s own `navigateToInquiry` (see its
+  // doc comment for the full reasoning) -- `backward` here, matching
+  // `view-transitions.css`'s own `data-advisor-inquiry-transition-
+  // direction`-scoped rules, per the user, 2026-09-25.
+  //
+  // `state: { scrollToHeroTop: true }` -- read by `AdvisorProfile.tsx`'s
+  // own effect to restore scroll position on arrival, per the user,
+  // 2026-09-25: coming back from this dedicated route should land with
+  // the Hero's own top flush against the viewport's top edge (Prospect
+  // Portal Lite, which sits above the Hero, scrolled past), not wherever
+  // the browser happens to leave scroll position after an SPA route
+  // change (typically unchanged from this page's own scroll position).
+  // Router `state`, not a query param -- doesn't need to survive a full
+  // reload/be shareable, only this one in-memory navigation.
+  function navigateBackToProfile(event: { preventDefault: () => void }) {
+    event.preventDefault();
+    document.documentElement.dataset.advisorInquiryTransitionDirection =
+      'backward';
+    navigate(`/advisor/${id}`, {
+      viewTransition: true,
+      state: { scrollToHeroTop: true },
+    });
+    window.setTimeout(() => {
+      delete document.documentElement.dataset.advisorInquiryTransitionDirection;
+    }, 400);
+  }
 
   if (!found) {
     return (
@@ -50,6 +79,7 @@ export function AdvisorInquiry() {
           navigation, not part of the Hero or the Contact Form. */}
       <LinkNavigation
         href={`/advisor/${advisor.id}`}
+        onClick={navigateBackToProfile}
         direction="previous"
         className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-layout-fixed-large)]"
       >

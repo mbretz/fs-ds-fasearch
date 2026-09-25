@@ -159,3 +159,147 @@ html[data-stuck-transition-direction='stuck']::view-transition-new(
   animation-delay: 160ms;
   animation-duration: 140ms;
 }
+
+/*
+  AdvisorHero.tsx's mobile "New Client Inquiry" link <-> AdvisorInquiry.tsx's
+  "Back to profile" link -- a real route change (`/advisor/:id` <->
+  `/advisor/:id/inquiry`), not a same-page anchor or in-place panel swap,
+  so this is React Router's `navigate(to, { viewTransition: true })`
+  (see AdvisorHero.tsx's own `navigateToInquiry` doc comment), not a
+  local `flushSync`/`document.startViewTransition()` call the way
+  `changeView`/Results.tsx's own manual version needs. Same directional
+  push-slide as `results-content` above, but on the *default* root pair
+  (`::view-transition-old(root)`/`::view-transition-new(root)`) since
+  there's no persistent shared element between these two distinct routes
+  to name the way `results-content` names one persistent element on a
+  single page -- per the user, 2026-09-25. Every rule below is scoped
+  behind `data-advisor-inquiry-transition-direction` (never a bare
+  `::view-transition-*(root)` selector), since `root` participates in
+  *every* view transition app-wide -- an unscoped rule here would slide
+  every other route change too, not just this one.
+*/
+html[data-advisor-inquiry-transition-direction='forward']::view-transition-old(
+    root
+  ),
+html[data-advisor-inquiry-transition-direction='backward']::view-transition-old(
+    root
+  ),
+html[data-advisor-inquiry-transition-direction='forward']::view-transition-new(
+    root
+  ),
+html[data-advisor-inquiry-transition-direction='backward']::view-transition-new(
+    root
+  ) {
+  animation-duration: 300ms;
+  animation-timing-function: ease-in-out;
+  mix-blend-mode: normal;
+}
+html[data-advisor-inquiry-transition-direction='forward']::view-transition-old(
+    root
+  ) {
+  animation-name: advisor-inquiry-slide-out-to-left;
+}
+html[data-advisor-inquiry-transition-direction='forward']::view-transition-new(
+    root
+  ) {
+  animation-name: advisor-inquiry-slide-in-from-right;
+}
+html[data-advisor-inquiry-transition-direction='backward']::view-transition-old(
+    root
+  ) {
+  animation-name: advisor-inquiry-slide-out-to-right;
+}
+html[data-advisor-inquiry-transition-direction='backward']::view-transition-new(
+    root
+  ) {
+  animation-name: advisor-inquiry-slide-in-from-left;
+}
+
+@keyframes advisor-inquiry-slide-out-to-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes advisor-inquiry-slide-in-from-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes advisor-inquiry-slide-out-to-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes advisor-inquiry-slide-in-from-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+/*
+  `/favorites`'s own mobile comparator (`FavoritesComparatorMobile.tsx`)
+  <-> whichever page launched it (Results/AdvisorProfile/LocationProfile,
+  via `ProspectPortal.tsx`'s/`ProspectPortalLite.tsx`'s own "View
+  favorites."/"See My Favorites" link) -- same default-root directional
+  push-slide as the `advisor-inquiry-*` rules just above (a separate,
+  identically-shaped set rather than reusing that attribute/those
+  keyframes, matching this file's own established one-set-per-feature
+  convention -- see `results-view-slide-*`'s own precedent), scoped to
+  mobile widths only, per the user, 2026-09-25: desktop's `/favorites`
+  renders a Dialog overlay instead (`Favorites.tsx`'s own `isDesktop`
+  branch), so `ProspectPortal.tsx`/`ProspectPortalLite.tsx` never set
+  this attribute above that width to begin with -- see their own
+  `navigateToFavorites` comments. The *backward* direction
+  (`Favorites.tsx`'s own `backWithSlide`) is a manual `document.
+  startViewTransition()` + `flushSync` call, not React Router's own
+  `viewTransition` navigate option, since it navigates via a history
+  delta (`navigate(-1)`), which that option doesn't support -- see its
+  own doc comment.
+*/
+html[data-favorites-transition-direction='forward']::view-transition-old(root),
+html[data-favorites-transition-direction='backward']::view-transition-old(root),
+html[data-favorites-transition-direction='forward']::view-transition-new(root),
+html[data-favorites-transition-direction='backward']::view-transition-new(
+    root
+  ) {
+  animation-duration: 300ms;
+  animation-timing-function: ease-in-out;
+  mix-blend-mode: normal;
+}
+html[data-favorites-transition-direction='forward']::view-transition-old(root) {
+  animation-name: favorites-slide-out-to-left;
+}
+html[data-favorites-transition-direction='forward']::view-transition-new(root) {
+  animation-name: favorites-slide-in-from-right;
+}
+html[data-favorites-transition-direction='backward']::view-transition-old(
+    root
+  ) {
+  animation-name: favorites-slide-out-to-right;
+}
+html[data-favorites-transition-direction='backward']::view-transition-new(
+    root
+  ) {
+  animation-name: favorites-slide-in-from-left;
+}
+
+@keyframes favorites-slide-out-to-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes favorites-slide-in-from-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes favorites-slide-out-to-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes favorites-slide-in-from-left {
+  from {
+    transform: translateX(-100%);
+  }
+}

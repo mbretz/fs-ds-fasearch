@@ -1,8 +1,34 @@
-import { Outlet } from 'react-router-dom';
+import type { Location } from 'react-router-dom';
+import { Outlet, useLocation, useRoutes } from 'react-router-dom';
+import { routeChildren } from '../routes';
 import { SiteHeader } from './SiteHeader';
 import { SiteFooter } from './SiteFooter';
 
 export function SiteShell() {
+  // Standard React Router "modal route" pattern: when the current
+  // navigation carries `state.backgroundLocation` (set by
+  // `ProspectPortal.tsx`'s/`ProspectPortalLite.tsx`'s own
+  // `navigateToFavorites`, desktop widths only), the *real* matched
+  // route below (`<Outlet />`, e.g. `Favorites.tsx` rendering
+  // `FavoritesComparatorDialog`) is meant to render as an overlay on top
+  // of whichever page actually launched it, not replace it -- per the
+  // user, 2026-09-25. This second, independent `useRoutes()` call
+  // matches that ORIGIN location against the exact same route table
+  // (`routeChildren`, shared with `router.tsx`'s own
+  // `createBrowserRouter` call) to render that page's own element
+  // separately, underneath. Hooks must run unconditionally every render,
+  // so this always computes a match (falling back to the current, real
+  // location when there's no background one to match instead) -- only
+  // the *rendering* of its result below is conditional.
+  const location = useLocation();
+  const backgroundLocation = (
+    location.state as { backgroundLocation?: Location } | null
+  )?.backgroundLocation;
+  const backgroundElement = useRoutes(
+    routeChildren,
+    backgroundLocation ?? location,
+  );
+
   return (
     <>
       <SiteHeader />
@@ -44,6 +70,15 @@ export function SiteShell() {
           min-[1262px]:px-0
         "
       >
+        {/* The origin page, rendered as a second, independent tree when
+            a background location is active -- see this component's own
+            top-of-file comment. Ordered before `<Outlet />` in the DOM,
+            though that barely matters in practice: Radix `Dialog.Content`
+            (what the real `<Outlet />` renders in this case --
+            `Favorites.tsx`'s desktop branch) already portals itself (and
+            its own scrim) to `document.body`, outside this `<main>`
+            entirely. */}
+        {backgroundLocation && backgroundElement}
         <Outlet />
       </main>
       <SiteFooter />

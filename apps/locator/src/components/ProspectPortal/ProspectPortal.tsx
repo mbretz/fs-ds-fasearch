@@ -1,8 +1,15 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Link } from 'ds';
 import { HeartFilled } from 'icons';
 import { useSession } from '../../session/useSession';
 import { useFavorites } from '../../favorites/useFavorites';
 import type { ProspectPortalProps } from './ProspectPortal.types';
+
+// Same 768px threshold, and the same click-time `matchMedia` (not a
+// `useMediaQuery` re-render) + "only wired below it" reasoning, as
+// `ProspectPortalLite.tsx`'s own `FAVORITES_MOBILE_QUERY` -- see its
+// comment.
+const FAVORITES_MOBILE_QUERY = '(max-width: 767.98px)';
 
 // Figma "Prospect portal" component set (LoggedIn=False/True), node
 // 1213:41591 of the Find-FA-Screens file — merges what docs/PLAN.md
@@ -19,6 +26,33 @@ import type { ProspectPortalProps } from './ProspectPortal.types';
 export function ProspectPortal({ className }: ProspectPortalProps) {
   const { signedIn, firstName, signIn, signOut } = useSession();
   const { favoriteIds } = useFavorites();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const favoritesHref = '/favorites?from=Search%20Results';
+
+  // Same mobile-slide/desktop-overlay split as `ProspectPortalLite.tsx`'s
+  // own `navigateToFavorites` -- see its comment for the full reasoning.
+  function navigateToFavorites(event: { preventDefault: () => void }) {
+    event.preventDefault();
+    if (window.matchMedia(FAVORITES_MOBILE_QUERY).matches) {
+      document.documentElement.dataset.favoritesTransitionDirection = 'forward';
+      // `state: { returnTo }` -- see `ProspectPortalLite.tsx`'s own
+      // `navigateToFavorites` comment for why `Favorites.tsx`'s "Back
+      // to..." link needs a concrete path here rather than relying on
+      // `navigate(-1)`.
+      navigate(favoritesHref, {
+        viewTransition: true,
+        state: {
+          returnTo: `${window.location.pathname}${window.location.search}`,
+        },
+      });
+      window.setTimeout(() => {
+        delete document.documentElement.dataset.favoritesTransitionDirection;
+      }, 400);
+      return;
+    }
+    navigate(favoritesHref, { state: { backgroundLocation: location } });
+  }
 
   return (
     <section
@@ -54,7 +88,7 @@ export function ProspectPortal({ className }: ProspectPortalProps) {
               {/* `?from=` -- see ProspectPortalLite.types.ts's own
                   `favoritesFromLabel` comment for why the label rides the
                   URL instead of router state. */}
-              <a href="/favorites?from=Search%20Results">
+              <a href={favoritesHref} onClick={navigateToFavorites}>
                 <Button.Icon>
                   <HeartFilled aria-hidden />
                 </Button.Icon>
