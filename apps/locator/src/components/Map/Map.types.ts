@@ -5,14 +5,27 @@ export interface MapHandle {
    * `flyTo`). Callers pass the whole `Location`, not raw coordinates, so
    * this stays the single place that reads `lat`/`lng` off it. */
   flyTo: (location: Location) => void;
-  /** Selects (or, with `null`, deselects) a pin -- opens/closes its
-   * popover the same way clicking the pin itself does. */
-  setSelected: (id: string | null) => void;
 }
 
 export interface MapProps {
   locations: Location[];
+  /** The one "visually selected" pin -- colors it with `MapPin`'s
+   * "inverse" treatment and drives `ResultsList`'s own matching row
+   * highlight (Dual view), regardless of whether that selection came
+   * from clicking the pin itself or the list row. Deliberately NOT what
+   * opens the pin's popover -- see `Map.tsx`'s own internal
+   * `popoverLocationId` state for that, which only a real pin click (or
+   * `onPinSelect`) sets, per the user, 2026-09-25: a Dual-view list row
+   * click should highlight its pin to avoid duplicating the same info
+   * the popover would show, not also pop it open. */
   selectedLocationId: string | null;
+  /** Real pin-click intent -- set by clicking a marker (this stays the
+   * single source of truth `Results.tsx`'s own `selectedLocationId`
+   * state derives from) and by this component's own popover
+   * close/pan-away handling (`null`). `Results.tsx`'s `handleListSelect`
+   * (Dual view's list row click) deliberately does NOT call this -- it
+   * sets `selectedLocationId` directly instead, precisely so it does
+   * NOT open a popover. */
   onPinSelect: (id: string | null) => void;
   className?: string;
 }

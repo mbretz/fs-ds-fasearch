@@ -38,10 +38,14 @@ const OSM_STYLE: maplibregl.StyleSpecification = {
 };
 
 const DEFAULT_ZOOM = 10;
-// Popover content picks its Large/Small variant off the map's own
-// rendered width, per the user -- full-width desktop Map view (~1214px)
-// gets Large, mobile (~350-390px) gets Small. A CSS container query
-// can't do this: the popover portals to `document.body` (Radix's
+// `popoverSize` below only drives `AdvisorPopoverContent`'s own Large/
+// Small variant now -- `BranchPopoverContent` (the location popover)
+// dropped its own equivalent `size` prop entirely, per the user,
+// 2026-09-25: it's a single fixed size regardless of the map's rendered
+// width. Advisor popover content still picks its variant off the map's
+// own rendered width, per the user -- full-width desktop Map view
+// (~1214px) gets Large, mobile (~350-390px) gets Small. A CSS container
+// query can't do this: the popover portals to `document.body` (Radix's
 // `Popover.Portal`), outside this component's DOM subtree entirely, so
 // `ResizeObserver` + JS state is the real fallback here, not a stopgap.
 //
@@ -83,17 +87,16 @@ function getCenter(locations: Location[]): [number, number] {
 
 // Thin wrapper around raw `maplibre-gl` (the only map library installed --
 // no React wrapper) per docs/PLAN.md §2.1: keeps MapLibre itself out of
-// the rest of the app, exposing only `flyTo`/`setSelected` via
-// `useImperativeHandle`. Markers are plain MapLibre `Marker`s backed by
-// an empty div; the actual pin JSX renders into that div via
-// `createPortal`, so pins stay real React (reusing DS `Avatar` and
-// `statusMeta` tokens) while MapLibre owns positioning.
+// the rest of the app, exposing only `flyTo` via `useImperativeHandle`.
+// Markers are plain MapLibre `Marker`s backed by an empty div; the
+// actual pin JSX renders into that div via `createPortal`, so pins stay
+// real React (reusing DS `Avatar` and `statusMeta` tokens) while
+// MapLibre owns positioning.
 //
 // The open popover closes on a user-initiated pan (`movestart`) rather
 // than continuously re-tracking a moving virtual anchor mid-drag/flyTo --
-// simpler, and it reopens cleanly once the pan/flyTo settles instead
-// (`setSelected`/a pin click both call `onPinSelect` again after the
-// map's already at rest).
+// simpler, and it reopens cleanly once the pan/flyTo settles instead (a
+// pin click calls `onPinSelect` again once the map's already at rest).
 export const Map = forwardRef<MapHandle, MapProps>(function Map(
   { locations, selectedLocationId, onPinSelect, className },
   ref,
@@ -106,6 +109,16 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
     {},
   );
   const [popoverSize, setPopoverSize] = useState<'sm' | 'lg'>('lg');
+  // Which pin's popover is open -- separate from the `selectedLocationId`
+  // *prop* (which only drives pin coloring/row-highlight, per its own doc
+  // comment) so that `Results.tsx`'s Dual-view list-row click, which sets
+  // that prop directly without ever calling `onPinSelect`, can never open
+  // one. Only this component's own marker-click listener and popover
+  // close/pan-away handling below ever set this, per the user,
+  // 2026-09-25.
+  const [popoverLocationId, setPopoverLocationId] = useState<string | null>(
+    null,
+  );
   // Tracks which advisor's `NewClientInquiryDialog` is open, lifted up
   // here (out of `AdvisorPopoverContent`/`MapPinPopover`) rather than
   // self-triggered in place -- same reasoning/pattern as
@@ -144,9 +157,12 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
     map.on('movestart', (event) => {
       // `event.originalEvent` is only set for user-initiated moves (drag/
       // scroll/touch), not for a programmatic `flyTo` -- deselecting on
-      // those too would immediately close the popover `setSelected` just
-      // opened.
-      if (event.originalEvent) onPinSelect(null);
+      // those too would immediately close the popover a pin click/
+      // `onPinSelect` just opened.
+      if (event.originalEvent) {
+        setPopoverLocationId(null);
+        onPinSelect(null);
+      }
     });
     map.on('load', () => setReady(true));
     mapRef.current = map;
@@ -168,11 +184,8 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
           zoom: DEFAULT_ZOOM,
         });
       },
-      setSelected(id) {
-        onPinSelect(id);
-      },
     }),
-    [onPinSelect],
+    [],
   );
 
   // One MapLibre Marker per location, created imperatively once the map
@@ -197,6 +210,7 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
       el.style.cursor = 'pointer';
       el.addEventListener('click', (event) => {
         event.stopPropagation();
+        setPopoverLocationId(location.id);
         onPinSelect(location.id);
       });
       const marker = new maplibregl.Marker({ element: el })
@@ -212,13 +226,13 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
     };
   }, [locations, ready, onPinSelect]);
 
-  const selectedLocation =
-    locations.find((location) => location.id === selectedLocationId) ?? null;
+  const popoverLocation =
+    locations.find((location) => location.id === popoverLocationId) ?? null;
 
   const getAnchorRect = useCallback((): DOMRect => {
-    const el = selectedLocationId ? markerEls[selectedLocationId] : undefined;
+    const el = popoverLocationId ? markerEls[popoverLocationId] : undefined;
     return el?.getBoundingClientRect() ?? new DOMRect();
-  }, [selectedLocationId, markerEls]);
+  }, [popoverLocationId, markerEls]);
 
   return (
     <div
@@ -246,10 +260,14 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
       {Object.entries(markerEls).map(([id, el]) => {
         const location = locations.find((l) => l.id === id);
         if (!location) return null;
-        return createPortal(<MapPin location={location} />, el, id);
+        return createPortal(
+          <MapPin location={location} selected={id === selectedLocationId} />,
+          el,
+          id,
+        );
       })}
-      {selectedLocation && (
-        // `key={selectedLocationId}` -- Radix Popper positions a
+      {popoverLocation && (
+        // `key={popoverLocationId}` -- Radix Popper positions a
         // `virtualRef` anchor once per mount; it has no real DOM node to
         // watch for the auto-reposition-on-change floating-ui otherwise
         // sets up, so clicking a *different* pin while a popover is
@@ -259,26 +277,34 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
         // unmount/remount on every pin change, which re-runs Popper's
         // positioning against the new pin from scratch.
         <MapPinPopover
-          key={selectedLocationId}
-          open={Boolean(selectedLocationId)}
+          key={popoverLocationId}
+          open={Boolean(popoverLocationId)}
           onOpenChange={(open) => {
-            if (!open) onPinSelect(null);
+            if (!open) {
+              setPopoverLocationId(null);
+              onPinSelect(null);
+            }
           }}
           getAnchorRect={getAnchorRect}
           collisionBoundary={wrapperRef.current}
         >
-          {getPinType(selectedLocation) === 'branch' ? (
+          {getPinType(popoverLocation) === 'branch' ? (
             <BranchPopoverContent
-              location={selectedLocation}
-              size={popoverSize}
+              location={popoverLocation}
+              onNewClientInquiry={(advisor) => {
+                setPopoverLocationId(null);
+                onPinSelect(null);
+                setInquiryAdvisor(advisor);
+              }}
             />
           ) : (
-            selectedLocation.advisors[0] && (
+            popoverLocation.advisors[0] && (
               <AdvisorPopoverContent
-                advisor={selectedLocation.advisors[0]}
+                advisor={popoverLocation.advisors[0]}
                 size={popoverSize}
                 onNewClientInquiry={() => {
-                  const advisor = selectedLocation.advisors[0];
+                  const advisor = popoverLocation.advisors[0];
+                  setPopoverLocationId(null);
                   onPinSelect(null);
                   if (advisor) setInquiryAdvisor(advisor);
                 }}

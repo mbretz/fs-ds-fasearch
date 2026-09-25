@@ -45,8 +45,15 @@ export function Results() {
   const [view, setView] = useState<ResultsView>('list');
   // Map/list<->map sync state (docs/PLAN.md §2.2): one `selectedLocationId`
   // drives both a highlighted/scrolled-to ResultsList row (Dual view) and
-  // the matching pin's open popover (Map/Dual view) -- plain lifted state,
-  // not a Context, same reasoning as `query`/`selectedFocusAreas` above.
+  // the matching pin's "inverse" color treatment (Map/Dual view) -- plain
+  // lifted state, not a Context, same reasoning as `query`/
+  // `selectedFocusAreas` above. Deliberately NOT what opens a pin's
+  // popover on its own anymore -- `Map.tsx` owns that separately now
+  // (its own internal `popoverLocationId`, only ever set by a real pin
+  // click), per the user, 2026-09-25: Dual view's own list row click
+  // should highlight its pin, not duplicate the same info by also
+  // popping it open. See `Map.types.ts`'s own `selectedLocationId`/
+  // `onPinSelect` doc comments for the full split.
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
     null,
   );
@@ -68,15 +75,18 @@ export function Results() {
     selectedFocusAreas,
     acceptingNewClients,
   );
-  // Every card ResultsList renders: one LocationCard per matching branch
-  // plus one AdvisorCard per advisor at each of those branches, per the
-  // user -- not just a location or advisor count alone.
-  const resultsCount =
-    filteredLocations.length +
-    filteredLocations.reduce(
-      (sum, location) => sum + location.advisors.length,
-      0,
-    );
+  // Every card ResultsList actually renders: one LocationCard per matching
+  // branch plus one AdvisorCard per advisor at each of those branches, per
+  // the user -- not just a location or advisor count alone. Mirrors
+  // ResultsList's own single-advisor-location skip (same split as the
+  // map's `getPinType`): a location with exactly one advisor never gets
+  // its own LocationCard row there, so it must only count once here too,
+  // not once for the location and again for its sole advisor.
+  const resultsCount = filteredLocations.reduce(
+    (sum, location) =>
+      sum + (location.advisors.length === 1 ? 1 : 1 + location.advisors.length),
+    0,
+  );
 
   function submitSearch(value: string) {
     const trimmed = value.trim();
@@ -88,12 +98,16 @@ export function Results() {
     itemRefsRef.current[id] = el;
   }, []);
 
-  // List row click (Dual view) -> select + fly the map to it + open its
-  // popover, per docs/PLAN.md §2.2's list->map sync.
+  // List row click (Dual view) -> select (colors the pin, per
+  // MapPin.tsx's own "inverse" treatment) + fly the map to it, per
+  // docs/PLAN.md §2.2's list->map sync. Deliberately does NOT open the
+  // pin's popover -- per the user, 2026-09-25, that would duplicate the
+  // same info the already-visible list row already shows; only calls
+  // `flyTo`, not `Map`'s own pin-click path, see `Map.types.ts`'s own
+  // `selectedLocationId` doc comment for the full reasoning.
   function handleListSelect(location: Location) {
     setSelectedLocationId(location.id);
     mapRef.current?.flyTo(location);
-    mapRef.current?.setSelected(location.id);
   }
 
   // Pin click (or `MapPinPopover` closing) -> select/deselect + scroll

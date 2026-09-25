@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Link, Button, Separator } from 'ds';
 import { Phone } from 'icons';
 import type { Advisor, Location } from '../../data/locations';
@@ -18,6 +19,18 @@ export interface AdvisorHeroProps {
    * placement classes. The mobile rendering has no single root of its own
    * (see AdvisorHeroMobile's own comment), so it isn't a target here. */
   className?: string;
+  /** Applied to the mobile rendering's own zero-height scroll sentinel
+   * (`useStuckSentinel`'s marker -- see its own `ref` below), which
+   * already sits at exactly "the top of the Hero" by design. Lets a
+   * caller scroll to that precise point (e.g. `AdvisorProfile.tsx`
+   * restoring scroll position when returning from the dedicated
+   * `AdvisorInquiry.tsx` route, per the user, 2026-09-25) without
+   * needing its own separate marker element -- an extra DOM node here
+   * would throw off this page's own flex `gap-y` math (see
+   * `AdvisorProfile.tsx`'s own comment on why the sentinel already
+   * costs one gap increment). Unused (`undefined`) by every other
+   * caller. */
+  topId?: string;
 }
 
 // `tel:` strips everything but digits/leading `+` -- the display string
@@ -475,12 +488,14 @@ function AdvisorHeroMobile({
   signedIn,
   fullName,
   showsNewClientInquiry,
+  topId,
 }: {
   advisor: Advisor;
   phone?: string;
   signedIn: boolean;
   fullName: string;
   showsNewClientInquiry: boolean;
+  topId?: string;
 }) {
   // `true` -- see this hook's own `viewTransition` doc comment.
   const { sentinelRef, stuck } = useStuckSentinel(0, true);
@@ -496,6 +511,34 @@ function AdvisorHeroMobile({
   // `FAProfilePage/Mobile/LoggedIn/InquiryForm` frame (`1639:50445`).
   const scrollToFormHref = '#new-client-inquiry';
   const dedicatedInquiryHref = `/advisor/${advisor.id}/inquiry`;
+  const navigate = useNavigate();
+  // Intercepts the dedicated-route variant of the link above the same way
+  // `scrollToInquiryForm` below intercepts the same-page-anchor variant --
+  // per the user, 2026-09-25: a real route change now gets a directional
+  // slide (`view-transitions.css`'s own `data-advisor-inquiry-transition-
+  // direction`-scoped rules), same `navigate(to, { viewTransition: true })`
+  // precedent as `Start.tsx`'s own route change (React Router wraps that
+  // call in `document.startViewTransition()` itself, so there's no local
+  // `flushSync`/`document.startViewTransition` call needed the way
+  // `Results.tsx`'s own *same-page* `changeView` transition does). The
+  // direction attribute is set here, synchronously before `navigate()`,
+  // not inside a `.finished` callback the way `Results.tsx` clears its
+  // own -- `navigate()` doesn't hand back the `ViewTransition` object
+  // React Router creates internally, so there's nothing to attach a
+  // `.finished.finally()` to; a fixed timeout comfortably longer than the
+  // CSS's own 300ms animation clears it instead, since leaving it set a
+  // little past the transition's own end has no visible effect (the
+  // `::view-transition-*` pseudo-elements it targets only exist while a
+  // transition is actually in flight).
+  function navigateToInquiry(event: { preventDefault: () => void }) {
+    event.preventDefault();
+    document.documentElement.dataset.advisorInquiryTransitionDirection =
+      'forward';
+    navigate(dedicatedInquiryHref, { viewTransition: true });
+    window.setTimeout(() => {
+      delete document.documentElement.dataset.advisorInquiryTransitionDirection;
+    }, 400);
+  }
   // Plain CSS `scroll-margin-top` (set on the form's own wrapper, see
   // AdvisorProfile.tsx) doesn't reliably offset a native URL-fragment
   // jump the way it does `Element.scrollIntoView()` -- confirmed live
@@ -618,7 +661,12 @@ function AdvisorHeroMobile({
 
   return (
     <>
-      <div ref={sentinelRef} aria-hidden="true" className="md:hidden" />
+      <div
+        ref={sentinelRef}
+        id={topId}
+        aria-hidden="true"
+        className="md:hidden"
+      />
       {/* `[view-transition-name:advisor-hero-mobile-bar]` on both
           branches' own root -- morphs the background rectangle's shape
           directly (tall/padded expanded banner <-> short/rounded-bottom
@@ -640,7 +688,12 @@ function AdvisorHeroMobile({
           // below it) -- per Figma's `421:6046`, Actions sits UNDER the
           // name, not beside it; an earlier version put them side by side
           // and crushed the name down to a couple of characters.
-          <div className="[view-transition-name:advisor-hero-mobile-bar] flex items-end gap-[var(--density-spacing-fixed-xxx-large)] rounded-b-[8px] bg-[color:var(--color-response-neutral-strong)] px-[16px] py-[8px] shadow-[0px_5px_5px_-3px_rgba(13,13,13,0.55),0px_6px_10px_0px_rgba(75,77,78,0.2)]">
+          // `items-start`, not `items-end` -- per the user, 2026-09-25,
+          // the portrait should top-align in this collapsed bar rather
+          // than bottom-align against the taller "Banner Group" column
+          // beside it (name+underline+Actions, which grows taller once
+          // Actions wraps to two lines on narrow screens).
+          <div className="[view-transition-name:advisor-hero-mobile-bar] flex items-start gap-[var(--density-spacing-fixed-xxx-large)] rounded-b-[8px] bg-[color:var(--color-response-neutral-strong)] px-[16px] py-[8px] shadow-[0px_5px_5px_-3px_rgba(13,13,13,0.55),0px_6px_10px_0px_rgba(75,77,78,0.2)]">
             <EntityPortrait
               name={fullName}
               photoUrl={advisor.photoUrl}
@@ -656,7 +709,19 @@ function AdvisorHeroMobile({
                 {fullName}
               </h1>
               <GoldUnderline className="[view-transition-name:advisor-hero-mobile-underline] h-[2px] w-[100px]" />
-              <div className="flex flex-wrap items-center gap-[var(--density-spacing-fixed-small)] pt-[var(--density-spacing-fixed-large)]">
+              {/* `max-[419px]:flex-col max-[419px]:items-stretch` -- below
+                  420px, where Call/New Client Inquiry no longer fit side
+                  by side and stack, per the user, 2026-09-25: the two
+                  buttons should read as equal width once stacked, not
+                  each sized to its own (uneven) label length the way
+                  plain `flex-wrap` alone leaves them. `items-stretch` on
+                  a `flex-col` container is what stretches each button
+                  to the row's full width -- same "stretch is the width
+                  axis in a column" mechanism this app's own popover
+                  ActionFooter buttons already rely on. Side-by-side
+                  above 420px is untouched (still natural width, row
+                  direction, centered). */}
+              <div className="flex flex-wrap items-center gap-[var(--density-spacing-fixed-small)] pt-[var(--density-spacing-fixed-large)] max-[419px]:flex-col max-[419px]:items-stretch">
                 {phone && (
                   // Compound API, not the flat `Button` -- `asChild` only
                   // works via `Button.Root` (see EntityActions' own
@@ -733,7 +798,7 @@ function AdvisorHeroMobile({
                     asChild
                     className="min-w-0 min-[500px]:hidden"
                   >
-                    <a href={dedicatedInquiryHref}>
+                    <a href={dedicatedInquiryHref} onClick={navigateToInquiry}>
                       <Button.Label>New Client Inquiry</Button.Label>
                     </a>
                   </Button.Root>
@@ -978,6 +1043,7 @@ function AdvisorHeroMobile({
             newClientInquiryHref={
               showsNewClientInquiry ? dedicatedInquiryHref : undefined
             }
+            onNewClientInquiryClick={navigateToInquiry}
             orientation="block"
             className="min-[500px]:hidden mt-[var(--density-spacing-fixed-small)]"
           />
@@ -991,6 +1057,7 @@ export function AdvisorHero({
   advisor,
   location,
   className,
+  topId,
 }: AdvisorHeroProps) {
   const { signedIn } = useSession();
   const phone = advisor.phone ?? location.phone;
@@ -1015,6 +1082,7 @@ export function AdvisorHero({
         signedIn={signedIn}
         fullName={fullName}
         showsNewClientInquiry={showsNewClientInquiry}
+        topId={topId}
       />
     </>
   );

@@ -1,5 +1,6 @@
 import { Popover as PopoverPrimitive } from 'radix-ui';
 import { lightRoomyTokens } from 'tokens';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, Button, Link } from 'ds';
 import { useSession } from '../../session/useSession';
 import { getInitials } from '../../utils/getInitials';
@@ -11,6 +12,11 @@ import type { ProspectPortalLiteProps } from './ProspectPortalLite.types';
 // sideOffset takes a plain number, not a CSS var, so this reads
 // packages/tokens' JS token output directly, same as those two.
 const CONTENT_SIDE_OFFSET = lightRoomyTokens.densitySpacingFixedXSmall;
+
+// 768px -- matches `Favorites.tsx`'s own `DESKTOP_QUERY` (in turn
+// SiteHeader.tsx's documented `md` breakpoint), reused rather than
+// introducing a second real breakpoint value.
+const FAVORITES_MOBILE_QUERY = '(max-width: 767.98px)';
 
 // Figma node 1306:50824 of the Find-FA-Screens file — a compact,
 // logged-in-only row (Avatar + "Welcome, [username]!" + "View favorites."
@@ -27,6 +33,61 @@ export function ProspectPortalLite({
   className,
 }: ProspectPortalLiteProps) {
   const { signedIn, fullName, signIn, signOut } = useSession();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const favoritesHref = `/favorites?from=${encodeURIComponent(favoritesFromLabel)}`;
+
+  // Always client-side now (real full-reload `<a href>` behavior is
+  // fully retired, per the user, 2026-09-25), but two different
+  // treatments by width:
+  //
+  // Mobile (below `FAVORITES_MOBILE_QUERY`): a directional slide
+  // (`view-transitions.css`'s own `data-favorites-transition-
+  // direction`-scoped rules) to the dedicated `FavoritesComparatorMobile`
+  // route -- unchanged from the earlier pass here.
+  //
+  // Desktop: `FavoritesComparatorDialog` now opens as a real overlay on
+  // top of *this* page instead of navigating away to a route that
+  // rendered only the Dialog with nothing behind it (confirmed live --
+  // that was a full reload to a blank page, not merely un-transitioned).
+  // `state: { backgroundLocation: location }` is the standard React
+  // Router "modal route" pattern -- `SiteShell.tsx`'s own second,
+  // independent `useRoutes()` call matches this exact location a second
+  // time to render this page's element *underneath* the real matched
+  // route (`Favorites.tsx`, rendering the Dialog) -- see its own
+  // top-of-file comment for the full mechanics.
+  function navigateToFavorites(event: { preventDefault: () => void }) {
+    event.preventDefault();
+    if (window.matchMedia(FAVORITES_MOBILE_QUERY).matches) {
+      document.documentElement.dataset.favoritesTransitionDirection = 'forward';
+      // `state: { returnTo }` -- `Favorites.tsx`'s own "Back to..." link
+      // reads this to navigate back via `navigate(returnTo, {
+      // viewTransition: true })` instead of `navigate(-1)`, per the
+      // user, 2026-09-25: a history-delta navigation's own `popstate`
+      // fires asynchronously (never inside the same synchronous
+      // callback a `document.startViewTransition()` call needs to
+      // capture the "new" DOM from), so wrapping `navigate(-1)` in one
+      // the way an earlier pass here tried never actually captured a
+      // real transition -- it fell through to a plain, untransitioned
+      // navigation instead. A concrete `returnTo` path lets that link
+      // use React Router's own `viewTransition` navigate option instead,
+      // the same reliable mechanism this link uses. Real "go back"
+      // (`navigate(-1)`) is kept as the fallback there for the one case
+      // this can't cover -- landing on `/favorites` with no `state` at
+      // all (e.g. a direct URL visit).
+      navigate(favoritesHref, {
+        viewTransition: true,
+        state: {
+          returnTo: `${window.location.pathname}${window.location.search}`,
+        },
+      });
+      window.setTimeout(() => {
+        delete document.documentElement.dataset.favoritesTransitionDirection;
+      }, 400);
+      return;
+    }
+    navigate(favoritesHref, { state: { backgroundLocation: location } });
+  }
 
   return (
     <section
@@ -105,7 +166,8 @@ export function ProspectPortalLite({
           {/* Real link now that `/favorites` exists -- unlike "Go to
               Prospect Portal." above, which still has nowhere real to go. */}
           <Link
-            href={`/favorites?from=${encodeURIComponent(favoritesFromLabel)}`}
+            href={favoritesHref}
+            onClick={navigateToFavorites}
             className="text-[length:var(--semantic-content-nanocopy-font-size)] font-[number:var(--semantic-content-nanocopy-font-weight)] leading-[var(--semantic-content-nanocopy-line-height)]"
           >
             View favorites.
