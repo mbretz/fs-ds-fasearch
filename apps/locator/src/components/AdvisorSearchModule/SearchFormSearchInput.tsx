@@ -2,7 +2,10 @@ import { useId, useState } from 'react';
 import { SearchInput, highlightMatch } from 'ds';
 import { Avatar, MapPinLarge } from 'icons';
 import { cn } from '../../utils/cn';
-import { useLocationSearch } from './useLocationSearch';
+import {
+  useLocationSearch,
+  type LocationSearchResult,
+} from './useLocationSearch';
 
 const LABEL_TEXT = 'Enter City, State, ZIP, or Advisor Name';
 
@@ -48,8 +51,13 @@ interface SearchFormSearchInputProps {
    */
   value: string;
   onValueChange: (value: string) => void;
-  /** Fired on Search-button click, Enter, or picking a suggestion. */
-  onSubmit: (value: string) => void;
+  /** Fired on Search-button click, Enter, or picking a suggestion.
+   * `advisorId` is only passed when the submission came from picking one
+   * specific advisor out of the dropdown (not a location pick, not typed
+   * text) -- see `selectResult` below -- so the results grid can narrow
+   * to just that advisor instead of a name-substring match against every
+   * advisor at their location. */
+  onSubmit: (value: string, advisorId?: string) => void;
 }
 
 // Shared between Start (roomy) and InProgress (condensed) so both stages'
@@ -67,10 +75,10 @@ export function SearchFormSearchInput({
   const results = useLocationSearch(value);
   const [open, setOpen] = useState(false);
 
-  function selectResult(label: string) {
-    onValueChange(label);
+  function selectResult(result: LocationSearchResult) {
+    onValueChange(result.label);
     setOpen(false);
-    onSubmit(label);
+    onSubmit(result.label, result.type === 'advisor' ? result.id : undefined);
   }
 
   // The field's accessible name always comes from a real <label
@@ -150,7 +158,7 @@ export function SearchFormSearchInput({
           return (
             <SearchInput.Option
               key={`${result.type}-${result.id}`}
-              onSelect={() => selectResult(result.label)}
+              onSelect={() => selectResult(result)}
               // Overrides Option's own default `items-center`/dynamic gap:
               // `items-center` centers the icon across the option's whole
               // (possibly two-line) height once text wraps, not against

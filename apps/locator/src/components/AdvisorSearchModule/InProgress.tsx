@@ -179,7 +179,7 @@ function FocusAreaFilter({
 interface InProgressProps {
   query: string;
   onQueryChange: (value: string) => void;
-  onSubmitSearch: (value: string) => void;
+  onSubmitSearch: (value: string, advisorId?: string) => void;
   selectedFocusAreas: string[];
   onSelectedFocusAreasChange: (next: string[]) => void;
   acceptingNewClients: boolean;

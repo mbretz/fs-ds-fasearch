@@ -48,6 +48,63 @@ function applyFacetFilters(
     : { ...location, advisors: matchingAdvisors };
 }
 
+// Picking one specific advisor out of the typeahead dropdown
+// (SearchFormSearchInput) narrows a location's own `advisors` array down to
+// just that one advisor -- same shape as `applyFacetFilters` above -- so a
+// location with several advisors only ever renders the one that was
+// actually picked, not every advisor at that branch. Per the user
+// (2026-09-25): picking a specific advisor should never surface their
+// location-mates.
+function applyAdvisorIdFilter(
+  selectedAdvisorId: string,
+  selectedFocusAreas: string[],
+  acceptingNewClientsOnly: boolean,
+): Location[] {
+  const match = locations.find((location) =>
+    location.advisors.some((advisor) => advisor.id === selectedAdvisorId),
+  );
+  if (!match) return [];
+
+  const targetAdvisor = match.advisors.find(
+    (advisor) => advisor.id === selectedAdvisorId,
+  );
+  if (
+    !targetAdvisor ||
+    !advisorMatchesFacets(
+      targetAdvisor,
+      selectedFocusAreas,
+      acceptingNewClientsOnly,
+    )
+  ) {
+    return [];
+  }
+
+  return [{ ...match, advisors: [targetAdvisor] }];
+}
+
+// A location narrowed down to one advisor by `applyAdvisorIdFilter` above
+// still needs its own LocationCard row when it *originally* had 2+
+// advisors -- per the user (2026-09-25): picking "Louis Everhart" out of a
+// multi-advisor branch should show that one AdvisorCard *plus* the
+// branch's own LocationCard, not fold into ResultsList's existing
+// single-advisor-location case (that case is for a location that only
+// ever had one advisor to begin with, where the LocationCard would be
+// fully redundant -- see ResultsList.tsx's own comment). Looks the
+// location back up in the raw, unfiltered fixture data (not the narrowed
+// `location` passed in) to tell "genuinely single-advisor" apart from
+// "search-narrowed down to one".
+export function locationKeepsCardForAdvisor(
+  location: Location,
+  selectedAdvisorId: string | null | undefined,
+): boolean {
+  if (location.advisors.length !== 1) return true;
+  if (!selectedAdvisorId || location.advisors[0]?.id !== selectedAdvisorId) {
+    return false;
+  }
+  const original = locations.find((l) => l.id === location.id);
+  return (original?.advisors.length ?? 1) !== 1;
+}
+
 // The existing, narrow literal-substring match against name/address/advisor
 // full name -- unchanged behavior from before the 2026-09-20 broad-search
 // addition below.
@@ -83,6 +140,38 @@ function matchesBroadQuery(location: Location, trimmedLowerQuery: string) {
   return matchesCity || matchesZip || matchesAdvisorNamePart;
 }
 
+// Drives ResultsList's card ordering (2026-09-26, per the user): a search
+// that resolves to a specific advisor entity -- a typeahead advisor pick
+// (`selectedAdvisorId`), or freeform text that happens to match an
+// advisor's name -- should surface that AdvisorCard ahead of the
+// LocationCard(s), while a location pick or freeform text matching only a
+// location's name/address keeps the existing LocationCard-first order.
+// Checked against `resultLocations` (the already-resolved result set, not
+// the full fixture list) so this reads the exact same narrow-vs-broad tier
+// that actually produced those results, rather than re-deriving which
+// tier fired.
+export function queryMatchesAdvisor(
+  searchQuery: string,
+  resultLocations: Location[],
+  selectedAdvisorId?: string | null,
+): boolean {
+  if (selectedAdvisorId) return true;
+
+  const trimmedLowerQuery = searchQuery.trim().toLowerCase();
+  if (!trimmedLowerQuery) return false;
+
+  return resultLocations.some((location) =>
+    location.advisors.some((advisor) => {
+      const fullName = getFullName(advisor).toLowerCase();
+      return (
+        fullName.includes(trimmedLowerQuery) ||
+        advisor.firstName.toLowerCase().includes(trimmedLowerQuery) ||
+        advisor.lastName.toLowerCase().includes(trimmedLowerQuery)
+      );
+    }),
+  );
+}
+
 // `searchQuery` is the *submitted* query, not whatever's currently typed in
 // the field -- per the user (2026-09-20), the results grid should only
 // change on an explicit action (a typeahead option picked, Enter/Search
@@ -97,8 +186,21 @@ export function useFilteredLocations(
   searchQuery: string,
   selectedFocusAreas: string[],
   acceptingNewClientsOnly: boolean,
+  // Set only when the field's own value was populated by picking a
+  // specific advisor out of the typeahead dropdown (not a location pick,
+  // not typed-and-submitted text) -- see SearchFormSearchInput.tsx's
+  // `selectResult` and Results.tsx/Start.tsx's `submitSearch`.
+  selectedAdvisorId?: string | null,
 ): Location[] {
   return useMemo(() => {
+    if (selectedAdvisorId) {
+      return applyAdvisorIdFilter(
+        selectedAdvisorId,
+        selectedFocusAreas,
+        acceptingNewClientsOnly,
+      );
+    }
+
     const trimmedLowerQuery = searchQuery.trim().toLowerCase();
 
     const narrowMatches = locations
@@ -125,5 +227,10 @@ export function useFilteredLocations(
         ),
       )
       .filter((location): location is Location => location !== null);
-  }, [searchQuery, selectedFocusAreas, acceptingNewClientsOnly]);
+  }, [
+    searchQuery,
+    selectedFocusAreas,
+    acceptingNewClientsOnly,
+    selectedAdvisorId,
+  ]);
 }

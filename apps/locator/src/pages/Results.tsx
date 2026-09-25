@@ -5,7 +5,11 @@ import { AdvisorSearchModule } from '../components/AdvisorSearchModule/AdvisorSe
 import { InProgress } from '../components/AdvisorSearchModule/InProgress';
 import { FilterFacets } from '../components/FilterFacets/FilterFacets';
 import { ResultsList } from '../components/ResultsList/ResultsList';
-import { useFilteredLocations } from '../components/ResultsList/useFilteredLocations';
+import {
+  useFilteredLocations,
+  locationKeepsCardForAdvisor,
+  queryMatchesAdvisor,
+} from '../components/ResultsList/useFilteredLocations';
 import {
   ResultsToolbar,
   type ResultsView,
@@ -70,10 +74,15 @@ export function Results() {
   // `useFilteredLocations` is what keeps the results grid from updating
   // until an explicit action happens (see that hook's own comment).
   const submittedQuery = searchParams.get('q') ?? '';
+  // Only set when the field's own value was populated by picking one
+  // specific advisor out of the typeahead dropdown -- see
+  // SearchFormSearchInput.tsx's `selectResult` and `submitSearch` below.
+  const submittedAdvisorId = searchParams.get('advisorId');
   const filteredLocations = useFilteredLocations(
     submittedQuery,
     selectedFocusAreas,
     acceptingNewClients,
+    submittedAdvisorId,
   );
   // Every card ResultsList actually renders: one LocationCard per matching
   // branch plus one AdvisorCard per advisor at each of those branches, per
@@ -82,16 +91,32 @@ export function Results() {
   // map's `getPinType`): a location with exactly one advisor never gets
   // its own LocationCard row there, so it must only count once here too,
   // not once for the location and again for its sole advisor.
+  // `locationKeepsCardForAdvisor` (not a bare `.length !== 1` check) is
+  // what also counts a search-narrowed-to-one-advisor LocationCard when
+  // that advisor's real location had 2+ advisors to begin with -- see
+  // that function's own comment.
+  // Whether the current results grid should lead with AdvisorCards ahead
+  // of any LocationCard(s), per the user (2026-09-26) -- true for a
+  // typeahead advisor pick or freeform text that matches an advisor
+  // entity, false (the original LocationCard-first order) for a location
+  // pick or freeform text that only matches a location's own name/address.
+  const advisorCardsFirst = queryMatchesAdvisor(
+    submittedQuery,
+    filteredLocations,
+    submittedAdvisorId,
+  );
   const resultsCount = filteredLocations.reduce(
     (sum, location) =>
-      sum + (location.advisors.length === 1 ? 1 : 1 + location.advisors.length),
+      sum +
+      location.advisors.length +
+      (locationKeepsCardForAdvisor(location, submittedAdvisorId) ? 1 : 0),
     0,
   );
 
-  function submitSearch(value: string) {
+  function submitSearch(value: string, advisorId?: string) {
     const trimmed = value.trim();
     if (!trimmed) return;
-    setSearchParams({ q: trimmed });
+    setSearchParams(advisorId ? { q: trimmed, advisorId } : { q: trimmed });
   }
 
   const registerItemRef = useCallback((id: string, el: HTMLElement | null) => {
@@ -353,6 +378,8 @@ export function Results() {
         {view === 'list' && (
           <ResultsList
             locations={filteredLocations}
+            selectedAdvisorId={submittedAdvisorId}
+            advisorCardsFirst={advisorCardsFirst}
             className="mt-[var(--density-spacing-fixed-small)]"
           />
         )}
@@ -419,6 +446,8 @@ export function Results() {
                 take effect. */}
             <ResultsList
               locations={filteredLocations}
+              selectedAdvisorId={submittedAdvisorId}
+              advisorCardsFirst={advisorCardsFirst}
               selectedLocationId={selectedLocationId}
               onSelectLocation={handleListSelect}
               registerItemRef={registerItemRef}
