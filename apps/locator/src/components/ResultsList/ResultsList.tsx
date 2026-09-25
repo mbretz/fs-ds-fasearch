@@ -2,9 +2,23 @@ import type { Location } from '../../data/locations';
 import { AdvisorCard } from '../cards/AdvisorCard/AdvisorCard';
 import { LocationCard } from '../cards/LocationCard/LocationCard';
 import { cn } from '../../utils/cn';
+import { locationKeepsCardForAdvisor } from './useFilteredLocations';
 
 interface ResultsListProps {
   locations: Location[];
+  /** Set only when `locations` was narrowed to one specific advisor by a
+   * typeahead pick (see useFilteredLocations.ts) -- lets a location that
+   * originally had 2+ advisors keep its LocationCard row even once
+   * narrowed down to just the one picked advisor. */
+  selectedAdvisorId?: string | null;
+  /** Leads the grid with AdvisorCard(s) ahead of any LocationCard(s) --
+   * set when the submitted search resolves to a specific advisor entity
+   * (a typeahead advisor pick, or freeform text matching an advisor's
+   * name), per the user (2026-09-26). Defaults to the original
+   * LocationCard-first order (a location pick, or freeform text matching
+   * only a location's own name/address) -- see
+   * `useFilteredLocations.ts`'s `queryMatchesAdvisor`. */
+  advisorCardsFirst?: boolean;
   /** Highlights the matching LocationCard row and registers it as a
    * `scrollIntoView()` target for map-pin selection sync (Dual view
    * only -- see Results.tsx). All three are optional/no-ops when unset,
@@ -82,6 +96,8 @@ interface ResultsListProps {
 // space to its right.
 export function ResultsList({
   locations,
+  selectedAdvisorId,
+  advisorCardsFirst = false,
   selectedLocationId,
   onSelectLocation,
   registerItemRef,
@@ -90,6 +106,76 @@ export function ResultsList({
   if (locations.length === 0) {
     return <p className={className}>No advisors match the current filters.</p>;
   }
+
+  const locationCards = locations
+    .filter((location) =>
+      locationKeepsCardForAdvisor(location, selectedAdvisorId),
+    )
+    .map((location) => (
+      <li
+        key={location.id}
+        ref={(el) => registerItemRef?.(location.id, el)}
+        onClick={() => onSelectLocation?.(location)}
+        className={cn(
+          'col-span-full',
+          selectedLocationId === location.id &&
+            // A real `border`, not a `ring` (box-shadow) -- per the
+            // user, the ring was only showing up as a faint sliver
+            // along the card's top edge rather than a full outline
+            // (Dual view's map<->list selection highlight). A border
+            // directly on this wrapper participates in the normal
+            // box model instead of an outside-the-box shadow, so it
+            // can't be partially covered the way the ring apparently
+            // was.
+            'relative z-10 border-[length:var(--component-tag-border-width)] border-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
+        )}
+      >
+        <LocationCard location={location} />
+      </li>
+    ));
+
+  const advisorCards = locations.flatMap((location) => {
+    // This location has no LocationCard row (see this file's own top
+    // comment) -- its one advisor's `<li>` picks up that row's
+    // `ref`/`onClick`/selection-ring props instead, so map<->list sync
+    // (Results.tsx) still has something to target by this location's own
+    // id.
+    const isSingleAdvisor = !locationKeepsCardForAdvisor(
+      location,
+      selectedAdvisorId,
+    );
+    return location.advisors.map((advisor) => (
+      <li
+        key={advisor.id}
+        ref={
+          isSingleAdvisor
+            ? (el) => registerItemRef?.(location.id, el)
+            : undefined
+        }
+        onClick={
+          isSingleAdvisor ? () => onSelectLocation?.(location) : undefined
+        }
+        className={cn(
+          'mx-auto w-full max-w-[729px]',
+          isSingleAdvisor &&
+            selectedLocationId === location.id &&
+            // Same border-not-ring fix as the LocationCard `<li>`
+            // above -- see its own comment.
+            'relative z-10 border-[length:var(--component-tag-border-width)] border-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
+        )}
+      >
+        {/* `showPortraitBadge={false}` -- per the user, `StatusTag`
+            (above the portrait) already shows this advisor's status
+            here, so the portrait's own corner badge would just repeat
+            it. */}
+        <AdvisorCard
+          advisor={advisor}
+          location={location}
+          showPortraitBadge={false}
+        />
+      </li>
+    ));
+  });
 
   return (
     // `relative` -- root cause of the Dual-view "dead space below the
@@ -122,76 +208,25 @@ export function ResultsList({
           need to be part of the *same* grid the advisor cards use
           (spanning only means something relative to a shared set of
           column tracks). Skips single-advisor locations entirely -- see
-          this file's own top comment. */}
-      {locations
-        .filter((location) => location.advisors.length !== 1)
-        .map((location) => (
-          <li
-            key={location.id}
-            ref={(el) => registerItemRef?.(location.id, el)}
-            onClick={() => onSelectLocation?.(location)}
-            className={cn(
-              'col-span-full',
-              selectedLocationId === location.id &&
-                // A real `border`, not a `ring` (box-shadow) -- per the
-                // user, the ring was only showing up as a faint sliver
-                // along the card's top edge rather than a full outline
-                // (Dual view's map<->list selection highlight). A border
-                // directly on this wrapper participates in the normal
-                // box model instead of an outside-the-box shadow, so it
-                // can't be partially covered the way the ring apparently
-                // was.
-                'relative z-10 border-[length:var(--component-tag-border-width)] border-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
-            )}
-          >
-            <LocationCard location={location} />
-          </li>
-        ))}
-      {/* 2 columns at `md`+, 3 at `lg`+, each rendering well under
-          `EntityCard`'s own 680px side-panel threshold, so every
-          `AdvisorCard` naturally drops into its stacked/portrait layout
-          (`OfficeDetailsPanel` hidden, `FocusAreasPanel` stacked below
-          main) purely from the width change -- no separate prop needed
-          to ask for that layout. */}
-      {locations.flatMap((location) => {
-        // This location has no LocationCard row above (see this file's
-        // own top comment) -- its one advisor's `<li>` picks up that
-        // row's `ref`/`onClick`/selection-ring props instead, so map<->
-        // list sync (Results.tsx) still has something to target by this
-        // location's own id.
-        const isSingleAdvisor = location.advisors.length === 1;
-        return location.advisors.map((advisor) => (
-          <li
-            key={advisor.id}
-            ref={
-              isSingleAdvisor
-                ? (el) => registerItemRef?.(location.id, el)
-                : undefined
-            }
-            onClick={
-              isSingleAdvisor ? () => onSelectLocation?.(location) : undefined
-            }
-            className={cn(
-              'mx-auto w-full max-w-[729px]',
-              isSingleAdvisor &&
-                selectedLocationId === location.id &&
-                // Same border-not-ring fix as the LocationCard `<li>`
-                // above -- see its own comment.
-                'relative z-10 border-[length:var(--component-tag-border-width)] border-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
-            )}
-          >
-            {/* `showPortraitBadge={false}` -- per the user, `StatusTag`
-                (above the portrait) already shows this advisor's status
-                here, so the portrait's own corner badge would just
-                repeat it. */}
-            <AdvisorCard
-              advisor={advisor}
-              location={location}
-              showPortraitBadge={false}
-            />
-          </li>
-        ));
-      })}
+          this file's own top comment.
+
+          Rendered after the AdvisorCards instead of before them when
+          `advisorCardsFirst` is set (see this component's own prop
+          comment) -- both blocks are plain arrays of `<li>`s (not a
+          single combined grid item), so swapping which one comes first
+          in this `<ul>` is enough on its own; the shared grid/column
+          classes above don't care about DOM order. */}
+      {advisorCardsFirst ? (
+        <>
+          {advisorCards}
+          {locationCards}
+        </>
+      ) : (
+        <>
+          {locationCards}
+          {advisorCards}
+        </>
+      )}
     </ul>
   );
 }

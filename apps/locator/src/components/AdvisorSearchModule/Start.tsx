@@ -191,15 +191,21 @@ export function Start() {
     headingRef.current?.focus();
   }, []);
 
-  function submitSearch(value: string) {
+  function submitSearch(value: string, advisorId?: string) {
     const trimmed = value.trim();
     if (!trimmed) return;
+    const params = new URLSearchParams({ q: trimmed });
+    // Carries a typeahead-picked advisor's id over into Results.tsx (see
+    // useFilteredLocations.ts) so the results grid can narrow to just
+    // that one advisor instead of a name-substring match against every
+    // advisor at their location.
+    if (advisorId) params.set('advisorId', advisorId);
     // `viewTransition: true` wraps React Router's own DOM commit in
     // `document.startViewTransition()` — see AdvisorSearchModule.tsx/this
     // file's H1 wrapper/SearchFormSearchInput below for the matching
     // `view-transition-name`s InProgress.tsx shares. Unsupported browsers
     // (this option is a no-op there) just get the instant navigation.
-    navigate(`/search?q=${encodeURIComponent(trimmed)}`, {
+    navigate(`/search?${params.toString()}`, {
       viewTransition: true,
     });
   }

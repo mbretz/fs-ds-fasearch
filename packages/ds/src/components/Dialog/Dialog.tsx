@@ -99,6 +99,34 @@ function DialogContent({
         data-density={density}
         className={cn(
           'fixed inset-x-0 top-[var(--component-dialog-spacing-padding)] z-index-modal mx-auto grid w-[calc(100%-2*var(--component-dialog-spacing-padding))] max-w-[var(--component-dialog-max-width)] max-h-[calc(100vh-2*var(--component-dialog-spacing-padding))] overflow-y-auto rounded-[var(--component-dialog-border-radius)] border-[length:var(--component-dialog-border-width)] border-[color:var(--component-dialog-border-color)] bg-[var(--component-dialog-background-color)] shadow-elevation-suspended motion-safe:data-[state=open]:animate-[dialog-content-fade-in_200ms_ease-out] motion-safe:data-[state=closed]:animate-[dialog-content-fade-out_200ms_ease-in]',
+          // Best-effort corner fix for a scrolled Content's own native
+          // scrollbar squaring off this element's top/bottom-right corner
+          // -- confirmed live (Chromium): a native scrollbar isn't clipped
+          // to the border-radius of the very element it scrolls, even
+          // though `overflow-y-auto` and `rounded-[...]` are the same
+          // declaration above. The clean fix (an outer, non-scrolling
+          // `overflow-hidden` wrapper doing the clipping instead) was tried
+          // and reverted already -- see this component's own comment a few
+          // lines up: Radix's body-scroll-lock only exempts scrolling
+          // *within Content's own subtree*, so an outer wrapper broke real
+          // wheel/trackpad scrolling.
+          //
+          // Legacy, non-standard `::-webkit-scrollbar-*` pseudo-elements
+          // (Chromium/Safari only -- Firefox has no equivalent and simply
+          // keeps its own default scrollbar here, unaffected either way)
+          // are the only CSS surface that exposes `border-radius` for a
+          // scrollbar at all; the standard `scrollbar-color`/`scrollbar-
+          // width` properties have no such knob. `-track` is made
+          // transparent rather than actually rounded-and-filled -- an
+          // invisible track can't visually square off a corner regardless
+          // of how well the browser clips it, which sidesteps needing
+          // pixel-perfect corner-clipping from a non-standard API in the
+          // first place. `-thumb` gets a full pill radius and the same
+          // width/color as the DS's own `ScrollArea` component
+          // (`--density-sizing-dynamic-small`, `bg-neutral-subtle`) so a
+          // Dialog's native scrollbar at least matches this app's other,
+          // Radix-`ScrollArea`-based custom scrollbars.
+          '[&::-webkit-scrollbar]:w-[var(--density-sizing-dynamic-small)] [&::-webkit-scrollbar-track]:rounded-[var(--component-dialog-border-radius)] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-neutral-subtle',
           className,
         )}
         // Default (per user direction, 2026-08-21): focus the close button on

@@ -1,4 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
+import { Slot } from 'radix-ui';
+import { Link } from 'react-router-dom';
 import logo from './assets/site-header-logo.svg';
 
 // Deliberately no `ds`/`tokens`/`icons` imports anywhere in this file — the
@@ -6,6 +8,15 @@ import logo from './assets/site-header-logo.svg';
 // product sits inside, styled independently of the design system it hosts.
 // All copy/branding here matches the real Figma site-shell reference
 // (nodes 6:4933 desktop, 338:5559 mobile) verbatim, per explicit direction.
+// `radix-ui`'s bare `Slot` is the one exception -- it's the same headless
+// `asChild` primitive `ds`'s own `Link`/`Button` use internally (see
+// `packages/ds/src/components/Link/Link.tsx`), not a themed `ds` import, so
+// pulling it in directly here doesn't create a dependency on token/Tailwind
+// CSS this file never loads. `Find a Financial Advisor` (below) is the one
+// real, active link in this otherwise-decorative header -- per the user,
+// 2026-09-26, `Slot.Root asChild` around a real router `Link` so this pill
+// stays a single `<a>` (no double-wrapping `<button><a>...`), matching the
+// `asChild` composition pattern used everywhere else in this app.
 //
 // Three tiers, measured directly against the real edwardjones.com header
 // (Figma's own mobile/desktop pair doesn't cover the middle one):
@@ -147,13 +158,8 @@ function SecureLoginPill() {
 
 function FindAdvisorPill() {
   return (
-    <a
-      href="#"
-      aria-disabled="true"
-      tabIndex={-1}
-      onClick={(event) => event.preventDefault()}
+    <Slot.Root
       style={{
-        ...disabledStyle,
         display: 'inline-block',
         padding: '6px 10px',
         border: '1px solid #006DA3',
@@ -166,8 +172,8 @@ function FindAdvisorPill() {
         whiteSpace: 'nowrap',
       }}
     >
-      Find a Financial Advisor
-    </a>
+      <Link to="/">Find a Financial Advisor</Link>
+    </Slot.Root>
   );
 }
 
@@ -313,13 +319,8 @@ export function SiteHeader() {
             >
               Secure Login
             </a>
-            <a
-              href="#"
-              aria-disabled="true"
-              tabIndex={-1}
-              onClick={(event) => event.preventDefault()}
+            <Slot.Root
               style={{
-                ...disabledStyle,
                 display: 'inline-block',
                 padding: '10px 14px',
                 border: '1px solid #006DA3',
@@ -332,8 +333,8 @@ export function SiteHeader() {
                 flexShrink: 0,
               }}
             >
-              Find a Financial Advisor
-            </a>
+              <Link to="/">Find a Financial Advisor</Link>
+            </Slot.Root>
           </div>
         </div>
       </div>
