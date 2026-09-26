@@ -27,5 +27,15 @@ export interface MapProps {
    * sets `selectedLocationId` directly instead, precisely so it does
    * NOT open a popover. */
   onPinSelect: (id: string | null) => void;
+  /** Forwarded to `getBranchRosterLocation` for a "branch" pin's own
+   * `BranchPopoverContent` -- lets its "N Financial Advisors" button and
+   * advisor list show the branch's real full roster (after facet
+   * filters, ignoring search-match narrowing) instead of whatever
+   * narrower `advisors` subset a search match left on the `location`
+   * object it's given -- same fix, same reasoning as `ResultsList`'s own
+   * identical props, see that function's own doc comment
+   * (useFilteredLocations.ts). */
+  selectedFocusAreas: string[];
+  acceptingNewClientsOnly: boolean;
   className?: string;
 }

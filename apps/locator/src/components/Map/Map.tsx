@@ -17,6 +17,7 @@ import { AdvisorPopoverContent } from './AdvisorPopoverContent';
 import { BranchPopoverContent } from './BranchPopoverContent';
 import { NewClientInquiryDialog } from '../entity-info/NewClientInquiryDialog';
 import { getPinType } from './pinType';
+import { getBranchRosterLocation } from '../ResultsList/useFilteredLocations';
 import { cn } from '../../utils/cn';
 import type { MapHandle, MapProps } from './Map.types';
 
@@ -98,7 +99,14 @@ function getCenter(locations: Location[]): [number, number] {
 // simpler, and it reopens cleanly once the pan/flyTo settles instead (a
 // pin click calls `onPinSelect` again once the map's already at rest).
 export const Map = forwardRef<MapHandle, MapProps>(function Map(
-  { locations, selectedLocationId, onPinSelect, className },
+  {
+    locations,
+    selectedLocationId,
+    onPinSelect,
+    selectedFocusAreas,
+    acceptingNewClientsOnly,
+    className,
+  },
   ref,
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -119,6 +127,35 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
   const [popoverLocationId, setPopoverLocationId] = useState<string | null>(
     null,
   );
+  // The last non-null `popoverLocation` (below) -- kept around after
+  // `popoverLocationId` goes back to `null`, per the user, 2026-09-26:
+  // `MapPinPopover.tsx`'s own Content now fades out on close
+  // (`data-[state=closed]:animate-[...]`), which needs Radix's Presence
+  // to keep the real DOM mounted long enough to actually play that
+  // animation -- impossible if THIS component synchronously unmounts the
+  // whole `<MapPinPopover>` React element the instant `popoverLocation`
+  // itself goes null (which the `{popoverLocation && (...)}` render below
+  // used to do directly, before this existed). Rendering off this state
+  // instead (still gating `open` itself off the real `popoverLocationId`)
+  // is what lets the close fade actually play before the real unmount.
+  const [renderedPopoverLocation, setRenderedPopoverLocation] =
+    useState<Location | null>(null);
+  // Incremented on every real pin click (the marker `click` listener
+  // below) -- folded into `<MapPinPopover>`'s own `key` alongside
+  // `renderedPopoverLocation.id`, per the user, 2026-09-26.
+  // `BranchPopoverContent.tsx`'s own internal drill-down state (which
+  // Advisors page it's on, which advisor it's drilled into) is
+  // documented there as resetting fresh "on every pin change and every
+  // close-then-reopen", which relied on `renderedPopoverLocation` itself
+  // going back to `null` (and so `<MapPinPopover>` fully unmounting) on
+  // every close -- no longer true now that it stays mounted through the
+  // close fade (see `renderedPopoverLocation`'s own comment). This
+  // sequence number is what still forces a genuine remount at the exact
+  // moment of a fresh open specifically (whether the same pin or a
+  // different one), while leaving the key untouched for the whole
+  // *closed* stretch in between, which is what actually lets that fade
+  // play instead of getting cut short by a remount.
+  const [openSequence, setOpenSequence] = useState(0);
   // Tracks which advisor's `NewClientInquiryDialog` is open, lifted up
   // here (out of `AdvisorPopoverContent`/`MapPinPopover`) rather than
   // self-triggered in place -- same reasoning/pattern as
@@ -211,6 +248,7 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
       el.addEventListener('click', (event) => {
         event.stopPropagation();
         setPopoverLocationId(location.id);
+        setOpenSequence((sequence) => sequence + 1);
         onPinSelect(location.id);
       });
       const marker = new maplibregl.Marker({ element: el })
@@ -229,10 +267,23 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
   const popoverLocation =
     locations.find((location) => location.id === popoverLocationId) ?? null;
 
+  // See `renderedPopoverLocation`'s own doc comment above.
+  useEffect(() => {
+    if (popoverLocation) setRenderedPopoverLocation(popoverLocation);
+  }, [popoverLocation]);
+
   const getAnchorRect = useCallback((): DOMRect => {
-    const el = popoverLocationId ? markerEls[popoverLocationId] : undefined;
+    // `renderedPopoverLocation`, not `popoverLocationId` -- while the
+    // popover is fading out, `popoverLocationId` is *already* `null`
+    // (set synchronously by whatever triggered the close), which would
+    // otherwise anchor the still-visible, still-animating popover to an
+    // empty `DOMRect()` (the viewport's own top-left corner) for the
+    // whole fade instead of leaving it where its pin actually is.
+    const el = renderedPopoverLocation
+      ? markerEls[renderedPopoverLocation.id]
+      : undefined;
     return el?.getBoundingClientRect() ?? new DOMRect();
-  }, [popoverLocationId, markerEls]);
+  }, [renderedPopoverLocation, markerEls]);
 
   return (
     <div
@@ -266,18 +317,34 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
           id,
         );
       })}
-      {popoverLocation && (
-        // `key={popoverLocationId}` -- Radix Popper positions a
-        // `virtualRef` anchor once per mount; it has no real DOM node to
-        // watch for the auto-reposition-on-change floating-ui otherwise
-        // sets up, so clicking a *different* pin while a popover is
-        // already open (`open` never actually toggles false->true) left
-        // the old popover in its old position with the new pin's content
-        // swapped into it, per the user. Keying by id forces a full
-        // unmount/remount on every pin change, which re-runs Popper's
-        // positioning against the new pin from scratch.
+      {renderedPopoverLocation && (
+        // Rendered off `renderedPopoverLocation` (not `popoverLocation`
+        // directly), with `open` still driven by the real
+        // `popoverLocationId` -- see that state's own doc comment above
+        // for why: `MapPinPopover.tsx`'s Content now fades out on close,
+        // which needs this whole element to stay mounted a beat longer
+        // than `popoverLocationId` itself does, not disappear from the
+        // React tree in the same tick the close is triggered.
+        //
+        // `key`: Radix Popper positions a `virtualRef` anchor once per
+        // mount; it has no real DOM node to watch for the auto-
+        // reposition-on-change floating-ui otherwise sets up, so clicking
+        // a *different* pin while a popover is already open (`open`
+        // never actually toggles false->true) left the old popover in
+        // its old position with the new pin's content swapped into it,
+        // per the user. Keying by location id forces a full unmount/
+        // remount whenever the rendered location itself actually changes
+        // (a different pin clicked), which re-runs Popper's positioning
+        // against the new pin from scratch -- but no longer remounts on
+        // a plain close, since `renderedPopoverLocation` itself doesn't
+        // change then (only `popoverLocationId`/`open` do), which is
+        // exactly what lets the close fade play at all. `openSequence`
+        // folded in alongside it is what still forces a fresh remount at
+        // the moment of a genuine reopen of the *same* pin specifically
+        // (location id alone wouldn't change then) -- see its own doc
+        // comment above for why that's still needed.
         <MapPinPopover
-          key={popoverLocationId}
+          key={`${renderedPopoverLocation.id}-${openSequence}`}
           open={Boolean(popoverLocationId)}
           onOpenChange={(open) => {
             if (!open) {
@@ -288,9 +355,13 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
           getAnchorRect={getAnchorRect}
           collisionBoundary={wrapperRef.current}
         >
-          {getPinType(popoverLocation) === 'branch' ? (
+          {getPinType(renderedPopoverLocation) === 'branch' ? (
             <BranchPopoverContent
-              location={popoverLocation}
+              location={getBranchRosterLocation(
+                renderedPopoverLocation,
+                selectedFocusAreas,
+                acceptingNewClientsOnly,
+              )}
               onNewClientInquiry={(advisor) => {
                 setPopoverLocationId(null);
                 onPinSelect(null);
@@ -298,12 +369,12 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
               }}
             />
           ) : (
-            popoverLocation.advisors[0] && (
+            renderedPopoverLocation.advisors[0] && (
               <AdvisorPopoverContent
-                advisor={popoverLocation.advisors[0]}
+                advisor={renderedPopoverLocation.advisors[0]}
                 size={popoverSize}
                 onNewClientInquiry={() => {
-                  const advisor = popoverLocation.advisors[0];
+                  const advisor = renderedPopoverLocation.advisors[0];
                   setPopoverLocationId(null);
                   onPinSelect(null);
                   if (advisor) setInquiryAdvisor(advisor);

@@ -2,15 +2,13 @@ import type { Location } from '../../data/locations';
 import { AdvisorCard } from '../cards/AdvisorCard/AdvisorCard';
 import { LocationCard } from '../cards/LocationCard/LocationCard';
 import { cn } from '../../utils/cn';
-import { locationKeepsCardForAdvisor } from './useFilteredLocations';
+import {
+  locationKeepsCardForAdvisor,
+  getBranchRosterLocation,
+} from './useFilteredLocations';
 
 interface ResultsListProps {
   locations: Location[];
-  /** Set only when `locations` was narrowed to one specific advisor by a
-   * typeahead pick (see useFilteredLocations.ts) -- lets a location that
-   * originally had 2+ advisors keep its LocationCard row even once
-   * narrowed down to just the one picked advisor. */
-  selectedAdvisorId?: string | null;
   /** Leads the grid with AdvisorCard(s) ahead of any LocationCard(s) --
    * set when the submitted search resolves to a specific advisor entity
    * (a typeahead advisor pick, or freeform text matching an advisor's
@@ -19,6 +17,14 @@ interface ResultsListProps {
    * only a location's own name/address) -- see
    * `useFilteredLocations.ts`'s `queryMatchesAdvisor`. */
   advisorCardsFirst?: boolean;
+  /** Forwarded to `getBranchRosterLocation` -- lets each LocationCard's
+   * own "Branch Advisors" panel/summary show the branch's real full
+   * roster (after facet filters, ignoring search-match narrowing)
+   * instead of whatever narrower `advisors` subset a search match left
+   * on the `location` object it's given -- see that function's own doc
+   * comment. */
+  selectedFocusAreas: string[];
+  acceptingNewClientsOnly: boolean;
   /** Highlights the matching LocationCard row and registers it as a
    * `scrollIntoView()` target for map-pin selection sync (Dual view
    * only -- see Results.tsx). All three are optional/no-ops when unset,
@@ -60,6 +66,26 @@ interface ResultsListProps {
 // used between advisor cards, not the larger `fixed-xxx-large` gap the
 // previous two-container layout had.
 //
+// The column count is capped to the actual number of AdvisorCards
+// (`gridColsClassName` below), not always 2/3 at `md`/`lg`+, per the
+// user, 2026-09-26: with the uncapped grid, a lone AdvisorCard still only
+// fills one column's worth of width at `md`+ (2/3 of the row left
+// empty), and two AdvisorCards leave one whole empty column at `lg`+ --
+// both read as a layout mistake rather than "few results." 3+
+// AdvisorCards keep the original uncapped responsive grid unchanged
+// (that's genuinely the normal case this grid was tuned for). Counts only
+// `advisorItemCount` (every AdvisorCard `<li>`), deliberately NOT
+// `locationCards.length` on top of it (an earlier version of this cap
+// did, and regressed exactly this: submitting "no" surfaces Skyler
+// Castellano's own multi-advisor LocationCard alongside his AdvisorCard
+// and Charlie Faulkner's, 3 total `<li>`s but only 2 AdvisorCards --
+// `totalCount`-based capping kept the full 3-column grid there, leaving
+// those 2 AdvisorCards sharing a row with one empty trailing column) --
+// a LocationCard's own `col-span-full` makes it moot for the column
+// count on its OWN row, and it shouldn't inflate the count that decides
+// how many columns whichever AdvisorCard(s) actually need to share a row
+// with each other either.
+//
 // Horizontal margin: 16px (`layout.fixed.large`) below `md`, none at `md`+
 // -- `<main>` (SiteShell.tsx) has zero padding of its own below `md`, so
 // mobile needs an explicit inset here, matching ResultsToolbar/
@@ -96,11 +122,12 @@ interface ResultsListProps {
 // space to its right.
 export function ResultsList({
   locations,
-  selectedAdvisorId,
   advisorCardsFirst = false,
   selectedLocationId,
   onSelectLocation,
   registerItemRef,
+  selectedFocusAreas,
+  acceptingNewClientsOnly,
   className,
 }: ResultsListProps) {
   if (locations.length === 0) {
@@ -108,9 +135,7 @@ export function ResultsList({
   }
 
   const locationCards = locations
-    .filter((location) =>
-      locationKeepsCardForAdvisor(location, selectedAdvisorId),
-    )
+    .filter((location) => locationKeepsCardForAdvisor(location))
     .map((location) => (
       <li
         key={location.id}
@@ -130,9 +155,44 @@ export function ResultsList({
             'relative z-10 border-[length:var(--component-tag-border-width)] border-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
         )}
       >
-        <LocationCard location={location} />
+        <LocationCard
+          location={getBranchRosterLocation(
+            location,
+            selectedFocusAreas,
+            acceptingNewClientsOnly,
+          )}
+        />
       </li>
     ));
+
+  // Counted separately from (and before) building `advisorCards` below --
+  // that `<li>`'s own className needs to already know the *final* count
+  // (see its `isOnlyAdvisorResult` use), which would be circular if it
+  // read `advisorCards.length` after the fact.
+  const advisorItemCount = locations.reduce(
+    (sum, location) => sum + location.advisors.length,
+    0,
+  );
+  // Keyed off `advisorItemCount` alone, not a `locationCards.length`-
+  // inclusive total -- per the user, 2026-09-26, same reasoning as
+  // `gridColsClassName` below (see its own comment): a single AdvisorCard
+  // should get this treatment whether or not a LocationCard also happens
+  // to share the grid (e.g. Charlie Faulkner's own single-advisor branch
+  // matched alongside Skyler Castellano's multi-advisor one) -- the
+  // LocationCard's own `col-span-full` row doesn't change what "alone in
+  // its own row" means for the one AdvisorCard actually sharing column
+  // tracks with nothing else.
+  //
+  // The lone AdvisorCard `<li>` (below) drops the 729px cap entirely
+  // (just `w-full`) and left-aligns (`mx-0`) instead of centering within
+  // it, per the user, 2026-09-26 -- both only make sense once there's a
+  // sibling ADVISOR card sharing its row to size/balance against (the
+  // 2/3+-AdvisorCard cases, where the cap exists specifically to keep
+  // AdvisorCard out of its own 3-column `EntityCard` row-mode shape at
+  // single-column tablet widths, see this file's own top comment);
+  // alone, there's no such row to matter for, so the lone card is free
+  // to just fill the grid's own full content width instead.
+  const isOnlyAdvisorResult = advisorItemCount === 1;
 
   const advisorCards = locations.flatMap((location) => {
     // This location has no LocationCard row (see this file's own top
@@ -140,10 +200,7 @@ export function ResultsList({
     // `ref`/`onClick`/selection-ring props instead, so map<->list sync
     // (Results.tsx) still has something to target by this location's own
     // id.
-    const isSingleAdvisor = !locationKeepsCardForAdvisor(
-      location,
-      selectedAdvisorId,
-    );
+    const isSingleAdvisor = !locationKeepsCardForAdvisor(location);
     return location.advisors.map((advisor) => (
       <li
         key={advisor.id}
@@ -156,7 +213,8 @@ export function ResultsList({
           isSingleAdvisor ? () => onSelectLocation?.(location) : undefined
         }
         className={cn(
-          'mx-auto w-full max-w-[729px]',
+          'w-full',
+          isOnlyAdvisorResult ? 'mx-0' : 'mx-auto max-w-[729px]',
           isSingleAdvisor &&
             selectedLocationId === location.id &&
             // Same border-not-ring fix as the LocationCard `<li>`
@@ -176,6 +234,25 @@ export function ResultsList({
       </li>
     ));
   });
+
+  // Keyed off `advisorItemCount` alone, not `totalCount` -- per the user,
+  // 2026-09-26: a LocationCard's own `col-span-full` already makes it
+  // moot for the column count (see this file's own top comment), so its
+  // presence shouldn't count toward the cap either. Submitting "no", for
+  // example, surfaces Skyler Castellano (+ his own multi-advisor
+  // location's LocationCard) and Charlie Faulkner -- 2 AdvisorCards, 1
+  // LocationCard, `totalCount` 3 -- which used to keep the full
+  // responsive grid (3 columns at `lg`+) since 3 >= the old threshold,
+  // leaving the 2 AdvisorCards sharing a row with one empty trailing
+  // column, the exact "looks like a mistake" case this cap exists to
+  // prevent, just triggered by a LocationCard padding out the count
+  // instead of there genuinely being 3 AdvisorCards.
+  const gridColsClassName =
+    advisorItemCount <= 1
+      ? 'grid-cols-1'
+      : advisorItemCount === 2
+        ? 'grid-cols-1 md:grid-cols-2'
+        : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
 
   return (
     // `relative` -- root cause of the Dual-view "dead space below the
@@ -198,7 +275,8 @@ export function ResultsList({
     // this scrollable box rather than escaping past it.
     <ul
       className={cn(
-        'relative mx-[var(--density-layout-fixed-large)] grid grid-cols-1 gap-[var(--density-spacing-fixed-large)] md:mx-0 md:grid-cols-2 lg:grid-cols-3',
+        'relative mx-[var(--density-layout-fixed-large)] grid gap-[var(--density-spacing-fixed-large)] md:mx-0',
+        gridColsClassName,
         className,
       )}
     >

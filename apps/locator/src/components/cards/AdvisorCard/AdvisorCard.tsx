@@ -160,6 +160,16 @@ export function AdvisorCard({
           size="xl"
           showBadge={showPortraitBadge}
           className="self-start"
+          // Matches `AdvisorHero`'s own desktop portrait -- see that
+          // file's comment; morphs this card's portrait into the Hero's
+          // when "View Profile" navigates there (per the user,
+          // 2026-09-26). Not carried onto the mobile Hero (its own
+          // scroll-collapse bar already owns a separate, non-id-keyed
+          // `view-transition-name` on that same element -- an element
+          // can only have one, and only one AdvisorHero mounts at a
+          // time, so that static name doesn't need id-keying the way
+          // this cross-page one does).
+          style={{ viewTransitionName: `advisor-portrait-${advisor.id}` }}
         />
         <div className="flex flex-col gap-[var(--density-spacing-fixed-small)] self-center">
           <NameBlock
@@ -173,8 +183,17 @@ export function AdvisorCard({
             // per the user, name-to-designations reads better at 4px
             // (`fixed-x-small`) than the space LocationCard's own
             // address-to-summary gap uses, which keeps the default.
-            className="gap-[var(--density-spacing-fixed-x-small)]"
+            //
+            // `w-fit` -- per modern-web-guidance's same-document-
+            // transitions guide, a transitioning text element should be
+            // `fit-content` width on both ends of the morph so the
+            // browser's shared old/new group box hugs the actual text
+            // rather than this column's full (flex-stretched) width.
+            className="w-fit gap-[var(--density-spacing-fixed-x-small)]"
             subheadingClassName="leading-[length:var(--semantic-content-size-x-small-line-height)]"
+            // Matches `AdvisorHero`'s own desktop `<h1>` -- see the
+            // portrait's own comment above for the full reasoning.
+            style={{ viewTransitionName: `advisor-name-${advisor.id}` }}
           />
           <TenureLine
             years={advisor.tenureYears}
@@ -222,6 +241,7 @@ export function AdvisorCard({
             <EntityActions
               primaryLabel="View Profile"
               primaryHref={`/advisor/${advisor.id}`}
+              primaryViewTransition
               onNewClientInquiry={openInquiryDialog}
             />
           )}
@@ -230,6 +250,7 @@ export function AdvisorCard({
         <EntityActions
           primaryLabel="View Profile"
           primaryHref={`/advisor/${advisor.id}`}
+          primaryViewTransition
         />
       )}
     </EntityCard>

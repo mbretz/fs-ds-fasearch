@@ -52,6 +52,10 @@ export function AdvisorPopoverContent({
     <EntityActions
       primaryLabel="View Profile"
       primaryHref={`/advisor/${advisor.id}`}
+      // Same shared-element morph as `AdvisorCard`'s own "View Profile"
+      // -- this popover's own portrait/name below carry the matching
+      // `view-transition-name`s, per the user, 2026-09-26.
+      primaryViewTransition
       onNewClientInquiry={onNewClientInquiry}
       orientation="block"
       density="condensed"
@@ -96,6 +100,10 @@ export function AdvisorPopoverContent({
           // the box/font/icon sizing directly, same pattern LocationCard's
           // own 240px avatar override uses.
           avatarClassName="size-[160px] text-[51px] [--avatar-icon-size:96px]"
+          // Matches `AdvisorHero`'s own desktop portrait -- morphs into
+          // it when "View Profile" navigates there, same pairing as
+          // `AdvisorCard`'s own, per the user, 2026-09-26.
+          style={{ viewTransitionName: `advisor-portrait-${advisor.id}` }}
         />
         {/* Right column: name/credentials, tenure, then actions. */}
         <div className="flex min-w-0 flex-1 flex-col">
@@ -108,7 +116,14 @@ export function AdvisorPopoverContent({
             <NameBlock
               heading={fullName}
               headingClassName="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)]"
-              className="gap-[var(--density-spacing-fixed-x-small)]"
+              // `w-fit` -- see `AdvisorCard`'s own identical comment;
+              // this column is `flex-col` too (this component's own
+              // `flex min-w-0 flex-1 flex-col` right column), same
+              // default-stretch reasoning.
+              className="w-fit gap-[var(--density-spacing-fixed-x-small)]"
+              // Matches `AdvisorHero`'s own desktop `<h1>` -- same
+              // pairing as this component's portrait above.
+              style={{ viewTransitionName: `advisor-name-${advisor.id}` }}
               subheading={
                 advisor.designations.length > 0
                   ? advisor.designations.join(', ')
@@ -160,6 +175,11 @@ export function AdvisorPopoverContent({
         // with the fallback-initials/icon sizes scaled by the same ratio
         // (51px -> 38px, 96px -> 72px).
         avatarClassName="size-[120px] text-[38px] [--avatar-icon-size:72px]"
+        // Same `AdvisorHero` pairing as the `lg` branch above -- only one
+        // of `lg`/`sm` is ever mounted per open popover (`Map.tsx` picks
+        // one based on its own rendered width), so both branches can
+        // safely carry the same name.
+        style={{ viewTransitionName: `advisor-portrait-${advisor.id}` }}
       />
       {/* `justify-center` -- this column stretches to the row's full
           height (the portrait's own 120px) by default, so centering its
@@ -169,6 +189,8 @@ export function AdvisorPopoverContent({
         <NameBlock
           heading={fullName}
           headingClassName="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)]"
+          className="w-fit"
+          style={{ viewTransitionName: `advisor-name-${advisor.id}` }}
         />
         <div className="mt-[var(--density-spacing-fixed-small)]">
           {showsNewClientInquiry ? actions(onNewClientInquiry) : actions()}

@@ -8,14 +8,15 @@ import { cn } from '../../utils/cn';
 
 const STATUSES = Object.keys(statusMeta) as NewClientStatus[];
 
-// Shared by `DesktopLegend` and `MobileLegend` below -- an attribute on
-// `<html>`, not either component's own DOM, since the
+// `MobileLegend`'s own View Transition direction flag (below) -- an
+// attribute on `<html>`, not that component's own DOM, since the
 // `::view-transition-*` pseudo-elements render in a top-layer tree
-// rooted at the document, not nested under either component, so their
-// direction-aware CSS has to key off something on `:root` to reach them.
-// One shared attribute is safe (not a collision risk) since the two
-// legends are mutually exclusive by viewport (`hidden`/`md:hidden`) and
-// each only ever reads its own `view-transition-name`-scoped selectors.
+// rooted at the document, not nested under it, so its direction-aware
+// CSS has to key off something on `:root` to reach them. `DesktopLegend`
+// no longer needs an equivalent of its own -- per the user, 2026-09-26,
+// it dropped View Transitions entirely for a plain CSS width transition
+// (see its own top comment), which has no pseudo-element tree to reach
+// in the first place.
 const LEGEND_DIRECTION_ATTR = 'data-map-legend-transition';
 
 function LegendRow({ status }: { status: NewClientStatus }) {
@@ -63,144 +64,124 @@ export function MapLegend({ className }: { className?: string }) {
   );
 }
 
-// Same `view-transition-name`-per-instance approach as `MobileLegend`
-// below, under its own name so the two never collide with each other.
-const DESKTOP_LEGEND_TRANSITION_NAME = 'map-legend-desktop';
-const DESKTOP_LEGEND_GROUP_DURATION_MS = 260;
-const DESKTOP_LEGEND_CROSSFADE_DURATION_MS = 100;
+// A plain CSS width transition, not View Transitions -- per the user,
+// 2026-09-26: unlike `MobileLegend` below (a genuine two-axis, 32x32-
+// circle-to-232px-wide-card resize), this toggle is width-only at a
+// constant 52px height, which a real `transition: width` can drive
+// directly with no snapshot/crossfade machinery needed. That machinery
+// (the `mix-blend-mode`/`object-fit`/timed-delay CSS this replaced) only
+// ever existed to stop View Transitions' own snapshot-based crossfade
+// from warping this circle's live border into an oval mid-resize --
+// a live DOM box never has that problem in the first place, since its
+// actual border-radius/border stay crisp at every width, not rasterized.
+//
+// `[interpolate-size:allow-keywords]` + toggling `width` between `52px`
+// and `auto` (rather than a hardcoded expanded pixel value) -- same
+// standing exception this repo already accepted for `AdvisorHero.tsx`'s
+// `FavoriteToggle` (`block-size:auto`<->`0`, see CLAUDE.md's own
+// 2026-09-22 note): Chrome/Edge-only, unsupported browsers just get an
+// instant width jump instead of an animated one, which is an accepted
+// fallback here for the same reason it was there. The alternative --
+// hardcoding the expanded width -- would mean guessing (or measuring
+// once and hoping it never drifts) a value driven entirely by this
+// legend's own status-label text, which isn't a value worth pinning down
+// by hand when the browser can already compute it correctly on both
+// ends.
+//
+// Both states are always mounted, absolutely stacked (`inset-0` within
+// the persistent box below) rather than conditionally swapped -- same
+// `inert`/`aria-hidden`-toggled, opacity-transitioned pattern
+// `FavoriteToggle` already uses for its own show/hide. Each fades on its
+// own 100ms opacity transition (`duration-[100ms]` below), timed
+// asymmetrically to whichever end of the box's own 260ms width
+// transition (`duration-[260ms]`) it's near its small (52px, circle-only)
+// footprint at -- immediately when expanding (the box is still 52px
+// right at the start, no `delay-*`), delayed 160ms (260 - 100, the same-
+// length window at the very end -- `delay-[160ms]` below) when
+// collapsing (the box only gets back down to 52px late in that
+// direction) -- same reasoning `MobileLegend`'s own (still VT-based)
+// crossfade delay below documents, just driven by plain opacity+delay on
+// live DOM instead of a `::view-transition-*` pseudo-element pair.
+// Without this, the circle icon would visibly show through/overlap the
+// row content (or vice versa) for most of the resize, rather than one
+// cleanly finishing its fade before the other's is even visible. All
+// three numbers are literal Tailwind arbitrary values, not JS constants
+// -- Tailwind's own build-time class scanner reads raw source text, so a
+// runtime-templated arbitrary value never gets a real rule generated for
+// it at all (confirmed the hard way on an earlier pass here); keep the
+// three literals in sync by hand if any of them ever changes.
 
 function DesktopLegend() {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Same feature-detected View Transitions approach as `MobileLegend`
-  // below -- see its own comment, including why the direction attribute
-  // is set here (border/shape distortion during the crossfade otherwise
-  // -- see the CSS below).
-  const setExpanded = (next: boolean) => {
-    if (!document.startViewTransition) {
-      setIsExpanded(next);
-      return;
-    }
-    document.documentElement.setAttribute(
-      LEGEND_DIRECTION_ATTR,
-      next ? 'expand' : 'collapse',
-    );
-    const transition = document.startViewTransition(() => {
-      flushSync(() => setIsExpanded(next));
-    });
-    transition.finished.finally(() => {
-      document.documentElement.removeAttribute(LEGEND_DIRECTION_ATTR);
-    });
-  };
-
   return (
-    // Fixed 52x52 anchor box -- matches the expanded pill's own *actual*
+    // Fixed 52px height -- matches the expanded pill's own *actual*
     // (auto, content-driven) height: a 32px badge, 8px top/bottom
     // padding (16px), and the pill's 2px top/bottom border
     // (`--component-tag-border-width`, 4px) = 52px. Not 48px: an
-    // earlier pass here sized this box off just the badge+padding,
-    // forgetting the border also adds to an auto-height box (unlike an
-    // explicitly-sized box, where box-sizing:border-box would fold the
-    // border into a stated size instead) -- close enough at 48px that it
-    // wasn't obviously wrong by eye, but the View Transition genuinely
-    // was animating a few px of real height difference every toggle
-    // (most visible shrinking on collapse), not a rendering artifact.
-    // Height now never actually changes across the toggle, only width,
-    // per the user ("resize the circle... to match the height of the
-    // expanded legend"). Both states are `absolute top-0 left-0` within
-    // it, same pinned-corner reasoning as `MobileLegend`'s own anchor
-    // box, so the toggle reads as growing out to the right.
-    <div className="relative size-[52px]">
-      <style>{`
-        /* Same crossfade fixes as \`MobileLegend\`'s own CSS below (that
-           comment has the full reasoning) -- \`mix-blend-mode: normal\`
-           for the ghosting halo, plus a fast crossfade timed to whichever
-           end of the resize the box is near its *small* (circle)
-           footprint at: early when expanding, delayed to the same-length
-           window at the end when collapsing. Even though this is a
-           same-height, width-only resize (simpler than Mobile's own
-           two-axis one, per the user), the default crossfade still
-           stretched the circle's own border into an oval while the box
-           was mid-width, which is what this fixes. */
-        ::view-transition-old(${DESKTOP_LEGEND_TRANSITION_NAME}),
-        ::view-transition-new(${DESKTOP_LEGEND_TRANSITION_NAME}) {
-          height: 100%;
-          /* Explicit, not left to the UA default -- the first pass at
-             this fix assumed that default was \`contain\`, but the
-             border still warping mid-resize (reported on both the
-             expand and, after the delay/easing fix below, the collapse
-             direction) means it's actually more likely \`fill\`
-             (stretching non-uniformly to the animated group box).
-             \`contain\` is what actually stops each snapshot's own
-             border from warping into an oval mid-resize, in either
-             direction, regardless of how the delay/easing below lines
-             up -- it fixes the root cause structurally rather than
-             timing the crossfade around it. */
-          object-fit: contain;
-          mix-blend-mode: normal;
-          animation-duration: ${DESKTOP_LEGEND_CROSSFADE_DURATION_MS}ms;
-        }
-        ::view-transition-old(${DESKTOP_LEGEND_TRANSITION_NAME}) {
-          animation-name: legend-key-fade-out;
-        }
-        ::view-transition-new(${DESKTOP_LEGEND_TRANSITION_NAME}) {
-          animation-name: legend-key-fade-in;
-        }
-        /* Same @keyframes names/definitions as \`MobileLegend\`'s own
-           style block below -- harmless to redeclare identically (CSS
-           just takes the matching rule), kept here too rather than
-           relying on Mobile's copy always being mounted alongside this
-           one. */
-        @keyframes legend-key-fade-out {
-          to { opacity: 0; }
-        }
-        @keyframes legend-key-fade-in {
-          from { opacity: 0; }
-        }
-        :root[${LEGEND_DIRECTION_ATTR}='collapse']::view-transition-old(${DESKTOP_LEGEND_TRANSITION_NAME}),
-        :root[${LEGEND_DIRECTION_ATTR}='collapse']::view-transition-new(${DESKTOP_LEGEND_TRANSITION_NAME}) {
-          animation-delay: ${DESKTOP_LEGEND_GROUP_DURATION_MS - DESKTOP_LEGEND_CROSSFADE_DURATION_MS}ms;
-        }
-        ::view-transition-group(${DESKTOP_LEGEND_TRANSITION_NAME}) {
-          animation-duration: ${DESKTOP_LEGEND_GROUP_DURATION_MS}ms;
-          animation-timing-function: cubic-bezier(0.55, 0, 0.15, 1);
-        }
-        @media (prefers-reduced-motion: reduce) {
-          ::view-transition-group(${DESKTOP_LEGEND_TRANSITION_NAME}),
-          ::view-transition-old(${DESKTOP_LEGEND_TRANSITION_NAME}),
-          ::view-transition-new(${DESKTOP_LEGEND_TRANSITION_NAME}) {
-            animation: none !important;
-          }
-        }
-      `}</style>
-      {!isExpanded ? (
+    // earlier pass here sized this off just the badge+padding, forgetting
+    // the border also adds to an auto-height box (unlike an explicitly-
+    // sized box, where box-sizing:border-box would fold the border into
+    // a stated size instead) -- close enough at 48px that it wasn't
+    // obviously wrong by eye, but was still animating a few real px of
+    // height difference every toggle (most visible shrinking on
+    // collapse). Height never actually changes across the toggle, only
+    // width, per the user ("resize the circle... to match the height of
+    // the expanded legend"). `overflow-hidden` clips whichever inner
+    // piece doesn't fit the box's own current (animating) width -- the
+    // row content while still collapsed, the circle button once past its
+    // own 52px once expanding -- into the "growing out to the right"
+    // reveal this toggle is going for.
+    //
+    // Only the COLLAPSED button is `absolute inset-0` (an overlay pinned
+    // on top); the expanded content stays in normal flow -- confirmed
+    // live (Playwright) that making both pieces `absolute` breaks
+    // `width: auto` above entirely: an out-of-flow (absolutely
+    // positioned) element makes zero contribution to its containing
+    // block's own auto-width sizing, so with *both* children absolute
+    // the box had no in-flow content left to size itself against at all,
+    // collapsing to ~4px (its own border) instead of expanding to fit the
+    // row. The expanded content being real in-flow content is what lets
+    // `width: auto` size the box correctly while expanded; while
+    // collapsed, the box's own explicit `52px` still clips it via
+    // `overflow-hidden` regardless of its natural (wider) content width.
+    <div
+      className="relative flex h-[52px] items-center overflow-hidden rounded-full border-[length:var(--component-tag-border-width)] border-[color:var(--semantic-control-color-border-color)] bg-[var(--semantic-surface-base-default)] [interpolate-size:allow-keywords] transition-[width] duration-[260ms] ease-[cubic-bezier(0.55,0,0.15,1)] motion-reduce:transition-none"
+      style={{ width: isExpanded ? 'auto' : '52px' }}
+    >
+      <button
+        type="button"
+        aria-label="Show map legend"
+        onClick={() => setIsExpanded(true)}
+        aria-hidden={isExpanded}
+        inert={isExpanded}
+        className={cn(
+          'absolute inset-0 flex size-[52px] shrink-0 cursor-pointer items-center justify-center transition-opacity duration-[100ms] motion-reduce:transition-none',
+          isExpanded ? 'opacity-0' : 'opacity-100 delay-[160ms]',
+        )}
+      >
+        <LoginKey aria-hidden="true" className="size-5" />
+      </button>
+      <div
+        aria-hidden={!isExpanded}
+        inert={!isExpanded}
+        className={cn(
+          'flex items-center gap-[var(--density-spacing-fixed-large)] px-[var(--density-spacing-fixed-large)] py-[var(--density-spacing-fixed-small)] whitespace-nowrap transition-opacity duration-[100ms] motion-reduce:transition-none',
+          isExpanded ? 'opacity-100 delay-[160ms]' : 'opacity-0',
+        )}
+      >
         <button
           type="button"
-          aria-label="Show map legend"
-          onClick={() => setExpanded(true)}
-          className="absolute top-0 left-0 flex size-[52px] cursor-pointer items-center justify-center rounded-full border-[length:var(--component-tag-border-width)] border-[color:var(--semantic-control-color-border-color)] bg-[var(--semantic-surface-base-default)]"
-          style={{ viewTransitionName: DESKTOP_LEGEND_TRANSITION_NAME }}
+          aria-label="Hide map legend"
+          onClick={() => setIsExpanded(false)}
+          className="flex size-[18px] shrink-0 cursor-pointer items-center justify-center rounded-full"
         >
-          <LoginKey aria-hidden="true" className="size-5" />
+          <ChevronLeft aria-hidden="true" className="size-4" />
         </button>
-      ) : (
-        <div
-          className="absolute top-0 left-0 flex items-center gap-[var(--density-spacing-fixed-large)] rounded-full border-[length:var(--component-tag-border-width)] border-[color:var(--semantic-control-color-border-color)] bg-[var(--semantic-surface-base-default)] px-[var(--density-spacing-fixed-large)] py-[var(--density-spacing-fixed-small)] whitespace-nowrap"
-          style={{ viewTransitionName: DESKTOP_LEGEND_TRANSITION_NAME }}
-        >
-          <button
-            type="button"
-            aria-label="Hide map legend"
-            onClick={() => setExpanded(false)}
-            className="flex size-[18px] shrink-0 cursor-pointer items-center justify-center rounded-full"
-          >
-            <ChevronLeft aria-hidden="true" className="size-4" />
-          </button>
-          {STATUSES.map((status) => (
-            <LegendRow key={status} status={status} />
-          ))}
-        </div>
-      )}
+        {STATUSES.map((status) => (
+          <LegendRow key={status} status={status} />
+        ))}
+      </div>
     </div>
   );
 }

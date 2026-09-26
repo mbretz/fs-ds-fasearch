@@ -152,6 +152,10 @@ function LocationHeroDesktop({
           // equivalent override is needed here regardless of size.
           className="absolute top-[40px] left-[40px]"
           avatarClassName="size-[var(--location-hero-portrait-size)] rounded-[4px]"
+          // Matches `LocationCard`'s own portrait -- see that file's
+          // comment for the full reasoning (destination side of that
+          // morph, desktop only, per the user, 2026-09-26).
+          style={{ viewTransitionName: `location-portrait-${location.id}` }}
         />
         {/* `pr-[32px]` default / `@[940px]/location-hero:pr-[440px]`
             override -- same reasoning as AdvisorHero.tsx's own text
@@ -192,7 +196,13 @@ function LocationHeroDesktop({
               ever actually mounted+visible for a given breakpoint/scroll-
               state at once, so there's no duplicate-h1-per-page conflict
               despite each being written out separately below. */}
-          <h1 className="mb-[4px] block text-[20px] leading-[30px] font-medium text-white">
+          <h1
+            className="mb-[4px] block w-fit text-[20px] leading-[30px] font-medium text-white"
+            // Matches `LocationCard`'s own `NameBlock` address heading --
+            // see `AdvisorHero.tsx`'s own identical `h1` comment for the
+            // `w-fit` reasoning.
+            style={{ viewTransitionName: `location-name-${location.id}` }}
+          >
             {street}
             <br />
             {cityStateZip}

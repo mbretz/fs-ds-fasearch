@@ -47,23 +47,34 @@ export function ResultsToolbar({
         <span className="text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-common-text-color-default)]">
           Results ({resultsCount})
         </span>
-        <SegmentedControl.Root
-          value={view}
-          onValueChange={(next) => onViewChange(next as ResultsView)}
-          density="condensed"
-        >
-          <SegmentedControl.List>
-            <SegmentedControl.Trigger value="list" icon={<List />}>
-              List View
-            </SegmentedControl.Trigger>
-            <SegmentedControl.Trigger value="map" icon={<Map />}>
-              Map View
-            </SegmentedControl.Trigger>
-            <SegmentedControl.Trigger value="dual">
-              Dual View
-            </SegmentedControl.Trigger>
-          </SegmentedControl.List>
-        </SegmentedControl.Root>
+        {/* Hidden in the zero-result state (`resultsCount === 0`) -- per
+            the user, 2026-09-26: there's nothing to switch views of, and
+            List/Map/Dual all render the identical "no advisors match"
+            state regardless of which is selected, so showing a live
+            switcher there is misleading busywork rather than a real
+            choice. `view` itself is left untouched (not reset to
+            `'list'`) -- whichever view was active before the filters
+            emptied the results stays selected underneath, so it's
+            already correct again the instant this switcher reappears. */}
+        {resultsCount > 0 && (
+          <SegmentedControl.Root
+            value={view}
+            onValueChange={(next) => onViewChange(next as ResultsView)}
+            density="condensed"
+          >
+            <SegmentedControl.List>
+              <SegmentedControl.Trigger value="list" icon={<List />}>
+                List View
+              </SegmentedControl.Trigger>
+              <SegmentedControl.Trigger value="map" icon={<Map />}>
+                Map View
+              </SegmentedControl.Trigger>
+              <SegmentedControl.Trigger value="dual">
+                Dual View
+              </SegmentedControl.Trigger>
+            </SegmentedControl.List>
+          </SegmentedControl.Root>
+        )}
       </div>
 
       {/* Mobile: `Results (N)` heading and the radio-button pair share one

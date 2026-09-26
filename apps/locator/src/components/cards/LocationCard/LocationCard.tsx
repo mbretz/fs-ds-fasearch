@@ -339,6 +339,11 @@ export function LocationCard({ location, className }: LocationCardProps) {
           variant="entity"
           size="lg"
           avatarClassName="location-avatar [--location-avatar-size:clamp(112px,calc(42.67cqi+35.2px),240px)] size-[var(--location-avatar-size)] text-[calc(var(--location-avatar-size)*76/240)] [--avatar-icon-size:calc(var(--location-avatar-size)*0.6)]"
+          // Matches `LocationHero`'s own desktop portrait -- morphs this
+          // card's portrait into the Hero's when "View Branch" navigates
+          // there, same `AdvisorCard`/`AdvisorHero` pairing, per the
+          // user, 2026-09-26. Desktop-only, same reasoning as that pair.
+          style={{ viewTransitionName: `location-portrait-${location.id}` }}
         />
         {/* `min-w-0` -- without it, this flex item's default `min-width:
             auto` refuses to shrink below its own content's intrinsic
@@ -370,6 +375,14 @@ export function LocationCard({ location, className }: LocationCardProps) {
           }
           subheadingClassName="location-branch-summary"
           subheading={branchSummary}
+          // Matches `LocationHero`'s own desktop `<h1>` address -- see
+          // the portrait's own comment above. No `w-fit` companion the
+          // way `AdvisorCard`'s own name lockup gets -- unlike that
+          // column-flex context (where children stretch to the column's
+          // width by default), this row already sizes NameBlock to its
+          // content (no `flex-grow`), so it's already effectively
+          // fit-content-width in every row-oriented state.
+          style={{ viewTransitionName: `location-name-${location.id}` }}
         />
       </div>
       {/* The 300-400px-only sibling copy of `branchSummary` -- see the
@@ -406,6 +419,7 @@ export function LocationCard({ location, className }: LocationCardProps) {
       <EntityActions
         primaryLabel="View Branch"
         primaryHref={`/branch/${location.id}`}
+        primaryViewTransition
       />
     </EntityCard>
   );

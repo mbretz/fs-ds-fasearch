@@ -343,6 +343,10 @@ function AdvisorHeroDesktop({
           // fluid size defined on the page-level grid (see the outer
           // grid's own comment above).
           avatarClassName="size-[var(--advisor-hero-portrait-size)] rounded-full"
+          // Matches `AdvisorCard`'s own portrait -- see that file's
+          // comment for the full reasoning (this is the destination side
+          // of that same morph, desktop only, per the user, 2026-09-26).
+          style={{ viewTransitionName: `advisor-portrait-${advisor.id}` }}
         />
         {/* `pr-[32px]` -- below AdvisorProfile.tsx's own container-query
             threshold, the rail panel is hidden entirely and this text
@@ -395,7 +399,15 @@ function AdvisorHeroDesktop({
               mounted+visible for a given breakpoint/scroll-state at once,
               so there's no duplicate-h1-per-page conflict despite each
               being written out separately below. */}
-          <h1 className="mb-[4px] block text-[30px] leading-[1.5em] font-semibold text-white">
+          <h1
+            className="mb-[4px] block w-fit text-[30px] leading-[1.5em] font-semibold text-white"
+            // Matches `AdvisorCard`'s own `NameBlock` -- see that file's
+            // comment. `w-fit` for the same fit-content reasoning (this
+            // `h1` sits in a `flex-col` context too -- see the wrapping
+            // div above -- so it stretches to that column's full width
+            // by default same as `AdvisorCard`'s own name column).
+            style={{ viewTransitionName: `advisor-name-${advisor.id}` }}
+          >
             {fullName}
           </h1>
           <GoldUnderline />

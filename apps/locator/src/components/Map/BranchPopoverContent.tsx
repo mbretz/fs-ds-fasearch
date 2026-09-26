@@ -103,9 +103,15 @@ export function BranchPopoverContent({
 }: BranchPopoverContentProps) {
   const [showAdvisors, setShowAdvisors] = useState(false);
   // Not reset explicitly on `showAdvisors`/`location` change -- `Map.tsx`
-  // keys `MapPinPopover` by `selectedLocationId`, so this whole component
-  // (and every piece of its local state, this included) already remounts
-  // fresh on every pin change and every close-then-reopen.
+  // keys `MapPinPopover` by the location's own id *plus* an incrementing
+  // "open sequence" number (bumped on every real pin click, 2026-09-26 --
+  // see its own `openSequence` doc comment), so this whole component (and
+  // every piece of its local state, this included) still remounts fresh
+  // on every pin change and every close-then-reopen, exactly as before --
+  // just no longer via the location id alone, since `MapPinPopover.tsx`
+  // now stays mounted through its own close-fade instead of unmounting
+  // immediately, which needed a second key ingredient that keeps
+  // changing at the moment of a fresh *open* specifically.
   const [advisorsPage, setAdvisorsPage] = useState(0);
   // Which advisor (if any) the Advisors panel has drilled into, per the
   // user, 2026-09-25 -- a third stacked state alongside Branch/Advisors,
@@ -169,6 +175,19 @@ export function BranchPopoverContent({
         variant="entity"
         size="lg"
         avatarClassName="size-[136px]"
+        // Matches `LocationHero`'s own desktop portrait -- same
+        // `LocationCard`/`LocationHero` pairing, morphing this popover's
+        // portrait into it when "View Location" navigates there, per
+        // the user, 2026-09-26. This is a plain `transform`-based
+        // internal panel carousel (see this file's own top-of-file
+        // comment on why View Transitions were reverted for THAT), not
+        // affected by adding this -- the name only ever gets captured
+        // into a real `document.startViewTransition()` at the moment
+        // "View Location" actually navigates away (a full route change,
+        // Popper-anchoring irrelevant since the popover itself is gone
+        // by the time the new page paints), never during this
+        // component's own Branch/Advisors/Advisor-detail slide.
+        style={{ viewTransitionName: `location-portrait-${location.id}` }}
       />
       {/* `justify-center` -- this column stretches to the row's full
           height (the portrait's own 136px) by default, so centering its
@@ -186,11 +205,14 @@ export function BranchPopoverContent({
             </>
           }
           headingClassName="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)]"
+          className="w-fit"
+          style={{ viewTransitionName: `location-name-${location.id}` }}
         />
         <div className="mt-[var(--density-spacing-fixed-large)]">
           <EntityActions
             primaryLabel="View Location"
             primaryHref={`/branch/${location.id}`}
+            primaryViewTransition
             orientation="block"
             density="condensed"
             noInset
@@ -303,6 +325,12 @@ export function BranchPopoverContent({
         // previous 120x120 (`AdvisorPopoverContent`'s own `sm` sizing):
         // trying its `lg` portrait sizing (160x160) instead.
         avatarClassName="size-[160px] text-[51px] [--avatar-icon-size:96px]"
+        // Same `AdvisorHero` pairing as `AdvisorCard`/`AdvisorPopoverContent`
+        // -- see `branchColumns`' own portrait comment above for why this
+        // is safe alongside the internal panel carousel.
+        style={{
+          viewTransitionName: `advisor-portrait-${selectedAdvisor.id}`,
+        }}
       />
       {/* `pr-[fixed-x-small]` -- 4px of additional breathing room on this
           column's own right edge, per the user, 2026-09-25, same
@@ -311,11 +339,14 @@ export function BranchPopoverContent({
         <NameBlock
           heading={getFullName(selectedAdvisor)}
           headingClassName="text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)]"
+          className="w-fit"
+          style={{ viewTransitionName: `advisor-name-${selectedAdvisor.id}` }}
         />
         <div className="mt-[var(--density-spacing-fixed-small)]">
           <EntityActions
             primaryLabel="View Profile"
             primaryHref={`/advisor/${selectedAdvisor.id}`}
+            primaryViewTransition
             onNewClientInquiry={
               (selectedAdvisor.newClientStatus === 'accepting' ||
                 selectedAdvisor.newClientStatus === 'waitlist') &&
