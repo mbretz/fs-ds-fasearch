@@ -5,6 +5,13 @@ import { useSession } from '../../session/useSession';
 import { useFavorites } from '../../favorites/useFavorites';
 import type { ProspectPortalProps } from './ProspectPortal.types';
 
+// Currently has no importers anywhere in the app (Results.tsx dropped its
+// own usage in favor of `ProspectPortalLite`, 2026-09-26) -- kept
+// deliberately, per the user, as a real exception to this repo's usual
+// "delete genuinely unused code" convention, in case it's wanted again
+// somewhere later. Don't delete this component on sight just because a
+// repo-wide search turns up no callers.
+
 // Same 768px threshold, and the same click-time `matchMedia` (not a
 // `useMediaQuery` re-render) + "only wired below it" reasoning, as
 // `ProspectPortalLite.tsx`'s own `FAVORITES_MOBILE_QUERY` -- see its

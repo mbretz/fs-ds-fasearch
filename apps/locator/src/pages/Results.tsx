@@ -14,7 +14,7 @@ import {
   ResultsToolbar,
   type ResultsView,
 } from '../components/ResultsToolbar/ResultsToolbar';
-import { ProspectPortal } from '../components/ProspectPortal/ProspectPortal';
+import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
 import { Map as LocatorMap, type MapHandle } from '../components/Map';
 import type { Location } from '../data/locations';
 
@@ -78,11 +78,17 @@ export function Results() {
   // specific advisor out of the typeahead dropdown -- see
   // SearchFormSearchInput.tsx's `selectResult` and `submitSearch` below.
   const submittedAdvisorId = searchParams.get('advisorId');
+  // Set only by InProgress.tsx's own "Find advisors near me" link (see
+  // `findNearMe` below) -- same "URL, not lifted state, carries the
+  // submitted mode across a route change" reasoning as `submittedQuery`/
+  // `submittedAdvisorId` above.
+  const nearMe = searchParams.get('near') === '1';
   const filteredLocations = useFilteredLocations(
     submittedQuery,
     selectedFocusAreas,
     acceptingNewClients,
     submittedAdvisorId,
+    nearMe,
   );
   // Every card ResultsList actually renders: one LocationCard per matching
   // branch plus one AdvisorCard per advisor at each of those branches, per
@@ -109,7 +115,7 @@ export function Results() {
     (sum, location) =>
       sum +
       location.advisors.length +
-      (locationKeepsCardForAdvisor(location, submittedAdvisorId) ? 1 : 0),
+      (locationKeepsCardForAdvisor(location) ? 1 : 0),
     0,
   );
 
@@ -117,6 +123,17 @@ export function Results() {
     const trimmed = value.trim();
     if (!trimmed) return;
     setSearchParams(advisorId ? { q: trimmed, advisorId } : { q: trimmed });
+  }
+
+  // InProgress.tsx's own "Find advisors near me" link -- replaces the
+  // search params wholesale (`setSearchParams`, not a merge), same as
+  // `submitSearch` above, so any previously-submitted `q`/`advisorId` is
+  // dropped rather than left stale alongside `near`. Also resets the
+  // field's own live-typed `query` text back to empty, since it no
+  // longer reflects what the grid is actually showing.
+  function findNearMe() {
+    setSearchParams({ near: '1' });
+    setQuery('');
   }
 
   const registerItemRef = useCallback((id: string, el: HTMLElement | null) => {
@@ -267,6 +284,24 @@ export function Results() {
 
   return (
     <>
+      {/* Flush-left above the search module, same convention/placement
+          as Landing.tsx's own instance -- see its comment for the full
+          reasoning. "Search" (not the full `ProspectPortal` card's own
+          hardcoded "Search Results" `favoritesFromLabel`, further down
+          this page) since this one's Favorites link is reached before
+          any results exist yet on a fresh page load, per the user,
+          2026-09-26 -- kept distinct rather than importing that
+          constant, since the two really are two separate entry points
+          (see this page's own `ProspectPortal` below) that happen to
+          coexist on the same page rather than one being a redundant
+          copy of the other.
+
+          `mt-[4px]` (mobile only, reset at `md`+) -- see Landing.tsx's
+          own identical instance/comment for the full reasoning. */}
+      <ProspectPortalLite
+        favoritesFromLabel="Search"
+        className="mt-[4px] mb-[4px] md:mt-0"
+      />
       <AdvisorSearchModule>
         <InProgress
           query={query}
@@ -276,73 +311,17 @@ export function Results() {
           onSelectedFocusAreasChange={setSelectedFocusAreas}
           acceptingNewClients={acceptingNewClients}
           onAcceptingNewClientsChange={setAcceptingNewClients}
+          onFindNearMe={findNearMe}
         />
       </AdvisorSearchModule>
-      {/*
-        16px below AdvisorSearchModule (layout.fixed.large, the page-level
-        spacing scale — see SiteShell.tsx's own comment on the
-        spacing/layout tier split).
-
-        Horizontal inset is a single fluid `clamp()` covering the whole
-        range rather than a breakpoint jump, per the modern-web-guidance
-        skill's fluid-scaling guide (a plain vw-based ramp here, not
-        container query units, since this margin is keyed to the same
-        viewport breakpoints SiteShell.tsx's own `<main>` padding already
-        uses — 768px/`md`, 1262px — not to this component's own box): a
-        16px-equivalent floor (`layout.fixed.large`, same token as the
-        margin-top above) below/at 768px viewport, ramping linearly up to
-        88px of additional inset (on top of `<main>`'s own 24px tablet
-        padding) by 1262px (SiteShell's own breakpoint into its fixed
-        1214px desktop column), then flat at 88px above that. `clamp()`'s
-        own min/max bounds do the flattening at both ends, so no extra
-        breakpoint prefixes are needed. The ramp's own zero-crossing
-        (where the calc'd value would drop below the 16px floor) lands at
-        ~858px, not 768px — viewport<858 clamps up to the 16px floor,
-        858-1262 ramps 16px->88px, >1262 clamps down to 88px.
-        88/(1262-768) = 88/494.
-
-        A `max-[768px]:w-fit` (content-driven, non-stretching) mobile
-        variant was tried and reverted: a wrapping flex container's
-        intrinsic width is computed by browsers as if wrapping were
-        disabled (a documented Flexbox spec quirk, confirmed empirically
-        here by force-testing widths well below what the box actually
-        rendered at, with zero overflow at any width tested), so
-        `w-fit` doesn't shrink to the wrapped rows' own width — it just
-        claims the full available width up to whatever cap bounds it,
-        which produced real dead space when the widest wrapped row
-        happened to be narrower than that cap (a hard, content-shape-
-        dependent artifact, not fixable by adjusting flex-shrink). This
-        single fluid `clamp()` margin sidesteps that entirely: the box
-        always stretches (no `w-fit`), so its width is a designed value
-        by definition rather than something meant to hug wrapped
-        content, and there's nothing to mismatch.
-
-        Above 360px viewport, the component's width is additionally
-        capped to 80% of the viewport. Expressed as an extra margin
-        floor rather than a separate `max-width`: a `max-width` sharing
-        a box with two already-fixed (non-auto) margins is a classic
-        over-constrained case (CSS 2.1 §10.3.3) — the browser would
-        silently discard the specified *right* margin to make the math
-        work, anchoring the box to the left instead of keeping it
-        centered. Converting "width <= 80vw" into its equivalent margin
-        ("margin >= 10vw" each side, since width = 100% - 2*margin) and
-        taking whichever margin is larger (this floor or the fluid ramp
-        above) keeps every case expressed as a single symmetric
-        `margin-inline` value, so it's never over-constrained and always
-        stays centered. Scoped to `min-[360px]:` (not applied below it)
-        since 10vw already exceeds the 16px floor for any viewport
-        wider than 160px — leaving it unscoped would silently replace
-        this file's whole hand-tuned 16px->88px ramp with a flat "10% of
-        viewport" margin almost everywhere above the very smallest
-        phones, which isn't what was asked for here.
-      */}
-      <ProspectPortal
-        className="
-          mt-[var(--density-layout-fixed-large)]
-          mx-[clamp(var(--density-layout-fixed-large),calc((100vw-768px)*88/494),88px)]
-          min-[360px]:mx-[max(clamp(var(--density-layout-fixed-large),calc((100vw-768px)*88/494),88px),10vw)]
-        "
-      />
+      {/* The full `ProspectPortal` card (sign-in + "View favorites."
+          launcher) that used to sit here was removed, per the user,
+          2026-09-26 -- `ProspectPortalLite` above AdvisorSearchModule
+          now covers that same job on this page. `FilterFacets`' own
+          `mt-[var(--density-layout-fixed-large)]` below already gives it
+          the same 16px-below-AdvisorSearchModule spacing this card used
+          to establish, so nothing else here needed to change to keep
+          that rhythm. */}
       <FilterFacets
         selectedFocusAreas={selectedFocusAreas}
         onSelectedFocusAreasChange={setSelectedFocusAreas}
@@ -378,8 +357,9 @@ export function Results() {
         {view === 'list' && (
           <ResultsList
             locations={filteredLocations}
-            selectedAdvisorId={submittedAdvisorId}
             advisorCardsFirst={advisorCardsFirst}
+            selectedFocusAreas={selectedFocusAreas}
+            acceptingNewClientsOnly={acceptingNewClients}
             className="mt-[var(--density-spacing-fixed-small)]"
           />
         )}
@@ -389,6 +369,8 @@ export function Results() {
             locations={filteredLocations}
             selectedLocationId={selectedLocationId}
             onPinSelect={handlePinSelect}
+            selectedFocusAreas={selectedFocusAreas}
+            acceptingNewClientsOnly={acceptingNewClients}
             className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-spacing-fixed-small)] md:mx-0"
           />
         )}
@@ -446,8 +428,9 @@ export function Results() {
                 take effect. */}
             <ResultsList
               locations={filteredLocations}
-              selectedAdvisorId={submittedAdvisorId}
               advisorCardsFirst={advisorCardsFirst}
+              selectedFocusAreas={selectedFocusAreas}
+              acceptingNewClientsOnly={acceptingNewClients}
               selectedLocationId={selectedLocationId}
               onSelectLocation={handleListSelect}
               registerItemRef={registerItemRef}
@@ -467,6 +450,8 @@ export function Results() {
               locations={filteredLocations}
               selectedLocationId={selectedLocationId}
               onPinSelect={handlePinSelect}
+              selectedFocusAreas={selectedFocusAreas}
+              acceptingNewClientsOnly={acceptingNewClients}
               className="dual-view-map md:rounded-tl-[var(--semantic-border-radius-generous)] md:rounded-bl-[var(--semantic-border-radius-generous)]"
             />
           </div>

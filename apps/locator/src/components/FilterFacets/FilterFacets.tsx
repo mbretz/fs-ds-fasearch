@@ -16,11 +16,17 @@ interface FilterFacetsProps {
 // Never unmounts, even with zero selected areas -- deliberately, on two
 // counts: an unmount on the last dismiss would hard-cut straight past the
 // motion-safe height transition below instead of animating to zero first,
-// and staying mounted is what lets the reduced-motion two-row space stay
-// reserved at all times (not just once at least one filter is selected),
-// which is the actual point of reserving it -- a user who's opted out of
-// motion shouldn't see layout shift when the *first* filter is added
-// either, only once it's already showing something.
+// and staying mounted is what lets both motion preferences' own permanent
+// row-reservation floors (one row, motion-safe; two rows, reduced-motion --
+// see their own comments below) stay reserved at all times, not just once
+// at least one filter is selected. Motion-safe's own one-row floor is also
+// what gives the visual space between AdvisorSearchModule above and
+// ResultsList below a consistent size whether or not any filter is
+// active, per the user, 2026-09-26 -- the measured-height transition
+// only ever becomes visible once a second row is actually needed, which
+// is also why a reduced-motion user shouldn't see layout shift when the
+// *first* filter is added either, only once it's already showing
+// something past its own two-row floor.
 export function FilterFacets({
   selectedFocusAreas,
   onSelectedFocusAreasChange,
@@ -63,6 +69,22 @@ export function FilterFacets({
         // row's edges line up with AdvisorSearchModule/ProspectPortal above
         // and below it rather than hugging the viewport/`<main>` edge.
         'mx-[var(--density-layout-fixed-xx-large)] hidden overflow-hidden motion-safe:transition-[block-size] motion-safe:duration-200 motion-safe:ease-out md:block',
+        // Motion-safe: permanently reserve room for one chip row -- same
+        // per-row formula as the reduced-motion floor below, just without
+        // its `*2 + row-gap` (a single row has no second row to gap
+        // against) -- per the user, 2026-09-26: more consistent visual
+        // space between the search module and the results grid below,
+        // whether or not any filter is active, and (since `min-h` always
+        // wins over a smaller explicit `blockSize` -- see the box-sizing
+        // spec) this floor is what actually suppresses the measured-height
+        // transition below from visibly animating at all while going from
+        // 0 chips up through however many still fit on that first row --
+        // there's nothing to grow into, since the space was already
+        // reserved. The transition only becomes visible once a real
+        // second row is needed (measured height first exceeds this
+        // floor) or shrinks back below it, which is exactly the "grow/
+        // shrink pertains to a second row only" behavior asked for.
+        'motion-safe:min-h-[calc(var(--component-chip-line-height)+var(--component-chip-padding-block)*2+var(--component-chip-border-width)*2)]',
         // Reduced motion: permanently reserve room for two chip rows (one
         // row's height -- line-height + block padding + border, all from
         // Chip's own component tokens -- times two, plus one row gap)

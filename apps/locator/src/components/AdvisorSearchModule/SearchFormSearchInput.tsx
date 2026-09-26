@@ -126,6 +126,12 @@ export function SearchFormSearchInput({
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
+              // Closes the suggestions drawer on submit -- same as
+              // `selectResult` picking one out of it -- per the user,
+              // 2026-09-26: submitting a freeform query that happened to
+              // have suggestions open otherwise left that drawer open on
+              // top of the (now-stale) results grid underneath.
+              setOpen(false);
               onSubmit(value);
             }
           }}
@@ -140,7 +146,15 @@ export function SearchFormSearchInput({
             ) : null
           }
         />
-        <SearchInput.Button onClick={() => onSubmit(value)}>
+        {/* Same drawer-close-on-submit fix as the field's own Enter
+            handler above -- the Search button is the other way to submit
+            a freeform query, so it had the identical gap. */}
+        <SearchInput.Button
+          onClick={() => {
+            setOpen(false);
+            onSubmit(value);
+          }}
+        >
           Search
         </SearchInput.Button>
       </SearchInput.InputGroup>

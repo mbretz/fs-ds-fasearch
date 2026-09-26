@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { Avatar } from 'ds';
 import type { NewClientStatus } from '../../data/locations';
 import { statusMeta } from './statusMeta';
@@ -91,6 +91,11 @@ export interface EntityPortraitProps {
    */
   avatarClassName?: string;
   className?: string;
+  /** Forwarded to the root element -- e.g. a caller assigning a dynamic,
+   * per-entity `view-transition-name` (a card/pin popover's portrait
+   * morphing into its profile page's own Hero portrait), which needs a
+   * runtime-computed value a `className` string can't express. */
+  style?: CSSProperties;
 }
 
 export function EntityPortrait({
@@ -103,6 +108,7 @@ export function EntityPortrait({
   showBadge = true,
   avatarClassName,
   className,
+  style,
 }: EntityPortraitProps) {
   const initials = getInitials(name);
   const meta = showBadge && status ? statusMeta[status] : undefined;
@@ -116,7 +122,10 @@ export function EntityPortrait({
   const [imageErrored, setImageErrored] = useState(false);
 
   return (
-    <div className={cn('relative inline-flex shrink-0', className)}>
+    <div
+      className={cn('relative inline-flex shrink-0', className)}
+      style={style}
+    >
       {/* `Avatar.Root` always carries a solid background
        * (`--component-avatar-background-color`, brand gold) -- Fallback's
        * own opacity has no effect on that background, since it's painted

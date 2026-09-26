@@ -47,15 +47,24 @@ export function MapPin({ location, selected = false }: MapPinProps) {
   const Icon = type === 'single' ? AvatarIcon : BuildingGeneric;
 
   return (
+    // `transition-colors duration-200` on all three conditionally-colored
+    // layers (this outer ring, the inner circle's fill+border, the icon)
+    // -- per the user, 2026-09-26: the default<->selected swap was an
+    // instant color snap before. 200ms matches `MapPinPopover.tsx`'s own
+    // fade-in/out duration, per the user's own "match that transition"
+    // ask, so a pin coloring in/out and its popover fading in/out read as
+    // one coordinated motion rather than two independently-timed ones.
+    // `motion-reduce:transition-none` -- same guard every other
+    // transition in this app's Map subtree already carries.
     <div
-      className={`flex size-11 items-center justify-center rounded-full ${selected ? 'bg-[#C08E16]/60' : 'bg-[#4B4D4E]/60'}`}
+      className={`flex size-11 items-center justify-center rounded-full transition-colors duration-200 motion-reduce:transition-none ${selected ? 'bg-[#C08E16]/60' : 'bg-[#4B4D4E]/60'}`}
     >
       <div
-        className={`flex size-8 items-center justify-center rounded-full border-[1px] border-[#FDE272] ${selected ? 'bg-[#FDE272]' : 'bg-[#323334]'}`}
+        className={`flex size-8 items-center justify-center rounded-full border-[1px] border-[#FDE272] transition-colors duration-200 motion-reduce:transition-none ${selected ? 'bg-[#FDE272]' : 'bg-[#323334]'}`}
       >
         <Icon
           aria-hidden="true"
-          className={`size-1/2 ${selected ? 'text-[#191A1A]' : 'text-[#FDE272]'}`}
+          className={`size-1/2 transition-colors duration-200 motion-reduce:transition-none ${selected ? 'text-[#191A1A]' : 'text-[#FDE272]'}`}
         />
       </div>
     </div>

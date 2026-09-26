@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Checkbox, ChecklistGroup, FilterMenu } from 'ds';
-import { CaretDown } from 'icons';
+import { Button, Checkbox, ChecklistGroup, FilterMenu, Link } from 'ds';
+import { CaretDown, MapPinLarge } from 'icons';
 import { cn } from '../../utils/cn';
 import { focusAreas } from '../../data/focusAreas';
 import { SearchFormSearchInput } from './SearchFormSearchInput';
@@ -184,6 +184,12 @@ interface InProgressProps {
   onSelectedFocusAreasChange: (next: string[]) => void;
   acceptingNewClients: boolean;
   onAcceptingNewClientsChange: (value: boolean) => void;
+  /** "Find advisors near me" (below the search input) -- reconstructed
+   * per docs/PLAN.md's own note (2026-09-20): a fixed fake user location
+   * (the fixture's own geographic centroid) sorted against by real
+   * `haversineDistanceMiles`, zero `navigator.geolocation`/external
+   * geocoding, per the user. */
+  onFindNearMe: () => void;
 }
 
 // query/selectedFocusAreas/acceptingNewClients are all owned by Results.tsx
@@ -206,6 +212,7 @@ export function InProgress({
   onSelectedFocusAreasChange,
   acceptingNewClients,
   onAcceptingNewClientsChange,
+  onFindNearMe,
 }: InProgressProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -218,7 +225,17 @@ export function InProgress({
   }, []);
 
   return (
-    <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-large)] @[768px]/module:px-[var(--density-spacing-fixed-xx-large)] @[768px]/module:pt-[var(--density-spacing-fixed-large)] @[768px]/module:pb-[var(--density-spacing-fixed-xx-large)]">
+    // `pb-[fixed-small]` (8px), unprefixed so it applies at every
+    // container width -- reduced from this stage's own previous bottom
+    // padding (16px below 768px container width via the base `p-[...]`,
+    // 24px at/above it via the old `@[768px]/module:pb-[...]` override,
+    // now dropped entirely in favor of this single value), per the user,
+    // 2026-09-26: the new "Find advisors near me" link below now supplies
+    // its own visual close to the stage, so the stage's own trailing
+    // whitespace past it reads better tightened down to match every
+    // other 8px gap in this app rather than kept at its old, roomier
+    // value.
+    <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-large)] pb-[var(--density-spacing-fixed-small)] @[768px]/module:px-[var(--density-spacing-fixed-xx-large)] @[768px]/module:pt-[var(--density-spacing-fixed-large)]">
       {/*
         `[view-transition-name:advisor-search-heading]` pairs with the
         same name on Start.tsx's H1 wrapper (see AdvisorSearchModule.tsx's
@@ -257,16 +274,24 @@ export function InProgress({
           onValueChange={onQueryChange}
           onSubmit={onSubmitSearch}
         />
-        {/* Negative margins cancel this component's own root padding
+        {/* Negative margin cancels this component's own root padding
             (`p-[--density-spacing-fixed-large]` above) on exactly the sides
-            this panel needs full-bleed -- left/right/bottom, not top, since
+            this panel needs full-bleed -- left/right, not top/bottom, since
             it should still sit below the dark bar's own bottom edge rather
             than touching it. No explicit width: the parent's default
             `align-items: stretch` already sizes this child to fill the
             available cross-axis space *minus its margins*, so the negative
-            margins alone extend it edge-to-edge -- an explicit `w-full`
-            here would fix the width at 100% of the (still-inset) parent
-            instead of letting it expand.
+            margin alone extends it edge-to-edge horizontally -- an explicit
+            `w-full` here would fix the width at 100% of the (still-inset)
+            parent instead of letting it expand.
+
+            No longer also cancels the root's own BOTTOM padding
+            (`-mb-[…]`, dropped) -- per the user, 2026-09-26: this panel
+            used to be the last element in the stage, flush against the
+            root's own bottom edge, but the new "Find advisors near me"
+            link now follows it, so it no longer reaches that edge at all
+            regardless of margin -- it just sits in the root's own
+            `gap-[fixed-large]` rhythm like any other stacked child.
 
             This -16px alone is also correct through AdvisorSearchModule's
             own 768-816px mobile-breakout band (see that file's comment):
@@ -276,7 +301,7 @@ export function InProgress({
             band exactly like true mobile -- nothing extra to cancel here. */}
         <div
           data-theme="light"
-          className="-mx-[var(--density-spacing-fixed-large)] -mb-[var(--density-spacing-fixed-large)] flex flex-col items-stretch gap-[var(--density-spacing-fixed-large)] bg-[var(--semantic-surface-base-default)] p-[var(--density-spacing-fixed-large)]"
+          className="-mx-[var(--density-spacing-fixed-large)] flex flex-col items-stretch gap-[var(--density-spacing-fixed-large)] bg-[var(--semantic-surface-base-default)] p-[var(--density-spacing-fixed-large)]"
         >
           <FocusAreaFilter
             theme="light"
@@ -358,6 +383,58 @@ export function InProgress({
             Accepting New Clients
           </Checkbox>
         </div>
+      </div>
+
+      {/* "Find advisors near me" -- a plain sibling of both breakpoint
+          blocks above (not duplicated inside either), so it always shows
+          exactly once regardless of which one CSS currently hides, per
+          the user, 2026-09-26.
+
+          `@[768px]/module:w-[320px] @[768px]/module:min-w-[200px]` --
+          matches the desktop row's own `SearchFormSearchInput` width
+          exactly (see that instance's own className below), per the
+          user, so this wrapper's left edge coincides with the search
+          input's own left edge by plain block/flex layout, zero extra
+          positioning math needed. Below 768px container width, this
+          stays unconstrained (full stage width) since the mobile search
+          input already spans that same width itself, so there's no
+          separate column to match there.
+
+          Left-aligned (not centered) within that matched width, plus a
+          flat `pl-[40px]` nudge (bumped from an initial 24px, then 32px,
+          per the user) -- true
+          centering under just the Field portion of `SearchInput`
+          specifically (excluding its own trailing Button, which shares
+          that same 320px box) would need this component to know that
+          Button's own rendered width, which isn't exposed anywhere this
+          component can read it. Left-align + a flat approximating nudge
+          is the deliberately-accepted stand-in instead of chasing exact
+          Field-center math for a decorative link.
+
+          `mt-[calc(-1*var(--density-spacing-fixed-med))]` -- per the
+          user, tightens the gap above this link down from the root's own
+          shared `gap-[fixed-large]` (16px) to a net 4px (16 - 12).
+
+          Icon kept OUTSIDE `Link` (a flex sibling, not a child) --
+          same convention ContactLinks.tsx's own address link uses:
+          `text-decoration: underline` paints across an anchor's *whole*
+          inline content, icon included, if the icon sits inside it,
+          which reads as a line running under the pin glyph itself. */}
+      <div className="mt-[calc(-1*var(--density-spacing-fixed-med))] flex items-center gap-[var(--density-spacing-fixed-small)] pl-[40px] @[768px]/module:w-[320px] @[768px]/module:min-w-[200px]">
+        <MapPinLarge
+          aria-hidden="true"
+          className="size-[14px] shrink-0 text-[color:var(--semantic-content-common-text-color-reverse)]"
+        />
+        <Link
+          href="#"
+          onClick={(event) => {
+            event.preventDefault();
+            onFindNearMe();
+          }}
+          className="text-[14px] leading-[18px] [--component-link-text-color-default:var(--semantic-content-common-text-color-reverse)] [--component-link-text-color-hover:var(--semantic-content-common-text-color-reverse)]"
+        >
+          Find advisors near me
+        </Link>
       </div>
     </div>
   );

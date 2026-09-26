@@ -2,6 +2,7 @@ import { Popover as PopoverPrimitive } from 'radix-ui';
 import { lightRoomyTokens } from 'tokens';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, Button, Link } from 'ds';
+import { HelpQuestionMark } from 'icons';
 import { useSession } from '../../session/useSession';
 import { getInitials } from '../../utils/getInitials';
 import { cn } from '../../utils/cn';
@@ -97,11 +98,29 @@ export function ProspectPortalLite({
         // below it (both mobile and desktop -- see AdvisorProfile.tsx/
         // LocationProfile.tsx's own callers, which place this as a plain
         // sibling of the Hero in the same flex column / grid column, no
-        // margin of its own on either), with a flat 12px left/right
-        // padding at every breakpoint so its own content sits inset 12px
-        // from the Hero's edge, per the user -- unlike most of this app's
-        // other product content, this doesn't vary by breakpoint or rely
-        // on SiteShell's `<main>` padding on desktop.
+        // margin of its own on either), with a flat 12px (`density.
+        // spacing.fixed.med`) left/right padding above 350px viewport
+        // width, per the user -- unlike most of this app's other
+        // product content, this doesn't vary by breakpoint or rely on
+        // SiteShell's `<main>` padding on desktop.
+        //
+        // Below 350px, per the user, 2026-09-26: a fluid `clamp()` (not
+        // a stepped breakpoint jump) shrinks that 12px down to a 4px
+        // floor, reached at 320px viewport width -- a widely-used
+        // practical "smallest real phone" floor elsewhere in this app
+        // (see e.g. ResultsList.tsx's own fluid-margin comments) rather
+        // than an arbitrarily-chosen second endpoint. Plain `vw`, not
+        // container query units -- per modern-web-guidance's container-
+        // vs-media-query heuristic (see LocationCard.tsx's own identical
+        // citation for the opposite, correctly-`cqi` case): this
+        // component's own rendered width already just IS the viewport's
+        // width (a full-width sibling of the Hero, not a card whose own
+        // box can be narrower than the viewport for independent
+        // layout reasons), so `vw` is the right unit here, not a legacy
+        // fallback for it. `4px + (100vw-320px)*4/15`: linear between
+        // (320px viewport -> 4px) and (350px viewport -> 12px);
+        // `clamp()`'s own floor/ceiling flatten it below 320px and above
+        // 350px.
         //
         // `min-h-[32px]` -- the signed-in state's own Avatar (32px, `xs`)
         // is taller than the signed-out state's text-only content (24px,
@@ -114,7 +133,7 @@ export function ProspectPortalLite({
         // Chrome/Edge-only, failing this repo's Baseline Widely Available
         // policy, and a JS-measured height transition is real complexity
         // for what's currently just a demo spoofed sign-in toggle.
-        'flex w-full items-center gap-[var(--density-spacing-fixed-med)] rounded-[var(--semantic-border-radius-generous)] px-[var(--density-spacing-fixed-med)] min-h-[32px]',
+        'flex w-full items-center gap-[var(--density-spacing-fixed-med)] rounded-[var(--semantic-border-radius-generous)] px-[clamp(4px,calc(4px+(100vw-320px)*4/15),var(--density-spacing-fixed-med))] min-h-[32px]',
         className,
       )}
     >
@@ -185,10 +204,102 @@ export function ProspectPortalLite({
         // content when centered via the section's `items-center`; per
         // the user, this group should sit flush against the section's
         // own bottom edge instead of splitting that slack evenly.
-        <div className="flex items-center self-end gap-[var(--density-spacing-fixed-small)]">
-          <span className="text-[length:var(--semantic-content-nanoheading-font-size)] font-[number:var(--semantic-content-nanoheading-font-weight)] leading-[var(--semantic-content-nanoheading-line-height)] text-[color:var(--semantic-content-common-text-color-default)] uppercase">
-            Edward Jones Prospect Portal
-          </span>
+        //
+        // Brand *light* gold pill background
+        // (`--semantic-brand-secondary-light-gold`, switched from the
+        // primary `--semantic-brand-primary-gold` per the user,
+        // 2026-09-26 -- the closest thing to a "component" tier token
+        // for this brand color, so it's read directly per this repo's
+        // fallback-order rule for a genuine gap), `rounded-full` (not a
+        // fixed px radius token -- this pill's own height isn't a fixed
+        // component size the way Tag's/SegmentedControl's own radius
+        // tokens assume, so a self-adjusting radius is what actually
+        // guarantees a true pill regardless of content height) and its
+        // own padding (this group had none before -- a pill shape reads
+        // as broken without inset from its own rounded edge), per the
+        // user, 2026-09-26.
+        <div
+          // `flex-wrap` + `justify-center` -- per the user, 2026-09-26:
+          // "Sign in" wraps to its own line instead of ever forcing this
+          // pill wider than its content actually needs, and the two
+          // resulting lines center against each other/the pill's own
+          // width rather than staying left-aligned once wrapped. The
+          // label+icon group below is its own nested, non-wrapping flex
+          // item specifically so THIS row's wrap point can only ever
+          // land between that group and "Sign in" -- never between the
+          // label and the icon themselves (the user's own "keep the
+          // icon locked with the text").
+          //
+          // `gap-x-*` only, no `gap-y-*` -- per the user, 2026-09-26: the
+          // row's own horizontal rhythm (label to icon to "Sign in",
+          // unwrapped) stays the existing 8px, but the *wrapped* case's
+          // line-to-line spacing is dropped to 0 entirely -- each
+          // line's own `leading-[...]` (nanoheading/nanocopy's line-
+          // height, both already taller than their own text) already
+          // supplies enough visual air between the two lines without an
+          // explicit gap on top of it.
+          className="flex flex-wrap items-center justify-center self-end gap-x-[var(--density-spacing-fixed-small)] rounded-full bg-[color:var(--semantic-brand-secondary-light-gold)] px-[var(--density-spacing-fixed-med)] py-[var(--density-spacing-fixed-x-small)]"
+        >
+          <div className="flex items-center gap-[var(--density-spacing-fixed-small)]">
+            <span className="text-[length:var(--semantic-content-nanoheading-font-size)] font-[number:var(--semantic-content-nanoheading-font-weight)] leading-[var(--semantic-content-nanoheading-line-height)] text-[color:var(--semantic-content-common-text-color-default)] uppercase">
+              Edward Jones Prospect Portal
+            </span>
+            {/* 16x16 (`density.sizing.fixed.large`, same token
+                SearchFormSearchInput's own suggestion-row icons read), in
+                `--semantic-control-action-color-default` ("action
+                default color", per the user, 2026-09-26) -- a
+                lightweight "what is this" affordance, not a form
+                control, so a plain icon button rather than
+                `Button`/`Button.Root`. Popover content below otherwise
+                matches the signed-in state's own Popover exactly
+                (`data-density`, `align`, `sideOffset`, layout/padding/
+                radius/elevation classes, `Arrow`), just with the
+                light-gold pill background above instead of the avatar's
+                dark one, per the user. */}
+            <PopoverPrimitive.Root>
+              <PopoverPrimitive.Trigger asChild>
+                <button
+                  type="button"
+                  aria-label="What is the Prospect Portal?"
+                  // `-ml-[4px]` -- this row's shared `gap-[fixed-small]`
+                  // (8px) reads as too much air between the label text
+                  // and this icon specifically, per the user, 2026-09-26;
+                  // pulling just this trigger 4px closer (rather than
+                  // shrinking the row's own shared gap, which would also
+                  // tighten the icon-to-"Sign in" gap) tightens only the
+                  // one relationship that was flagged, down to a net 4px.
+                  className="-ml-[4px] cursor-pointer rounded-full focus-visible:outline-none focus-visible:shadow-[0_0_0_var(--semantic-control-border-width-active)_var(--semantic-content-common-text-color-default)]"
+                >
+                  <HelpQuestionMark
+                    aria-hidden="true"
+                    className="size-[var(--density-sizing-fixed-large)] text-[color:var(--semantic-control-action-color-default)]"
+                  />
+                </button>
+              </PopoverPrimitive.Trigger>
+              <PopoverPrimitive.Portal>
+                <PopoverPrimitive.Content
+                  data-density="roomy"
+                  align="start"
+                  sideOffset={CONTENT_SIDE_OFFSET}
+                  className="z-index-popover flex flex-col items-start gap-[var(--density-spacing-fixed-x-small)] rounded-[var(--semantic-border-radius-generous)] bg-[color:var(--semantic-brand-secondary-light-gold)] px-[var(--density-spacing-fixed-large)] py-[var(--density-spacing-fixed-small)] shadow-elevation-raised"
+                >
+                  {/* Inert, same as the signed-in popover's own "Go to
+                      Prospect Portal." above -- no real destination built
+                      for this yet either. */}
+                  <Link
+                    href="#"
+                    aria-disabled="true"
+                    tabIndex={-1}
+                    onClick={(event) => event.preventDefault()}
+                    className="cursor-not-allowed text-[length:var(--semantic-content-nanocopy-font-size)] font-[number:var(--semantic-content-nanocopy-font-weight)] leading-[var(--semantic-content-nanocopy-line-height)]"
+                  >
+                    Learn more.
+                  </Link>
+                  <PopoverPrimitive.Arrow className="fill-[color:var(--semantic-brand-secondary-light-gold)]" />
+                </PopoverPrimitive.Content>
+              </PopoverPrimitive.Portal>
+            </PopoverPrimitive.Root>
+          </div>
           {/* `Button.Root` + `asChild`, not the flat `Button` -- same
               reasoning as AdvisorHeroMobile.tsx's own "Call" button:
               asChild only works via Button.Root, since the flat

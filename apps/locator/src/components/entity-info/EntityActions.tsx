@@ -1,4 +1,5 @@
 import type { MouseEvent, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from 'ds';
 import { cn } from '../../utils/cn';
 
@@ -27,6 +28,20 @@ export interface EntityActionsProps {
    * component has other, already-real-navigation callers.
    */
   primaryInert?: boolean;
+  /**
+   * Renders `primaryHref` as a React Router `Link` (with its own
+   * `viewTransition` prop) instead of a plain `<a>` -- opt-in, since most
+   * `primaryHref` callers are `tel:`/`mailto:`/same-page-anchor
+   * destinations that are correctly plain links, not app routes. Set by
+   * `AdvisorCard`/`LocationCard`'s "View Profile"/"View Branch" and the
+   * map pin popovers' own "View Profile"/"View Location" -- the only
+   * `primaryHref` callers that navigate to a real in-app route AND carry
+   * a `view-transition-name`'d portrait/name lockup that should morph
+   * into the destination Hero's own, per the user, 2026-09-26. Ignored
+   * when `primaryInert` is also set (that branch never navigates at
+   * all).
+   */
+  primaryViewTransition?: boolean;
   onPrimaryAction?: () => void;
   /**
    * Renders the secondary "New Client Inquiry" button when provided --
@@ -126,6 +141,7 @@ export function EntityActions({
   primaryIcon,
   primaryHref,
   primaryInert = false,
+  primaryViewTransition = false,
   onPrimaryAction,
   onNewClientInquiry,
   newClientInquiryHref,
@@ -161,6 +177,27 @@ export function EntityActions({
         className: '!cursor-not-allowed',
       }
     : { href: primaryHref };
+  // Shared by both orientations' `Button.Root asChild` primary link below
+  // -- a real React Router `Link` (its own `viewTransition` prop is what
+  // makes `Link`'s navigation wrap itself in `document.startViewTransition`,
+  // same mechanism `AdvisorHero.tsx`'s own `navigateToInquiry` uses via
+  // `useNavigate`) when `primaryViewTransition` is set, a plain `<a>`
+  // otherwise -- see that prop's own doc comment for why this isn't the
+  // unconditional default.
+  const primaryLinkContent = (
+    <>
+      {primaryIcon && <Button.Icon>{primaryIcon}</Button.Icon>}
+      <Button.Label>{primaryLabel}</Button.Label>
+    </>
+  );
+  const primaryLink =
+    primaryViewTransition && !primaryInert ? (
+      <Link to={primaryHref ?? '#'} viewTransition>
+        {primaryLinkContent}
+      </Link>
+    ) : (
+      <a {...primaryAnchorProps}>{primaryLinkContent}</a>
+    );
   // Block (stacked) only, per the user -- inline (side by side) keeps its
   // original natural-width, centered sizing untouched below. `flex-1` on
   // each button here grows it to fill the column's width (block's own
@@ -177,10 +214,7 @@ export function EntityActions({
             asChild
             className="min-w-0"
           >
-            <a {...primaryAnchorProps}>
-              {primaryIcon && <Button.Icon>{primaryIcon}</Button.Icon>}
-              <Button.Label>{primaryLabel}</Button.Label>
-            </a>
+            {primaryLink}
           </Button.Root>
         ) : (
           <Button
@@ -354,10 +388,7 @@ export function EntityActions({
               asChild
               className="entity-actions-button"
             >
-              <a {...primaryAnchorProps}>
-                {primaryIcon && <Button.Icon>{primaryIcon}</Button.Icon>}
-                <Button.Label>{primaryLabel}</Button.Label>
-              </a>
+              {primaryLink}
             </Button.Root>
           ) : (
             <Button

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { cn } from '../../utils/cn';
 
 export interface NameBlockProps {
@@ -27,6 +27,10 @@ export interface NameBlockProps {
    * affecting LocationCard's branch-summary subheading, which shares this
    * component but keeps the default. */
   subheadingClassName?: string;
+  /** Forwarded to the root element -- see `EntityPortrait`'s own `style`
+   * doc comment; same dynamic per-entity `view-transition-name` use
+   * case, this time for the name/address lockup itself. */
+  style?: CSSProperties;
 }
 
 // No single semantic content-token bundle matches Figma's exact heading
@@ -43,6 +47,7 @@ export function NameBlock({
   className,
   headingClassName,
   subheadingClassName,
+  style,
 }: NameBlockProps) {
   return (
     <div
@@ -50,6 +55,7 @@ export function NameBlock({
         'flex flex-col gap-[var(--density-spacing-fixed-small)]',
         className,
       )}
+      style={style}
     >
       <span
         className={cn(
