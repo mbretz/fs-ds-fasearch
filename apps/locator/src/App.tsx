@@ -1,5 +1,6 @@
 import 'ds/src/theme.css';
 import './view-transitions.css';
+import './map-pin-popover.css';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
 import { SessionProvider } from './session/SessionContext';
