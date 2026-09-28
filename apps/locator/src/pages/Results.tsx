@@ -529,6 +529,9 @@ export function Results() {
                       selectedLocationId={selectedLocationId}
                       onSelectLocation={handleListSelect}
                       registerItemRef={registerItemRef}
+                      // Dual view only, per the user, 2026-09-28 -- see
+                      // `AdvisorCard`'s own `showFocusAreas` doc comment.
+                      showFocusAreas={false}
                       className="mx-0 md:grid-cols-1 lg:grid-cols-1"
                     />
                   </div>

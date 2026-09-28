@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Heart, HeartFilled } from 'icons';
 import { cn } from '../../utils/cn';
 import { useFavorites } from '../../favorites/useFavorites';
@@ -37,8 +38,41 @@ export function FavoriteToggle({
   const favorited = isFavorite(advisorId);
   const [capError, setCapError] = useState(false);
   const capErrorTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // This component's own root `<span>` -- measured (below) to position
+  // the portaled cap-error toast, since a plain CSS `absolute` toast
+  // (this component's own original approach) gets silently clipped by
+  // any ancestor with `overflow: hidden` between here and the page root.
+  // Confirmed a real instance of that, 2026-09-28: `AdvisorHero.tsx`'s
+  // own sign-in/out collapse animation wraps this whole component in
+  // exactly such an ancestor (`overflow-hidden` is load-bearing there,
+  // for the `block-size` collapse itself) -- the toast rendered
+  // (confirmed via computed styles) but was never visible on either
+  // desktop or mobile. `AdvisorCard`/`LocationCard`'s own usage never
+  // hit this (no clipping ancestor there), which is why it went
+  // unnoticed until reported on the profile page specifically.
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [toastPosition, setToastPosition] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
 
   useEffect(() => () => clearTimeout(capErrorTimeoutRef.current), []);
+
+  // Snapshots the anchor's position once, right when the toast opens --
+  // not re-measured on scroll/resize while showing, same tradeoff every
+  // other short-lived (3s), auto-dismissing toast in this app makes
+  // (e.g. `PrototypeInfoTray`'s own fixed placement). `useLayoutEffect`,
+  // not `useEffect`, so the very first paint of the toast already has
+  // its real position -- an `useEffect` version would render one frame
+  // at `(0, 0)` first, a visible jump.
+  useLayoutEffect(() => {
+    if (!capError || !anchorRef.current) {
+      setToastPosition(null);
+      return;
+    }
+    const rect = anchorRef.current.getBoundingClientRect();
+    setToastPosition({ top: rect.bottom, left: rect.left });
+  }, [capError]);
 
   const toggle = () => {
     const result = toggleFavorite(advisorId);
@@ -58,27 +92,41 @@ export function FavoriteToggle({
   // Rendered by both branches below -- the cap-exceeded message applies
   // regardless of which layout this toggle currently renders (favorited
   // state can't ever hit it, but the icon-only/expanded-idle branches can).
-  const capErrorMessage = capError && (
-    <span
-      role="status"
-      // `border-critical bg-critical-subtle` -- same critical-variant
-      // pairing Button.tsx's own `variant="critical"` already uses (see
-      // its own `border-critical` class), reused here rather than
-      // inventing a new critical treatment. Was plain unboxed text before
-      // this; the border/background/padding/radius turn it into a real
-      // toast-style surface instead of floating text. `z-20` -- this
-      // toggle sits inside a card in a grid (AdvisorCard/LocationCard),
-      // and the toast's own `absolute` positioning can overflow this
-      // toggle's box into the next card's own area; no dedicated
-      // z-index-* scale entry exists for card-level content like this
-      // (see theme.css's own overlay/modal/popover roles, none of which
-      // fit), so a plain `z-20` is enough to beat sibling cards' default
-      // z-auto stacking, per the user.
-      className="absolute top-full left-0 z-20 mt-[var(--density-spacing-fixed-x-small)] w-max max-w-[240px] rounded-[var(--semantic-border-radius-generous)] border-[length:var(--semantic-surface-border-width)] border-critical bg-critical-subtle px-[var(--density-spacing-fixed-med)] py-[var(--density-spacing-fixed-x-small)] text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] text-critical-strong"
-    >
-      You can only favorite up to {FAVORITES_CAP} advisors in this prototype
-    </span>
-  );
+  // Portaled to `document.body` (not inline in this component's own tree)
+  // and positioned via `toastPosition` (computed above) rather than a
+  // plain CSS `absolute` -- see `anchorRef`'s own comment for why:
+  // `absolute` gets silently clipped by a `overflow: hidden` ancestor
+  // like `AdvisorHero.tsx`'s own collapse wrapper. `position: fixed`
+  // (viewport-relative, matching `getBoundingClientRect()`'s own
+  // coordinate space) is what lets it escape any such ancestor
+  // regardless of where this component is ever mounted.
+  const capErrorMessage =
+    capError && toastPosition
+      ? createPortal(
+          <span
+            role="status"
+            // `border-critical bg-critical-subtle` -- same critical-variant
+            // pairing Button.tsx's own `variant="critical"` already uses (see
+            // its own `border-critical` class), reused here rather than
+            // inventing a new critical treatment. `z-20` -- no dedicated
+            // z-index-* scale entry exists for a card-level toast like this
+            // (see theme.css's own overlay/modal/popover roles, none of
+            // which fit), so a plain `z-20` is enough to beat this app's
+            // own default z-auto stacking, per the user. Now portaled to
+            // `document.body`, so this also has to clear that page's real
+            // content, not just sibling cards in a grid.
+            style={{
+              top: toastPosition.top,
+              left: toastPosition.left,
+            }}
+            className="fixed z-20 mt-[var(--density-spacing-fixed-x-small)] w-max max-w-[240px] rounded-[var(--semantic-border-radius-generous)] border-[length:var(--semantic-surface-border-width)] border-critical bg-critical-subtle px-[var(--density-spacing-fixed-med)] py-[var(--density-spacing-fixed-x-small)] text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] text-critical-strong"
+          >
+            You can only favorite up to {FAVORITES_CAP} advisors in this
+            prototype
+          </span>,
+          document.body,
+        )
+      : null;
 
   // Expanded + favorited (Figma's Favorited=True, Device=Desktop) is two
   // independent controls, not one -- per the user, clicking the heart icon
@@ -90,6 +138,7 @@ export function FavoriteToggle({
   if (showLabel && variant === 'expanded' && favorited) {
     return (
       <span
+        ref={anchorRef}
         className={cn(
           'relative inline-flex items-center gap-[var(--density-spacing-fixed-x-small)] text-[color:var(--semantic-control-action-color-default)]',
           className,
@@ -126,7 +175,7 @@ export function FavoriteToggle({
   const Icon = favorited ? HeartFilled : Heart;
 
   return (
-    <span className={cn('relative inline-flex', className)}>
+    <span ref={anchorRef} className={cn('relative inline-flex', className)}>
       <button
         type="button"
         aria-pressed={favorited}

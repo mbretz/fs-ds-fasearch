@@ -38,6 +38,16 @@ export interface AdvisorCardProps {
    * content and Focus Areas, 2 columns" layout the user asked for here,
    * with no separate layout prop needed. */
   showOfficeDetails?: boolean;
+  /**
+   * Whether the Focus Areas side panel renders at all. Defaults to true;
+   * `ResultsList` sets this false for Dual view specifically -- per the
+   * user, 2026-09-28: Dual's own list pane is already the narrowest
+   * context this card renders in (see `Results.tsx`'s own `.dual-view-
+   * list` comment), so dropping this panel keeps cards more compact
+   * there rather than pushing it into `EntityCard`'s stacked-below mode
+   * on every card.
+   */
+  showFocusAreas?: boolean;
   className?: string;
 }
 
@@ -54,6 +64,7 @@ export function AdvisorCard({
   location,
   showPortraitBadge,
   showOfficeDetails = true,
+  showFocusAreas = true,
   className,
 }: AdvisorCardProps) {
   const { signedIn } = useSession();
@@ -74,9 +85,12 @@ export function AdvisorCard({
   // `panels.length` directly (see its `gridColumns` comment), so a falsy
   // placeholder element left in the array would still count as a second
   // panel even though it renders nothing.
-  const panels = [
-    <FocusAreasPanel key="focus-areas" focusAreas={advisor.focusAreas} />,
-  ];
+  const panels = [];
+  if (showFocusAreas) {
+    panels.push(
+      <FocusAreasPanel key="focus-areas" focusAreas={advisor.focusAreas} />,
+    );
+  }
   if (showOfficeDetails) {
     // `officePhotoUrl` deliberately not passed here -- per the user, the
     // branch photo is reserved for the full Office Details panel on
@@ -105,22 +119,28 @@ export function AdvisorCard({
       // single-panel Focus-Areas-only composition -- fixes `main` at
       // 400px and lets the Focus Areas panel fill the rest, the opposite
       // of the general 3-panel component's proportional split (see
-      // `EntityCard`'s own `mainWidth` doc comment). Only applies once
-      // `showOfficeDetails` has actually dropped this card to that
-      // single-panel shape -- passing it alongside the 2-panel case would
+      // `EntityCard`'s own `mainWidth` doc comment). Only applies for
+      // that exact single-panel shape (Focus Areas showing, Office
+      // Details not) -- passing it alongside the 2-panel case would
       // fight the proportional split's own 50/25/25 that composition
-      // still wants.
-      mainWidth={showOfficeDetails ? undefined : 400}
+      // still wants, and the Office-Details-only case below (Focus
+      // Areas hidden, per `showFocusAreas`) has no matching Figma
+      // composition to reach for, so it falls back to the same
+      // proportional split the 2-panel case uses.
+      mainWidth={showFocusAreas && !showOfficeDetails ? 400 : undefined}
       // Below 730px, three real columns (main + Focus Areas + Office
       // Details) read as cramped -- per the user, that band now keeps
       // Office Details beside main (still worth keeping visible) and
       // only drops Focus Areas to its own full-width row below both,
       // rather than squeezing all three into one row or hiding Office
       // Details outright (see `EntityCard`'s own `dropFirstPanelBelow`
-      // doc comment). Only meaningful for the 2-panel case -- with
-      // `showOfficeDetails` false there's only one panel to begin with,
-      // so there's no "last panel" for this to keep beside main.
-      dropFirstPanelBelow={showOfficeDetails ? 730 : undefined}
+      // doc comment). Only meaningful when both panels are actually
+      // showing -- with either `showOfficeDetails` or `showFocusAreas`
+      // false there's only one panel (or none) to begin with, so
+      // there's no "last panel" for this to keep beside main.
+      dropFirstPanelBelow={
+        showFocusAreas && showOfficeDetails ? 730 : undefined
+      }
     >
       <div className="flex items-start justify-between gap-[var(--density-spacing-fixed-large)]">
         <StatusTag status={advisor.newClientStatus} size="sm" />
