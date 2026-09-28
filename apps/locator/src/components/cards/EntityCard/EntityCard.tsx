@@ -328,18 +328,40 @@ function gridStyles(
        combinator inside \`:has()\` never matched anything, so this
        wrapper never actually hid and the gap it explains above was never
        fixed. Dropping the \`>\` matches it as a descendant instead,
-       regardless of how many wrapper levels sit in between. */
-    .entity-card-grid${scope} > div:has(.office-details-panel) {
+       regardless of how many wrapper levels sit in between.
+       \`:nth-child(3)\`, added 2026-09-28 -- this rule was written
+       assuming Office Details is always the SECOND panel (position 3:
+       main=1, Focus Areas=2, Office Details=3), which held for every
+       caller until \`AdvisorCard\`'s new \`showFocusAreas={false}\` (Dual
+       view only) made Office Details the FIRST and only panel instead
+       (position 2). \`:has()\` alone matches by content anywhere, so it
+       was still catching -- and fully hiding, not just collapsing an
+       already-empty wrapper -- that now-solo panel regardless of
+       whether it actually had content, confirmed live: EntityActions'
+       own trailing space collapsed because the whole panel (with real
+       Office Hours/Branch Team content) vanished, not just its own
+       internal empty state. Scoping to \`:nth-child(3)\` restores the
+       original "second panel slot only" intent -- a lone first-panel
+       Office Details (position 2) no longer matches this rule at all. */
+    .entity-card-grid${scope} > div:nth-child(3):has(.office-details-panel) {
       display: none;
     }
     /* First panel's own trailing space, distinct from the card's outer
        padding-bottom above -- per the user, once the office-details
        wrapper is actually hidden (the fix directly above) the first
        panel now grows flush to that 4px card padding with nothing of
-       its own beneath it, which read as too tight; this adds 4px back
-       as the panel's own margin rather than restoring the old (16px,
-       \`fixed-large\`) flex \`gap\` the hidden wrapper used to contribute.
-       Applies whenever the first panel ends up the last VISIBLE one in
+       its own beneath it, which read as too tight; this adds a small
+       margin back rather than restoring the old (16px, \`fixed-large\`)
+       flex \`gap\` the hidden wrapper used to contribute. 2px
+       (\`fixed-xx-small\`), not 4px (\`fixed-x-small\`) -- trimmed
+       2026-09-28, per the user: stacked on top of the card's own 4px
+       padding-bottom above, the original 4px read as too much combined
+       trailing space once the 2026-09-28 \`:nth-child(3)\` fix (above)
+       started actually rendering real content in that trailing slot
+       again for a lone Office Details panel (Dual view's own new
+       single-panel case), instead of the empty wrapper this rule was
+       originally tuned against. Applies whenever the first panel ends
+       up the last VISIBLE one in
        stacked mode -- i.e. always, since a second (office-details) panel
        is either absent to begin with or hidden by the rule above.
        \`:nth-child(2)\`, not \`:first-of-type\` -- \`.entity-card-main\` (the
@@ -349,7 +371,7 @@ function gridStyles(
        is the same counting convention \`dropFirstPanelBelow\`'s own rules
        above already use. */
     .entity-card-grid${scope} > div:nth-child(2) {
-      margin-bottom: var(--density-spacing-fixed-x-small);
+      margin-bottom: var(--density-spacing-fixed-xx-small);
     }
   }
 `;

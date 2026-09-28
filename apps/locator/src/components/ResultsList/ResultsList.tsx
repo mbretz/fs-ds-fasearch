@@ -32,6 +32,12 @@ interface ResultsListProps {
   selectedLocationId?: string | null;
   onSelectLocation?: (location: Location) => void;
   registerItemRef?: (id: string, el: HTMLElement | null) => void;
+  /** Forwarded to every `AdvisorCard`'s own `showFocusAreas` -- per the
+   * user, 2026-09-28, `Results.tsx` sets this false for its Dual view
+   * instance specifically (not List view's), since Dual's own list pane
+   * is the narrowest context these cards ever render in. Defaults to
+   * true (unchanged behavior) everywhere else. */
+  showFocusAreas?: boolean;
   className?: string;
 }
 
@@ -128,6 +134,7 @@ export function ResultsList({
   registerItemRef,
   selectedFocusAreas,
   acceptingNewClientsOnly,
+  showFocusAreas = true,
   className,
 }: ResultsListProps) {
   if (locations.length === 0) {
@@ -245,6 +252,7 @@ export function ResultsList({
           advisor={advisor}
           location={location}
           showPortraitBadge={false}
+          showFocusAreas={showFocusAreas}
         />
       </li>
     ));
