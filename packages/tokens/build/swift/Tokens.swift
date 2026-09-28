@@ -222,7 +222,7 @@ public enum LightRoomyTokens {
     public static let componentCardHeaderTitleFontSize: Double = 20
     public static let componentCardHeaderTitleFontWeight: Double = 525
     public static let componentCardHeaderTitleTextColor: String = "#191a1a"
-    public static let componentCardMinWidth: Double = 320
+    public static let componentCardMinWidth: Double = 312
     public static let componentCardRadioBackgroundColorDefault: String = "#ffffff"
     public static let componentCardRadioBorderColorDefault: String = "#7d8082"
     public static let componentCardRadioBorderColorHover: String = "#006da3"
@@ -1279,7 +1279,7 @@ public enum DarkRoomyTokens {
     public static let componentCardHeaderTitleFontSize: Double = 20
     public static let componentCardHeaderTitleFontWeight: Double = 525
     public static let componentCardHeaderTitleTextColor: String = "#191a1a"
-    public static let componentCardMinWidth: Double = 320
+    public static let componentCardMinWidth: Double = 312
     public static let componentCardRadioBackgroundColorDefault: String = "#ffffff"
     public static let componentCardRadioBorderColorDefault: String = "#7d8082"
     public static let componentCardRadioBorderColorHover: String = "#006da3"
@@ -2336,7 +2336,7 @@ public enum LightCondensedTokens {
     public static let componentCardHeaderTitleFontSize: Double = 20
     public static let componentCardHeaderTitleFontWeight: Double = 525
     public static let componentCardHeaderTitleTextColor: String = "#191a1a"
-    public static let componentCardMinWidth: Double = 320
+    public static let componentCardMinWidth: Double = 312
     public static let componentCardRadioBackgroundColorDefault: String = "#ffffff"
     public static let componentCardRadioBorderColorDefault: String = "#7d8082"
     public static let componentCardRadioBorderColorHover: String = "#006da3"
@@ -3393,7 +3393,7 @@ public enum DarkCondensedTokens {
     public static let componentCardHeaderTitleFontSize: Double = 20
     public static let componentCardHeaderTitleFontWeight: Double = 525
     public static let componentCardHeaderTitleTextColor: String = "#191a1a"
-    public static let componentCardMinWidth: Double = 320
+    public static let componentCardMinWidth: Double = 312
     public static let componentCardRadioBackgroundColorDefault: String = "#ffffff"
     public static let componentCardRadioBorderColorDefault: String = "#7d8082"
     public static let componentCardRadioBorderColorHover: String = "#006da3"

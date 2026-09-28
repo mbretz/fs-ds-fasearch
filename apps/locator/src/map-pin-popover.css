@@ -1,0 +1,27 @@
+/*
+ * MapPinPopover.tsx's fade-in/out `@keyframes` -- moved here from a
+ * component-rendered `<style>` tag (2026-09-28), same fix already applied
+ * to packages/ds/src/theme.css's `dialog-*-fade-*` keyframes (see that
+ * file's own dated comment for the full mechanism): React 19 treats a
+ * `<style>` element as a managed "Resource" and garbage-collects its
+ * underlying DOM node once it decides the owning fiber is no longer
+ * rendering it. Radix's own Presence kept `Popover.Content`'s DOM node
+ * alive past `data-state="closed"` specifically so its exit animation
+ * could play, but that only protects the element Presence directly
+ * manages -- not a sibling `<style>` resource on the same pass. Confirmed
+ * live (Playwright): the close animation was cutting off ~60ms into its
+ * declared 200ms duration, with the popover's whole wrapper gone from the
+ * DOM well before the fade actually finished -- the same "flicker"
+ * previously investigated and left open in RESUME_NOTES.txt. A plain
+ * global rule here has no such lifecycle to be cleaned up.
+ */
+@keyframes map-pin-popover-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes map-pin-popover-fade-out {
+  to {
+    opacity: 0;
+  }
+}

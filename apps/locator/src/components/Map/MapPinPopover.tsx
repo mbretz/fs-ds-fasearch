@@ -63,22 +63,20 @@ export function MapPinPopover({
             //
             // Fade in/out, timed to match `MapPin.tsx`'s own default<->
             // selected color transition (200ms), per the user, 2026-09-26
-            // -- same `data-[state=open]`/`data-[state=closed]` + local
-            // `@keyframes` convention `Dialog.tsx` already uses for its
-            // own content fade, not a shared/global keyframe (this is the
-            // only consumer). `motion-safe:` guards both, matching every
-            // other transition in this app's Map subtree.
+            // -- same `data-[state=open]`/`data-[state=closed]` convention
+            // `Dialog.tsx` uses for its own content fade. The `@keyframes`
+            // themselves live in a real, build-time stylesheet
+            // (`apps/locator/src/map-pin-popover.css`), not a component-
+            // rendered `<style>` tag here -- fixed 2026-09-28 after that
+            // exact pattern was found to cut this animation short (React
+            // 19 garbage-collects the `<style>` resource mid-exit-
+            // animation); see that file's own comment and `Dialog.tsx`'s
+            // matching 2026-09-23 fix for the full mechanism.
+            // `motion-safe:` guards both, matching every other transition
+            // in this app's Map subtree.
             'z-index-popover rounded-[var(--semantic-border-radius-ample)] border-[2px] border-[color:var(--primitives-ref-color-neutral-800)] bg-[var(--semantic-surface-base-default)] shadow-elevation-levitating motion-safe:data-[state=open]:animate-[map-pin-popover-fade-in_200ms_ease-out] motion-safe:data-[state=closed]:animate-[map-pin-popover-fade-out_200ms_ease-in]',
           )}
         >
-          <style>{`
-            @keyframes map-pin-popover-fade-in {
-              from { opacity: 0; }
-            }
-            @keyframes map-pin-popover-fade-out {
-              to { opacity: 0; }
-            }
-          `}</style>
           {/* No `Popover.Arrow` -- Radix's arrow has no way to carry the
               Content's own 2px border around its own triangle edges, so
               the border visibly cut through/dead-ended at the arrow

@@ -156,6 +156,17 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
   // *closed* stretch in between, which is what actually lets that fade
   // play instead of getting cut short by a remount.
   const [openSequence, setOpenSequence] = useState(0);
+  // Live mirror of `popoverLocationId`, read by the marker `click`
+  // listener below -- that listener is created once per location inside
+  // the marker-creation effect (deps `[locations, ready, onPinSelect]`),
+  // so its closure doesn't see subsequent `popoverLocationId` updates. A
+  // ref kept in sync via the effect just below is what lets it compare
+  // against the *current* open pin at click time instead of whatever was
+  // open when the listener was created.
+  const popoverLocationIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    popoverLocationIdRef.current = popoverLocationId;
+  }, [popoverLocationId]);
   // Tracks which advisor's `NewClientInquiryDialog` is open, lifted up
   // here (out of `AdvisorPopoverContent`/`MapPinPopover`) rather than
   // self-triggered in place -- same reasoning/pattern as
@@ -247,8 +258,17 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map(
       el.style.cursor = 'pointer';
       el.addEventListener('click', (event) => {
         event.stopPropagation();
+        // Only bump `openSequence` (forcing the remount that replays the
+        // open fade -- see its own doc comment above) when this click is
+        // genuinely opening a *different* pin than whichever one is
+        // already open. Re-clicking the same already-open pin's own
+        // marker used to bump it unconditionally, remounting (and so
+        // re-fading-in) a popover that was already fully visible -- a
+        // pointless flash, per the user, 2026-09-28.
+        if (popoverLocationIdRef.current !== location.id) {
+          setOpenSequence((sequence) => sequence + 1);
+        }
         setPopoverLocationId(location.id);
-        setOpenSequence((sequence) => sequence + 1);
         onPinSelect(location.id);
       });
       const marker = new maplibregl.Marker({ element: el })

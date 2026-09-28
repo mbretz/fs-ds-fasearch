@@ -3254,7 +3254,7 @@
         "$description": "Component token for card border width."
       },
       "minWidth": {
-        "$value": "320px",
+        "$value": "312px",
         "$type": "dimension",
         "$description": "Component token for card min width."
       },

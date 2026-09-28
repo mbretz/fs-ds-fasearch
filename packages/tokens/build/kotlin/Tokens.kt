@@ -222,7 +222,7 @@ object LightRoomyTokens {
     const val componentCardHeaderTitleFontSize: Double = 20
     const val componentCardHeaderTitleFontWeight: Double = 525
     const val componentCardHeaderTitleTextColor: String = "#191a1a"
-    const val componentCardMinWidth: Double = 320
+    const val componentCardMinWidth: Double = 312
     const val componentCardRadioBackgroundColorDefault: String = "#ffffff"
     const val componentCardRadioBorderColorDefault: String = "#7d8082"
     const val componentCardRadioBorderColorHover: String = "#006da3"
@@ -1279,7 +1279,7 @@ object DarkRoomyTokens {
     const val componentCardHeaderTitleFontSize: Double = 20
     const val componentCardHeaderTitleFontWeight: Double = 525
     const val componentCardHeaderTitleTextColor: String = "#191a1a"
-    const val componentCardMinWidth: Double = 320
+    const val componentCardMinWidth: Double = 312
     const val componentCardRadioBackgroundColorDefault: String = "#ffffff"
     const val componentCardRadioBorderColorDefault: String = "#7d8082"
     const val componentCardRadioBorderColorHover: String = "#006da3"
@@ -2336,7 +2336,7 @@ object LightCondensedTokens {
     const val componentCardHeaderTitleFontSize: Double = 20
     const val componentCardHeaderTitleFontWeight: Double = 525
     const val componentCardHeaderTitleTextColor: String = "#191a1a"
-    const val componentCardMinWidth: Double = 320
+    const val componentCardMinWidth: Double = 312
     const val componentCardRadioBackgroundColorDefault: String = "#ffffff"
     const val componentCardRadioBorderColorDefault: String = "#7d8082"
     const val componentCardRadioBorderColorHover: String = "#006da3"
@@ -3393,7 +3393,7 @@ object DarkCondensedTokens {
     const val componentCardHeaderTitleFontSize: Double = 20
     const val componentCardHeaderTitleFontWeight: Double = 525
     const val componentCardHeaderTitleTextColor: String = "#191a1a"
-    const val componentCardMinWidth: Double = 320
+    const val componentCardMinWidth: Double = 312
     const val componentCardRadioBackgroundColorDefault: String = "#ffffff"
     const val componentCardRadioBorderColorDefault: String = "#7d8082"
     const val componentCardRadioBorderColorHover: String = "#006da3"

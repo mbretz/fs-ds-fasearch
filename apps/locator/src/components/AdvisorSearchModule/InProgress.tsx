@@ -225,7 +225,7 @@ export function InProgress({
   }, []);
 
   return (
-    // `pb-[fixed-small]` (8px), unprefixed so it applies at every
+    // `pb-[fixed-med]` (12px), unprefixed so it applies at every
     // container width -- reduced from this stage's own previous bottom
     // padding (16px below 768px container width via the base `p-[...]`,
     // 24px at/above it via the old `@[768px]/module:pb-[...]` override,
@@ -234,8 +234,11 @@ export function InProgress({
     // its own visual close to the stage, so the stage's own trailing
     // whitespace past it reads better tightened down to match every
     // other 8px gap in this app rather than kept at its old, roomier
-    // value.
-    <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-large)] pb-[var(--density-spacing-fixed-small)] @[768px]/module:px-[var(--density-spacing-fixed-xx-large)] @[768px]/module:pt-[var(--density-spacing-fixed-large)]">
+    // value. Nudged up an extra 4px (fixed-small, 8px, to fixed-med,
+    // 12px) per the user, 2026-09-28, after previewing both live --
+    // a small amount of extra breathing room below the module's own
+    // last row felt better than flush against it.
+    <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-large)] pb-[var(--density-spacing-fixed-med)] @[768px]/module:px-[var(--density-spacing-fixed-xx-large)] @[768px]/module:pt-[var(--density-spacing-fixed-large)]">
       {/*
         `[view-transition-name:advisor-search-heading]` pairs with the
         same name on Start.tsx's H1 wrapper (see AdvisorSearchModule.tsx's
@@ -431,7 +434,27 @@ export function InProgress({
             event.preventDefault();
             onFindNearMe();
           }}
-          className="text-[14px] leading-[18px] [--component-link-text-color-default:var(--semantic-content-common-text-color-reverse)] [--component-link-text-color-hover:var(--semantic-content-common-text-color-reverse)]"
+          // Hover fixed 2026-09-28, per the user: `Link`'s own default
+          // hover styling (`component.link.textColor.hover` = a dark
+          // navy `#004b70`, `component.link.backgroundColor.hover` = a
+          // pale light-mode blue `#f0faff`) is tuned for a light
+          // surface -- against this module's own scoped `data-
+          // theme="dark"` background (`AdvisorSearchModule.tsx`,
+          // `--color-layout-background-color-neutral-base` resolves to
+          // `neutral-200`/`#323334` here), the pale background rendered
+          // as a near-illegible white-on-light-blue patch (confirmed
+          // live, screenshotted before/after). Hover background moved to
+          // `primitives.ref.color.neutral.300` (`#4b4d4e`) -- bumped up
+          // from an initial neutral-250 (too subtle to read as a real
+          // hover state) per the user, still short of neutral-400
+          // (visible, but read as further than intended) -- a real
+          // primitives-tier reference, not a semantic one, since no
+          // semantic bucket covers a "reverse-context" hover shade (same
+          // "no clean token, arbitrary value with a comment" precedent
+          // as `MapPin`/`Map`'s own literal colors). Text hover color
+          // left at the default reverse-white -- the background shift
+          // alone is the hover feedback now.
+          className="text-[14px] leading-[18px] [--component-link-background-color-hover:var(--primitives-ref-color-neutral-300)] [--component-link-text-color-default:var(--semantic-content-common-text-color-reverse)] [--component-link-text-color-hover:var(--semantic-content-common-text-color-reverse)]"
         >
           Find advisors near me
         </Link>
