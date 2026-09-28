@@ -16,6 +16,7 @@ import {
 } from '../components/ResultsToolbar/ResultsToolbar';
 import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
 import { Map as LocatorMap, type MapHandle } from '../components/Map';
+import { ResultsZeroState } from '../components/ResultsZeroState/ResultsZeroState';
 import type { Location } from '../data/locations';
 
 // Left-to-right order the SegmentedControl (desktop)/RadioGroup (mobile)
@@ -354,27 +355,43 @@ export function Results() {
           than stacking at the same rhythm as the section-level gaps
           elsewhere on this page. */}
       <div className="[view-transition-name:results-content]">
-        {view === 'list' && (
-          <ResultsList
-            locations={filteredLocations}
-            advisorCardsFirst={advisorCardsFirst}
-            selectedFocusAreas={selectedFocusAreas}
-            acceptingNewClientsOnly={acceptingNewClients}
-            className="mt-[var(--density-spacing-fixed-small)]"
-          />
-        )}
-        {view === 'map' && (
-          <LocatorMap
-            ref={mapRef}
-            locations={filteredLocations}
-            selectedLocationId={selectedLocationId}
-            onPinSelect={handlePinSelect}
-            selectedFocusAreas={selectedFocusAreas}
-            acceptingNewClientsOnly={acceptingNewClients}
-            className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-spacing-fixed-small)] md:mx-0"
-          />
-        )}
-        {/* Side by side at 920px+ (a custom `min-[920px]:` arbitrary
+        {/* Zero-results state, per the user, 2026-09-28 -- reproduces
+            (a deliberate copy, not a shared import) `Start.tsx`'s own
+            two promo panels ("Starting Point Quiz" + "Get Matched") as
+            `ResultsZeroState`, since this page has nowhere else to send
+            a zero-match visitor but back to that same pair the Landing
+            page's Start stage already leads with. Shown regardless of
+            which view (`List`/`Map`/`Dual`) is selected, replacing this
+            whole per-view block -- `ResultsToolbar` above (the
+            "Results (0)" count and, once `resultsCount > 0`, its own
+            view switcher) is untouched, per the user -- the count
+            itself still shows even with zero matches, only the content
+            below it changes. */}
+        {resultsCount === 0 ? (
+          <ResultsZeroState />
+        ) : (
+          <>
+            {view === 'list' && (
+              <ResultsList
+                locations={filteredLocations}
+                advisorCardsFirst={advisorCardsFirst}
+                selectedFocusAreas={selectedFocusAreas}
+                acceptingNewClientsOnly={acceptingNewClients}
+                className="mt-[var(--density-spacing-fixed-small)]"
+              />
+            )}
+            {view === 'map' && (
+              <LocatorMap
+                ref={mapRef}
+                locations={filteredLocations}
+                selectedLocationId={selectedLocationId}
+                onPinSelect={handlePinSelect}
+                selectedFocusAreas={selectedFocusAreas}
+                acceptingNewClientsOnly={acceptingNewClients}
+                className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-spacing-fixed-small)] md:mx-0"
+              />
+            )}
+            {/* Side by side at 920px+ (a custom `min-[920px]:` arbitrary
             variant, not a stock `md`/`lg` breakpoint) -- per the user,
             this cutoff moved from the original `lg` (1024px) down to
             `md` (768px) and then back up into the low 900s across a
@@ -382,16 +399,16 @@ export function Results() {
             List scrolls independently of the fixed-height Map pane, per
             docs/PLAN.md §2.2's "Side-by-side map+list" item), stacked
             below it. */}
-        {view === 'dual' && (
-          <div className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-spacing-fixed-small)] flex flex-col gap-[var(--density-spacing-fixed-large)] md:mx-0 min-[920px]:flex-row">
-            {/* `md:grid-cols-1 lg:grid-cols-1`, overriding ResultsList's
+            {view === 'dual' && (
+              <div className="mx-[var(--density-layout-fixed-large)] mt-[var(--density-spacing-fixed-small)] flex flex-col gap-[var(--density-spacing-fixed-large)] md:mx-0 min-[920px]:flex-row">
+                {/* `md:grid-cols-1 lg:grid-cols-1`, overriding ResultsList's
                 own defaults (`md:grid-cols-2`/`lg:grid-cols-3`) at those
                 same variants so tailwind-merge actually dedupes them --
                 per the user, Dual keeps a single column throughout
                 (sharing width with Map leaves even less room than the
                 previous 2-column pass assumed), not just a narrower
                 column count than List view's own. */}
-            {/* A dedicated `<style>` block, not two Tailwind flex-*
+                {/* A dedicated `<style>` block, not two Tailwind flex-*
                 utilities layered across breakpoints -- relying on
                 Tailwind's own generated-stylesheet ordering to make a
                 `lg:` rule beat an arbitrary `min-[920px]:` one once both
@@ -439,7 +456,7 @@ export function Results() {
                 changes this math at all. Map (no such fixed floor) is
                 what gives up the difference once this binds, the same
                 way any flex sibling absorbs a neighbor's `min-width`. */}
-            <style>{`
+                <style>{`
               @media (min-width: 920px) {
                 .dual-view-list, .dual-view-map {
                   flex: 1;
@@ -454,7 +471,7 @@ export function Results() {
                 }
               }
             `}</style>
-            {/* `min-[920px]:min-h-0` -- the actual fix for the "list
+                {/* `min-[920px]:min-h-0` -- the actual fix for the "list
                 escapes its own max-h-[600px] cap" bug (traced to the
                 dead-space-below-the-footer report): a flex item's
                 `min-height` defaults to `auto`, not `0`, which for a
@@ -467,7 +484,7 @@ export function Results() {
                 inside 600px. Forcing `min-height: 0` here is what
                 actually lets `max-h-[600px]`/`overflow-y-auto` below
                 take effect. */}
-            {/* New containing box around Dual view's own card list, per
+                {/* New containing box around Dual view's own card list, per
                 the user, 2026-09-28 -- echoes Map's own surface (border
                 color/radius match `LocatorMap`'s wrapper below) so the
                 two panes read as one matched pair rather than a bare
@@ -502,21 +519,21 @@ export function Results() {
                 whatever native scrollbar Chrome draws clips to (and
                 follows) a properly rounded corner there instead of a
                 square one. */}
-            <div className="dual-view-list rounded-[var(--semantic-border-radius-generous)] border-[length:1px] border-[color:var(--primitives-ref-color-neutral-600)] p-[var(--density-spacing-fixed-x-small)]">
-              <div className="min-[920px]:min-h-0 min-[920px]:max-h-[600px] min-[920px]:overflow-y-auto rounded-tr-[var(--semantic-border-radius-generous)] rounded-br-[var(--semantic-border-radius-generous)]">
-                <ResultsList
-                  locations={filteredLocations}
-                  advisorCardsFirst={advisorCardsFirst}
-                  selectedFocusAreas={selectedFocusAreas}
-                  acceptingNewClientsOnly={acceptingNewClients}
-                  selectedLocationId={selectedLocationId}
-                  onSelectLocation={handleListSelect}
-                  registerItemRef={registerItemRef}
-                  className="mx-0 md:grid-cols-1 lg:grid-cols-1"
-                />
-              </div>
-            </div>
-            {/* `md:rounded-tl-[...]`/`md:rounded-bl-[...]`, layered on
+                <div className="dual-view-list rounded-[var(--semantic-border-radius-generous)] border-[length:1px] border-[color:var(--primitives-ref-color-neutral-600)] p-[var(--density-spacing-fixed-x-small)]">
+                  <div className="min-[920px]:min-h-0 min-[920px]:max-h-[600px] min-[920px]:overflow-y-auto rounded-tr-[var(--semantic-border-radius-generous)] rounded-br-[var(--semantic-border-radius-generous)]">
+                    <ResultsList
+                      locations={filteredLocations}
+                      advisorCardsFirst={advisorCardsFirst}
+                      selectedFocusAreas={selectedFocusAreas}
+                      acceptingNewClientsOnly={acceptingNewClients}
+                      selectedLocationId={selectedLocationId}
+                      onSelectLocation={handleListSelect}
+                      registerItemRef={registerItemRef}
+                      className="mx-0 md:grid-cols-1 lg:grid-cols-1"
+                    />
+                  </div>
+                </div>
+                {/* `md:rounded-tl-[...]`/`md:rounded-bl-[...]`, layered on
                 top of the base component's own uniform `md:rounded-
                 [large]` (24px, all four corners) -- per the user,
                 matching Figma's own Dual-view Map Component radius
@@ -525,16 +542,18 @@ export function Results() {
                 corners, on the outer edge, stay 24px). Dual-view-only:
                 the single-pane Map view keeps its base component's
                 uniform 24px, unaffected by this override. */}
-            <LocatorMap
-              ref={mapRef}
-              locations={filteredLocations}
-              selectedLocationId={selectedLocationId}
-              onPinSelect={handlePinSelect}
-              selectedFocusAreas={selectedFocusAreas}
-              acceptingNewClientsOnly={acceptingNewClients}
-              className="dual-view-map md:rounded-tl-[var(--semantic-border-radius-generous)] md:rounded-bl-[var(--semantic-border-radius-generous)]"
-            />
-          </div>
+                <LocatorMap
+                  ref={mapRef}
+                  locations={filteredLocations}
+                  selectedLocationId={selectedLocationId}
+                  onPinSelect={handlePinSelect}
+                  selectedFocusAreas={selectedFocusAreas}
+                  acceptingNewClientsOnly={acceptingNewClients}
+                  className="dual-view-map md:rounded-tl-[var(--semantic-border-radius-generous)] md:rounded-bl-[var(--semantic-border-radius-generous)]"
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
     </>
