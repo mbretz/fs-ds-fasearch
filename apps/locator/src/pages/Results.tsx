@@ -400,7 +400,45 @@ export function Results() {
                 split from 920px, widening to Map's own ~2/3 share (per
                 the user/Figma -- node 684:9043's "FA List" 414px beside
                 "Map" 774px) at 1024px+, where the later, more specific
-                media query is unambiguously what wins. */}
+                media query is unambiguously what wins.
+
+                `.dual-view-list`'s own `min-width` (1024px+ only -- the
+                1/3-share band) fixes a real overflow bug, reported by
+                the user at ~1030px viewport width: DS `Card` (the root
+                every `EntityCard` renders through) has a hard
+                `min-w-[var(--component-card-min-width)]` floor that
+                never shrinks below its own content's minimum -- but the
+                1/3 share of *this* row's own available width (viewport
+                minus this page's margins/gap) can land right at (or
+                below) that same floor around 1024-1040px viewport
+                width, especially with any further deduction (confirmed
+                live: a reserved, space-taking scrollbar on
+                `.dual-view-list` itself -- real on Chrome/macOS with a
+                physical mouse connected, not the trackpad's overlay
+                one -- is enough on its own). `.dual-view-list` has no
+                `overflow-x` rule, so an oversized card doesn't get
+                clipped -- it just visually runs past the pane's own
+                right edge into/under Map, reading exactly like a "cut
+                off" card.
+
+                344px -- recomputed 2026-09-28 after
+                `--component-card-min-width` itself moved from 320px to
+                312px (`packages/tokens/HAND_ADDED_TOKENS.md`'s own
+                `component.card.minWidth` row has the full reasoning):
+                312 (Card's own floor) + 8 (this list's new bordered/
+                padded box, 4px padding both sides) + 2 (its 1px border,
+                both sides) + ~17 (a real reserved scrollbar's own
+                width) + a few px of rounding slack. (An earlier pass
+                here used 352px against the *old* 320px floor -- both
+                numbers move together if that token ever changes again.)
+                `EntityCard`'s selection outline (`ResultsList.tsx`, also
+                fixed this session) doesn't factor in here: it used to be
+                a `border`, which shrank the selected `<li>`'s own
+                content area by another 4px on top of everything else,
+                but `outline` draws outside the box model and never
+                changes this math at all. Map (no such fixed floor) is
+                what gives up the difference once this binds, the same
+                way any flex sibling absorbs a neighbor's `min-width`. */}
             <style>{`
               @media (min-width: 920px) {
                 .dual-view-list, .dual-view-map {
@@ -410,6 +448,9 @@ export function Results() {
               @media (min-width: 1024px) {
                 .dual-view-map {
                   flex: 2;
+                }
+                .dual-view-list {
+                  min-width: 344px;
                 }
               }
             `}</style>
@@ -426,16 +467,55 @@ export function Results() {
                 inside 600px. Forcing `min-height: 0` here is what
                 actually lets `max-h-[600px]`/`overflow-y-auto` below
                 take effect. */}
-            <ResultsList
-              locations={filteredLocations}
-              advisorCardsFirst={advisorCardsFirst}
-              selectedFocusAreas={selectedFocusAreas}
-              acceptingNewClientsOnly={acceptingNewClients}
-              selectedLocationId={selectedLocationId}
-              onSelectLocation={handleListSelect}
-              registerItemRef={registerItemRef}
-              className="dual-view-list min-[920px]:min-h-0 min-[920px]:max-h-[600px] min-[920px]:overflow-y-auto md:grid-cols-1 lg:grid-cols-1"
-            />
+            {/* New containing box around Dual view's own card list, per
+                the user, 2026-09-28 -- echoes Map's own surface (border
+                color/radius match `LocatorMap`'s wrapper below) so the
+                two panes read as one matched pair rather than a bare
+                list beside a framed map. Radius matches the GENEROUS
+                token Map's own left corners use in Dual view (its right
+                corners stay the base LARGE radius -- see that
+                component's own comment), not Map's base/right-corner
+                value. 4px (`spacing.fixed.x-small`) padding on every
+                side, a starting point per the user, not a measured
+                final value. `.dual-view-list`'s own flex/min-width
+                rules (this row's own `<style>` block above) moved here
+                from `ResultsList`'s className, since THIS box is now
+                the actual flex item in the List/Map row -- `ResultsList`
+                itself (still just its `<ul>` grid) sits inside it,
+                `mx-0` overriding its own default page-level side margin
+                (meant for List view's un-boxed layout) now that this
+                wrapper's padding is what insets its content instead.
+
+                Split into this outer box and a separate inner scroll
+                element (below), per the user, 2026-09-28, same session
+                -- `overflow-y-auto` used to live directly on this outer,
+                rounded/bordered box, which let a real vertical scrollbar
+                (Chrome/macOS with a reserved, space-taking one) visually
+                square off the top-right/bottom-right corners it runs
+                past, instead of following this box's own curve. This
+                outer box now only carries the border/radius/padding
+                (never scrolls itself); the inner element owns
+                `overflow-y-auto`/`max-h-[600px]`/`min-h-0` and its OWN
+                matching `rounded-tr`/`rounded-br` (generous, same
+                token) -- only those two corners, since a vertical
+                scrollbar only ever runs down the right edge -- so
+                whatever native scrollbar Chrome draws clips to (and
+                follows) a properly rounded corner there instead of a
+                square one. */}
+            <div className="dual-view-list rounded-[var(--semantic-border-radius-generous)] border-[length:1px] border-[color:var(--primitives-ref-color-neutral-600)] p-[var(--density-spacing-fixed-x-small)]">
+              <div className="min-[920px]:min-h-0 min-[920px]:max-h-[600px] min-[920px]:overflow-y-auto rounded-tr-[var(--semantic-border-radius-generous)] rounded-br-[var(--semantic-border-radius-generous)]">
+                <ResultsList
+                  locations={filteredLocations}
+                  advisorCardsFirst={advisorCardsFirst}
+                  selectedFocusAreas={selectedFocusAreas}
+                  acceptingNewClientsOnly={acceptingNewClients}
+                  selectedLocationId={selectedLocationId}
+                  onSelectLocation={handleListSelect}
+                  registerItemRef={registerItemRef}
+                  className="mx-0 md:grid-cols-1 lg:grid-cols-1"
+                />
+              </div>
+            </div>
             {/* `md:rounded-tl-[...]`/`md:rounded-bl-[...]`, layered on
                 top of the base component's own uniform `md:rounded-
                 [large]` (24px, all four corners) -- per the user,

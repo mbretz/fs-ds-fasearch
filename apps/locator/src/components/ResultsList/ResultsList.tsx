@@ -144,15 +144,30 @@ export function ResultsList({
         className={cn(
           'col-span-full',
           selectedLocationId === location.id &&
-            // A real `border`, not a `ring` (box-shadow) -- per the
-            // user, the ring was only showing up as a faint sliver
-            // along the card's top edge rather than a full outline
-            // (Dual view's map<->list selection highlight). A border
-            // directly on this wrapper participates in the normal
-            // box model instead of an outside-the-box shadow, so it
-            // can't be partially covered the way the ring apparently
-            // was.
-            'relative z-10 border-[length:var(--component-tag-border-width)] border-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
+            // `outline`, not `border` -- fixed 2026-09-28 after a real,
+            // user-reported bug: a `border` is part of the box model, so
+            // adding one on selection shrinks this `<li>`'s own content
+            // area by the border's width, which could (in Dual view's
+            // already-tight list pane, further narrowed by a real
+            // scrollbar) push `EntityCard`'s inner `Card.Root` below
+            // its own hard `min-w-[var(--component-card-min-width)]`
+            // floor -- at that point `Card.Root` stopped shrinking to
+            // match while its containing `@container/entity-card` div
+            // (sized off THIS now-narrower `<li>`) kept shrinking,
+            // leaving the card visibly wider than the selection outline
+            // meant to wrap it. `outline` draws outside the box model
+            // entirely (into the grid's own 16px gap, which has room to
+            // spare) without changing this `<li>`'s own width at all,
+            // so selecting a card can never itself trigger that
+            // mismatch again -- also the guidance's own explicit
+            // preference over `box-shadow`/`border-image` for a ring
+            // like this (modern-web-guidance's `css` guide, forced-
+            // colors-mode visibility). A real `box-shadow` ring was
+            // tried before landing on the original `border` above (see
+            // that history) for an unrelated rendering gap along the
+            // top edge -- `outline` doesn't share that failure mode,
+            // since it's a real stroked rectangle, not a shadow.
+            'relative z-10 outline-[length:var(--component-tag-border-width)] outline-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
         )}
       >
         <LocationCard
@@ -217,9 +232,9 @@ export function ResultsList({
           isOnlyAdvisorResult ? 'mx-0' : 'mx-auto max-w-[729px]',
           isSingleAdvisor &&
             selectedLocationId === location.id &&
-            // Same border-not-ring fix as the LocationCard `<li>`
+            // Same border->outline fix as the LocationCard `<li>`
             // above -- see its own comment.
-            'relative z-10 border-[length:var(--component-tag-border-width)] border-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
+            'relative z-10 outline-[length:var(--component-tag-border-width)] outline-[color:var(--color-intent-primary-base)] rounded-[var(--semantic-border-radius-generous)]',
         )}
       >
         {/* `showPortraitBadge={false}` -- per the user, `StatusTag`
