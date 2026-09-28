@@ -61,9 +61,22 @@ export function FavoriteToggle({
   const capErrorMessage = capError && (
     <span
       role="status"
-      className="absolute top-full left-0 mt-[var(--density-spacing-fixed-x-small)] w-max max-w-[240px] text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] text-critical-strong"
+      // `border-critical bg-critical-subtle` -- same critical-variant
+      // pairing Button.tsx's own `variant="critical"` already uses (see
+      // its own `border-critical` class), reused here rather than
+      // inventing a new critical treatment. Was plain unboxed text before
+      // this; the border/background/padding/radius turn it into a real
+      // toast-style surface instead of floating text. `z-20` -- this
+      // toggle sits inside a card in a grid (AdvisorCard/LocationCard),
+      // and the toast's own `absolute` positioning can overflow this
+      // toggle's box into the next card's own area; no dedicated
+      // z-index-* scale entry exists for card-level content like this
+      // (see theme.css's own overlay/modal/popover roles, none of which
+      // fit), so a plain `z-20` is enough to beat sibling cards' default
+      // z-auto stacking, per the user.
+      className="absolute top-full left-0 z-20 mt-[var(--density-spacing-fixed-x-small)] w-max max-w-[240px] rounded-[var(--semantic-border-radius-generous)] border-[length:var(--semantic-surface-border-width)] border-critical bg-critical-subtle px-[var(--density-spacing-fixed-med)] py-[var(--density-spacing-fixed-x-small)] text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] text-critical-strong"
     >
-      You can only favorite up to {FAVORITES_CAP} advisors
+      You can only favorite up to {FAVORITES_CAP} advisors in this prototype
     </span>
   );
 
