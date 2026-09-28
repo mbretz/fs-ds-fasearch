@@ -247,6 +247,15 @@ body {
   /* role: popover, rank 4 (raised) -- SelectInput, FilterMenu, SearchInput's drawer */
   z-index: calc(300 + 4);
 }
+@utility z-index-persistent-tray {
+  /* role: persistent-tray, no elevation rank -- a fixed, non-modal,
+     always-present disclosure (e.g. apps/locator's PrototypeInfoTray),
+     distinct from every role above: it must sit above ordinary page
+     content but stay below an open Dialog (z-index-modal, 205) so that
+     modal still correctly covers it, and below popover (304) too since a
+     transient anchored surface should never render under it. */
+  z-index: 150;
+}
 
 /*
  * Dialog fade `@keyframes` -- added 2026-09-23. MUST live in this real,

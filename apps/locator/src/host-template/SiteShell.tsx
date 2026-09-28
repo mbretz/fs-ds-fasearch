@@ -3,6 +3,7 @@ import { Outlet, useLocation, useRoutes } from 'react-router-dom';
 import { routeChildren } from '../routes';
 import { SiteHeader } from './SiteHeader';
 import { SiteFooter } from './SiteFooter';
+import { PrototypeInfoTray } from '../components/PrototypeInfoTray/PrototypeInfoTray';
 
 export function SiteShell() {
   // Standard React Router "modal route" pattern: when the current
@@ -131,6 +132,10 @@ export function SiteShell() {
         <Outlet />
       </main>
       <SiteFooter />
+      {/* Fixed to the viewport, not this column's flow -- rendered last so
+          it isn't a sticky-footer participant, but its own `fixed`
+          positioning means DOM order here doesn't actually matter. */}
+      <PrototypeInfoTray />
     </div>
   );
 }
