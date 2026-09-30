@@ -165,7 +165,7 @@ export function ProspectPortalLite({
                   onClick={(event) => event.preventDefault()}
                   className="cursor-not-allowed text-[length:var(--semantic-content-nanocopy-font-size)] font-[number:var(--semantic-content-nanocopy-font-weight)] leading-[var(--semantic-content-nanocopy-line-height)]"
                 >
-                  Go to Prospect Portal.
+                  Go to My Edward Jones.
                 </Link>
                 <Link
                   asChild
@@ -240,9 +240,9 @@ export function ProspectPortalLite({
           // explicit gap on top of it.
           className="flex flex-wrap items-center justify-center self-end gap-x-[var(--density-spacing-fixed-small)] rounded-full bg-[color:var(--semantic-brand-secondary-light-gold)] px-[var(--density-spacing-fixed-med)] py-[var(--density-spacing-fixed-x-small)]"
         >
-          <div className="flex items-center gap-[var(--density-spacing-fixed-small)]">
+          <div className="flex items-center gap-[var(--density-spacing-fixed-x-small)]">
             <span className="text-[length:var(--semantic-content-nanoheading-font-size)] font-[number:var(--semantic-content-nanoheading-font-weight)] leading-[var(--semantic-content-nanoheading-line-height)] text-[color:var(--semantic-content-common-text-color-default)] uppercase">
-              Edward Jones Prospect Portal
+              My Edward Jones
             </span>
             {/* 16x16 (`density.sizing.fixed.large`, same token
                 SearchFormSearchInput's own suggestion-row icons read), in
@@ -260,7 +260,7 @@ export function ProspectPortalLite({
               <PopoverPrimitive.Trigger asChild>
                 <button
                   type="button"
-                  aria-label="What is the Prospect Portal?"
+                  aria-label="What is My Edward Jones?"
                   // `-ml-[4px]` -- this row's shared `gap-[fixed-small]`
                   // (8px) reads as too much air between the label text
                   // and this icon specifically, per the user, 2026-09-26;
@@ -268,7 +268,7 @@ export function ProspectPortalLite({
                   // shrinking the row's own shared gap, which would also
                   // tighten the icon-to-"Sign in" gap) tightens only the
                   // one relationship that was flagged, down to a net 4px.
-                  className="-ml-[4px] cursor-pointer rounded-full focus-visible:outline-none focus-visible:shadow-[0_0_0_var(--semantic-control-border-width-active)_var(--semantic-content-common-text-color-default)]"
+                  className=" cursor-pointer rounded-full focus-visible:outline-none focus-visible:shadow-[0_0_0_var(--semantic-control-border-width-active)_var(--semantic-content-common-text-color-default)]"
                 >
                   <HelpQuestionMark
                     aria-hidden="true"
@@ -281,11 +281,15 @@ export function ProspectPortalLite({
                   data-density="roomy"
                   align="start"
                   sideOffset={CONTENT_SIDE_OFFSET}
-                  className="z-index-popover flex flex-col items-start gap-[var(--density-spacing-fixed-x-small)] rounded-[var(--semantic-border-radius-generous)] bg-[color:var(--semantic-brand-secondary-light-gold)] px-[var(--density-spacing-fixed-large)] py-[var(--density-spacing-fixed-small)] shadow-elevation-raised"
+                  className="w-60 text-center z-index-popover flex flex-col items-center justify-center gap-[var(--density-spacing-fixed-x-small)] rounded-[var(--semantic-border-radius-generous)] bg-[color:var(--semantic-brand-secondary-light-gold)] px-[var(--density-spacing-fixed-large)] py-[var(--density-spacing-fixed-med)] shadow-elevation-raised"
                 >
                   {/* Inert, same as the signed-in popover's own "Go to
-                      Prospect Portal." above -- no real destination built
+                      My Edward Jones." above -- no real destination built
                       for this yet either. */}
+                  <p className="text-[length:var(--semantic-content-nanocopy-font-size)] font-[number:var(--semantic-content-nanocopy-font-weight)] leading-[var(--semantic-content-nanocopy-line-height)]">
+                    Everything you need to begin working with an Edward Jones
+                    financial advisor all in one place.
+                  </p>
                   <Link
                     href="#"
                     aria-disabled="true"

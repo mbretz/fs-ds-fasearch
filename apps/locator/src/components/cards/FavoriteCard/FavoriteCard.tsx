@@ -5,11 +5,7 @@ import { EntityPortrait } from '../../entity-info/EntityPortrait';
 import { EntityActions } from '../../entity-info/EntityActions';
 import { ContactLinks } from '../../entity-info/ContactLinks';
 import { FocusAreasPanel } from '../../entity-info/FocusAreasPanel';
-// `FavoriteToggle` itself (and the `useFavorites` hook it wraps) is left
-// fully in place -- only its render below is commented out, per the user,
-// so the unfavorite control can be reinstalled here later with a single
-// uncomment rather than rebuilding it.
-// import { FavoriteToggle } from '../../entity-info/FavoriteToggle';
+import { FavoriteToggle } from '../../entity-info/FavoriteToggle';
 import { NewClientInquiryDialog } from '../../entity-info/NewClientInquiryDialog';
 import { getFullName } from '../../../utils/getFullName';
 import { cn } from '../../../utils/cn';
@@ -152,10 +148,6 @@ export function FavoriteCard({
         <span className="text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-common-text-color-reverse)]">
           {fullName}
         </span>
-        {/* Unfavorite control removed from this card, per the user --
-            re-add with `<FavoriteToggle advisorId={advisor.id}
-            name={fullName} showLabel />` (see the commented-out import
-            above) if it should come back. */}
       </div>
       {nav}
       {/* Figma's own gap here (40px) has no matching `fixed` token --
@@ -187,6 +179,18 @@ export function FavoriteCard({
           always above 320) is what actually governs this card's floor
           now, not Card's generic one. */}
       <Card.Root className="w-full min-w-0 flex-1 items-stretch gap-[var(--density-spacing-fixed-xxx-large)] p-[var(--density-spacing-fixed-small)] pt-[var(--density-spacing-fixed-large)]">
+        {/* Desktop hero's "In your Favorites" + "Remove" treatment
+            (`variant="expanded"`), per the user. Centered, with a
+            negative bottom margin cancelling half of Card.Root's 32px
+            gap so the space below (16px, to `actions`) matches the card's
+            own 16px top padding above it. */}
+        <FavoriteToggle
+          advisorId={advisor.id}
+          name={fullName}
+          showLabel
+          variant="expanded"
+          className="-mb-[var(--density-spacing-fixed-large)] justify-center"
+        />
         {actions}
         {/* Flush with `actions`' own left edge, not a deeper 24px indent
             (Figma's `.FA-Card-Contact` static 24px padding) -- per the

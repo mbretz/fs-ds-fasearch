@@ -187,6 +187,10 @@ export function PrototypeInfoTray({ className }: PrototypeInfoTrayProps) {
                     — they point at real destinations that don&rsquo;t exist in
                     this demo.
                   </li>
+                  <li>
+                    To return to the prototype landing page, click the "Find a
+                    Financial Advisor" button in the site header.
+                  </li>
                 </ul>
                 <button
                   type="button"
