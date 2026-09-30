@@ -35,7 +35,11 @@ export function AboutMeSection({
       <span className="text-[length:var(--semantic-content-heading-font-size)] leading-[length:var(--semantic-content-heading-line-height)] font-[number:var(--semantic-content-heading-font-weight)] text-[color:var(--semantic-content-heading-color)]">
         About Me
       </span>
-      {bio && <p className={bioTextClassName}>{bio}</p>}
+      {bio?.split('\n\n').map((paragraph) => (
+        <p key={paragraph} className={bioTextClassName}>
+          {paragraph}
+        </p>
+      ))}
       {advisor.personalInterests.length > 0 && (
         <div className="flex flex-col gap-[var(--density-spacing-fixed-x-small)]">
           <span className="text-[length:var(--semantic-content-subheading-font-size)] leading-[length:var(--semantic-content-subheading-line-height)] font-[number:var(--semantic-content-subheading-font-weight)] text-[color:var(--semantic-content-subheading-color)]">

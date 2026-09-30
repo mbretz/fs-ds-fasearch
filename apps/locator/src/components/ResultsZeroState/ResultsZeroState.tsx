@@ -26,9 +26,9 @@ function MatchPanel() {
       <div className="flex flex-col gap-[var(--density-spacing-fixed-large)]">
         {/* Heavy (16/24/600). Text color: `common.text-color.default` --
             same reasoning as `StartingPointPanel`'s own comment above. */}
-        <h2 className="text-balance text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[var(--semantic-content-common-text-color-default)]">
-          Get Matched with Advisors Near You
-        </h2>
+        <h3 className="text-balance text-[length:var(--semantic-content-heavy-font-size)] leading-[length:var(--semantic-content-heavy-line-height)] font-[number:var(--semantic-content-heavy-font-weight)] text-[var(--semantic-content-common-text-color-default)]">
+          Having trouble finding the right financial advisor?
+        </h3>
         {/* Microcopy (14/24/400). */}
         <p className="text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] font-[number:var(--semantic-content-microcopy-font-weight)] text-[var(--semantic-content-common-text-color-default)]">
           Take two minutes to help us understand your needs and goals and match
@@ -105,13 +105,18 @@ function StartingPointPanel() {
 // panels.
 export function ResultsZeroState() {
   return (
-    <div className="mx-[var(--density-layout-fixed-xxx-large)] my-[var(--density-spacing-fixed-xxx-large)] flex flex-col gap-[var(--density-spacing-fixed-xx-large)] md:flex-row md:items-stretch">
-      <div className="md:flex-1">
-        <MatchPanel />
+    <>
+      <h2 className="text-[length:var(--semantic-content-heading-font-size)] leading-[length:var(--semantic-content-heading-line-height)] font-[number:var(--semantic-content-heading-font-weight)] text-[var(--semantic-content-common-text-color-default)] mx-[var(--density-layout-fixed-xxx-large)] my-[var(--density-spacing-fixed-xxx-large)]">
+        No results found.
+      </h2>
+      <div className="mx-[var(--density-layout-fixed-xxx-large)] my-[var(--density-spacing-fixed-xxx-large)] flex flex-col gap-[var(--density-spacing-fixed-xx-large)] md:flex-row md:items-stretch">
+        <div className="md:flex-1">
+          <MatchPanel />
+        </div>
+        <div className="md:flex-1">
+          <StartingPointPanel />
+        </div>
       </div>
-      <div className="md:flex-1">
-        <StartingPointPanel />
-      </div>
-    </div>
+    </>
   );
 }
