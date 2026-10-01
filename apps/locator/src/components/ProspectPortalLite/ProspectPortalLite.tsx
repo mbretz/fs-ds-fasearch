@@ -7,6 +7,7 @@ import { useSession } from '../../session/useSession';
 import { getInitials } from '../../utils/getInitials';
 import { cn } from '../../utils/cn';
 import type { ProspectPortalLiteProps } from './ProspectPortalLite.types';
+import { clearAfterViewTransition } from '../../utils/clearAfterViewTransition';
 
 // spacing.fixed.x-small (4px, density-invariant), same token FilterMenu's
 // and SearchInput's own Popover Content sideOffset read — Popper's
@@ -82,9 +83,7 @@ export function ProspectPortalLite({
           returnTo: `${window.location.pathname}${window.location.search}`,
         },
       });
-      window.setTimeout(() => {
-        delete document.documentElement.dataset.favoritesTransitionDirection;
-      }, 400);
+      clearAfterViewTransition('favoritesTransitionDirection');
       return;
     }
     navigate(favoritesHref, { state: { backgroundLocation: location } });

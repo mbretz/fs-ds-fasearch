@@ -1,13 +1,10 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '../favorites/useFavorites';
 import { findAdvisorById } from '../utils/findAdvisor';
-import { useMediaQuery } from '../utils/useMediaQuery';
+import { DESKTOP_QUERY, useMediaQuery } from '../utils/useMediaQuery';
 import { FavoritesComparatorDialog } from '../components/favorites-comparator/FavoritesComparatorDialog';
 import { FavoritesComparatorMobile } from '../components/favorites-comparator/FavoritesComparatorMobile';
-
-// 768px matches SiteHeader.tsx's own documented `md` breakpoint -- reusing
-// that same number rather than introducing a second real breakpoint value.
-const DESKTOP_QUERY = '(min-width: 768px)';
+import { clearAfterViewTransition } from '../utils/clearAfterViewTransition';
 
 // Falls back to this when `?from=` is missing (e.g. `/favorites` entered
 // directly) -- every real launcher (ProspectPortal on Results,
@@ -50,7 +47,10 @@ export function Favorites() {
           if (hasBackgroundLocation) {
             navigate(-1);
           } else {
-            navigate('/search');
+            // `returnTo` covers a mobile launch that was widened to desktop.
+            const returnTo = (location.state as { returnTo?: string } | null)
+              ?.returnTo;
+            navigate(returnTo ?? '/search');
           }
         }}
       />
@@ -75,16 +75,24 @@ export function Favorites() {
   // landing on `/favorites` with no `state` at all (e.g. a direct URL
   // visit) -- untransitioned, same as before.
   function backWithSlide() {
-    const returnTo = (location.state as { returnTo?: string } | null)?.returnTo;
+    // `backgroundLocation` as a fallback for a desktop launch (no
+    // `returnTo`) that was then resized to mobile width.
+    const state = location.state as {
+      returnTo?: string;
+      backgroundLocation?: { pathname: string; search: string };
+    } | null;
+    const returnTo =
+      state?.returnTo ??
+      (state?.backgroundLocation
+        ? `${state.backgroundLocation.pathname}${state.backgroundLocation.search}`
+        : undefined);
     if (!returnTo) {
       navigate(-1);
       return;
     }
     document.documentElement.dataset.favoritesTransitionDirection = 'backward';
     navigate(returnTo, { viewTransition: true });
-    window.setTimeout(() => {
-      delete document.documentElement.dataset.favoritesTransitionDirection;
-    }, 400);
+    clearAfterViewTransition('favoritesTransitionDirection');
   }
 
   return (

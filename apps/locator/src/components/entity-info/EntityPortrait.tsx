@@ -98,6 +98,11 @@ export interface EntityPortraitProps {
   style?: CSSProperties;
 }
 
+// Photo URLs that have already loaded once this session -- a remount of
+// the same portrait (e.g. the page rebuilt under the favorites Dialog)
+// skips the fade-in instead of replaying it.
+const loadedPhotoUrls = new Set<string>();
+
 export function EntityPortrait({
   photoUrl,
   name,
@@ -120,6 +125,9 @@ export function EntityPortrait({
   // Fallback anyway rather than hiding the avatar forever on a genuinely
   // broken photo URL.
   const [imageErrored, setImageErrored] = useState(false);
+  const [alreadyLoaded] = useState(
+    () => !!photoUrl && loadedPhotoUrls.has(photoUrl),
+  );
 
   return (
     <div
@@ -172,6 +180,11 @@ export function EntityPortrait({
         .entity-portrait-image {
           animation: entity-portrait-image-fade-in 150ms ease-out;
         }
+        .entity-portrait-image.entity-portrait-image-cached,
+        .entity-portrait-has-photo.entity-portrait-cached {
+          animation: none;
+          transition: none;
+        }
         @media (prefers-reduced-motion: reduce) {
           .entity-portrait-has-photo {
             transition: none;
@@ -188,6 +201,7 @@ export function EntityPortrait({
           avatarBorderClassName[size],
           photoUrl && 'entity-portrait-has-photo',
           imageErrored && 'entity-portrait-errored',
+          alreadyLoaded && 'entity-portrait-cached',
           avatarClassName,
         )}
       >
@@ -195,10 +209,14 @@ export function EntityPortrait({
           <Avatar.Image
             src={photoUrl}
             alt=""
-            className="entity-portrait-image"
-            onLoadingStatusChange={(loadingStatus) =>
-              setImageErrored(loadingStatus === 'error')
-            }
+            className={cn(
+              'entity-portrait-image',
+              alreadyLoaded && 'entity-portrait-image-cached',
+            )}
+            onLoadingStatusChange={(loadingStatus) => {
+              setImageErrored(loadingStatus === 'error');
+              if (loadingStatus === 'loaded') loadedPhotoUrls.add(photoUrl);
+            }}
           />
         )}
         <Avatar.Fallback className="entity-portrait-fallback">

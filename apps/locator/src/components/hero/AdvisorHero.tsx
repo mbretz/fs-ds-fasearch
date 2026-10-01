@@ -11,6 +11,7 @@ import { getFullName } from '../../utils/getFullName';
 import { useSession } from '../../session/useSession';
 import { useStuckSentinel } from '../../hooks/useStuckSentinel';
 import { cn } from '../../utils/cn';
+import { clearAfterViewTransition } from '../../utils/clearAfterViewTransition';
 
 export interface AdvisorHeroProps {
   advisor: Advisor;
@@ -547,9 +548,7 @@ function AdvisorHeroMobile({
     document.documentElement.dataset.advisorInquiryTransitionDirection =
       'forward';
     navigate(dedicatedInquiryHref, { viewTransition: true });
-    window.setTimeout(() => {
-      delete document.documentElement.dataset.advisorInquiryTransitionDirection;
-    }, 400);
+    clearAfterViewTransition('advisorInquiryTransitionDirection');
   }
   // Plain CSS `scroll-margin-top` (set on the form's own wrapper, see
   // AdvisorProfile.tsx) doesn't reliably offset a native URL-fragment

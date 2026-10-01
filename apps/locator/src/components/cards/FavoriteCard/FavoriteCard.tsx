@@ -189,7 +189,7 @@ export function FavoriteCard({
           name={fullName}
           showLabel
           variant="expanded"
-          className="-mb-[var(--density-spacing-fixed-large)] justify-center"
+          className="-mb-[var(--density-spacing-fixed-large)] justify-center [&>button]:text-[16px] [&>span]:text-[16px]"
         />
         {actions}
         {/* Flush with `actions`' own left edge, not a deeper 24px indent

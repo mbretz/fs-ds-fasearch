@@ -1,5 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { useScrollToTopOnArrival } from '../hooks/useScrollToTopOnArrival';
 import { findAdvisorById } from '../utils/findAdvisor';
 import { AdvisorHero } from '../components/hero/AdvisorHero';
 import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
@@ -65,6 +66,7 @@ export function AdvisorProfile() {
   const { id } = useParams<{ id: string }>();
   const found = id ? findAdvisorById(id) : undefined;
   const routerLocation = useLocation();
+  useScrollToTopOnArrival();
 
   // Restores scroll position when arriving back from the dedicated
   // `AdvisorInquiry.tsx` route (`state: { scrollToHeroTop: true }`, set

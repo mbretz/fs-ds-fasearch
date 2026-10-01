@@ -192,7 +192,11 @@ export function EntityActions({
   );
   const primaryLink =
     primaryViewTransition && !primaryInert ? (
-      <Link to={primaryHref ?? '#'} viewTransition>
+      <Link
+        to={primaryHref ?? '#'}
+        viewTransition
+        state={{ scrollToTop: true }}
+      >
         {primaryLinkContent}
       </Link>
     ) : (
