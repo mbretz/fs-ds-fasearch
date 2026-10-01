@@ -28,6 +28,7 @@ export function FavoritesComparatorMobile({
   onBack,
 }: FavoritesComparatorMobileProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const hasMultiple = favoriteAdvisors.length > 1;
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   // Sync nav state to whichever slide is actually snapped -- per
@@ -149,87 +150,110 @@ export function FavoritesComparatorMobile({
                   location={location}
                   variant="mobile"
                   nav={
-                    // Per the user, the nav lives between the name and
-                    // the card body, i.e. inside each card slide -- but
-                    // it must only be a REAL, single control, not N
-                    // duplicate tab-stops. Every slide renders identical
-                    // nav markup (so it's already in the right spot no
-                    // matter which slide is snapped/visible), and `inert`
-                    // strips every copy but the active slide's out of the
-                    // tab order and accessibility tree entirely (not just
-                    // visually hidden -- also blocks clicks on the
-                    // clipped-offscreen copies).
-                    <nav
-                      aria-label="Favorited advisors"
-                      aria-hidden={!isActive}
-                      inert={!isActive}
-                      className="flex items-center justify-center gap-[var(--density-spacing-fixed-large)]"
+                    // Always mounted, collapsed (not unmounted) while
+                    // there's only one favorite -- per the user, so
+                    // removing a favorite down to one animates the nav
+                    // away instead of jumping. `block-size` to/from
+                    // `auto` (`interpolate-size`, Chrome/Edge-only,
+                    // instant jump elsewhere -- same standing exception
+                    // as AdvisorHero's FavoriteToggle row). `-mt-[gap]`
+                    // cancels one of the two `gap`s around this item,
+                    // which don't collapse with its height. `inert`
+                    // pulls the collapsed copy out of tab order/AT.
+                    <div
+                      aria-hidden={!hasMultiple}
+                      inert={!hasMultiple}
+                      className={cn(
+                        '[interpolate-size:allow-keywords] overflow-hidden transition-[block-size,opacity,margin-top] duration-300 ease-in-out motion-reduce:transition-none',
+                        hasMultiple
+                          ? '[block-size:auto] mt-0 opacity-100'
+                          : '[block-size:0] mt-[calc(-1*var(--density-spacing-fixed-med))] opacity-0',
+                      )}
                     >
-                      <button
-                        type="button"
-                        aria-label="Previous advisor"
-                        onClick={() => {
-                          if (activeIndex === 0) return;
-                          scrollToIndex(activeIndex - 1);
-                        }}
-                        // `aria-disabled`, not `disabled` -- a *focused*
-                        // button that goes `disabled` on the same click
-                        // that reaches this boundary loses focus, and the
-                        // browser's default focus repair jumps the page
-                        // to the document's top (the "Comparing..."
-                        // heading). `aria-disabled` keeps the button
-                        // focusable while the guarded onClick above makes
-                        // it a no-op.
-                        aria-disabled={activeIndex === 0}
-                        className="cursor-pointer text-white aria-disabled:cursor-not-allowed aria-disabled:opacity-40"
+                      {/* Per the user, the nav lives between the name and the
+                          card body, i.e. inside each card slide -- but it must
+                          only be a REAL, single control, not N duplicate
+                          tab-stops. Every slide renders identical nav markup
+                          (so it's already in the right spot no matter which
+                          slide is snapped/visible), and `inert` strips every
+                          copy but the active slide's out of the tab order and
+                          accessibility tree entirely (not just visually
+                          hidden -- also blocks clicks on the clipped-offscreen
+                          copies). */}
+                      <nav
+                        aria-label="Favorited advisors"
+                        aria-hidden={!isActive}
+                        inert={!isActive}
+                        className="flex items-center justify-center gap-[var(--density-spacing-fixed-large)]"
                       >
-                        <ChevronLeft aria-hidden className="size-[24px]" />
-                      </button>
-                      <div
-                        role="tablist"
-                        className="flex items-center gap-[12px]"
-                      >
-                        {favoriteAdvisors.map(({ advisor: a }, dotIndex) => (
-                          <button
-                            key={a.id}
-                            type="button"
-                            role="tab"
-                            aria-label={`Go to ${a.firstName} ${a.lastName}`}
-                            aria-current={
-                              dotIndex === activeIndex ? 'location' : undefined
-                            }
-                            onClick={() => scrollToIndex(dotIndex)}
-                            // Figma's dot colors (`#28A4E2` active /
-                            // `#979A9B` inactive) have no semantic-tier
-                            // match -- primitives fallback
-                            // (`blue-500`/`neutral-600`), per this repo's
-                            // documented component -> semantic ->
-                            // primitives order.
-                            className={cn(
-                              'size-[8px] cursor-pointer rounded-full',
-                              dotIndex === activeIndex
-                                ? 'bg-[color:var(--primitives-ref-color-blue-500)]'
-                                : 'bg-[color:var(--primitives-ref-color-neutral-600)]',
-                            )}
-                          />
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        aria-label="Next advisor"
-                        onClick={() => {
-                          if (activeIndex === favoriteAdvisors.length - 1)
-                            return;
-                          scrollToIndex(activeIndex + 1);
-                        }}
-                        aria-disabled={
-                          activeIndex === favoriteAdvisors.length - 1
-                        }
-                        className="cursor-pointer text-white aria-disabled:cursor-not-allowed aria-disabled:opacity-40"
-                      >
-                        <ChevronRight aria-hidden className="size-[24px]" />
-                      </button>
-                    </nav>
+                        <button
+                          type="button"
+                          aria-label="Previous advisor"
+                          onClick={() => {
+                            if (activeIndex === 0) return;
+                            scrollToIndex(activeIndex - 1);
+                          }}
+                          // `aria-disabled`, not `disabled` -- a *focused*
+                          // button that goes `disabled` on the same click
+                          // that reaches this boundary loses focus, and the
+                          // browser's default focus repair jumps the page
+                          // to the document's top (the "Comparing..."
+                          // heading). `aria-disabled` keeps the button
+                          // focusable while the guarded onClick above makes
+                          // it a no-op.
+                          aria-disabled={activeIndex === 0}
+                          className="cursor-pointer text-white aria-disabled:cursor-not-allowed aria-disabled:opacity-40"
+                        >
+                          <ChevronLeft aria-hidden className="size-[24px]" />
+                        </button>
+                        <div
+                          role="tablist"
+                          className="flex items-center gap-[12px]"
+                        >
+                          {favoriteAdvisors.map(({ advisor: a }, dotIndex) => (
+                            <button
+                              key={a.id}
+                              type="button"
+                              role="tab"
+                              aria-label={`Go to ${a.firstName} ${a.lastName}`}
+                              aria-current={
+                                dotIndex === activeIndex
+                                  ? 'location'
+                                  : undefined
+                              }
+                              onClick={() => scrollToIndex(dotIndex)}
+                              // Figma's dot colors (`#28A4E2` active /
+                              // `#979A9B` inactive) have no semantic-tier
+                              // match -- primitives fallback
+                              // (`blue-500`/`neutral-600`), per this repo's
+                              // documented component -> semantic ->
+                              // primitives order.
+                              className={cn(
+                                'size-[8px] cursor-pointer rounded-full',
+                                dotIndex === activeIndex
+                                  ? 'bg-[color:var(--primitives-ref-color-blue-500)]'
+                                  : 'bg-[color:var(--primitives-ref-color-neutral-600)]',
+                              )}
+                            />
+                          ))}
+                        </div>
+                        <button
+                          type="button"
+                          aria-label="Next advisor"
+                          onClick={() => {
+                            if (activeIndex === favoriteAdvisors.length - 1)
+                              return;
+                            scrollToIndex(activeIndex + 1);
+                          }}
+                          aria-disabled={
+                            activeIndex === favoriteAdvisors.length - 1
+                          }
+                          className="cursor-pointer text-white aria-disabled:cursor-not-allowed aria-disabled:opacity-40"
+                        >
+                          <ChevronRight aria-hidden className="size-[24px]" />
+                        </button>
+                      </nav>
+                    </div>
                   }
                 />
               </div>

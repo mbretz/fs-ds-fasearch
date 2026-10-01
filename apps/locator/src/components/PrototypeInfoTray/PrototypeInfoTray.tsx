@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Collapsible as CollapsiblePrimitive } from 'radix-ui';
 import { NoticeInfo, CaretDown, CaretUp } from 'icons';
 import { cn } from '../../utils/cn';
@@ -189,7 +189,14 @@ export function PrototypeInfoTray({ className }: PrototypeInfoTrayProps) {
                   </li>
                   <li>
                     To return to the prototype landing page, click the "Find a
-                    Financial Advisor" button in the site header.
+                    Financial Advisor" button in the site header, or{' '}
+                    <Link
+                      to="/"
+                      className="text-[color:var(--semantic-brand-secondary-light-gold)] underline"
+                    >
+                      click here
+                    </Link>
+                    .
                   </li>
                 </ul>
                 <button

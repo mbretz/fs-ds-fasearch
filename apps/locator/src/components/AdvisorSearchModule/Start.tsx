@@ -339,7 +339,7 @@ export function Start() {
         </div>
       </div>
 
-      <div className="[grid-area:quiz] min-w-0 px-[var(--density-spacing-fixed-large)] @[768px]/module:px-0">
+      <div className="[grid-area:quiz] min-w-0 px-[var(--density-spacing-fixed-large)] pb-[var(--density-spacing-fixed-large)] @[768px]/module:px-0 @[768px]/module:pb-0">
         <StartingPointPanel />
       </div>
 

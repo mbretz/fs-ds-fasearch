@@ -3,6 +3,7 @@ import { Outlet, useLocation, useRoutes } from 'react-router-dom';
 import { routeChildren } from '../routes';
 import { SiteHeader } from './SiteHeader';
 import { SiteFooter } from './SiteFooter';
+import { useMediaQuery, DESKTOP_QUERY } from '../utils/useMediaQuery';
 import { PrototypeInfoTray } from '../components/PrototypeInfoTray/PrototypeInfoTray';
 
 export function SiteShell() {
@@ -22,9 +23,15 @@ export function SiteShell() {
   // location when there's no background one to match instead) -- only
   // the *rendering* of its result below is conditional.
   const location = useLocation();
-  const backgroundLocation = (
-    location.state as { backgroundLocation?: Location } | null
-  )?.backgroundLocation;
+  const isDesktop = useMediaQuery(DESKTOP_QUERY);
+  // Only honored at desktop widths -- below them `Favorites.tsx` renders
+  // the full-page mobile comparator, so a leftover background location
+  // (launched on desktop, then resized down) would stack the origin page
+  // underneath it.
+  const backgroundLocation = isDesktop
+    ? (location.state as { backgroundLocation?: Location } | null)
+        ?.backgroundLocation
+    : undefined;
   const backgroundElement = useRoutes(
     routeChildren,
     backgroundLocation ?? location,

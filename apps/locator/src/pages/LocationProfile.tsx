@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { useScrollToTopOnArrival } from '../hooks/useScrollToTopOnArrival';
 import { findLocationById } from '../utils/findAdvisor';
 import { LocationHero } from '../components/hero/LocationHero';
 import { ProspectPortalLite } from '../components/ProspectPortalLite/ProspectPortalLite';
@@ -26,6 +27,7 @@ const profileBodySectionClassName =
 export function LocationProfile() {
   const { id } = useParams<{ id: string }>();
   const location = id ? findLocationById(id) : undefined;
+  useScrollToTopOnArrival();
 
   if (!location) {
     return (

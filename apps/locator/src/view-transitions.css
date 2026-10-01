@@ -256,6 +256,20 @@ html[data-advisor-inquiry-transition-direction='backward']::view-transition-new(
   delta (`navigate(-1)`), which that option doesn't support -- see its
   own doc comment.
 */
+/*
+  The origin page's Hero names its portrait/name (`advisor-portrait-*`,
+  `location-*`, `advisor-hero-mobile-*`) for card-to-profile morphs, but
+  `/favorites` has no counterpart for them -- left named, each would get
+  its own unpaired group and fade while the rest of the page slides.
+  `!important` beats the inline `style` those names are set with.
+*/
+html[data-favorites-transition-direction]
+  :is(
+    [style*='view-transition-name'],
+    [class*='view-transition-name:advisor-hero-mobile']
+  ) {
+  view-transition-name: none !important;
+}
 html[data-favorites-transition-direction='forward']::view-transition-old(root),
 html[data-favorites-transition-direction='backward']::view-transition-old(root),
 html[data-favorites-transition-direction='forward']::view-transition-new(root),

@@ -46,10 +46,17 @@ export function useStuckSentinel(stickyOffsetPx = 0, viewTransition = false) {
   useEffect(() => {
     const node = sentinelRef.current;
     if (!node) return;
+    // The observer's first callback only reports the initial state, not a
+    // scroll-driven change -- applying it instantly keeps a mount-time
+    // transition from firing inside another transition's window (e.g. the
+    // favorites slide back to this page, which it would play a second time).
+    let initial = true;
     const observer = new IntersectionObserver(
       ([entry]) => {
         const next = !entry.isIntersecting;
-        if (viewTransition && document.startViewTransition) {
+        const isInitial = initial;
+        initial = false;
+        if (!isInitial && viewTransition && document.startViewTransition) {
           document.documentElement.dataset.stuckTransitionDirection = next
             ? 'stuck'
             : 'unstuck';

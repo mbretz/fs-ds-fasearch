@@ -3,6 +3,7 @@ import { LinkNavigation } from 'ds';
 import { findAdvisorById } from '../utils/findAdvisor';
 import { AdvisorHeroInert } from '../components/hero/AdvisorHeroInert';
 import { NewClientInquiryForm } from '../components/entity-info/NewClientInquiryForm';
+import { clearAfterViewTransition } from '../utils/clearAfterViewTransition';
 
 /**
  * The dedicated New Client Inquiry route (`/advisor/:id/inquiry`) --
@@ -43,9 +44,7 @@ export function AdvisorInquiry() {
       viewTransition: true,
       state: { scrollToHeroTop: true },
     });
-    window.setTimeout(() => {
-      delete document.documentElement.dataset.advisorInquiryTransitionDirection;
-    }, 400);
+    clearAfterViewTransition('advisorInquiryTransitionDirection');
   }
 
   if (!found) {

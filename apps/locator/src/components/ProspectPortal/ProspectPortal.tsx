@@ -4,6 +4,7 @@ import { HeartFilled } from 'icons';
 import { useSession } from '../../session/useSession';
 import { useFavorites } from '../../favorites/useFavorites';
 import type { ProspectPortalProps } from './ProspectPortal.types';
+import { clearAfterViewTransition } from '../../utils/clearAfterViewTransition';
 
 // Currently has no importers anywhere in the app (Results.tsx dropped its
 // own usage in favor of `ProspectPortalLite`, 2026-09-26) -- kept
@@ -53,9 +54,7 @@ export function ProspectPortal({ className }: ProspectPortalProps) {
           returnTo: `${window.location.pathname}${window.location.search}`,
         },
       });
-      window.setTimeout(() => {
-        delete document.documentElement.dataset.favoritesTransitionDirection;
-      }, 400);
+      clearAfterViewTransition('favoritesTransitionDirection');
       return;
     }
     navigate(favoritesHref, { state: { backgroundLocation: location } });

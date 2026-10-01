@@ -7,6 +7,11 @@ import { useEffect, useState } from 'react';
 // rendered to document.body, so a CSS-only `hidden md:block` wrapper
 // around it wouldn't stop the portaled scrim/content from painting
 // full-screen on mobile regardless of the wrapper's own display.
+// 768px matches SiteHeader.tsx's own documented `md` breakpoint. Shared by
+// Favorites.tsx (Dialog vs mobile page) and SiteShell.tsx (whether the
+// "modal route" background page renders at all).
+export const DESKTOP_QUERY = '(min-width: 768px)';
+
 export function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(
     () => window.matchMedia(query).matches,
