@@ -73,6 +73,15 @@ done
 
 printf '%s\n' "$README_TEMPLATE" > README.md
 
+# Ask search engines not to index the published case-study site. (A meta tag
+# is the only option: Pages can't send headers, and a robots.txt only counts
+# at the host root, which a project site doesn't own.)
+perl -pi -e 's|(<meta name="viewport"[^>]*/>)|$1\n    <meta name="robots" content="noindex, nofollow" />|' apps/locator/index.html
+grep -q 'name="robots"' apps/locator/index.html || {
+  echo "Couldn't add the noindex tag: no viewport <meta> in apps/locator/index.html." >&2
+  exit 1
+}
+
 mkdir -p .github/workflows
 cat > .github/workflows/pages.yml <<EOF
 name: Deploy to GitHub Pages
