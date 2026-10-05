@@ -28,9 +28,14 @@ export function SiteShell() {
   // the full-page mobile comparator, so a leftover background location
   // (launched on desktop, then resized down) would stack the origin page
   // underneath it.
+  const state = location.state as {
+    backgroundLocation?: Location;
+    returnTo?: string;
+  } | null;
+  // A mobile launch widened to desktop carries only `returnTo` (a path
+  // string), so match that page as the background instead -- 2026-10-05.
   const backgroundLocation = isDesktop
-    ? (location.state as { backgroundLocation?: Location } | null)
-        ?.backgroundLocation
+    ? (state?.backgroundLocation ?? state?.returnTo)
     : undefined;
   const backgroundElement = useRoutes(
     routeChildren,
