@@ -132,16 +132,14 @@ export function SiteShell() {
           min-[1262px]:px-0
         "
       >
-        {/* The origin page, rendered as a second, independent tree when
-            a background location is active -- see this component's own
-            top-of-file comment. Ordered before `<Outlet />` in the DOM,
-            though that barely matters in practice: Radix `Dialog.Content`
-            (what the real `<Outlet />` renders in this case --
-            `Favorites.tsx`'s desktop branch) already portals itself (and
-            its own scrim) to `document.body`, outside this `<main>`
-            entirely. */}
-        {backgroundLocation && backgroundElement}
-        <Outlet />
+        {/* The page itself always renders here, from `backgroundLocation`
+            when one is active, else the real location. Keeping it in one
+            fixed spot means opening/closing the Favorites Dialog never
+            remounts it: a remount re-ran Start/InProgress's focus-on-mount,
+            which smooth-scrolled the page to its heading. `<Outlet />`
+            only renders the overlay route (Favorites) on top. */}
+        {backgroundElement}
+        {backgroundLocation && <Outlet />}
       </main>
       <SiteFooter />
       {/* Fixed to the viewport, not this column's flow -- rendered last so
