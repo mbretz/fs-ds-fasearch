@@ -90,7 +90,14 @@ export function NewClientInquiryForm({
   bordered = true,
   submitButtonDensity,
 }: NewClientInquiryFormProps) {
-  const { signedIn } = useSession();
+  const {
+    signedIn,
+    firstName,
+    lastName,
+    fullName: sessionFullName,
+  } = useSession();
+  // Placeholders echo the spoofed signed-in prospect so the form reads as theirs.
+  const placeholderEmail = `${firstName}.${lastName}@email.com`.toLowerCase();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -178,7 +185,7 @@ export function NewClientInquiryForm({
                 Full name
               </TextInput.Label>
               <TextInput.Field
-                placeholder="Tina Finn"
+                placeholder={sessionFullName}
                 value={fullName}
                 onChange={(event) => setFullName(event.target.value)}
                 required
@@ -188,7 +195,7 @@ export function NewClientInquiryForm({
               <TextInput.Label requirement="required">Email</TextInput.Label>
               <TextInput.Field
                 type="email"
-                placeholder="tina.finn@email.com"
+                placeholder={placeholderEmail}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 required
