@@ -80,7 +80,7 @@ export function ProspectPortalLite({
       navigate(favoritesHref, {
         viewTransition: true,
         state: {
-          returnTo: `${window.location.pathname}${window.location.search}`,
+          returnTo: `${location.pathname}${location.search}`,
         },
       });
       clearAfterViewTransition('favoritesTransitionDirection');

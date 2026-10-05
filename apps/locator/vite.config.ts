@@ -8,5 +8,7 @@ import { imagetools } from 'vite-imagetools';
 const isWebContainer = Boolean(process.versions.webcontainer);
 
 export default defineConfig({
+  // Set BASE_PATH for a subpath deploy (e.g. /repo-name/ on GitHub Pages).
+  base: process.env.BASE_PATH ?? '/',
   plugins: [react(), tailwindcss(), ...(isWebContainer ? [] : [imagetools()])],
 });
