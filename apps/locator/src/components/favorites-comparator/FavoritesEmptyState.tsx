@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 
 export interface FavoritesEmptyStateProps {
@@ -21,12 +22,12 @@ export function FavoritesEmptyState({ className }: FavoritesEmptyStateProps) {
       <p className="text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] text-white">
         You haven&apos;t favorited any advisors yet.
       </p>
-      <a
-        href="/search"
+      <Link
+        to="/search"
         className="text-[length:var(--semantic-content-common-font-size)] leading-[length:var(--semantic-content-common-line-height)] font-medium text-white underline"
       >
         Back to search
-      </a>
+      </Link>
     </div>
   );
 }
