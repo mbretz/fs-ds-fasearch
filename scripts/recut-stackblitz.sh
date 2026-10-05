@@ -3,12 +3,15 @@
 #
 # StackBlitz's GitHub import stalls on the full repo, so reviewers get a
 # slimmed copy: this drops what the locator doesn't need to run, downscales
-# the two large PNGs, and adds a .stackblitzrc that auto-installs and starts
-# the locator.
+# the two large PNGs, swaps in a reviewer-facing README
+# (scripts/stackblitz-README.md), repoints the package READMEs' PLAN.md links at
+# GitHub, and adds a .stackblitzrc that auto-installs
+# and starts the locator.
 #
 # Usage:
 #   scripts/recut-stackblitz.sh           build locally, leave `stackblitz` unpushed
 #   scripts/recut-stackblitz.sh --push    also force-push it to origin
+#   BASE=<ref> scripts/recut-stackblitz.sh   cut from a ref other than origin/main
 #
 # Runs in a temporary git worktree, so the current working tree is never
 # touched. Nothing is pushed without --push.
@@ -16,11 +19,13 @@
 set -euo pipefail
 
 BRANCH=stackblitz
-BASE=origin/main
+REPO_URL=https://github.com/mbretz/fs-ds-fasearch
+BASE="${BASE:-origin/main}"  # override to test unmerged changes
 
 # Dropped from the StackBlitz copy -- none are needed to run the locator.
 REMOVE=(
   docs
+  CLAUDE.md
   .claude
   .agents
   packages/tokens/build/swift
@@ -71,6 +76,14 @@ done
 for entry in "${DOWNSCALE[@]}"; do
   resize "${entry%%:*}" "${entry##*:}"
 done
+
+# docs/ isn't shipped, so point the package READMEs' relative PLAN.md links
+# at the file on GitHub instead of leaving them dead.
+perl -pi -e "s|\(\.\./\.\./docs/PLAN\.md\)|($REPO_URL/blob/main/docs/PLAN.md)|g" packages/*/README.md
+
+# The reviewer README replaces the root one; this tooling isn't shipped.
+cp scripts/stackblitz-README.md README.md
+git rm -q scripts/stackblitz-README.md scripts/recut-stackblitz.sh
 
 cat > .stackblitzrc <<'EOF'
 {
