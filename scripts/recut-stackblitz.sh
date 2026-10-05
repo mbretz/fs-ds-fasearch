@@ -4,7 +4,8 @@
 # StackBlitz's GitHub import stalls on the full repo, so reviewers get a
 # slimmed copy: this drops what the locator doesn't need to run, downscales
 # the two large PNGs, swaps in a reviewer-facing README
-# (scripts/stackblitz-README.md), and adds a .stackblitzrc that auto-installs
+# (scripts/stackblitz-README.md), repoints the package READMEs' PLAN.md links at
+# GitHub, and adds a .stackblitzrc that auto-installs
 # and starts the locator.
 #
 # Usage:
@@ -18,6 +19,7 @@
 set -euo pipefail
 
 BRANCH=stackblitz
+REPO_URL=https://github.com/mbretz/fs-ds-fasearch
 BASE="${BASE:-origin/main}"  # override to test unmerged changes
 
 # Dropped from the StackBlitz copy -- none are needed to run the locator.
@@ -74,6 +76,10 @@ done
 for entry in "${DOWNSCALE[@]}"; do
   resize "${entry%%:*}" "${entry##*:}"
 done
+
+# docs/ isn't shipped, so point the package READMEs' relative PLAN.md links
+# at the file on GitHub instead of leaving them dead.
+perl -pi -e "s|\(\.\./\.\./docs/PLAN\.md\)|($REPO_URL/blob/main/docs/PLAN.md)|g" packages/*/README.md
 
 # The reviewer README replaces the root one; this tooling isn't shipped.
 cp scripts/stackblitz-README.md README.md
