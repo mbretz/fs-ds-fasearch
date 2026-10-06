@@ -344,14 +344,13 @@ export function EntityActions({
   // `.entity-actions-button` is what stretches each to match once stacked,
   // which is what the user actually flagged.
   //
-  // Once stacked, the inset is two-tiered, per the user: the spacers'
-  // shrinkable amount (and the row's own fixed-floor margin, matching the
-  // Separator's inset exactly) doubles from 16px/32px-total to
-  // 32px/64px-total the closer the container gets to no longer needing to
-  // stack at all -- split at the midpoint of the stacked range
-  // (`STACK_BELOW_PX / 2`), a deliberate design choice (more breathing
-  // room once there's more room to give it), not a second measured
-  // constraint like `STACK_BELOW_PX` itself.
+  // Once stacked (container under `STACK_BELOW_PX`), the row's inset is a
+  // flat 16px a side -- the Separator's own inset, so the buttons line up
+  // with the divider above them -- and the buttons stretch across it. This
+  // used to be a two-tier inset that grew to 64px a side near the stack
+  // threshold, which left too little width for the labels: a lone "View
+  // Branch" wrapped at 87-120px and a stacked "New Client Inquiry" wrapped
+  // at ~297px containers (3-column advisor grid, ~1026-1033px viewports).
   return (
     <div className={cn('@container/entity-actions', className)}>
       <style>{`
@@ -365,20 +364,9 @@ export function EntityActions({
             min-width: 0;
           }
         }
-        @container entity-actions (max-width: ${STACK_BELOW_PX / 2 - 0.02}px) {
+        @container entity-actions (max-width: ${STACK_BELOW_PX - 0.02}px) {
           .entity-actions-row {
             margin-inline: var(--density-spacing-fixed-large);
-          }
-          .entity-actions-spacer {
-            flex-basis: var(--density-spacing-fixed-large);
-          }
-        }
-        @container entity-actions (min-width: ${STACK_BELOW_PX / 2}px) and (max-width: ${STACK_BELOW_PX - 0.02}px) {
-          .entity-actions-row {
-            margin-inline: var(--density-spacing-fixed-xxx-large);
-          }
-          .entity-actions-spacer {
-            flex-basis: var(--density-spacing-fixed-xxx-large);
           }
         }
       `}</style>
