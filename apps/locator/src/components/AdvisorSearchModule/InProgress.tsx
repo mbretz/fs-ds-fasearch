@@ -207,15 +207,18 @@ interface InProgressProps {
 // container width it stays unconstrained (full stage width) since the
 // mobile search input already spans that same width.
 //
-// Left-aligned (not centered) within that matched width, plus a flat
-// `pl-[40px]` nudge: true centering under just the Field portion of
-// `SearchInput` (excluding its trailing Button, which shares that 320px
-// box) would need to know that Button's rendered width, which isn't
-// exposed anywhere this component can read. Left-align + a flat
-// approximating nudge is the deliberately-accepted stand-in.
+// Left padding is per instance. Desktop: a flat `pl-[40px]` nudge --
+// true centering under just the Field portion of `SearchInput` (excluding
+// its trailing Button, which shares that 320px box) would need that
+// Button's rendered width, which isn't exposed anywhere this component can
+// read, so left-align + an approximating nudge is the accepted stand-in.
+// Mobile: `fixed-large` (16px), so the icon's left edge lines up with the
+// start of the search input's microcopy text (the stage's own 16px padding
+// plus the label's 16px inset).
 //
-// `mt-[calc(-1*var(--density-spacing-fixed-med))]` tightens the gap above
-// down from the stage's shared `gap-[fixed-large]` (16px) to a net 4px.
+// Top margin is per instance too. Desktop: `-fixed-med` tightens the gap
+// above from the stage's shared `gap-[fixed-large]` (16px) to a net 4px.
+// Mobile: `-fixed-small`, a net 8px.
 //
 // Icon kept OUTSIDE `Link` (a flex sibling, not a child) -- same
 // convention ContactLinks.tsx's own address link uses: `text-decoration:
@@ -231,7 +234,7 @@ function NearMeLink({
 }) {
   return (
     <div
-      className={`mt-[calc(-1*var(--density-spacing-fixed-med))] items-center gap-[var(--density-spacing-fixed-small)] pl-[40px] @[768px]/module:w-[320px] @[768px]/module:min-w-[200px] ${className}`}
+      className={`items-center gap-[var(--density-spacing-fixed-small)] @[768px]/module:w-[320px] @[768px]/module:min-w-[200px] ${className}`}
     >
       <MapPinLarge
         aria-hidden="true"
@@ -304,20 +307,12 @@ export function InProgress({
   }, []);
 
   return (
-    // `pb-[fixed-med]` (12px), unprefixed so it applies at every
-    // container width -- reduced from this stage's own previous bottom
-    // padding (16px below 768px container width via the base `p-[...]`,
-    // 24px at/above it via the old `@[768px]/module:pb-[...]` override,
-    // now dropped entirely in favor of this single value), per the user,
-    // 2026-09-26: the new "Find advisors near me" link below now supplies
-    // its own visual close to the stage, so the stage's own trailing
-    // whitespace past it reads better tightened down to match every
-    // other 8px gap in this app rather than kept at its old, roomier
-    // value. Nudged up an extra 4px (fixed-small, 8px, to fixed-med,
-    // 12px) per the user, 2026-09-28, after previewing both live --
-    // a small amount of extra breathing room below the module's own
-    // last row felt better than flush against it.
-    <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-large)] pb-[var(--density-spacing-fixed-med)] @[768px]/module:px-[var(--density-spacing-fixed-xx-large)] @[768px]/module:pt-[var(--density-spacing-fixed-large)]">
+    // Bottom padding is `fixed-med` (12px) at `@[768px]/module` and up, where
+    // the "Find advisors near me" link is the last row and wants a little
+    // room below it. Below that the light filter panel is the last child
+    // and runs to the stage's bottom edge, so no padding there -- it
+    // would show as a dark strip under the panel.
+    <div className="flex flex-col gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-large)] pb-0 @[768px]/module:pb-[var(--density-spacing-fixed-med)] @[768px]/module:px-[var(--density-spacing-fixed-xx-large)] @[768px]/module:pt-[var(--density-spacing-fixed-large)]">
       {/*
         `[view-transition-name:advisor-search-heading]` pairs with the
         same name on Start.tsx's H1 wrapper (see AdvisorSearchModule.tsx's
@@ -356,7 +351,10 @@ export function InProgress({
           onValueChange={onQueryChange}
           onSubmit={onSubmitSearch}
         />
-        <NearMeLink onFindNearMe={onFindNearMe} className="flex" />
+        <NearMeLink
+          onFindNearMe={onFindNearMe}
+          className="-mt-[var(--density-spacing-fixed-small)] flex pl-[var(--density-spacing-fixed-large)]"
+        />
         {/* Negative margin cancels this component's own root padding
             (`p-[--density-spacing-fixed-large]` above) on exactly the sides
             this panel needs full-bleed -- left/right, not top/bottom, since
@@ -469,7 +467,7 @@ export function InProgress({
       </div>
       <NearMeLink
         onFindNearMe={onFindNearMe}
-        className="hidden @[768px]/module:flex"
+        className="mt-[calc(-1*var(--density-spacing-fixed-med))] hidden pl-[40px] @[768px]/module:flex"
       />
     </div>
   );
