@@ -1,5 +1,12 @@
+import { useContext, useMemo } from 'react';
 import type { Location } from 'react-router-dom';
-import { Outlet, useLocation, useRoutes } from 'react-router-dom';
+import {
+  Outlet,
+  UNSAFE_DataRouterContext,
+  UNSAFE_NavigationContext,
+  useLocation,
+  useRoutes,
+} from 'react-router-dom';
 import { routeChildren } from '../routes';
 import { SiteHeader } from './SiteHeader';
 import { SiteFooter } from './SiteFooter';
@@ -41,6 +48,44 @@ export function SiteShell() {
     routeChildren,
     backgroundLocation ?? location,
   );
+
+  // Pages below are rendered by this component's own `useRoutes()`, not as
+  // data routes, so their `useNavigate()` goes through the context
+  // navigator, and RouterProvider's drops `viewTransition`/`flushSync`
+  // (it forwards only `state` and `preventScrollReset`). Hand them a
+  // navigator that forwards all of it to `router.navigate`, or every
+  // `navigate(..., { viewTransition: true })` and `<Link viewTransition>`
+  // in the pages silently stops animating.
+  const dataRouter = useContext(UNSAFE_DataRouterContext);
+  const navigation = useContext(UNSAFE_NavigationContext);
+  const pageNavigation = useMemo(() => {
+    const router = dataRouter?.router;
+    if (!router) return navigation;
+    return {
+      ...navigation,
+      navigator: {
+        ...navigation.navigator,
+        push: (
+          to: Parameters<typeof router.navigate>[0],
+          state?: unknown,
+          opts?: {
+            preventScrollReset?: boolean;
+            flushSync?: boolean;
+            viewTransition?: boolean;
+          },
+        ) => router.navigate(to, { state, ...opts }),
+        replace: (
+          to: Parameters<typeof router.navigate>[0],
+          state?: unknown,
+          opts?: {
+            preventScrollReset?: boolean;
+            flushSync?: boolean;
+            viewTransition?: boolean;
+          },
+        ) => router.navigate(to, { replace: true, state, ...opts }),
+      },
+    };
+  }, [dataRouter, navigation]);
 
   return (
     // `flex min-h-dvh flex-col` + `<main>`'s own `flex-1` below -- the
@@ -138,7 +183,9 @@ export function SiteShell() {
             remounts it: a remount re-ran Start/InProgress's focus-on-mount,
             which smooth-scrolled the page to its heading. `<Outlet />`
             only renders the overlay route (Favorites) on top. */}
-        {backgroundElement}
+        <UNSAFE_NavigationContext.Provider value={pageNavigation}>
+          {backgroundElement}
+        </UNSAFE_NavigationContext.Provider>
         {backgroundLocation && <Outlet />}
       </main>
       <SiteFooter />
