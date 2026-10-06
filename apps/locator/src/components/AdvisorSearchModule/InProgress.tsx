@@ -192,6 +192,85 @@ interface InProgressProps {
   onFindNearMe: () => void;
 }
 
+// "Find advisors near me" -- rendered once inside each breakpoint block
+// (mobile: directly under the search input, above the filter panel;
+// desktop: below the whole row), with CSS hiding the inactive copy. Two DOM
+// instances rather than one reordered with `order`, so keyboard tab order
+// matches the visual order at every width (`order` only moves things
+// visually), and `display: none` keeps the hidden copy out of the tab order
+// and the accessibility tree.
+//
+// `@[768px]/module:w-[320px] @[768px]/module:min-w-[200px]` -- matches the
+// desktop row's own `SearchFormSearchInput` width exactly, so this
+// wrapper's left edge coincides with the search input's own left edge by
+// plain block/flex layout, zero extra positioning math needed. Below 768px
+// container width it stays unconstrained (full stage width) since the
+// mobile search input already spans that same width.
+//
+// Left-aligned (not centered) within that matched width, plus a flat
+// `pl-[40px]` nudge: true centering under just the Field portion of
+// `SearchInput` (excluding its trailing Button, which shares that 320px
+// box) would need to know that Button's rendered width, which isn't
+// exposed anywhere this component can read. Left-align + a flat
+// approximating nudge is the deliberately-accepted stand-in.
+//
+// `mt-[calc(-1*var(--density-spacing-fixed-med))]` tightens the gap above
+// down from the stage's shared `gap-[fixed-large]` (16px) to a net 4px.
+//
+// Icon kept OUTSIDE `Link` (a flex sibling, not a child) -- same
+// convention ContactLinks.tsx's own address link uses: `text-decoration:
+// underline` paints across an anchor's *whole* inline content, icon
+// included, if the icon sits inside it, which reads as a line running
+// under the pin glyph itself.
+function NearMeLink({
+  onFindNearMe,
+  className,
+}: {
+  onFindNearMe: () => void;
+  className: string;
+}) {
+  return (
+    <div
+      className={`mt-[calc(-1*var(--density-spacing-fixed-med))] items-center gap-[var(--density-spacing-fixed-small)] pl-[40px] @[768px]/module:w-[320px] @[768px]/module:min-w-[200px] ${className}`}
+    >
+      <MapPinLarge
+        aria-hidden="true"
+        className="size-[14px] shrink-0 text-[color:var(--semantic-content-common-text-color-reverse)]"
+      />
+      <Link
+        href="#"
+        onClick={(event) => {
+          event.preventDefault();
+          onFindNearMe();
+        }}
+        // Hover fixed 2026-09-28, per the user: `Link`'s own default
+        // hover styling (`component.link.textColor.hover` = a dark
+        // navy `#004b70`, `component.link.backgroundColor.hover` = a
+        // pale light-mode blue `#f0faff`) is tuned for a light
+        // surface -- against this module's own scoped `data-
+        // theme="dark"` background (`AdvisorSearchModule.tsx`,
+        // `--color-layout-background-color-neutral-base` resolves to
+        // `neutral-200`/`#323334` here), the pale background rendered
+        // as a near-illegible white-on-light-blue patch (confirmed
+        // live, screenshotted before/after). Hover background moved to
+        // `primitives.ref.color.neutral.300` (`#4b4d4e`) -- bumped up
+        // from an initial neutral-250 (too subtle to read as a real
+        // hover state) per the user, still short of neutral-400
+        // (visible, but read as further than intended) -- a real
+        // primitives-tier reference, not a semantic one, since no
+        // semantic bucket covers a "reverse-context" hover shade (same
+        // "no clean token, arbitrary value with a comment" precedent
+        // as `MapPin`/`Map`'s own literal colors). Text hover color
+        // left at the default reverse-white -- the background shift
+        // alone is the hover feedback now.
+        className="text-[14px] leading-[18px] [--component-link-background-color-hover:var(--primitives-ref-color-neutral-300)] [--component-link-text-color-default:var(--semantic-content-common-text-color-reverse)] [--component-link-text-color-hover:var(--semantic-content-common-text-color-reverse)]"
+      >
+        Find advisors near me
+      </Link>
+    </div>
+  );
+}
+
 // query/selectedFocusAreas/acceptingNewClients are all owned by Results.tsx
 // (the page), not this component -- lifted there so the results list and a
 // future selected-focus-area chip row (both siblings of AdvisorSearchModule,
@@ -277,6 +356,7 @@ export function InProgress({
           onValueChange={onQueryChange}
           onSubmit={onSubmitSearch}
         />
+        <NearMeLink onFindNearMe={onFindNearMe} className="flex" />
         {/* Negative margin cancels this component's own root padding
             (`p-[--density-spacing-fixed-large]` above) on exactly the sides
             this panel needs full-bleed -- left/right, not top/bottom, since
@@ -387,78 +467,10 @@ export function InProgress({
           </Checkbox>
         </div>
       </div>
-
-      {/* "Find advisors near me" -- a plain sibling of both breakpoint
-          blocks above (not duplicated inside either), so it always shows
-          exactly once regardless of which one CSS currently hides, per
-          the user, 2026-09-26.
-
-          `@[768px]/module:w-[320px] @[768px]/module:min-w-[200px]` --
-          matches the desktop row's own `SearchFormSearchInput` width
-          exactly (see that instance's own className below), per the
-          user, so this wrapper's left edge coincides with the search
-          input's own left edge by plain block/flex layout, zero extra
-          positioning math needed. Below 768px container width, this
-          stays unconstrained (full stage width) since the mobile search
-          input already spans that same width itself, so there's no
-          separate column to match there.
-
-          Left-aligned (not centered) within that matched width, plus a
-          flat `pl-[40px]` nudge (bumped from an initial 24px, then 32px,
-          per the user) -- true
-          centering under just the Field portion of `SearchInput`
-          specifically (excluding its own trailing Button, which shares
-          that same 320px box) would need this component to know that
-          Button's own rendered width, which isn't exposed anywhere this
-          component can read it. Left-align + a flat approximating nudge
-          is the deliberately-accepted stand-in instead of chasing exact
-          Field-center math for a decorative link.
-
-          `mt-[calc(-1*var(--density-spacing-fixed-med))]` -- per the
-          user, tightens the gap above this link down from the root's own
-          shared `gap-[fixed-large]` (16px) to a net 4px (16 - 12).
-
-          Icon kept OUTSIDE `Link` (a flex sibling, not a child) --
-          same convention ContactLinks.tsx's own address link uses:
-          `text-decoration: underline` paints across an anchor's *whole*
-          inline content, icon included, if the icon sits inside it,
-          which reads as a line running under the pin glyph itself. */}
-      <div className="mt-[calc(-1*var(--density-spacing-fixed-med))] flex items-center gap-[var(--density-spacing-fixed-small)] pl-[40px] @[768px]/module:w-[320px] @[768px]/module:min-w-[200px]">
-        <MapPinLarge
-          aria-hidden="true"
-          className="size-[14px] shrink-0 text-[color:var(--semantic-content-common-text-color-reverse)]"
-        />
-        <Link
-          href="#"
-          onClick={(event) => {
-            event.preventDefault();
-            onFindNearMe();
-          }}
-          // Hover fixed 2026-09-28, per the user: `Link`'s own default
-          // hover styling (`component.link.textColor.hover` = a dark
-          // navy `#004b70`, `component.link.backgroundColor.hover` = a
-          // pale light-mode blue `#f0faff`) is tuned for a light
-          // surface -- against this module's own scoped `data-
-          // theme="dark"` background (`AdvisorSearchModule.tsx`,
-          // `--color-layout-background-color-neutral-base` resolves to
-          // `neutral-200`/`#323334` here), the pale background rendered
-          // as a near-illegible white-on-light-blue patch (confirmed
-          // live, screenshotted before/after). Hover background moved to
-          // `primitives.ref.color.neutral.300` (`#4b4d4e`) -- bumped up
-          // from an initial neutral-250 (too subtle to read as a real
-          // hover state) per the user, still short of neutral-400
-          // (visible, but read as further than intended) -- a real
-          // primitives-tier reference, not a semantic one, since no
-          // semantic bucket covers a "reverse-context" hover shade (same
-          // "no clean token, arbitrary value with a comment" precedent
-          // as `MapPin`/`Map`'s own literal colors). Text hover color
-          // left at the default reverse-white -- the background shift
-          // alone is the hover feedback now.
-          className="text-[14px] leading-[18px] [--component-link-background-color-hover:var(--primitives-ref-color-neutral-300)] [--component-link-text-color-default:var(--semantic-content-common-text-color-reverse)] [--component-link-text-color-hover:var(--semantic-content-common-text-color-reverse)]"
-        >
-          Find advisors near me
-        </Link>
-      </div>
+      <NearMeLink
+        onFindNearMe={onFindNearMe}
+        className="hidden @[768px]/module:flex"
+      />
     </div>
   );
 }
