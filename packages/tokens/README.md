@@ -1,6 +1,6 @@
 # tokens
 
-Mirrors the Figma "Styles" library. One-time, non-reproducible pipeline: Figma Variables → Tokens Studio Pro export → merge → transform → CSS/DTCG. See [docs/PLAN.md §1.1](../../docs/PLAN.md) for the full spec and the "Pipeline history" note on why this isn't a live sync.
+Mirrors the Figma "Styles" library. One-time, non-reproducible pipeline: Figma Variables → Tokens Studio Pro export → merge → transform → CSS/DTCG. See [docs/PLAN.md §1.1](https://github.com/mbretz/fs-ds-fasearch/blob/main/docs/PLAN.md) for the full spec and the "Pipeline history" note on why this isn't a live sync.
 
 ## Structure
 

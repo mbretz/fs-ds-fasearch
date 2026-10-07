@@ -1,6 +1,6 @@
 # illustrations
 
-Mirrors the Figma "Financial Services DS - Assets" file's **Illustrations** page. One-way pipeline: Figma → SVG → React components. See [docs/PLAN.md §1.2](../../docs/PLAN.md) and [§1.3a](../../docs/PLAN.md) for the full spec this package implements.
+Mirrors the Figma "Financial Services DS - Assets" file's **Illustrations** page. One-way pipeline: Figma → SVG → React components. See [docs/PLAN.md §1.2](https://github.com/mbretz/fs-ds-fasearch/blob/main/docs/PLAN.md) and [§1.3a](https://github.com/mbretz/fs-ds-fasearch/blob/main/docs/PLAN.md) for the full spec this package implements.
 
 Sibling package to [`icons`](../icons), with a pipeline that's identical except for the one thing that matters most here: **colors are never touched.**
 

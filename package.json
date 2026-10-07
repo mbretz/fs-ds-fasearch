@@ -1,5 +1,6 @@
 {
-  "name": "fs-ds-fasearch",
+  "name": "design-system-to-product-pipeline",
+  "description": "Design tokens drive a library of composable React/TypeScript components, designed in Figma and consumed by a real application: a design system to product pipeline",
   "private": true,
   "version": "0.0.0",
   "packageManager": "pnpm@11.8.0",
