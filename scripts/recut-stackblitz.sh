@@ -5,8 +5,8 @@
 # slimmed copy: this drops what the locator doesn't need to run, downscales
 # the two large PNGs, swaps in a reviewer-facing README
 # (scripts/stackblitz-README.md), repoints the package READMEs' PLAN.md links at
-# GitHub, and adds a .stackblitzrc that auto-installs
-# and starts the locator.
+# GitHub, retitles the root package.json (StackBlitz's header shows it), and
+# adds a .stackblitzrc that auto-installs and starts the locator.
 #
 # Usage:
 #   scripts/recut-stackblitz.sh           build locally, leave `stackblitz` unpushed
@@ -21,6 +21,11 @@ set -euo pipefail
 BRANCH=stackblitz
 REPO_URL=https://github.com/mbretz/fs-ds-fasearch
 BASE="${BASE:-origin/main}"  # override to test unmerged changes
+
+# Root package.json identity on the StackBlitz copy. Nothing in the workspace
+# references the root name (pnpm filters target the app/package names only).
+PACKAGE_NAME=design-system-to-product-pipeline
+PACKAGE_DESCRIPTION="Design tokens drive a library of composable React/TypeScript components, designed in Figma and consumed by a real application: a design system to product pipeline"
 
 # Dropped from the StackBlitz copy -- none are needed to run the locator.
 REMOVE=(
@@ -84,6 +89,15 @@ perl -pi -e "s|\(\.\./\.\./docs/PLAN\.md\)|($REPO_URL/blob/main/docs/PLAN.md)|g"
 # The reviewer README replaces the root one; this tooling isn't shipped.
 cp scripts/stackblitz-README.md README.md
 git rm -q scripts/stackblitz-README.md scripts/recut-stackblitz.sh
+
+# Rename in place, keeping key order (description right after name) and the
+# file's 2-space/trailing-newline formatting.
+PACKAGE_NAME="$PACKAGE_NAME" PACKAGE_DESCRIPTION="$PACKAGE_DESCRIPTION" node -e '
+const fs = require("fs");
+const { name, description, ...rest } = JSON.parse(fs.readFileSync("package.json", "utf8"));
+const next = { name: process.env.PACKAGE_NAME, description: process.env.PACKAGE_DESCRIPTION, ...rest };
+fs.writeFileSync("package.json", JSON.stringify(next, null, 2) + "\n");
+'
 
 cat > .stackblitzrc <<'EOF'
 {
