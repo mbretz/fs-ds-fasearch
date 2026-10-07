@@ -3,7 +3,9 @@ import { EntityPortrait } from '../entity-info/EntityPortrait';
 import { NameBlock } from '../entity-info/NameBlock';
 import { TenureLine } from '../entity-info/TenureLine';
 import { EntityActions } from '../entity-info/EntityActions';
+import { FavoriteToggle } from '../entity-info/FavoriteToggle';
 import { getFullName } from '../../utils/getFullName';
+import { useSession } from '../../session/useSession';
 
 export interface AdvisorPopoverContentProps {
   advisor: Advisor;
@@ -38,6 +40,7 @@ export function AdvisorPopoverContent({
   size,
   onNewClientInquiry,
 }: AdvisorPopoverContentProps) {
+  const { signedIn } = useSession();
   const fullName = getFullName(advisor);
   const showsNewClientInquiry =
     advisor.newClientStatus === 'accepting' ||
@@ -81,7 +84,17 @@ export function AdvisorPopoverContent({
       // not this component's own default 16px (`fixed-large`), per the
       // user -- except the right edge, which gets 4px extra (12px total)
       // to visually balance the portrait's own left-side margin.
-      <div className="flex w-[400px] gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-small)] pr-[calc(var(--density-spacing-fixed-small)_+_var(--density-spacing-fixed-x-small))]">
+      <div className="relative flex w-[400px] gap-[var(--density-spacing-fixed-large)] p-[var(--density-spacing-fixed-small)] pr-[calc(var(--density-spacing-fixed-small)_+_var(--density-spacing-fixed-x-small))]">
+        {/* Favoriting requires a signed-in prospect, same gate as
+            `AdvisorCard` -- hidden entirely for a signed-out visitor.
+            First in DOM order to match its top-of-tile position. */}
+        {signedIn && (
+          <FavoriteToggle
+            advisorId={advisor.id}
+            name={fullName}
+            className="absolute top-[var(--density-spacing-fixed-x-small)] right-[var(--density-spacing-fixed-x-small)]"
+          />
+        )}
         {/* Left column: portrait, with its status corner badge (default
             `showBadge`, not suppressed like AdvisorCard's own ResultsList
             usage) -- the sole status indicator here now; the status tag
@@ -164,7 +177,17 @@ export function AdvisorPopoverContent({
     // ratio than the previous 280px/~138px pass, per the user), with
     // less outer padding and a tighter column gap to match, plus no
     // designations/tenure line, per the user.
-    <div className="flex w-[320px] gap-[var(--density-spacing-fixed-med)] p-[var(--density-spacing-fixed-x-small)] pr-[calc(var(--density-spacing-fixed-x-small)_+_var(--density-spacing-fixed-xx-small))]">
+    <div className="relative flex w-[320px] gap-[var(--density-spacing-fixed-med)] p-[var(--density-spacing-fixed-x-small)] pr-[calc(var(--density-spacing-fixed-x-small)_+_var(--density-spacing-fixed-xx-small))]">
+      {/* Favoriting requires a signed-in prospect, same gate as
+            `AdvisorCard` -- hidden entirely for a signed-out visitor.
+            First in DOM order to match its top-of-tile position. */}
+      {signedIn && (
+        <FavoriteToggle
+          advisorId={advisor.id}
+          name={fullName}
+          className="absolute top-[var(--density-spacing-fixed-x-small)] right-[var(--density-spacing-fixed-x-small)]"
+        />
+      )}
       <EntityPortrait
         name={fullName}
         photoUrl={advisor.photoUrl}

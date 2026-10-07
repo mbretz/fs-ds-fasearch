@@ -5,8 +5,10 @@ import type { Advisor, Location } from '../../data/locations';
 import { EntityPortrait } from '../entity-info/EntityPortrait';
 import { NameBlock } from '../entity-info/NameBlock';
 import { EntityActions } from '../entity-info/EntityActions';
+import { FavoriteToggle } from '../entity-info/FavoriteToggle';
 import { splitAddressLines } from '../../utils/splitAddressLines';
 import { getFullName } from '../../utils/getFullName';
+import { useSession } from '../../session/useSession';
 
 export interface BranchPopoverContentProps {
   location: Location;
@@ -101,6 +103,7 @@ export function BranchPopoverContent({
   location,
   onNewClientInquiry,
 }: BranchPopoverContentProps) {
+  const { signedIn } = useSession();
   const [showAdvisors, setShowAdvisors] = useState(false);
   // Not reset explicitly on `showAdvisors`/`location` change -- `Map.tsx`
   // keys `MapPinPopover` by the location's own id *plus* an incrementing
@@ -493,13 +496,25 @@ export function BranchPopoverContent({
         </ActionFooter>
       </div>
       <div
-        className={`col-start-1 row-start-1 flex flex-col ${PANEL_SLIDE_CLASS}`}
+        className={`relative col-start-1 row-start-1 flex flex-col ${PANEL_SLIDE_CLASS}`}
         style={{
           transform: `translateX(${panelOffsetPercent('advisorDetail')}%)`,
         }}
         aria-hidden={!isAdvisorDetailActive}
         inert={!isAdvisorDetailActive}
       >
+        {/* Same signed-in gate/placement as `AdvisorPopoverContent`'s own
+            toggle. Anchored to this panel (not `advisorDetail`'s inner
+            row) so the 4px inset is from the tile's own corner; slides
+            with the panel, and `inert` above keeps it unfocusable while
+            off-screen. */}
+        {signedIn && selectedAdvisor && (
+          <FavoriteToggle
+            advisorId={selectedAdvisor.id}
+            name={getFullName(selectedAdvisor)}
+            className="absolute top-[var(--density-spacing-fixed-x-small)] right-[var(--density-spacing-fixed-x-small)]"
+          />
+        )}
         {/* `flex-1 flex-col justify-center` -- centers the
             portrait+name/actions row vertically within whatever space
             this state doesn't need for its own `ActionFooter` below, per

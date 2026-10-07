@@ -119,7 +119,7 @@ export function FavoriteToggle({
               top: toastPosition.top,
               left: toastPosition.left,
             }}
-            className="fixed z-20 mt-[var(--density-spacing-fixed-x-small)] w-max max-w-[240px] rounded-[var(--semantic-border-radius-generous)] border-[length:var(--semantic-surface-border-width)] border-critical bg-critical-subtle px-[var(--density-spacing-fixed-med)] py-[var(--density-spacing-fixed-x-small)] text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] text-critical-strong"
+            className="z-index-popover fixed mt-[var(--density-spacing-fixed-x-small)] w-max max-w-[240px] rounded-[var(--semantic-border-radius-generous)] border-[length:var(--semantic-surface-border-width)] border-critical bg-critical-subtle px-[var(--density-spacing-fixed-med)] py-[var(--density-spacing-fixed-x-small)] text-[length:var(--semantic-content-microcopy-font-size)] leading-[length:var(--semantic-content-microcopy-line-height)] text-critical-strong"
           >
             You can only favorite up to {FAVORITES_CAP} advisors in this
             prototype
