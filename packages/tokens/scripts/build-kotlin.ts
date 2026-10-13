@@ -52,7 +52,9 @@ function kotlinLiteral(token: FlatToken): string {
     kind === 'dimension'
       ? Number(token.value.replace(/px$/, ''))
       : Number(token.value);
-  return String(n);
+  // Kotlin won't widen an integer literal to Double (`: Double = 80` is a
+  // type mismatch), so whole numbers need an explicit `.0`.
+  return Number.isInteger(n) ? `${n}.0` : String(n);
 }
 
 function kotlinType(token: FlatToken): 'String' | 'Double' {
