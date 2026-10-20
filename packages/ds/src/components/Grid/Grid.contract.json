@@ -1,0 +1,118 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Grid",
+  "summary": "CSS grid layout primitive with token-backed gaps. Extends Box.",
+  "exports": {
+    "component": "Grid",
+    "variants": ["gridVariants"]
+  },
+  "parts": [
+    {
+      "usage": "Grid",
+      "typeName": "GridProps",
+      "typesFile": "Grid.types.ts",
+      "renders": "div",
+      "cva": "gridVariants",
+      "props": [
+        {
+          "name": "columns",
+          "type": "number",
+          "description": "Equal-width column count via inline style; omit to lay columns out via className/style."
+        },
+        {
+          "name": "gap",
+          "type": "enum",
+          "values": [
+            "none",
+            "xx-small",
+            "x-small",
+            "small",
+            "med",
+            "large",
+            "x-large",
+            "xx-large"
+          ],
+          "default": "none"
+        },
+        {
+          "name": "columnGap",
+          "type": "enum",
+          "values": [
+            "none",
+            "xx-small",
+            "x-small",
+            "small",
+            "med",
+            "large",
+            "x-large",
+            "xx-large"
+          ]
+        },
+        {
+          "name": "rowGap",
+          "type": "enum",
+          "values": [
+            "none",
+            "xx-small",
+            "x-small",
+            "small",
+            "med",
+            "large",
+            "x-large",
+            "xx-large"
+          ]
+        },
+        {
+          "name": "align",
+          "type": "enum",
+          "values": ["start", "center", "end", "stretch"]
+        },
+        {
+          "name": "justify",
+          "type": "enum",
+          "values": ["start", "center", "end", "stretch"]
+        },
+        {
+          "name": "padding",
+          "type": "enum",
+          "values": [
+            "none",
+            "xx-small",
+            "x-small",
+            "small",
+            "med",
+            "large",
+            "x-large",
+            "xx-large"
+          ],
+          "description": "Inherited from Box."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Inherited from Box."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "usage",
+      "rule": "gap/columnGap/rowGap/padding are the named steps only."
+    }
+  ],
+  "notSupported": [
+    "rows prop.",
+    "gap as numbers or px strings.",
+    "responsive prop values."
+  ]
+}

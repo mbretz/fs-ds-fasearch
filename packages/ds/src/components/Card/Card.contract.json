@@ -1,0 +1,164 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Card",
+  "summary": "Bordered surface with optional collapsible header (Radix Collapsible); compose Root + Header + Body + Footer.",
+  "spec": "Card.spec.md",
+  "exports": {
+    "component": "Card"
+  },
+  "parts": [
+    {
+      "usage": "Card.Root",
+      "typeName": "CardRootProps",
+      "typesFile": "Card.types.ts",
+      "renders": "div (Radix Collapsible.Root)",
+      "description": "defaultOpen is true. open/defaultOpen/onOpenChange/disabled only matter when Header is expandable.",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element (e.g. <section>) instead of a <div>."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'> + Radix Collapsible.Root (open, defaultOpen, onOpenChange, disabled)",
+        "omit": ["onOpenChange (div)"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Card.Header", "Card.Body", "Card.Footer"]
+      }
+    },
+    {
+      "usage": "Card.Header",
+      "typeName": "CardHeaderProps",
+      "typesFile": "Card.types.ts",
+      "renders": "div, or button when expandable",
+      "props": [
+        {
+          "name": "expandable",
+          "type": "boolean",
+          "description": "Header becomes the Collapsible trigger and renders as a <button>."
+        },
+        {
+          "name": "showBorder",
+          "type": "boolean",
+          "default": true,
+          "description": "Bottom border; on an expandable header it only shows while open."
+        },
+        {
+          "name": "ref",
+          "type": "other",
+          "description": "Ref<HTMLElement> (the element is a div or a button)."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Card.HeaderTitle", "Card.HeaderDescription"],
+        "note": "When expandable, children render inside a native <button>: no nested links, buttons or form controls."
+      }
+    },
+    {
+      "usage": "Card.HeaderTitle",
+      "typeName": "CardHeaderTitleProps",
+      "typesFile": "Card.types.ts",
+      "renders": "div",
+      "props": [
+        {
+          "name": "icon",
+          "type": "node",
+          "description": "Leading icon."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "Card.HeaderDescription",
+      "typeName": "CardHeaderDescriptionProps",
+      "typesFile": "Card.types.ts",
+      "renders": "div",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "Card.Body",
+      "typeName": "CardBodyProps",
+      "typesFile": "Card.types.ts",
+      "renders": "div (inside Collapsible.Content)",
+      "description": "Collapses with an expandable Header.",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "Card.Footer",
+      "typeName": "CardFooterProps",
+      "typesFile": "Card.types.ts",
+      "renders": "div (inside Collapsible.Content)",
+      "description": "Column layout; collapses with an expandable Header.",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Card.* parts are only valid inside Card.Root.",
+      "parents": ["Card.Root"]
+    },
+    {
+      "kind": "conflicts",
+      "rule": "Do not nest interactive elements inside an expandable Card.Header.",
+      "part": "Card.Header"
+    },
+    {
+      "kind": "usage",
+      "rule": "Card.Footer is a column; for a row of buttons use Dialog.Footer-style layout yourself.",
+      "part": "Card.Footer"
+    }
+  ],
+  "notSupported": [
+    "variant / elevation / color props.",
+    "a Card.Title (use Card.HeaderTitle).",
+    "controlled collapse without Card.Header expandable (open only has an effect on collapsible content)."
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "TextArea",
+  "summary": "Labelled multi-line field. Compose Root + Label + Field + Microcopy.",
+  "spec": "TextArea.spec.md",
+  "exports": {
+    "component": "TextArea",
+    "variants": ["textAreaFieldVariants"]
+  },
+  "parts": [
+    {
+      "usage": "TextArea.Root",
+      "typeName": "TextAreaRootProps",
+      "typesFile": "TextArea.types.ts",
+      "renders": "div",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["TextArea.Label", "TextArea.Field", "TextArea.Microcopy"]
+      }
+    },
+    {
+      "usage": "TextArea.Label",
+      "typeName": "LabelProps",
+      "typesFile": "../Label/Label.types.ts",
+      "renders": "label (DS Label)",
+      "props": [
+        {
+          "name": "requirement",
+          "type": "enum",
+          "values": ["required", "optional"],
+          "description": "Omit for no suffix."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Label.Root",
+        "note": "htmlFor etc."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "TextArea.Field",
+      "typeName": "TextAreaFieldProps",
+      "typesFile": "TextArea.types.ts",
+      "renders": "textarea",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error state."
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'textarea'>",
+        "omit": ["size"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "TextArea.Microcopy",
+      "typeName": "MicrocopyProps",
+      "typesFile": "../Microcopy/Microcopy.types.ts",
+      "renders": "p (DS Microcopy)",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'p'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "a11y",
+      "rule": "Pair Label and Field via htmlFor/id; link Microcopy with aria-describedby."
+    }
+  ],
+  "notSupported": ["size prop.", "auto-resize."]
+}

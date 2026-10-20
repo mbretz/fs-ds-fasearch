@@ -1,0 +1,41 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Separator",
+  "summary": "Thin divider line (Radix Separator).",
+  "exports": {
+    "component": "Separator",
+    "variants": ["separatorVariants"]
+  },
+  "parts": [
+    {
+      "usage": "Separator",
+      "typeName": "SeparatorProps",
+      "typesFile": "Separator.types.ts",
+      "renders": "div (Radix Separator.Root)",
+      "props": [
+        {
+          "name": "orientation",
+          "type": "enum",
+          "values": ["horizontal", "vertical"],
+          "default": "horizontal"
+        },
+        {
+          "name": "decorative",
+          "type": "boolean",
+          "description": "Radix: purely visual, hidden from a11y tree."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Separator.Root"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "none"
+      }
+    }
+  ],
+  "constraints": [],
+  "notSupported": ["variant / color / thickness props."]
+}

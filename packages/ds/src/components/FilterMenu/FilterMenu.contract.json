@@ -1,0 +1,250 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "FilterMenu",
+  "summary": "Popover filter panel: Header (anchor) with a Trigger and ClearButton, and a Content drawer (Radix Popover).",
+  "spec": "FilterMenu.spec.md",
+  "exports": {
+    "component": "FilterMenu"
+  },
+  "parts": [
+    {
+      "usage": "FilterMenu.Root",
+      "typeName": "FilterMenuRootProps",
+      "typesFile": "FilterMenu.types.ts",
+      "renders": "div wrapper > Radix Popover.Root",
+      "props": [
+        {
+          "name": "className",
+          "type": "string"
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Popover.Root",
+        "note": "open, defaultOpen, onOpenChange, modal."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["FilterMenu.Header", "FilterMenu.Content"]
+      }
+    },
+    {
+      "usage": "FilterMenu.Header",
+      "typeName": "FilterMenuHeaderProps",
+      "typesFile": "FilterMenu.types.ts",
+      "renders": "div (Popover.Anchor)",
+      "description": "Content aligns to this whole row.",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["FilterMenu.Trigger", "FilterMenu.ClearButton"]
+      }
+    },
+    {
+      "usage": "FilterMenu.Trigger",
+      "typeName": "FilterMenuTriggerProps",
+      "typesFile": "FilterMenu.types.ts",
+      "renders": "button (Button, tertiary, filter icon, Popover.Trigger)",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "description": "Static label. Mutually exclusive with collapsedLabel/expandedLabel."
+        },
+        {
+          "name": "collapsedLabel",
+          "type": "node",
+          "description": "Label while closed; requires expandedLabel."
+        },
+        {
+          "name": "expandedLabel",
+          "type": "node",
+          "description": "Label while open; requires collapsedLabel."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "name": "iconEnd",
+          "type": "other",
+          "description": "Trailing icon node."
+        },
+        {
+          "name": "destructive",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        },
+        {
+          "name": "aria-label",
+          "type": "string"
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'button'> via Button (variant, iconStart, children omitted)"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any",
+        "note": "Either children, or collapsedLabel + expandedLabel together (compile error otherwise)."
+      }
+    },
+    {
+      "usage": "FilterMenu.ClearButton",
+      "typeName": "FilterMenuClearButtonProps",
+      "typesFile": "FilterMenu.types.ts",
+      "renders": "button (Button, tertiary)",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "required": true,
+          "description": "Label."
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "description": "Renders a Tag count badge when provided."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "name": "iconStart",
+          "type": "node",
+          "description": "Leading icon."
+        },
+        {
+          "name": "destructive",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        },
+        {
+          "name": "aria-label",
+          "type": "string"
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'button'> via Button (variant, iconEnd omitted)"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "FilterMenu.Content",
+      "typeName": "FilterMenuContentProps",
+      "typesFile": "FilterMenu.types.ts",
+      "renders": "Radix Popover.Content (no Portal)",
+      "description": "Not portaled; inherits ambient data-density.",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Popover.Content",
+        "note": "Defaults side=\"bottom\", align=\"start\", avoidCollisions=false; overridable."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["FilterMenu.Drawer", "FilterMenu.Footer"]
+      }
+    },
+    {
+      "usage": "FilterMenu.Drawer",
+      "typeName": "FilterMenuDrawerProps",
+      "typesFile": "FilterMenu.types.ts",
+      "renders": "div",
+      "description": "Scrolls (overflow-y); Footer stays outside the scroll region.",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "FilterMenu.Footer",
+      "typeName": "FilterMenuFooterProps",
+      "typesFile": "FilterMenu.types.ts",
+      "renders": "div",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Trigger must be inside Header inside Root; Content inside Root.",
+      "part": "FilterMenu.Trigger",
+      "parents": ["FilterMenu.Header"]
+    },
+    {
+      "kind": "conflicts",
+      "rule": "Do not pass children together with collapsedLabel/expandedLabel.",
+      "part": "FilterMenu.Trigger"
+    },
+    {
+      "kind": "usage",
+      "rule": "Do not pass variant or iconStart to Trigger, or variant/iconEnd to ClearButton; they are fixed."
+    }
+  ],
+  "notSupported": [
+    "variant on Trigger / ClearButton.",
+    "a Portal (Content renders in flow)."
+  ]
+}

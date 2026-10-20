@@ -5,3 +5,5 @@ packages/tokens/source/tokens-studio
 packages/icons/src/generated
 packages/illustrations/src/generated
 apps/storybook/storybook-static
+packages/ds/src/components/*/*.contract.md
+packages/ds/contracts/contracts.json

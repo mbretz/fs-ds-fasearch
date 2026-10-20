@@ -1,0 +1,61 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Checkbox",
+  "summary": "Labelled checkbox row (Radix Checkbox). The whole row is a native <label>.",
+  "spec": "Checkbox.spec.md",
+  "exports": {
+    "component": "Checkbox",
+    "variants": ["checkboxInputVariants", "checkboxLabelVariants"]
+  },
+  "parts": [
+    {
+      "usage": "Checkbox",
+      "typeName": "CheckboxProps",
+      "typesFile": "Checkbox.types.ts",
+      "renders": "label > Radix Checkbox.Root",
+      "description": "className applies to the outer label row.",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "description": "Row label text."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Recolors the label text only (not the box)."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Checkbox.Root",
+        "omit": ["children"],
+        "note": "checked accepts boolean | \"indeterminate\"; also defaultChecked, onCheckedChange, required, disabled, name, value."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any",
+        "note": "Label content."
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "usage",
+      "rule": "Indeterminate state is checked=\"indeterminate\"; there is no separate prop.",
+      "part": "Checkbox"
+    },
+    {
+      "kind": "usage",
+      "rule": "Do not wrap in your own <label> or add htmlFor; the row is already a label.",
+      "part": "Checkbox"
+    }
+  ],
+  "notSupported": [
+    "selection / indeterminate prop (use checked=\"indeterminate\").",
+    "size / density props.",
+    "separate Label component pairing."
+  ]
+}

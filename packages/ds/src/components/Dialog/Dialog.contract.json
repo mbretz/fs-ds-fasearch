@@ -1,0 +1,180 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Dialog",
+  "summary": "Modal dialog (Radix Dialog) with built-in scrim, close button, title and optional description.",
+  "spec": "Dialog.spec.md",
+  "exports": { "component": "Dialog" },
+  "parts": [
+    {
+      "usage": "Dialog.Root",
+      "typeName": "DialogRootProps",
+      "typesFile": "Dialog.types.ts",
+      "renders": "Radix Dialog.Root (no DOM)",
+      "props": [],
+      "passthrough": {
+        "from": "Radix Dialog.Root",
+        "only": ["open", "defaultOpen", "onOpenChange", "modal", "children"]
+      },
+      "ref": false,
+      "className": "none",
+      "children": { "allowed": ["Dialog.Trigger", "Dialog.Content"] }
+    },
+    {
+      "usage": "Dialog.Trigger",
+      "typeName": "DialogTriggerProps",
+      "typesFile": "Dialog.types.ts",
+      "renders": "button",
+      "props": [],
+      "passthrough": {
+        "from": "Radix Dialog.Trigger",
+        "note": "Supports asChild."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": "any" }
+    },
+    {
+      "usage": "Dialog.Content",
+      "typeName": "DialogContentProps",
+      "typesFile": "Dialog.types.ts",
+      "renders": "Radix Dialog.Content in a Portal, plus Scrim and CloseButton",
+      "description": "Portal-rendered; sets data-density itself because portals escape the ancestor cascade.",
+      "props": [
+        {
+          "name": "title",
+          "type": "node",
+          "required": true,
+          "description": "Always rendered; the dialog's accessible name."
+        },
+        {
+          "name": "description",
+          "type": "node",
+          "description": "Optional; omit and Radix warns about a missing description."
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "default": "roomy"
+        },
+        {
+          "name": "closeButtonAriaLabel",
+          "type": "string",
+          "default": "Close"
+        },
+        {
+          "name": "closeButtonClassName",
+          "type": "string",
+          "description": "Merged onto the built-in close button."
+        },
+        {
+          "name": "visuallyHideTitle",
+          "type": "boolean",
+          "default": false,
+          "description": "Keeps the title for a11y but hides it visually."
+        },
+        { "name": "showScrim", "type": "boolean", "default": true },
+        {
+          "name": "scrimClassName",
+          "type": "string",
+          "description": "Merged onto the backdrop Scrim."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Dialog.Content",
+        "omit": ["title"],
+        "note": "Includes onOpenAutoFocus (default focuses the close button), onEscapeKeyDown, onPointerDownOutside, onInteractOutside, forceMount, asChild."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Dialog.Header", "Dialog.Body", "Dialog.Footer"],
+        "note": "Rendered below the built-in title/description."
+      }
+    },
+    {
+      "usage": "Dialog.Header",
+      "typeName": "DialogHeaderProps",
+      "typesFile": "Dialog.types.ts",
+      "renders": "div",
+      "props": [],
+      "passthrough": { "from": "ComponentProps<'div'>" },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": "any" }
+    },
+    {
+      "usage": "Dialog.Body",
+      "typeName": "DialogBodyProps",
+      "typesFile": "Dialog.types.ts",
+      "renders": "div",
+      "props": [],
+      "passthrough": { "from": "ComponentProps<'div'>" },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": "any" }
+    },
+    {
+      "usage": "Dialog.Footer",
+      "typeName": "DialogFooterProps",
+      "typesFile": "Dialog.types.ts",
+      "renders": "Separator + div (row)",
+      "description": "Row layout for action buttons; renders its own Separator above itself.",
+      "props": [],
+      "passthrough": { "from": "ComponentProps<'div'>" },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": ["Button"] }
+    },
+    {
+      "usage": "Dialog.Close",
+      "typeName": "DialogCloseProps",
+      "typesFile": "Dialog.types.ts",
+      "renders": "button",
+      "props": [],
+      "passthrough": {
+        "from": "Radix Dialog.Close",
+        "note": "Supports asChild; use it to wrap Cancel-style buttons."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": "any" }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "requires-prop",
+      "part": "Dialog.Content",
+      "props": ["title"],
+      "rule": "Content always needs a title; use visuallyHideTitle to hide it visually rather than omitting it."
+    },
+    {
+      "kind": "composition",
+      "part": "Dialog.Content",
+      "parents": ["Dialog.Root"],
+      "rule": "Content and Trigger must be inside Dialog.Root."
+    },
+    {
+      "kind": "composition",
+      "part": "Dialog.Footer",
+      "rule": "Do not add a Separator above Footer; it renders its own."
+    },
+    {
+      "kind": "usage",
+      "part": "Dialog.Content",
+      "rule": "Do not wrap Content in a scroll container; it is its own scroll container (wrapping breaks Radix scroll-lock)."
+    },
+    {
+      "kind": "usage",
+      "part": "Dialog.Content",
+      "rule": "Do not add your own close button; Content has one built in."
+    }
+  ],
+  "notSupported": [
+    "size / width props (max width comes from the component token).",
+    "placement / position props (always top-anchored, horizontally centered).",
+    "non-modal custom overlay; use showScrim={false} only to hide the backdrop.",
+    "title as a Dialog.Title child (title is a Content prop)."
+  ]
+}

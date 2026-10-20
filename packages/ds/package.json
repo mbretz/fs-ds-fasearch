@@ -5,6 +5,15 @@
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./theme.css": "./src/theme.css",
+    "./src/theme.css": "./src/theme.css",
+    "./contracts.json": "./contracts/contracts.json",
+    "./contract.schema.json": "./contracts/contract.schema.json",
+    "./AGENTS.md": "./AGENTS.md",
+    "./package.json": "./package.json"
+  },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -22,6 +31,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.0.4",
@@ -36,6 +46,7 @@
   },
   "scripts": {
     "theme:check": "tailwindcss -i src/theme.css -o /dev/null --minify",
+    "contracts:build": "node scripts/build-contracts.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:browser": "vitest run --config vitest.browser.config.ts",

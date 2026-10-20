@@ -1,0 +1,54 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "LinkNavigation",
+  "summary": "Previous/next navigation link (a) with a chevron.",
+  "exports": {
+    "component": "LinkNavigation"
+  },
+  "parts": [
+    {
+      "usage": "LinkNavigation",
+      "typeName": "LinkNavigationProps",
+      "typesFile": "LinkNavigation.types.ts",
+      "renders": "a",
+      "props": [
+        {
+          "name": "direction",
+          "type": "enum",
+          "values": ["previous", "next"],
+          "required": true
+        },
+        {
+          "name": "iconAlign",
+          "type": "enum",
+          "values": ["start", "center", "end"],
+          "default": "center",
+          "description": "Chevron alignment against the text."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'a'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "requires-prop",
+      "rule": "direction is required.",
+      "part": "LinkNavigation",
+      "props": ["direction"]
+    }
+  ],
+  "notSupported": ["custom icon."]
+}

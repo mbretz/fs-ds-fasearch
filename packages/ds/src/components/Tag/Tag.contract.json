@@ -1,0 +1,120 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Tag",
+  "summary": "Small static label badge. Flat Tag, or composed Tag.Root + Tag.Label for extra content.",
+  "spec": "Tag.spec.md",
+  "exports": {
+    "component": "Tag",
+    "variants": ["tagRootVariants"]
+  },
+  "parts": [
+    {
+      "usage": "Tag",
+      "typeName": "TagProps",
+      "typesFile": "Tag.types.ts",
+      "renders": "span",
+      "cva": "tagRootVariants",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "required": true,
+          "description": "Label."
+        },
+        {
+          "name": "size",
+          "type": "enum",
+          "values": ["sm", "lg"],
+          "default": "lg"
+        },
+        {
+          "name": "variant",
+          "type": "enum",
+          "values": ["generic", "teal", "red", "gold"],
+          "default": "generic"
+        },
+        {
+          "name": "borderWidth",
+          "type": "enum",
+          "values": ["default", "heavy"],
+          "default": "default"
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'span'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "Tag.Root",
+      "typeName": "TagRootProps",
+      "typesFile": "Tag.types.ts",
+      "renders": "span",
+      "cva": "tagRootVariants",
+      "props": [
+        {
+          "name": "size",
+          "type": "enum",
+          "values": ["sm", "lg"],
+          "default": "lg"
+        },
+        {
+          "name": "variant",
+          "type": "enum",
+          "values": ["generic", "teal", "red", "gold"],
+          "default": "generic"
+        },
+        {
+          "name": "borderWidth",
+          "type": "enum",
+          "values": ["default", "heavy"],
+          "default": "default"
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'span'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Tag.Label"]
+      }
+    },
+    {
+      "usage": "Tag.Label",
+      "typeName": "TagLabelProps",
+      "typesFile": "Tag.types.ts",
+      "renders": "span",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'span'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [],
+  "notSupported": [
+    "density prop.",
+    "variant values other than generic | teal | red | gold.",
+    "a dismiss control (use Chip)."
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "ScrollArea",
+  "summary": "Custom-scrollbar container (Radix ScrollArea). Use the flat ScrollArea for the common single-viewport case.",
+  "exports": {
+    "component": "ScrollArea",
+    "variants": ["scrollAreaScrollbarVariants"]
+  },
+  "parts": [
+    {
+      "usage": "ScrollArea",
+      "typeName": "ScrollAreaProps",
+      "typesFile": "ScrollArea.types.ts",
+      "renders": "Radix ScrollArea (Root > Viewport + Scrollbar + Thumb + Corner)",
+      "description": "Flat convenience wrapper.",
+      "props": [
+        {
+          "name": "children",
+          "type": "node"
+        },
+        {
+          "name": "horizontal",
+          "type": "boolean",
+          "description": "Adds a horizontal scrollbar to the default vertical one."
+        },
+        {
+          "name": "viewportClassName",
+          "type": "string",
+          "description": "Merged onto the viewport."
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix ScrollArea.Root",
+        "omit": ["children"],
+        "note": "type, scrollHideDelay, dir."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "ScrollArea.Root",
+      "typeName": "ScrollAreaRootProps",
+      "typesFile": "ScrollArea.types.ts",
+      "renders": "Radix ScrollArea.Root",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix ScrollArea.Root"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": [
+          "ScrollArea.Viewport",
+          "ScrollArea.Scrollbar",
+          "ScrollArea.Corner"
+        ]
+      }
+    },
+    {
+      "usage": "ScrollArea.Viewport",
+      "typeName": "ScrollAreaViewportProps",
+      "typesFile": "ScrollArea.types.ts",
+      "renders": "Radix ScrollArea.Viewport",
+      "props": [],
+      "passthrough": {
+        "from": "Radix ScrollArea.Viewport"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "ScrollArea.Scrollbar",
+      "typeName": "ScrollAreaScrollbarProps",
+      "typesFile": "ScrollArea.types.ts",
+      "renders": "Radix ScrollArea.Scrollbar",
+      "cva": "scrollAreaScrollbarVariants",
+      "props": [
+        {
+          "name": "orientation",
+          "type": "enum",
+          "values": ["vertical", "horizontal"],
+          "default": "vertical"
+        }
+      ],
+      "passthrough": {
+        "from": "Radix ScrollArea.Scrollbar"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["ScrollArea.Thumb"]
+      }
+    },
+    {
+      "usage": "ScrollArea.Thumb",
+      "typeName": "ScrollAreaThumbProps",
+      "typesFile": "ScrollArea.types.ts",
+      "renders": "Radix ScrollArea.Thumb",
+      "props": [],
+      "passthrough": {
+        "from": "Radix ScrollArea.Thumb"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "none"
+      }
+    },
+    {
+      "usage": "ScrollArea.Corner",
+      "typeName": "ScrollAreaCornerProps",
+      "typesFile": "ScrollArea.types.ts",
+      "renders": "Radix ScrollArea.Corner",
+      "props": [],
+      "passthrough": {
+        "from": "Radix ScrollArea.Corner"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "none"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Viewport, Scrollbar and Corner go inside Root; Thumb inside Scrollbar.",
+      "part": "ScrollArea.Thumb",
+      "parents": ["ScrollArea.Scrollbar"]
+    }
+  ],
+  "notSupported": [
+    "a bespoke imperative scroll API (use Element.scrollIntoView on children)."
+  ]
+}

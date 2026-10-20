@@ -1,0 +1,139 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "TextInput",
+  "summary": "Labelled single-line field with optional start/end icons. Compose Root + Label + Field + Microcopy.",
+  "spec": "TextInput.spec.md",
+  "exports": {
+    "component": "TextInput",
+    "variants": ["textInputFieldVariants"]
+  },
+  "parts": [
+    {
+      "usage": "TextInput.Root",
+      "typeName": "TextInputRootProps",
+      "typesFile": "TextInput.types.ts",
+      "renders": "div",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["TextInput.Label", "TextInput.Field", "TextInput.Microcopy"]
+      }
+    },
+    {
+      "usage": "TextInput.Label",
+      "typeName": "LabelProps",
+      "typesFile": "../Label/Label.types.ts",
+      "renders": "label (DS Label)",
+      "props": [
+        {
+          "name": "requirement",
+          "type": "enum",
+          "values": ["required", "optional"],
+          "description": "Omit for no suffix."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Label.Root",
+        "note": "htmlFor etc."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "TextInput.Field",
+      "typeName": "TextInputFieldProps",
+      "typesFile": "TextInput.types.ts",
+      "renders": "input",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error state."
+        },
+        {
+          "name": "iconStart",
+          "type": "node",
+          "description": "Inline-start icon."
+        },
+        {
+          "name": "iconEnd",
+          "type": "node",
+          "description": "Inline-end icon (decorative, aria-hidden)."
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'input'>",
+        "omit": ["size"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "TextInput.Microcopy",
+      "typeName": "MicrocopyProps",
+      "typesFile": "../Microcopy/Microcopy.types.ts",
+      "renders": "p (DS Microcopy)",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'p'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "a11y",
+      "rule": "Pair Label and Field via htmlFor/id; link Microcopy with aria-describedby."
+    },
+    {
+      "kind": "usage",
+      "rule": "Disabled takes visual precedence over error and read-only."
+    }
+  ],
+  "notSupported": [
+    "size prop.",
+    "interactive iconEnd (use SearchInput for that)."
+  ]
+}

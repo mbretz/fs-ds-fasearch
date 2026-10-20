@@ -1,0 +1,162 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "RadioGroup",
+  "summary": "Radio group (Radix RadioGroup) with optional label, microcopy, grouped field and items.",
+  "spec": "RadioGroup.spec.md",
+  "exports": {
+    "component": "RadioGroup"
+  },
+  "parts": [
+    {
+      "usage": "RadioGroup.Root",
+      "typeName": "RadioGroupRootProps",
+      "typesFile": "RadioGroup.types.ts",
+      "renders": "div (Radix RadioGroup.Root)",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix RadioGroup.Root",
+        "note": "value, defaultValue, onValueChange, name, disabled, required, orientation, dir, loop."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": [
+          "RadioGroup.Label",
+          "RadioGroup.Group",
+          "RadioGroup.Microcopy"
+        ]
+      }
+    },
+    {
+      "usage": "RadioGroup.Label",
+      "typeName": "LabelProps",
+      "typesFile": "../Label/Label.types.ts",
+      "renders": "label (DS Label)",
+      "props": [
+        {
+          "name": "requirement",
+          "type": "enum",
+          "values": ["required", "optional"],
+          "description": "Omit for no suffix."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Label.Root",
+        "note": "htmlFor etc."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "RadioGroup.Group",
+      "typeName": "RadioGroupGroupProps",
+      "typesFile": "RadioGroup.types.ts",
+      "renders": "div",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error styling for the group field."
+        },
+        {
+          "name": "orientation",
+          "type": "enum",
+          "values": ["vertical", "horizontal"],
+          "default": "vertical"
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["RadioGroup.Item"]
+      }
+    },
+    {
+      "usage": "RadioGroup.Item",
+      "typeName": "RadioButtonProps",
+      "typesFile": "../RadioButton/RadioButton.types.ts",
+      "renders": "RadioButton",
+      "description": "Alias of RadioButton.",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "description": "Row label text."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Item value."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix RadioGroup.Item",
+        "omit": ["children"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "RadioGroup.Microcopy",
+      "typeName": "MicrocopyProps",
+      "typesFile": "../Microcopy/Microcopy.types.ts",
+      "renders": "p (DS Microcopy)",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'p'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Items go inside RadioGroup.Group inside RadioGroup.Root.",
+      "part": "RadioGroup.Item",
+      "parents": ["RadioGroup.Group"]
+    }
+  ],
+  "notSupported": ["per-item error prop (use Group error)."]
+}

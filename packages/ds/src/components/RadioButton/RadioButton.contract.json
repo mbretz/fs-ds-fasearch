@@ -1,0 +1,58 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "RadioButton",
+  "summary": "Single radio item (Radix RadioGroup.Item) with label. Must be inside a RadioGroup.Root.",
+  "exports": {
+    "component": "RadioButton",
+    "variants": ["radioButtonInputVariants", "radioButtonLabelVariants"]
+  },
+  "parts": [
+    {
+      "usage": "RadioButton",
+      "typeName": "RadioButtonProps",
+      "typesFile": "RadioButton.types.ts",
+      "renders": "button (Radix RadioGroup.Item) in a label row",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "description": "Row label text."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Item value; required by Radix."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix RadioGroup.Item",
+        "omit": ["children"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Must be inside RadioGroup.Root.",
+      "part": "RadioButton",
+      "parents": ["RadioGroup.Root"]
+    },
+    {
+      "kind": "requires-prop",
+      "rule": "value is required.",
+      "part": "RadioButton",
+      "props": ["value"]
+    }
+  ],
+  "notSupported": [
+    "standalone use outside a group.",
+    "error prop (error state is on RadioGroup.Group)."
+  ]
+}

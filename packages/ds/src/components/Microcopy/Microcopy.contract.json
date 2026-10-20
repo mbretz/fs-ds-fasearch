@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Microcopy",
+  "summary": "Helper/error text under a field (p).",
+  "exports": {
+    "component": "Microcopy"
+  },
+  "parts": [
+    {
+      "usage": "Microcopy",
+      "typeName": "MicrocopyProps",
+      "typesFile": "Microcopy.types.ts",
+      "renders": "p",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'p'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [],
+  "notSupported": ["asChild.", "size props."]
+}

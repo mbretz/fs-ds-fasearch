@@ -1,0 +1,61 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Box",
+  "summary": "Padding-only layout primitive (div) with token-backed padding steps.",
+  "exports": {
+    "component": "Box",
+    "variants": ["boxVariants"]
+  },
+  "parts": [
+    {
+      "usage": "Box",
+      "typeName": "BoxProps",
+      "typesFile": "Box.types.ts",
+      "renders": "div",
+      "cva": "boxVariants",
+      "props": [
+        {
+          "name": "padding",
+          "type": "enum",
+          "values": [
+            "none",
+            "xx-small",
+            "x-small",
+            "small",
+            "med",
+            "large",
+            "x-large",
+            "xx-large"
+          ],
+          "default": "none",
+          "description": "Density-reactive spacing step."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "usage",
+      "rule": "Padding is the named steps only; no numbers or px strings."
+    }
+  ],
+  "notSupported": [
+    "numeric / px padding values.",
+    "margin, paddingX/paddingY props.",
+    "responsive (breakpoint) prop values."
+  ]
+}

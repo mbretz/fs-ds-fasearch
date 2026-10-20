@@ -1,0 +1,104 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Tabs",
+  "summary": "Tabs (Radix Tabs) with automatic activation.",
+  "exports": {
+    "component": "Tabs",
+    "variants": ["tabsTriggerVariants"]
+  },
+  "parts": [
+    {
+      "usage": "Tabs.Root",
+      "typeName": "TabsRootProps",
+      "typesFile": "Tabs.types.ts",
+      "renders": "div (Radix Tabs.Root)",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Tabs.Root",
+        "note": "value, defaultValue, onValueChange, orientation, activationMode, dir."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Tabs.List", "Tabs.Content"]
+      }
+    },
+    {
+      "usage": "Tabs.List",
+      "typeName": "TabsListProps",
+      "typesFile": "Tabs.types.ts",
+      "renders": "Radix Tabs.List",
+      "props": [],
+      "passthrough": {
+        "from": "Radix Tabs.List"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Tabs.Trigger"]
+      }
+    },
+    {
+      "usage": "Tabs.Trigger",
+      "typeName": "TabsTriggerProps",
+      "typesFile": "Tabs.types.ts",
+      "renders": "Radix Tabs.Trigger",
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Tab value."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Tabs.Trigger"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "Tabs.Content",
+      "typeName": "TabsContentProps",
+      "typesFile": "Tabs.types.ts",
+      "renders": "Radix Tabs.Content",
+      "description": "Unstyled panel.",
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Matches a Trigger value."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Tabs.Content"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Triggers go inside List; Content is a sibling of List inside Root.",
+      "part": "Tabs.Trigger",
+      "parents": ["Tabs.List"]
+    }
+  ],
+  "notSupported": ["variant / size props."]
+}
