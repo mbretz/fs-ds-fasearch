@@ -15,5 +15,6 @@
       "Read(//tmp/**)",
       "Bash(node scratch-badge32.mjs)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": ["figma-tokens"]
 }
