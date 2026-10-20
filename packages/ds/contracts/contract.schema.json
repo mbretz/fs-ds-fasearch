@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ds-component-contract",
+  "title": "DS component contract",
+  "description": "Machine-readable API surface for one DS component. Agents may only use what is listed here. Checked against the code by src/contracts/contracts.test.ts.",
+  "type": "object",
+  "required": ["contractVersion", "name", "summary", "parts"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "contractVersion": { "const": 1 },
+    "name": { "type": "string" },
+    "summary": { "type": "string" },
+    "spec": {
+      "type": "string",
+      "description": "Colocated .spec.md, if one exists."
+    },
+    "exports": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "component": { "type": "string" },
+        "variants": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Exported cva functions (public API)."
+        }
+      }
+    },
+    "parts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/part" }
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/constraint" }
+    },
+    "notSupported": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Things an agent might plausibly reach for that do NOT exist."
+    }
+  },
+  "definitions": {
+    "part": {
+      "type": "object",
+      "required": ["usage", "typeName", "typesFile", "renders", "props"],
+      "additionalProperties": false,
+      "properties": {
+        "usage": {
+          "type": "string",
+          "description": "JSX name, e.g. 'Dialog.Content'."
+        },
+        "typeName": {
+          "type": "string",
+          "description": "Exported props type this part is checked against."
+        },
+        "typesFile": { "type": "string" },
+        "renders": {
+          "type": "string",
+          "description": "DOM element or Radix primitive this part renders."
+        },
+        "description": { "type": "string" },
+        "cva": {
+          "type": "string",
+          "description": "Name of the cva function (in the component file) whose variants/defaults must match this part's props."
+        },
+        "props": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/prop" },
+          "description": "Every prop declared in this repo for the part (own or inherited from another DS type). Must be complete."
+        },
+        "passthrough": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from"],
+          "properties": {
+            "from": { "type": "string" },
+            "only": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "If present, ONLY these keys pass through."
+            },
+            "omit": { "type": "array", "items": { "type": "string" } },
+            "note": { "type": "string" }
+          }
+        },
+        "ref": { "type": "boolean" },
+        "className": { "enum": ["merged", "none"] },
+        "children": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "allowed": {
+              "oneOf": [
+                { "const": "any" },
+                { "const": "none" },
+                { "type": "array", "items": { "type": "string" } }
+              ]
+            },
+            "note": { "type": "string" }
+          }
+        }
+      }
+    },
+    "prop": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "enum": [
+            "enum",
+            "boolean",
+            "string",
+            "number",
+            "node",
+            "function",
+            "other"
+          ]
+        },
+        "values": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Exhaustive allowed literals when type is 'enum'. Checked against the TS union."
+        },
+        "required": { "type": "boolean" },
+        "default": {},
+        "description": { "type": "string" }
+      }
+    },
+    "constraint": {
+      "type": "object",
+      "required": ["kind", "rule"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": ["requires-prop", "conflicts", "composition", "a11y", "usage"]
+        },
+        "rule": { "type": "string" },
+        "part": { "type": "string" },
+        "props": { "type": "array", "items": { "type": "string" } },
+        "parents": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

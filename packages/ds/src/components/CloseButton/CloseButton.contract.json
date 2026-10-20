@@ -1,0 +1,48 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "CloseButton",
+  "summary": "Fixed tertiary icon-only close button (a configured Button).",
+  "exports": {
+    "component": "CloseButton"
+  },
+  "parts": [
+    {
+      "usage": "CloseButton",
+      "typeName": "CloseButtonProps",
+      "typesFile": "CloseButton.types.ts",
+      "renders": "button (Button)",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Forwarded to Button."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "Overrides the default \"Close\" accessible name."
+        }
+      ],
+      "passthrough": {
+        "from": "Pick<ComponentProps<'button'>>",
+        "only": ["onClick", "disabled", "className", "id", "ref"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "none"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "usage",
+      "rule": "Do not pass variant, children, icon or showLabel; the configuration is fixed."
+    }
+  ],
+  "notSupported": [
+    "variant, children, icon, showLabel, type, form, name props (explicit allow-list)."
+  ]
+}

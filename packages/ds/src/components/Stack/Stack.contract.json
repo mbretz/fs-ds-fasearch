@@ -1,0 +1,86 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Stack",
+  "summary": "Flex layout primitive with token-backed gap and padding. Extends Box.",
+  "exports": { "component": "Stack", "variants": ["stackVariants"] },
+  "parts": [
+    {
+      "usage": "Stack",
+      "typeName": "StackProps",
+      "typesFile": "Stack.types.ts",
+      "renders": "div",
+      "cva": "stackVariants",
+      "props": [
+        {
+          "name": "direction",
+          "type": "enum",
+          "values": ["row", "column"],
+          "default": "column"
+        },
+        {
+          "name": "gap",
+          "type": "enum",
+          "values": [
+            "none",
+            "xx-small",
+            "x-small",
+            "small",
+            "med",
+            "large",
+            "x-large",
+            "xx-large"
+          ],
+          "default": "none",
+          "description": "Density-reactive spacing step."
+        },
+        {
+          "name": "align",
+          "type": "enum",
+          "values": ["start", "center", "end", "stretch", "baseline"]
+        },
+        {
+          "name": "justify",
+          "type": "enum",
+          "values": ["start", "center", "end", "between", "around", "evenly"]
+        },
+        { "name": "wrap", "type": "boolean" },
+        {
+          "name": "padding",
+          "type": "enum",
+          "values": [
+            "none",
+            "xx-small",
+            "x-small",
+            "small",
+            "med",
+            "large",
+            "x-large",
+            "xx-large"
+          ],
+          "description": "Inherited from Box."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Inherited from Box. Render the child element instead of a <div>."
+        }
+      ],
+      "passthrough": { "from": "ComponentProps<'div'>" },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": "any" }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "usage",
+      "rule": "Spacing values are the named steps only; no pixel numbers or arbitrary strings."
+    }
+  ],
+  "notSupported": [
+    "gap/padding as numbers or px strings.",
+    "responsive (breakpoint) prop values.",
+    "separate paddingX/paddingY or margin props (use Box/className for those)."
+  ]
+}

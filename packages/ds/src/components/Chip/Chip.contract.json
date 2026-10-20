@@ -1,0 +1,113 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Chip",
+  "summary": "Small dismissible/non-dismissible pill. Flat Chip wrapper or composed Root + Label + CloseButton.",
+  "exports": {
+    "component": "Chip"
+  },
+  "parts": [
+    {
+      "usage": "Chip",
+      "typeName": "ChipProps",
+      "typesFile": "Chip.types.ts",
+      "renders": "span",
+      "description": "Convenience wrapper.",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "required": true,
+          "description": "Label."
+        },
+        {
+          "name": "onDismiss",
+          "type": "function",
+          "description": "Renders the close button when present."
+        },
+        {
+          "name": "dismissLabel",
+          "type": "string",
+          "default": "Remove",
+          "description": "Accessible name for the dismiss button."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'span'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "Chip.Root",
+      "typeName": "ChipRootProps",
+      "typesFile": "Chip.types.ts",
+      "renders": "span",
+      "props": [
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'span'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Chip.Label", "Chip.CloseButton"]
+      }
+    },
+    {
+      "usage": "Chip.Label",
+      "typeName": "ChipLabelProps",
+      "typesFile": "Chip.types.ts",
+      "renders": "span",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'span'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "Chip.CloseButton",
+      "typeName": "ChipCloseButtonProps",
+      "typesFile": "Chip.types.ts",
+      "renders": "button",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'button'>",
+        "note": "onClick is the dismiss hook; set aria-label yourself."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "none"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "a11y",
+      "rule": "Chip.CloseButton needs an aria-label when composed directly.",
+      "part": "Chip.CloseButton"
+    }
+  ],
+  "notSupported": [
+    "density / size / variant props (single style).",
+    "leading icon or count on the flat Chip (compose Root/Label/CloseButton for that)."
+  ]
+}

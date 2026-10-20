@@ -1,0 +1,48 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Label",
+  "summary": "Form field label (Radix Label) with required/optional suffix and error color.",
+  "exports": {
+    "component": "Label",
+    "variants": ["labelTextVariants"]
+  },
+  "parts": [
+    {
+      "usage": "Label",
+      "typeName": "LabelProps",
+      "typesFile": "Label.types.ts",
+      "renders": "label (Radix Label.Root)",
+      "props": [
+        {
+          "name": "requirement",
+          "type": "enum",
+          "values": ["required", "optional"],
+          "description": "Omit for no suffix."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Label.Root",
+        "note": "htmlFor etc. No asChild."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "usage",
+      "rule": "Pair with the control via htmlFor."
+    }
+  ],
+  "notSupported": ["asChild.", "requirement=\"none\" (omit the prop instead)."]
+}

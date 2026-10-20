@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "LinkHelp",
+  "summary": "Help-style link (a) with a built-in leading help icon.",
+  "spec": "LinkHelp.spec.md",
+  "exports": {
+    "component": "LinkHelp"
+  },
+  "parts": [
+    {
+      "usage": "LinkHelp",
+      "typeName": "LinkHelpProps",
+      "typesFile": "LinkHelp.types.ts",
+      "renders": "a",
+      "props": [
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'a'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [],
+  "notSupported": [
+    "icon override.",
+    "underline / newWindow props (use Link for those)."
+  ]
+}

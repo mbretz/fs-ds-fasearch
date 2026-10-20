@@ -1,0 +1,57 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Link",
+  "summary": "Inline text link (a) with underline control and optional new-window trailing icon.",
+  "exports": {
+    "component": "Link"
+  },
+  "parts": [
+    {
+      "usage": "Link",
+      "typeName": "LinkProps",
+      "typesFile": "Link.types.ts",
+      "renders": "a",
+      "props": [
+        {
+          "name": "newWindow",
+          "type": "boolean",
+          "description": "Shows trailing icon, sets target=\"_blank\" rel=\"noopener noreferrer\", adds sr-only text."
+        },
+        {
+          "name": "underline",
+          "type": "boolean",
+          "default": true,
+          "description": "Underline decoration."
+        },
+        {
+          "name": "iconVerticalAlign",
+          "type": "enum",
+          "values": ["start", "center", "end"],
+          "default": "end",
+          "description": "Trailing icon alignment against wrapped text."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child (e.g. router Link) instead of <a>. The new-window icon is not added in this mode."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'a'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "usage",
+      "rule": "Use Link for navigation; use Button for actions."
+    }
+  ],
+  "notSupported": ["variant / color props.", "icon props other than newWindow."]
+}

@@ -1,0 +1,170 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Button",
+  "summary": "Triggers an action (submit, open/close something). Navigation to another place is a Link, not a Button.",
+  "spec": "Button.spec.md",
+  "exports": { "component": "Button", "variants": ["buttonRootVariants"] },
+  "parts": [
+    {
+      "usage": "Button",
+      "typeName": "ButtonProps",
+      "typesFile": "Button.types.ts",
+      "renders": "button",
+      "description": "Convenience wrapper composing Root + optional Icon(s) + Label. Use this by default.",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "required": true,
+          "description": "Label content. Stays mounted (as the accessible name) when showLabel is false."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "default": true,
+          "description": "false = icon-only button; label is visually hidden."
+        },
+        {
+          "name": "iconStart",
+          "type": "node",
+          "description": "Icon before the label."
+        },
+        {
+          "name": "iconEnd",
+          "type": "node",
+          "description": "Icon after the label."
+        },
+        {
+          "name": "variant",
+          "type": "enum",
+          "values": ["primary", "secondary", "tertiary"],
+          "default": "primary"
+        },
+        {
+          "name": "destructive",
+          "type": "boolean",
+          "default": false,
+          "description": "Critical-response styling; combines with every variant."
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of a <button> (Radix Slot)."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "Overrides the accessible name."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'button'>",
+        "omit": ["aria-label"],
+        "note": "All native button attributes and event handlers."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": "any" }
+    },
+    {
+      "usage": "Button.Root",
+      "typeName": "ButtonRootProps",
+      "typesFile": "Button.types.ts",
+      "renders": "button",
+      "description": "Bare styled button for custom composition. Use only when Button's iconStart/iconEnd/label layout is not enough.",
+      "cva": "buttonRootVariants",
+      "props": [
+        {
+          "name": "variant",
+          "type": "enum",
+          "values": ["primary", "secondary", "tertiary"],
+          "default": "primary"
+        },
+        { "name": "destructive", "type": "boolean", "default": false },
+        { "name": "density", "type": "enum", "values": ["roomy", "condensed"] },
+        { "name": "asChild", "type": "boolean" },
+        {
+          "name": "iconOnly",
+          "type": "boolean",
+          "default": false,
+          "description": "Square, icon-only sizing. Button sets this from showLabel={false}; set it yourself only on Root."
+        },
+        { "name": "aria-label", "type": "string" }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'button'>",
+        "omit": ["aria-label"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": ["Button.Icon", "Button.Label"] }
+    },
+    {
+      "usage": "Button.Icon",
+      "typeName": "ButtonIconProps",
+      "typesFile": "Button.types.ts",
+      "renders": "span",
+      "props": [],
+      "passthrough": { "from": "ComponentProps<'span'>" },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": "any", "note": "An svg icon." }
+    },
+    {
+      "usage": "Button.Label",
+      "typeName": "ButtonLabelProps",
+      "typesFile": "Button.types.ts",
+      "renders": "span",
+      "props": [
+        {
+          "name": "visuallyHidden",
+          "type": "boolean",
+          "description": "Hides the label visually but keeps it as the accessible name."
+        }
+      ],
+      "passthrough": { "from": "ComponentProps<'span'>" },
+      "ref": true,
+      "className": "merged",
+      "children": { "allowed": "any" }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "a11y",
+      "part": "Button",
+      "rule": "An icon-only button (showLabel={false}) must still have children (its accessible name) or an aria-label."
+    },
+    {
+      "kind": "composition",
+      "part": "Button.Icon",
+      "parents": ["Button.Root"],
+      "rule": "Button.Icon and Button.Label are only valid inside Button.Root."
+    },
+    {
+      "kind": "usage",
+      "rule": "If the element navigates (same page anchor or another page), use Link instead of Button."
+    },
+    {
+      "kind": "usage",
+      "rule": "Use destructive (not a custom color) for delete-like actions; do not use variant='primary' non-destructive for irreversible actions."
+    },
+    {
+      "kind": "usage",
+      "rule": "At most three buttons per group; order tertiary, secondary, primary left to right."
+    }
+  ],
+  "notSupported": [
+    "size prop (Figma has no Size variant; size comes from density).",
+    "variant values other than primary | secondary | tertiary (no 'reversed', 'ghost', 'link', 'outline', 'danger').",
+    "intent / color / tone props (use destructive).",
+    "loading / isLoading prop.",
+    "href prop (use Link, or asChild with an anchor)."
+  ]
+}

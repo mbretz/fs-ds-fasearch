@@ -1,0 +1,39 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Scrim",
+  "summary": "Fixed full-viewport backdrop (div). Apply a z-index-* utility yourself.",
+  "exports": {
+    "component": "Scrim"
+  },
+  "parts": [
+    {
+      "usage": "Scrim",
+      "typeName": "ScrimProps",
+      "typesFile": "Scrim.types.ts",
+      "renders": "div",
+      "props": [
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render onto a supplied element, e.g. Radix Dialog.Overlay."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "none"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "usage",
+      "rule": "Scrim has no default z-index; add one of theme.css's z-index-* utilities via className."
+    }
+  ],
+  "notSupported": ["variant / opacity props."]
+}

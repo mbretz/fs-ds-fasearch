@@ -1,0 +1,3735 @@
+{
+  "contractVersion": 1,
+  "components": {
+    "Avatar": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Avatar",
+      "summary": "Circular (associate) or rounded-square (entity) image with an initials/icon fallback (Radix Avatar).",
+      "spec": "Avatar.spec.md",
+      "exports": {
+        "component": "Avatar",
+        "variants": [
+          "avatarRootVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Avatar.Root",
+          "typeName": "AvatarRootProps",
+          "typesFile": "Avatar.types.ts",
+          "renders": "span (Radix Avatar.Root)",
+          "cva": "avatarRootVariants",
+          "props": [
+            {
+              "name": "size",
+              "type": "enum",
+              "values": [
+                "xs",
+                "sm",
+                "md",
+                "lg",
+                "xl",
+                "2xl"
+              ],
+              "default": "md"
+            },
+            {
+              "name": "variant",
+              "type": "enum",
+              "values": [
+                "associate",
+                "entity"
+              ],
+              "default": "associate",
+              "description": "associate = person (circle); entity = organization (rounded square)."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Avatar.Root",
+            "note": "Supports asChild."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Avatar.Image",
+              "Avatar.Fallback"
+            ]
+          }
+        },
+        {
+          "usage": "Avatar.Image",
+          "typeName": "AvatarImageProps",
+          "typesFile": "Avatar.types.ts",
+          "renders": "img (Radix Avatar.Image)",
+          "props": [],
+          "passthrough": {
+            "from": "Radix Avatar.Image",
+            "note": "onLoadingStatusChange available."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "none"
+          }
+        },
+        {
+          "usage": "Avatar.Fallback",
+          "typeName": "AvatarFallbackProps",
+          "typesFile": "Avatar.types.ts",
+          "renders": "span (Radix Avatar.Fallback)",
+          "description": "Initials text or an icon; shown when the image is missing, errored or loading.",
+          "props": [],
+          "passthrough": {
+            "from": "Radix Avatar.Fallback",
+            "note": "delayMs available."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any",
+            "note": "Initials text or an icon sized via var(--avatar-icon-size)."
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Avatar.Image and Avatar.Fallback are only valid inside Avatar.Root.",
+          "parents": [
+            "Avatar.Root"
+          ]
+        },
+        {
+          "kind": "a11y",
+          "rule": "Pass alt on Avatar.Image; a decorative Avatar needs alt=\"\".",
+          "part": "Avatar.Image"
+        }
+      ],
+      "notSupported": [
+        "sizes other than xs | sm | md | lg | xl | 2xl (no numeric px size).",
+        "variant values other than associate | entity.",
+        "a single-component form (<Avatar src=...>); compose Root + Image + Fallback."
+      ]
+    },
+    "Box": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Box",
+      "summary": "Padding-only layout primitive (div) with token-backed padding steps.",
+      "exports": {
+        "component": "Box",
+        "variants": [
+          "boxVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Box",
+          "typeName": "BoxProps",
+          "typesFile": "Box.types.ts",
+          "renders": "div",
+          "cva": "boxVariants",
+          "props": [
+            {
+              "name": "padding",
+              "type": "enum",
+              "values": [
+                "none",
+                "xx-small",
+                "x-small",
+                "small",
+                "med",
+                "large",
+                "x-large",
+                "xx-large"
+              ],
+              "default": "none",
+              "description": "Density-reactive spacing step."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "usage",
+          "rule": "Padding is the named steps only; no numbers or px strings."
+        }
+      ],
+      "notSupported": [
+        "numeric / px padding values.",
+        "margin, paddingX/paddingY props.",
+        "responsive (breakpoint) prop values."
+      ]
+    },
+    "Button": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Button",
+      "summary": "Triggers an action (submit, open/close something). Navigation to another place is a Link, not a Button.",
+      "spec": "Button.spec.md",
+      "exports": {
+        "component": "Button",
+        "variants": [
+          "buttonRootVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Button",
+          "typeName": "ButtonProps",
+          "typesFile": "Button.types.ts",
+          "renders": "button",
+          "description": "Convenience wrapper composing Root + optional Icon(s) + Label. Use this by default.",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "required": true,
+              "description": "Label content. Stays mounted (as the accessible name) when showLabel is false."
+            },
+            {
+              "name": "showLabel",
+              "type": "boolean",
+              "default": true,
+              "description": "false = icon-only button; label is visually hidden."
+            },
+            {
+              "name": "iconStart",
+              "type": "node",
+              "description": "Icon before the label."
+            },
+            {
+              "name": "iconEnd",
+              "type": "node",
+              "description": "Icon after the label."
+            },
+            {
+              "name": "variant",
+              "type": "enum",
+              "values": [
+                "primary",
+                "secondary",
+                "tertiary"
+              ],
+              "default": "primary"
+            },
+            {
+              "name": "destructive",
+              "type": "boolean",
+              "default": false,
+              "description": "Critical-response styling; combines with every variant."
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of a <button> (Radix Slot)."
+            },
+            {
+              "name": "aria-label",
+              "type": "string",
+              "description": "Overrides the accessible name."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'button'>",
+            "omit": [
+              "aria-label"
+            ],
+            "note": "All native button attributes and event handlers."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Button.Root",
+          "typeName": "ButtonRootProps",
+          "typesFile": "Button.types.ts",
+          "renders": "button",
+          "description": "Bare styled button for custom composition. Use only when Button's iconStart/iconEnd/label layout is not enough.",
+          "cva": "buttonRootVariants",
+          "props": [
+            {
+              "name": "variant",
+              "type": "enum",
+              "values": [
+                "primary",
+                "secondary",
+                "tertiary"
+              ],
+              "default": "primary"
+            },
+            {
+              "name": "destructive",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ]
+            },
+            {
+              "name": "asChild",
+              "type": "boolean"
+            },
+            {
+              "name": "iconOnly",
+              "type": "boolean",
+              "default": false,
+              "description": "Square, icon-only sizing. Button sets this from showLabel={false}; set it yourself only on Root."
+            },
+            {
+              "name": "aria-label",
+              "type": "string"
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'button'>",
+            "omit": [
+              "aria-label"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Button.Icon",
+              "Button.Label"
+            ]
+          }
+        },
+        {
+          "usage": "Button.Icon",
+          "typeName": "ButtonIconProps",
+          "typesFile": "Button.types.ts",
+          "renders": "span",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'span'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any",
+            "note": "An svg icon."
+          }
+        },
+        {
+          "usage": "Button.Label",
+          "typeName": "ButtonLabelProps",
+          "typesFile": "Button.types.ts",
+          "renders": "span",
+          "props": [
+            {
+              "name": "visuallyHidden",
+              "type": "boolean",
+              "description": "Hides the label visually but keeps it as the accessible name."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'span'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "a11y",
+          "part": "Button",
+          "rule": "An icon-only button (showLabel={false}) must still have children (its accessible name) or an aria-label."
+        },
+        {
+          "kind": "composition",
+          "part": "Button.Icon",
+          "parents": [
+            "Button.Root"
+          ],
+          "rule": "Button.Icon and Button.Label are only valid inside Button.Root."
+        },
+        {
+          "kind": "usage",
+          "rule": "If the element navigates (same page anchor or another page), use Link instead of Button."
+        },
+        {
+          "kind": "usage",
+          "rule": "Use destructive (not a custom color) for delete-like actions; do not use variant='primary' non-destructive for irreversible actions."
+        },
+        {
+          "kind": "usage",
+          "rule": "At most three buttons per group; order tertiary, secondary, primary left to right."
+        }
+      ],
+      "notSupported": [
+        "size prop (Figma has no Size variant; size comes from density).",
+        "variant values other than primary | secondary | tertiary (no 'reversed', 'ghost', 'link', 'outline', 'danger').",
+        "intent / color / tone props (use destructive).",
+        "loading / isLoading prop.",
+        "href prop (use Link, or asChild with an anchor)."
+      ]
+    },
+    "Card": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Card",
+      "summary": "Bordered surface with optional collapsible header (Radix Collapsible); compose Root + Header + Body + Footer.",
+      "spec": "Card.spec.md",
+      "exports": {
+        "component": "Card"
+      },
+      "parts": [
+        {
+          "usage": "Card.Root",
+          "typeName": "CardRootProps",
+          "typesFile": "Card.types.ts",
+          "renders": "div (Radix Collapsible.Root)",
+          "description": "defaultOpen is true. open/defaultOpen/onOpenChange/disabled only matter when Header is expandable.",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element (e.g. <section>) instead of a <div>."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'> + Radix Collapsible.Root (open, defaultOpen, onOpenChange, disabled)",
+            "omit": [
+              "onOpenChange (div)"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Card.Header",
+              "Card.Body",
+              "Card.Footer"
+            ]
+          }
+        },
+        {
+          "usage": "Card.Header",
+          "typeName": "CardHeaderProps",
+          "typesFile": "Card.types.ts",
+          "renders": "div, or button when expandable",
+          "props": [
+            {
+              "name": "expandable",
+              "type": "boolean",
+              "description": "Header becomes the Collapsible trigger and renders as a <button>."
+            },
+            {
+              "name": "showBorder",
+              "type": "boolean",
+              "default": true,
+              "description": "Bottom border; on an expandable header it only shows while open."
+            },
+            {
+              "name": "ref",
+              "type": "other",
+              "description": "Ref<HTMLElement> (the element is a div or a button)."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Card.HeaderTitle",
+              "Card.HeaderDescription"
+            ],
+            "note": "When expandable, children render inside a native <button>: no nested links, buttons or form controls."
+          }
+        },
+        {
+          "usage": "Card.HeaderTitle",
+          "typeName": "CardHeaderTitleProps",
+          "typesFile": "Card.types.ts",
+          "renders": "div",
+          "props": [
+            {
+              "name": "icon",
+              "type": "node",
+              "description": "Leading icon."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Card.HeaderDescription",
+          "typeName": "CardHeaderDescriptionProps",
+          "typesFile": "Card.types.ts",
+          "renders": "div",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Card.Body",
+          "typeName": "CardBodyProps",
+          "typesFile": "Card.types.ts",
+          "renders": "div (inside Collapsible.Content)",
+          "description": "Collapses with an expandable Header.",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Card.Footer",
+          "typeName": "CardFooterProps",
+          "typesFile": "Card.types.ts",
+          "renders": "div (inside Collapsible.Content)",
+          "description": "Column layout; collapses with an expandable Header.",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Card.* parts are only valid inside Card.Root.",
+          "parents": [
+            "Card.Root"
+          ]
+        },
+        {
+          "kind": "conflicts",
+          "rule": "Do not nest interactive elements inside an expandable Card.Header.",
+          "part": "Card.Header"
+        },
+        {
+          "kind": "usage",
+          "rule": "Card.Footer is a column; for a row of buttons use Dialog.Footer-style layout yourself.",
+          "part": "Card.Footer"
+        }
+      ],
+      "notSupported": [
+        "variant / elevation / color props.",
+        "a Card.Title (use Card.HeaderTitle).",
+        "controlled collapse without Card.Header expandable (open only has an effect on collapsible content)."
+      ]
+    },
+    "Checkbox": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Checkbox",
+      "summary": "Labelled checkbox row (Radix Checkbox). The whole row is a native <label>.",
+      "spec": "Checkbox.spec.md",
+      "exports": {
+        "component": "Checkbox",
+        "variants": [
+          "checkboxInputVariants",
+          "checkboxLabelVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Checkbox",
+          "typeName": "CheckboxProps",
+          "typesFile": "Checkbox.types.ts",
+          "renders": "label > Radix Checkbox.Root",
+          "description": "className applies to the outer label row.",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "description": "Row label text."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Recolors the label text only (not the box)."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Checkbox.Root",
+            "omit": [
+              "children"
+            ],
+            "note": "checked accepts boolean | \"indeterminate\"; also defaultChecked, onCheckedChange, required, disabled, name, value."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any",
+            "note": "Label content."
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "usage",
+          "rule": "Indeterminate state is checked=\"indeterminate\"; there is no separate prop.",
+          "part": "Checkbox"
+        },
+        {
+          "kind": "usage",
+          "rule": "Do not wrap in your own <label> or add htmlFor; the row is already a label.",
+          "part": "Checkbox"
+        }
+      ],
+      "notSupported": [
+        "selection / indeterminate prop (use checked=\"indeterminate\").",
+        "size / density props.",
+        "separate Label component pairing."
+      ]
+    },
+    "ChecklistGroup": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "ChecklistGroup",
+      "summary": "Vertical grouping of Checkbox items with optional error state and nested sub-groups.",
+      "exports": {
+        "component": "ChecklistGroup"
+      },
+      "parts": [
+        {
+          "usage": "ChecklistGroup.Root",
+          "typeName": "ChecklistGroupRootProps",
+          "typesFile": "ChecklistGroup.types.ts",
+          "renders": "div",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "ChecklistGroup.Group",
+              "Label",
+              "Microcopy"
+            ]
+          }
+        },
+        {
+          "usage": "ChecklistGroup.Group",
+          "typeName": "ChecklistGroupGroupProps",
+          "typesFile": "ChecklistGroup.types.ts",
+          "renders": "div",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error styling for the group field."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Checkbox",
+              "ChecklistGroup.NestedGroup"
+            ]
+          }
+        },
+        {
+          "usage": "ChecklistGroup.Label",
+          "typeName": "LabelProps",
+          "typesFile": "../Label/Label.types.ts",
+          "renders": "label (DS Label)",
+          "props": [
+            {
+              "name": "requirement",
+              "type": "enum",
+              "values": [
+                "required",
+                "optional"
+              ],
+              "description": "Omit for no suffix."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Label.Root",
+            "note": "htmlFor etc."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "ChecklistGroup.Item",
+          "typeName": "CheckboxProps",
+          "typesFile": "../Checkbox/Checkbox.types.ts",
+          "renders": "label > Radix Checkbox.Root (the Checkbox component)",
+          "description": "Alias of Checkbox.",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "description": "Row label text."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Recolors the label text only."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Checkbox.Root",
+            "omit": [
+              "children"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "ChecklistGroup.Microcopy",
+          "typeName": "MicrocopyProps",
+          "typesFile": "../Microcopy/Microcopy.types.ts",
+          "renders": "p (DS Microcopy)",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'p'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "ChecklistGroup.NestedGroup",
+          "typeName": "ChecklistGroupNestedGroupProps",
+          "typesFile": "ChecklistGroup.types.ts",
+          "renders": "div",
+          "description": "40px inline indent for sub-items under a parent Checkbox.",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Checkbox"
+            ]
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Group goes inside Root; NestedGroup goes inside Group, after its parent Checkbox.",
+          "part": "ChecklistGroup.NestedGroup",
+          "parents": [
+            "ChecklistGroup.Group"
+          ]
+        }
+      ],
+      "notSupported": [
+        "orientation prop (vertical only)."
+      ]
+    },
+    "Chip": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Chip",
+      "summary": "Small dismissible/non-dismissible pill. Flat Chip wrapper or composed Root + Label + CloseButton.",
+      "exports": {
+        "component": "Chip"
+      },
+      "parts": [
+        {
+          "usage": "Chip",
+          "typeName": "ChipProps",
+          "typesFile": "Chip.types.ts",
+          "renders": "span",
+          "description": "Convenience wrapper.",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "required": true,
+              "description": "Label."
+            },
+            {
+              "name": "onDismiss",
+              "type": "function",
+              "description": "Renders the close button when present."
+            },
+            {
+              "name": "dismissLabel",
+              "type": "string",
+              "default": "Remove",
+              "description": "Accessible name for the dismiss button."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'span'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Chip.Root",
+          "typeName": "ChipRootProps",
+          "typesFile": "Chip.types.ts",
+          "renders": "span",
+          "props": [
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'span'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Chip.Label",
+              "Chip.CloseButton"
+            ]
+          }
+        },
+        {
+          "usage": "Chip.Label",
+          "typeName": "ChipLabelProps",
+          "typesFile": "Chip.types.ts",
+          "renders": "span",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'span'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Chip.CloseButton",
+          "typeName": "ChipCloseButtonProps",
+          "typesFile": "Chip.types.ts",
+          "renders": "button",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'button'>",
+            "note": "onClick is the dismiss hook; set aria-label yourself."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "none"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "a11y",
+          "rule": "Chip.CloseButton needs an aria-label when composed directly.",
+          "part": "Chip.CloseButton"
+        }
+      ],
+      "notSupported": [
+        "density / size / variant props (single style).",
+        "leading icon or count on the flat Chip (compose Root/Label/CloseButton for that)."
+      ]
+    },
+    "CloseButton": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "CloseButton",
+      "summary": "Fixed tertiary icon-only close button (a configured Button).",
+      "exports": {
+        "component": "CloseButton"
+      },
+      "parts": [
+        {
+          "usage": "CloseButton",
+          "typeName": "CloseButtonProps",
+          "typesFile": "CloseButton.types.ts",
+          "renders": "button (Button)",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Forwarded to Button."
+            },
+            {
+              "name": "aria-label",
+              "type": "string",
+              "description": "Overrides the default \"Close\" accessible name."
+            }
+          ],
+          "passthrough": {
+            "from": "Pick<ComponentProps<'button'>>",
+            "only": [
+              "onClick",
+              "disabled",
+              "className",
+              "id",
+              "ref"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "none"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "usage",
+          "rule": "Do not pass variant, children, icon or showLabel; the configuration is fixed."
+        }
+      ],
+      "notSupported": [
+        "variant, children, icon, showLabel, type, form, name props (explicit allow-list)."
+      ]
+    },
+    "Dialog": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Dialog",
+      "summary": "Modal dialog (Radix Dialog) with built-in scrim, close button, title and optional description.",
+      "spec": "Dialog.spec.md",
+      "exports": {
+        "component": "Dialog"
+      },
+      "parts": [
+        {
+          "usage": "Dialog.Root",
+          "typeName": "DialogRootProps",
+          "typesFile": "Dialog.types.ts",
+          "renders": "Radix Dialog.Root (no DOM)",
+          "props": [],
+          "passthrough": {
+            "from": "Radix Dialog.Root",
+            "only": [
+              "open",
+              "defaultOpen",
+              "onOpenChange",
+              "modal",
+              "children"
+            ]
+          },
+          "ref": false,
+          "className": "none",
+          "children": {
+            "allowed": [
+              "Dialog.Trigger",
+              "Dialog.Content"
+            ]
+          }
+        },
+        {
+          "usage": "Dialog.Trigger",
+          "typeName": "DialogTriggerProps",
+          "typesFile": "Dialog.types.ts",
+          "renders": "button",
+          "props": [],
+          "passthrough": {
+            "from": "Radix Dialog.Trigger",
+            "note": "Supports asChild."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Dialog.Content",
+          "typeName": "DialogContentProps",
+          "typesFile": "Dialog.types.ts",
+          "renders": "Radix Dialog.Content in a Portal, plus Scrim and CloseButton",
+          "description": "Portal-rendered; sets data-density itself because portals escape the ancestor cascade.",
+          "props": [
+            {
+              "name": "title",
+              "type": "node",
+              "required": true,
+              "description": "Always rendered; the dialog's accessible name."
+            },
+            {
+              "name": "description",
+              "type": "node",
+              "description": "Optional; omit and Radix warns about a missing description."
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "default": "roomy"
+            },
+            {
+              "name": "closeButtonAriaLabel",
+              "type": "string",
+              "default": "Close"
+            },
+            {
+              "name": "closeButtonClassName",
+              "type": "string",
+              "description": "Merged onto the built-in close button."
+            },
+            {
+              "name": "visuallyHideTitle",
+              "type": "boolean",
+              "default": false,
+              "description": "Keeps the title for a11y but hides it visually."
+            },
+            {
+              "name": "showScrim",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "name": "scrimClassName",
+              "type": "string",
+              "description": "Merged onto the backdrop Scrim."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Dialog.Content",
+            "omit": [
+              "title"
+            ],
+            "note": "Includes onOpenAutoFocus (default focuses the close button), onEscapeKeyDown, onPointerDownOutside, onInteractOutside, forceMount, asChild."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Dialog.Header",
+              "Dialog.Body",
+              "Dialog.Footer"
+            ],
+            "note": "Rendered below the built-in title/description."
+          }
+        },
+        {
+          "usage": "Dialog.Header",
+          "typeName": "DialogHeaderProps",
+          "typesFile": "Dialog.types.ts",
+          "renders": "div",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Dialog.Body",
+          "typeName": "DialogBodyProps",
+          "typesFile": "Dialog.types.ts",
+          "renders": "div",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Dialog.Footer",
+          "typeName": "DialogFooterProps",
+          "typesFile": "Dialog.types.ts",
+          "renders": "Separator + div (row)",
+          "description": "Row layout for action buttons; renders its own Separator above itself.",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Button"
+            ]
+          }
+        },
+        {
+          "usage": "Dialog.Close",
+          "typeName": "DialogCloseProps",
+          "typesFile": "Dialog.types.ts",
+          "renders": "button",
+          "props": [],
+          "passthrough": {
+            "from": "Radix Dialog.Close",
+            "note": "Supports asChild; use it to wrap Cancel-style buttons."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "requires-prop",
+          "part": "Dialog.Content",
+          "props": [
+            "title"
+          ],
+          "rule": "Content always needs a title; use visuallyHideTitle to hide it visually rather than omitting it."
+        },
+        {
+          "kind": "composition",
+          "part": "Dialog.Content",
+          "parents": [
+            "Dialog.Root"
+          ],
+          "rule": "Content and Trigger must be inside Dialog.Root."
+        },
+        {
+          "kind": "composition",
+          "part": "Dialog.Footer",
+          "rule": "Do not add a Separator above Footer; it renders its own."
+        },
+        {
+          "kind": "usage",
+          "part": "Dialog.Content",
+          "rule": "Do not wrap Content in a scroll container; it is its own scroll container (wrapping breaks Radix scroll-lock)."
+        },
+        {
+          "kind": "usage",
+          "part": "Dialog.Content",
+          "rule": "Do not add your own close button; Content has one built in."
+        }
+      ],
+      "notSupported": [
+        "size / width props (max width comes from the component token).",
+        "placement / position props (always top-anchored, horizontally centered).",
+        "non-modal custom overlay; use showScrim={false} only to hide the backdrop.",
+        "title as a Dialog.Title child (title is a Content prop)."
+      ]
+    },
+    "FilterMenu": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "FilterMenu",
+      "summary": "Popover filter panel: Header (anchor) with a Trigger and ClearButton, and a Content drawer (Radix Popover).",
+      "spec": "FilterMenu.spec.md",
+      "exports": {
+        "component": "FilterMenu"
+      },
+      "parts": [
+        {
+          "usage": "FilterMenu.Root",
+          "typeName": "FilterMenuRootProps",
+          "typesFile": "FilterMenu.types.ts",
+          "renders": "div wrapper > Radix Popover.Root",
+          "props": [
+            {
+              "name": "className",
+              "type": "string"
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Popover.Root",
+            "note": "open, defaultOpen, onOpenChange, modal."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "FilterMenu.Header",
+              "FilterMenu.Content"
+            ]
+          }
+        },
+        {
+          "usage": "FilterMenu.Header",
+          "typeName": "FilterMenuHeaderProps",
+          "typesFile": "FilterMenu.types.ts",
+          "renders": "div (Popover.Anchor)",
+          "description": "Content aligns to this whole row.",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "FilterMenu.Trigger",
+              "FilterMenu.ClearButton"
+            ]
+          }
+        },
+        {
+          "usage": "FilterMenu.Trigger",
+          "typeName": "FilterMenuTriggerProps",
+          "typesFile": "FilterMenu.types.ts",
+          "renders": "button (Button, tertiary, filter icon, Popover.Trigger)",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "description": "Static label. Mutually exclusive with collapsedLabel/expandedLabel."
+            },
+            {
+              "name": "collapsedLabel",
+              "type": "node",
+              "description": "Label while closed; requires expandedLabel."
+            },
+            {
+              "name": "expandedLabel",
+              "type": "node",
+              "description": "Label while open; requires collapsedLabel."
+            },
+            {
+              "name": "showLabel",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "name": "iconEnd",
+              "type": "other",
+              "description": "Trailing icon node."
+            },
+            {
+              "name": "destructive",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            },
+            {
+              "name": "aria-label",
+              "type": "string"
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'button'> via Button (variant, iconStart, children omitted)"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any",
+            "note": "Either children, or collapsedLabel + expandedLabel together (compile error otherwise)."
+          }
+        },
+        {
+          "usage": "FilterMenu.ClearButton",
+          "typeName": "FilterMenuClearButtonProps",
+          "typesFile": "FilterMenu.types.ts",
+          "renders": "button (Button, tertiary)",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "required": true,
+              "description": "Label."
+            },
+            {
+              "name": "count",
+              "type": "number",
+              "description": "Renders a Tag count badge when provided."
+            },
+            {
+              "name": "showLabel",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "name": "iconStart",
+              "type": "node",
+              "description": "Leading icon."
+            },
+            {
+              "name": "destructive",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            },
+            {
+              "name": "aria-label",
+              "type": "string"
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'button'> via Button (variant, iconEnd omitted)"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "FilterMenu.Content",
+          "typeName": "FilterMenuContentProps",
+          "typesFile": "FilterMenu.types.ts",
+          "renders": "Radix Popover.Content (no Portal)",
+          "description": "Not portaled; inherits ambient data-density.",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Popover.Content",
+            "note": "Defaults side=\"bottom\", align=\"start\", avoidCollisions=false; overridable."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "FilterMenu.Drawer",
+              "FilterMenu.Footer"
+            ]
+          }
+        },
+        {
+          "usage": "FilterMenu.Drawer",
+          "typeName": "FilterMenuDrawerProps",
+          "typesFile": "FilterMenu.types.ts",
+          "renders": "div",
+          "description": "Scrolls (overflow-y); Footer stays outside the scroll region.",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "FilterMenu.Footer",
+          "typeName": "FilterMenuFooterProps",
+          "typesFile": "FilterMenu.types.ts",
+          "renders": "div",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Trigger must be inside Header inside Root; Content inside Root.",
+          "part": "FilterMenu.Trigger",
+          "parents": [
+            "FilterMenu.Header"
+          ]
+        },
+        {
+          "kind": "conflicts",
+          "rule": "Do not pass children together with collapsedLabel/expandedLabel.",
+          "part": "FilterMenu.Trigger"
+        },
+        {
+          "kind": "usage",
+          "rule": "Do not pass variant or iconStart to Trigger, or variant/iconEnd to ClearButton; they are fixed."
+        }
+      ],
+      "notSupported": [
+        "variant on Trigger / ClearButton.",
+        "a Portal (Content renders in flow)."
+      ]
+    },
+    "Grid": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Grid",
+      "summary": "CSS grid layout primitive with token-backed gaps. Extends Box.",
+      "exports": {
+        "component": "Grid",
+        "variants": [
+          "gridVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Grid",
+          "typeName": "GridProps",
+          "typesFile": "Grid.types.ts",
+          "renders": "div",
+          "cva": "gridVariants",
+          "props": [
+            {
+              "name": "columns",
+              "type": "number",
+              "description": "Equal-width column count via inline style; omit to lay columns out via className/style."
+            },
+            {
+              "name": "gap",
+              "type": "enum",
+              "values": [
+                "none",
+                "xx-small",
+                "x-small",
+                "small",
+                "med",
+                "large",
+                "x-large",
+                "xx-large"
+              ],
+              "default": "none"
+            },
+            {
+              "name": "columnGap",
+              "type": "enum",
+              "values": [
+                "none",
+                "xx-small",
+                "x-small",
+                "small",
+                "med",
+                "large",
+                "x-large",
+                "xx-large"
+              ]
+            },
+            {
+              "name": "rowGap",
+              "type": "enum",
+              "values": [
+                "none",
+                "xx-small",
+                "x-small",
+                "small",
+                "med",
+                "large",
+                "x-large",
+                "xx-large"
+              ]
+            },
+            {
+              "name": "align",
+              "type": "enum",
+              "values": [
+                "start",
+                "center",
+                "end",
+                "stretch"
+              ]
+            },
+            {
+              "name": "justify",
+              "type": "enum",
+              "values": [
+                "start",
+                "center",
+                "end",
+                "stretch"
+              ]
+            },
+            {
+              "name": "padding",
+              "type": "enum",
+              "values": [
+                "none",
+                "xx-small",
+                "x-small",
+                "small",
+                "med",
+                "large",
+                "x-large",
+                "xx-large"
+              ],
+              "description": "Inherited from Box."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Inherited from Box."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "usage",
+          "rule": "gap/columnGap/rowGap/padding are the named steps only."
+        }
+      ],
+      "notSupported": [
+        "rows prop.",
+        "gap as numbers or px strings.",
+        "responsive prop values."
+      ]
+    },
+    "Label": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Label",
+      "summary": "Form field label (Radix Label) with required/optional suffix and error color.",
+      "exports": {
+        "component": "Label",
+        "variants": [
+          "labelTextVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Label",
+          "typeName": "LabelProps",
+          "typesFile": "Label.types.ts",
+          "renders": "label (Radix Label.Root)",
+          "props": [
+            {
+              "name": "requirement",
+              "type": "enum",
+              "values": [
+                "required",
+                "optional"
+              ],
+              "description": "Omit for no suffix."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Label.Root",
+            "note": "htmlFor etc. No asChild."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "usage",
+          "rule": "Pair with the control via htmlFor."
+        }
+      ],
+      "notSupported": [
+        "asChild.",
+        "requirement=\"none\" (omit the prop instead)."
+      ]
+    },
+    "Link": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Link",
+      "summary": "Inline text link (a) with underline control and optional new-window trailing icon.",
+      "exports": {
+        "component": "Link"
+      },
+      "parts": [
+        {
+          "usage": "Link",
+          "typeName": "LinkProps",
+          "typesFile": "Link.types.ts",
+          "renders": "a",
+          "props": [
+            {
+              "name": "newWindow",
+              "type": "boolean",
+              "description": "Shows trailing icon, sets target=\"_blank\" rel=\"noopener noreferrer\", adds sr-only text."
+            },
+            {
+              "name": "underline",
+              "type": "boolean",
+              "default": true,
+              "description": "Underline decoration."
+            },
+            {
+              "name": "iconVerticalAlign",
+              "type": "enum",
+              "values": [
+                "start",
+                "center",
+                "end"
+              ],
+              "default": "end",
+              "description": "Trailing icon alignment against wrapped text."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child (e.g. router Link) instead of <a>. The new-window icon is not added in this mode."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'a'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "usage",
+          "rule": "Use Link for navigation; use Button for actions."
+        }
+      ],
+      "notSupported": [
+        "variant / color props.",
+        "icon props other than newWindow."
+      ]
+    },
+    "LinkHelp": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "LinkHelp",
+      "summary": "Help-style link (a) with a built-in leading help icon.",
+      "spec": "LinkHelp.spec.md",
+      "exports": {
+        "component": "LinkHelp"
+      },
+      "parts": [
+        {
+          "usage": "LinkHelp",
+          "typeName": "LinkHelpProps",
+          "typesFile": "LinkHelp.types.ts",
+          "renders": "a",
+          "props": [
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'a'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [],
+      "notSupported": [
+        "icon override.",
+        "underline / newWindow props (use Link for those)."
+      ]
+    },
+    "LinkNavigation": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "LinkNavigation",
+      "summary": "Previous/next navigation link (a) with a chevron.",
+      "exports": {
+        "component": "LinkNavigation"
+      },
+      "parts": [
+        {
+          "usage": "LinkNavigation",
+          "typeName": "LinkNavigationProps",
+          "typesFile": "LinkNavigation.types.ts",
+          "renders": "a",
+          "props": [
+            {
+              "name": "direction",
+              "type": "enum",
+              "values": [
+                "previous",
+                "next"
+              ],
+              "required": true
+            },
+            {
+              "name": "iconAlign",
+              "type": "enum",
+              "values": [
+                "start",
+                "center",
+                "end"
+              ],
+              "default": "center",
+              "description": "Chevron alignment against the text."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'a'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "requires-prop",
+          "rule": "direction is required.",
+          "part": "LinkNavigation",
+          "props": [
+            "direction"
+          ]
+        }
+      ],
+      "notSupported": [
+        "custom icon."
+      ]
+    },
+    "Microcopy": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Microcopy",
+      "summary": "Helper/error text under a field (p).",
+      "exports": {
+        "component": "Microcopy"
+      },
+      "parts": [
+        {
+          "usage": "Microcopy",
+          "typeName": "MicrocopyProps",
+          "typesFile": "Microcopy.types.ts",
+          "renders": "p",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'p'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [],
+      "notSupported": [
+        "asChild.",
+        "size props."
+      ]
+    },
+    "RadioButton": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "RadioButton",
+      "summary": "Single radio item (Radix RadioGroup.Item) with label. Must be inside a RadioGroup.Root.",
+      "exports": {
+        "component": "RadioButton",
+        "variants": [
+          "radioButtonInputVariants",
+          "radioButtonLabelVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "RadioButton",
+          "typeName": "RadioButtonProps",
+          "typesFile": "RadioButton.types.ts",
+          "renders": "button (Radix RadioGroup.Item) in a label row",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "description": "Row label text."
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "required": true,
+              "description": "Item value; required by Radix."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix RadioGroup.Item",
+            "omit": [
+              "children"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Must be inside RadioGroup.Root.",
+          "part": "RadioButton",
+          "parents": [
+            "RadioGroup.Root"
+          ]
+        },
+        {
+          "kind": "requires-prop",
+          "rule": "value is required.",
+          "part": "RadioButton",
+          "props": [
+            "value"
+          ]
+        }
+      ],
+      "notSupported": [
+        "standalone use outside a group.",
+        "error prop (error state is on RadioGroup.Group)."
+      ]
+    },
+    "RadioGroup": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "RadioGroup",
+      "summary": "Radio group (Radix RadioGroup) with optional label, microcopy, grouped field and items.",
+      "spec": "RadioGroup.spec.md",
+      "exports": {
+        "component": "RadioGroup"
+      },
+      "parts": [
+        {
+          "usage": "RadioGroup.Root",
+          "typeName": "RadioGroupRootProps",
+          "typesFile": "RadioGroup.types.ts",
+          "renders": "div (Radix RadioGroup.Root)",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix RadioGroup.Root",
+            "note": "value, defaultValue, onValueChange, name, disabled, required, orientation, dir, loop."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "RadioGroup.Label",
+              "RadioGroup.Group",
+              "RadioGroup.Microcopy"
+            ]
+          }
+        },
+        {
+          "usage": "RadioGroup.Label",
+          "typeName": "LabelProps",
+          "typesFile": "../Label/Label.types.ts",
+          "renders": "label (DS Label)",
+          "props": [
+            {
+              "name": "requirement",
+              "type": "enum",
+              "values": [
+                "required",
+                "optional"
+              ],
+              "description": "Omit for no suffix."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Label.Root",
+            "note": "htmlFor etc."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "RadioGroup.Group",
+          "typeName": "RadioGroupGroupProps",
+          "typesFile": "RadioGroup.types.ts",
+          "renders": "div",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error styling for the group field."
+            },
+            {
+              "name": "orientation",
+              "type": "enum",
+              "values": [
+                "vertical",
+                "horizontal"
+              ],
+              "default": "vertical"
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "RadioGroup.Item"
+            ]
+          }
+        },
+        {
+          "usage": "RadioGroup.Item",
+          "typeName": "RadioButtonProps",
+          "typesFile": "../RadioButton/RadioButton.types.ts",
+          "renders": "RadioButton",
+          "description": "Alias of RadioButton.",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "description": "Row label text."
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "required": true,
+              "description": "Item value."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix RadioGroup.Item",
+            "omit": [
+              "children"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "RadioGroup.Microcopy",
+          "typeName": "MicrocopyProps",
+          "typesFile": "../Microcopy/Microcopy.types.ts",
+          "renders": "p (DS Microcopy)",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'p'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Items go inside RadioGroup.Group inside RadioGroup.Root.",
+          "part": "RadioGroup.Item",
+          "parents": [
+            "RadioGroup.Group"
+          ]
+        }
+      ],
+      "notSupported": [
+        "per-item error prop (use Group error)."
+      ]
+    },
+    "Scrim": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Scrim",
+      "summary": "Fixed full-viewport backdrop (div). Apply a z-index-* utility yourself.",
+      "exports": {
+        "component": "Scrim"
+      },
+      "parts": [
+        {
+          "usage": "Scrim",
+          "typeName": "ScrimProps",
+          "typesFile": "Scrim.types.ts",
+          "renders": "div",
+          "props": [
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render onto a supplied element, e.g. Radix Dialog.Overlay."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "none"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "usage",
+          "rule": "Scrim has no default z-index; add one of theme.css's z-index-* utilities via className."
+        }
+      ],
+      "notSupported": [
+        "variant / opacity props."
+      ]
+    },
+    "ScrollArea": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "ScrollArea",
+      "summary": "Custom-scrollbar container (Radix ScrollArea). Use the flat ScrollArea for the common single-viewport case.",
+      "exports": {
+        "component": "ScrollArea",
+        "variants": [
+          "scrollAreaScrollbarVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "ScrollArea",
+          "typeName": "ScrollAreaProps",
+          "typesFile": "ScrollArea.types.ts",
+          "renders": "Radix ScrollArea (Root > Viewport + Scrollbar + Thumb + Corner)",
+          "description": "Flat convenience wrapper.",
+          "props": [
+            {
+              "name": "children",
+              "type": "node"
+            },
+            {
+              "name": "horizontal",
+              "type": "boolean",
+              "description": "Adds a horizontal scrollbar to the default vertical one."
+            },
+            {
+              "name": "viewportClassName",
+              "type": "string",
+              "description": "Merged onto the viewport."
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix ScrollArea.Root",
+            "omit": [
+              "children"
+            ],
+            "note": "type, scrollHideDelay, dir."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "ScrollArea.Root",
+          "typeName": "ScrollAreaRootProps",
+          "typesFile": "ScrollArea.types.ts",
+          "renders": "Radix ScrollArea.Root",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix ScrollArea.Root"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "ScrollArea.Viewport",
+              "ScrollArea.Scrollbar",
+              "ScrollArea.Corner"
+            ]
+          }
+        },
+        {
+          "usage": "ScrollArea.Viewport",
+          "typeName": "ScrollAreaViewportProps",
+          "typesFile": "ScrollArea.types.ts",
+          "renders": "Radix ScrollArea.Viewport",
+          "props": [],
+          "passthrough": {
+            "from": "Radix ScrollArea.Viewport"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "ScrollArea.Scrollbar",
+          "typeName": "ScrollAreaScrollbarProps",
+          "typesFile": "ScrollArea.types.ts",
+          "renders": "Radix ScrollArea.Scrollbar",
+          "cva": "scrollAreaScrollbarVariants",
+          "props": [
+            {
+              "name": "orientation",
+              "type": "enum",
+              "values": [
+                "vertical",
+                "horizontal"
+              ],
+              "default": "vertical"
+            }
+          ],
+          "passthrough": {
+            "from": "Radix ScrollArea.Scrollbar"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "ScrollArea.Thumb"
+            ]
+          }
+        },
+        {
+          "usage": "ScrollArea.Thumb",
+          "typeName": "ScrollAreaThumbProps",
+          "typesFile": "ScrollArea.types.ts",
+          "renders": "Radix ScrollArea.Thumb",
+          "props": [],
+          "passthrough": {
+            "from": "Radix ScrollArea.Thumb"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "none"
+          }
+        },
+        {
+          "usage": "ScrollArea.Corner",
+          "typeName": "ScrollAreaCornerProps",
+          "typesFile": "ScrollArea.types.ts",
+          "renders": "Radix ScrollArea.Corner",
+          "props": [],
+          "passthrough": {
+            "from": "Radix ScrollArea.Corner"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "none"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Viewport, Scrollbar and Corner go inside Root; Thumb inside Scrollbar.",
+          "part": "ScrollArea.Thumb",
+          "parents": [
+            "ScrollArea.Scrollbar"
+          ]
+        }
+      ],
+      "notSupported": [
+        "a bespoke imperative scroll API (use Element.scrollIntoView on children)."
+      ]
+    },
+    "SearchInput": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "SearchInput",
+      "summary": "Search field with optional suggestions popover and submit button (Radix Popover).",
+      "spec": "SearchInput.spec.md",
+      "exports": {
+        "component": "SearchInput",
+        "variants": [
+          "searchInputFieldVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "SearchInput.Root",
+          "typeName": "SearchInputRootProps",
+          "typesFile": "SearchInput.types.ts",
+          "renders": "div wrapper > Radix Popover.Root",
+          "props": [
+            {
+              "name": "className",
+              "type": "string"
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Popover.Root",
+            "note": "open, defaultOpen, onOpenChange, modal."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "SearchInput.Label",
+              "SearchInput.InputGroup",
+              "SearchInput.Microcopy",
+              "SearchInput.Suggestions"
+            ]
+          }
+        },
+        {
+          "usage": "SearchInput.Label",
+          "typeName": "LabelProps",
+          "typesFile": "../Label/Label.types.ts",
+          "renders": "label (DS Label, inset)",
+          "props": [
+            {
+              "name": "requirement",
+              "type": "enum",
+              "values": [
+                "required",
+                "optional"
+              ]
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Label.Root"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "SearchInput.InputGroup",
+          "typeName": "SearchInputInputGroupProps",
+          "typesFile": "SearchInput.types.ts",
+          "renders": "div",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "SearchInput.Field",
+              "SearchInput.Button"
+            ]
+          }
+        },
+        {
+          "usage": "SearchInput.Field",
+          "typeName": "SearchInputFieldProps",
+          "typesFile": "SearchInput.types.ts",
+          "renders": "input",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            },
+            {
+              "name": "iconEnd",
+              "type": "node",
+              "description": "Trailing slot; defaults to SearchInput.ClearButton. Pass null or a node to override."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'input'>",
+            "omit": [
+              "size",
+              "type",
+              "role"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "SearchInput.ClearButton",
+          "typeName": "SearchInputClearButtonProps",
+          "typesFile": "SearchInput.types.ts",
+          "renders": "button",
+          "props": [
+            {
+              "name": "aria-label",
+              "type": "string",
+              "description": "Overrides the default \"Clear search\" name."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'button'>",
+            "omit": [
+              "type"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "none"
+          }
+        },
+        {
+          "usage": "SearchInput.Button",
+          "typeName": "SearchInputButtonProps",
+          "typesFile": "SearchInput.types.ts",
+          "renders": "button (Button, primary)",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "required": true,
+              "description": "Label content."
+            },
+            {
+              "name": "showLabel",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "name": "iconStart",
+              "type": "node"
+            },
+            {
+              "name": "iconEnd",
+              "type": "node"
+            },
+            {
+              "name": "destructive",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            },
+            {
+              "name": "aria-label",
+              "type": "string"
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'button'> via Button (variant omitted)"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "SearchInput.Microcopy",
+          "typeName": "MicrocopyProps",
+          "typesFile": "../Microcopy/Microcopy.types.ts",
+          "renders": "p (DS Microcopy)",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'p'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "SearchInput.Suggestions",
+          "typeName": "SearchInputSuggestionsProps",
+          "typesFile": "SearchInput.types.ts",
+          "renders": "Radix Popover.Content in a Portal",
+          "description": "Portal-rendered; density defaults to roomy.",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Popover.Content"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "SearchInput.Option"
+            ]
+          }
+        },
+        {
+          "usage": "SearchInput.Option",
+          "typeName": "SearchInputOptionProps",
+          "typesFile": "SearchInput.types.ts",
+          "renders": "button",
+          "props": [
+            {
+              "name": "onSelect",
+              "type": "function",
+              "description": "Fires on click, Enter or Space; the drawer closes and focus returns to the field."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'button'>",
+            "omit": [
+              "type",
+              "role"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Every SearchInput.* part must be inside SearchInput.Root (throws otherwise).",
+          "parents": [
+            "SearchInput.Root"
+          ]
+        }
+      ],
+      "notSupported": [
+        "type / size / role props on Field.",
+        "variant on Button (fixed primary)."
+      ]
+    },
+    "SegmentedControl": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "SegmentedControl",
+      "summary": "Pill-shaped single-select control built on Radix Tabs (manual activation by default).",
+      "spec": "SegmentedControl.spec.md",
+      "exports": {
+        "component": "SegmentedControl"
+      },
+      "parts": [
+        {
+          "usage": "SegmentedControl.Root",
+          "typeName": "SegmentedControlRootProps",
+          "typesFile": "SegmentedControl.types.ts",
+          "renders": "div (Radix Tabs.Root)",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            },
+            {
+              "name": "activationMode",
+              "type": "enum",
+              "values": [
+                "automatic",
+                "manual"
+              ],
+              "default": "manual",
+              "description": "Differs from Tabs, which is automatic."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Tabs.Root",
+            "note": "value, defaultValue, onValueChange, orientation, dir."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "SegmentedControl.List",
+              "SegmentedControl.Content"
+            ]
+          }
+        },
+        {
+          "usage": "SegmentedControl.List",
+          "typeName": "SegmentedControlListProps",
+          "typesFile": "SegmentedControl.types.ts",
+          "renders": "Radix Tabs.List",
+          "description": "Hugs its Triggers; for full width pass className=\"flex w-full\" here and \"grow basis-0\" on each Trigger.",
+          "props": [],
+          "passthrough": {
+            "from": "Radix Tabs.List"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "SegmentedControl.Trigger"
+            ]
+          }
+        },
+        {
+          "usage": "SegmentedControl.Trigger",
+          "typeName": "SegmentedControlTriggerProps",
+          "typesFile": "SegmentedControl.types.ts",
+          "renders": "Radix Tabs.Trigger",
+          "props": [
+            {
+              "name": "icon",
+              "type": "node",
+              "description": "Leading icon."
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "required": true,
+              "description": "Tab value."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Tabs.Trigger"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "SegmentedControl.Content",
+          "typeName": "SegmentedControlContentProps",
+          "typesFile": "SegmentedControl.types.ts",
+          "renders": "Radix Tabs.Content",
+          "description": "Unstyled panel.",
+          "props": [
+            {
+              "name": "value",
+              "type": "string",
+              "required": true,
+              "description": "Matches a Trigger value."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Tabs.Content"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Triggers go inside List; Content is a sibling of List inside Root.",
+          "part": "SegmentedControl.Trigger",
+          "parents": [
+            "SegmentedControl.List"
+          ]
+        }
+      ],
+      "notSupported": [
+        "size / variant props."
+      ]
+    },
+    "SelectInput": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "SelectInput",
+      "summary": "Labelled select (Radix Select) with trigger states, options and microcopy.",
+      "spec": "SelectInput.spec.md",
+      "exports": {
+        "component": "SelectInput",
+        "variants": [
+          "selectInputTriggerVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "SelectInput.Root",
+          "typeName": "SelectInputRootProps",
+          "typesFile": "SelectInput.types.ts",
+          "renders": "div wrapper > Radix Select.Root",
+          "props": [
+            {
+              "name": "className",
+              "type": "string"
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Select.Root",
+            "note": "value, defaultValue, onValueChange, open, onOpenChange, name, disabled, required."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "SelectInput.Label",
+              "SelectInput.Trigger",
+              "SelectInput.Content",
+              "SelectInput.Microcopy"
+            ]
+          }
+        },
+        {
+          "usage": "SelectInput.Label",
+          "typeName": "LabelProps",
+          "typesFile": "../Label/Label.types.ts",
+          "renders": "label (DS Label)",
+          "props": [
+            {
+              "name": "requirement",
+              "type": "enum",
+              "values": [
+                "required",
+                "optional"
+              ],
+              "description": "Omit for no suffix."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Label.Root",
+            "note": "htmlFor etc."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "SelectInput.Trigger",
+          "typeName": "SelectInputTriggerProps",
+          "typesFile": "SelectInput.types.ts",
+          "renders": "Radix Select.Trigger (button)",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error state."
+            },
+            {
+              "name": "readOnly",
+              "type": "boolean",
+              "default": false,
+              "description": "Read-only look (disabled interaction)."
+            },
+            {
+              "name": "placeholder",
+              "type": "string",
+              "description": "Shown when no value."
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Select.Trigger"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "SelectInput.Content",
+          "typeName": "SelectInputContentProps",
+          "typesFile": "SelectInput.types.ts",
+          "renders": "Radix Select.Content in a Portal",
+          "description": "Portal-rendered; density defaults to roomy.",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Defaults to roomy."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Select.Content"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "SelectInput.Option"
+            ]
+          }
+        },
+        {
+          "usage": "SelectInput.Option",
+          "typeName": "SelectInputOptionProps",
+          "typesFile": "SelectInput.types.ts",
+          "renders": "Radix Select.Item",
+          "props": [
+            {
+              "name": "value",
+              "type": "string",
+              "required": true,
+              "description": "Option value; must be non-empty."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Select.Item"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "SelectInput.Microcopy",
+          "typeName": "MicrocopyProps",
+          "typesFile": "../Microcopy/Microcopy.types.ts",
+          "renders": "p (DS Microcopy)",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'p'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Options go inside Content; Trigger and Content inside Root.",
+          "part": "SelectInput.Option",
+          "parents": [
+            "SelectInput.Content"
+          ]
+        }
+      ],
+      "notSupported": [
+        "multi-select.",
+        "Option with an empty-string value."
+      ]
+    },
+    "Separator": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Separator",
+      "summary": "Thin divider line (Radix Separator).",
+      "exports": {
+        "component": "Separator",
+        "variants": [
+          "separatorVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Separator",
+          "typeName": "SeparatorProps",
+          "typesFile": "Separator.types.ts",
+          "renders": "div (Radix Separator.Root)",
+          "props": [
+            {
+              "name": "orientation",
+              "type": "enum",
+              "values": [
+                "horizontal",
+                "vertical"
+              ],
+              "default": "horizontal"
+            },
+            {
+              "name": "decorative",
+              "type": "boolean",
+              "description": "Radix: purely visual, hidden from a11y tree."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Separator.Root"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "none"
+          }
+        }
+      ],
+      "constraints": [],
+      "notSupported": [
+        "variant / color / thickness props."
+      ]
+    },
+    "Stack": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Stack",
+      "summary": "Flex layout primitive with token-backed gap and padding. Extends Box.",
+      "exports": {
+        "component": "Stack",
+        "variants": [
+          "stackVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Stack",
+          "typeName": "StackProps",
+          "typesFile": "Stack.types.ts",
+          "renders": "div",
+          "cva": "stackVariants",
+          "props": [
+            {
+              "name": "direction",
+              "type": "enum",
+              "values": [
+                "row",
+                "column"
+              ],
+              "default": "column"
+            },
+            {
+              "name": "gap",
+              "type": "enum",
+              "values": [
+                "none",
+                "xx-small",
+                "x-small",
+                "small",
+                "med",
+                "large",
+                "x-large",
+                "xx-large"
+              ],
+              "default": "none",
+              "description": "Density-reactive spacing step."
+            },
+            {
+              "name": "align",
+              "type": "enum",
+              "values": [
+                "start",
+                "center",
+                "end",
+                "stretch",
+                "baseline"
+              ]
+            },
+            {
+              "name": "justify",
+              "type": "enum",
+              "values": [
+                "start",
+                "center",
+                "end",
+                "between",
+                "around",
+                "evenly"
+              ]
+            },
+            {
+              "name": "wrap",
+              "type": "boolean"
+            },
+            {
+              "name": "padding",
+              "type": "enum",
+              "values": [
+                "none",
+                "xx-small",
+                "x-small",
+                "small",
+                "med",
+                "large",
+                "x-large",
+                "xx-large"
+              ],
+              "description": "Inherited from Box."
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Inherited from Box. Render the child element instead of a <div>."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "usage",
+          "rule": "Spacing values are the named steps only; no pixel numbers or arbitrary strings."
+        }
+      ],
+      "notSupported": [
+        "gap/padding as numbers or px strings.",
+        "responsive (breakpoint) prop values.",
+        "separate paddingX/paddingY or margin props (use Box/className for those)."
+      ]
+    },
+    "Tabs": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Tabs",
+      "summary": "Tabs (Radix Tabs) with automatic activation.",
+      "exports": {
+        "component": "Tabs",
+        "variants": [
+          "tabsTriggerVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Tabs.Root",
+          "typeName": "TabsRootProps",
+          "typesFile": "Tabs.types.ts",
+          "renders": "div (Radix Tabs.Root)",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Tabs.Root",
+            "note": "value, defaultValue, onValueChange, orientation, activationMode, dir."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Tabs.List",
+              "Tabs.Content"
+            ]
+          }
+        },
+        {
+          "usage": "Tabs.List",
+          "typeName": "TabsListProps",
+          "typesFile": "Tabs.types.ts",
+          "renders": "Radix Tabs.List",
+          "props": [],
+          "passthrough": {
+            "from": "Radix Tabs.List"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Tabs.Trigger"
+            ]
+          }
+        },
+        {
+          "usage": "Tabs.Trigger",
+          "typeName": "TabsTriggerProps",
+          "typesFile": "Tabs.types.ts",
+          "renders": "Radix Tabs.Trigger",
+          "props": [
+            {
+              "name": "value",
+              "type": "string",
+              "required": true,
+              "description": "Tab value."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Tabs.Trigger"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Tabs.Content",
+          "typeName": "TabsContentProps",
+          "typesFile": "Tabs.types.ts",
+          "renders": "Radix Tabs.Content",
+          "description": "Unstyled panel.",
+          "props": [
+            {
+              "name": "value",
+              "type": "string",
+              "required": true,
+              "description": "Matches a Trigger value."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Tabs.Content"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "composition",
+          "rule": "Triggers go inside List; Content is a sibling of List inside Root.",
+          "part": "Tabs.Trigger",
+          "parents": [
+            "Tabs.List"
+          ]
+        }
+      ],
+      "notSupported": [
+        "variant / size props."
+      ]
+    },
+    "Tag": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "Tag",
+      "summary": "Small static label badge. Flat Tag, or composed Tag.Root + Tag.Label for extra content.",
+      "spec": "Tag.spec.md",
+      "exports": {
+        "component": "Tag",
+        "variants": [
+          "tagRootVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "Tag",
+          "typeName": "TagProps",
+          "typesFile": "Tag.types.ts",
+          "renders": "span",
+          "cva": "tagRootVariants",
+          "props": [
+            {
+              "name": "children",
+              "type": "node",
+              "required": true,
+              "description": "Label."
+            },
+            {
+              "name": "size",
+              "type": "enum",
+              "values": [
+                "sm",
+                "lg"
+              ],
+              "default": "lg"
+            },
+            {
+              "name": "variant",
+              "type": "enum",
+              "values": [
+                "generic",
+                "teal",
+                "red",
+                "gold"
+              ],
+              "default": "generic"
+            },
+            {
+              "name": "borderWidth",
+              "type": "enum",
+              "values": [
+                "default",
+                "heavy"
+              ],
+              "default": "default"
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'span'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "Tag.Root",
+          "typeName": "TagRootProps",
+          "typesFile": "Tag.types.ts",
+          "renders": "span",
+          "cva": "tagRootVariants",
+          "props": [
+            {
+              "name": "size",
+              "type": "enum",
+              "values": [
+                "sm",
+                "lg"
+              ],
+              "default": "lg"
+            },
+            {
+              "name": "variant",
+              "type": "enum",
+              "values": [
+                "generic",
+                "teal",
+                "red",
+                "gold"
+              ],
+              "default": "generic"
+            },
+            {
+              "name": "borderWidth",
+              "type": "enum",
+              "values": [
+                "default",
+                "heavy"
+              ],
+              "default": "default"
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the child element instead of the default element (Radix Slot)."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'span'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "Tag.Label"
+            ]
+          }
+        },
+        {
+          "usage": "Tag.Label",
+          "typeName": "TagLabelProps",
+          "typesFile": "Tag.types.ts",
+          "renders": "span",
+          "props": [],
+          "passthrough": {
+            "from": "ComponentProps<'span'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [],
+      "notSupported": [
+        "density prop.",
+        "variant values other than generic | teal | red | gold.",
+        "a dismiss control (use Chip)."
+      ]
+    },
+    "TextArea": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "TextArea",
+      "summary": "Labelled multi-line field. Compose Root + Label + Field + Microcopy.",
+      "spec": "TextArea.spec.md",
+      "exports": {
+        "component": "TextArea",
+        "variants": [
+          "textAreaFieldVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "TextArea.Root",
+          "typeName": "TextAreaRootProps",
+          "typesFile": "TextArea.types.ts",
+          "renders": "div",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "TextArea.Label",
+              "TextArea.Field",
+              "TextArea.Microcopy"
+            ]
+          }
+        },
+        {
+          "usage": "TextArea.Label",
+          "typeName": "LabelProps",
+          "typesFile": "../Label/Label.types.ts",
+          "renders": "label (DS Label)",
+          "props": [
+            {
+              "name": "requirement",
+              "type": "enum",
+              "values": [
+                "required",
+                "optional"
+              ],
+              "description": "Omit for no suffix."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Label.Root",
+            "note": "htmlFor etc."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "TextArea.Field",
+          "typeName": "TextAreaFieldProps",
+          "typesFile": "TextArea.types.ts",
+          "renders": "textarea",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error state."
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'textarea'>",
+            "omit": [
+              "size"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "TextArea.Microcopy",
+          "typeName": "MicrocopyProps",
+          "typesFile": "../Microcopy/Microcopy.types.ts",
+          "renders": "p (DS Microcopy)",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'p'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "a11y",
+          "rule": "Pair Label and Field via htmlFor/id; link Microcopy with aria-describedby."
+        }
+      ],
+      "notSupported": [
+        "size prop.",
+        "auto-resize."
+      ]
+    },
+    "TextInput": {
+      "$schema": "../../../contracts/contract.schema.json",
+      "contractVersion": 1,
+      "name": "TextInput",
+      "summary": "Labelled single-line field with optional start/end icons. Compose Root + Label + Field + Microcopy.",
+      "spec": "TextInput.spec.md",
+      "exports": {
+        "component": "TextInput",
+        "variants": [
+          "textInputFieldVariants"
+        ]
+      },
+      "parts": [
+        {
+          "usage": "TextInput.Root",
+          "typeName": "TextInputRootProps",
+          "typesFile": "TextInput.types.ts",
+          "renders": "div",
+          "props": [
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'div'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": [
+              "TextInput.Label",
+              "TextInput.Field",
+              "TextInput.Microcopy"
+            ]
+          }
+        },
+        {
+          "usage": "TextInput.Label",
+          "typeName": "LabelProps",
+          "typesFile": "../Label/Label.types.ts",
+          "renders": "label (DS Label)",
+          "props": [
+            {
+              "name": "requirement",
+              "type": "enum",
+              "values": [
+                "required",
+                "optional"
+              ],
+              "description": "Omit for no suffix."
+            },
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "Radix Label.Root",
+            "note": "htmlFor etc."
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "TextInput.Field",
+          "typeName": "TextInputFieldProps",
+          "typesFile": "TextInput.types.ts",
+          "renders": "input",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error state."
+            },
+            {
+              "name": "iconStart",
+              "type": "node",
+              "description": "Inline-start icon."
+            },
+            {
+              "name": "iconEnd",
+              "type": "node",
+              "description": "Inline-end icon (decorative, aria-hidden)."
+            },
+            {
+              "name": "density",
+              "type": "enum",
+              "values": [
+                "roomy",
+                "condensed"
+              ],
+              "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'input'>",
+            "omit": [
+              "size"
+            ]
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        },
+        {
+          "usage": "TextInput.Microcopy",
+          "typeName": "MicrocopyProps",
+          "typesFile": "../Microcopy/Microcopy.types.ts",
+          "renders": "p (DS Microcopy)",
+          "props": [
+            {
+              "name": "error",
+              "type": "boolean",
+              "default": false,
+              "description": "Error color."
+            }
+          ],
+          "passthrough": {
+            "from": "ComponentProps<'p'>"
+          },
+          "ref": true,
+          "className": "merged",
+          "children": {
+            "allowed": "any"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "a11y",
+          "rule": "Pair Label and Field via htmlFor/id; link Microcopy with aria-describedby."
+        },
+        {
+          "kind": "usage",
+          "rule": "Disabled takes visual precedence over error and read-only."
+        }
+      ],
+      "notSupported": [
+        "size prop.",
+        "interactive iconEnd (use SearchInput for that)."
+      ]
+    }
+  }
+}

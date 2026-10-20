@@ -1,0 +1,95 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "Avatar",
+  "summary": "Circular (associate) or rounded-square (entity) image with an initials/icon fallback (Radix Avatar).",
+  "spec": "Avatar.spec.md",
+  "exports": {
+    "component": "Avatar",
+    "variants": ["avatarRootVariants"]
+  },
+  "parts": [
+    {
+      "usage": "Avatar.Root",
+      "typeName": "AvatarRootProps",
+      "typesFile": "Avatar.types.ts",
+      "renders": "span (Radix Avatar.Root)",
+      "cva": "avatarRootVariants",
+      "props": [
+        {
+          "name": "size",
+          "type": "enum",
+          "values": ["xs", "sm", "md", "lg", "xl", "2xl"],
+          "default": "md"
+        },
+        {
+          "name": "variant",
+          "type": "enum",
+          "values": ["associate", "entity"],
+          "default": "associate",
+          "description": "associate = person (circle); entity = organization (rounded square)."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Avatar.Root",
+        "note": "Supports asChild."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Avatar.Image", "Avatar.Fallback"]
+      }
+    },
+    {
+      "usage": "Avatar.Image",
+      "typeName": "AvatarImageProps",
+      "typesFile": "Avatar.types.ts",
+      "renders": "img (Radix Avatar.Image)",
+      "props": [],
+      "passthrough": {
+        "from": "Radix Avatar.Image",
+        "note": "onLoadingStatusChange available."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "none"
+      }
+    },
+    {
+      "usage": "Avatar.Fallback",
+      "typeName": "AvatarFallbackProps",
+      "typesFile": "Avatar.types.ts",
+      "renders": "span (Radix Avatar.Fallback)",
+      "description": "Initials text or an icon; shown when the image is missing, errored or loading.",
+      "props": [],
+      "passthrough": {
+        "from": "Radix Avatar.Fallback",
+        "note": "delayMs available."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any",
+        "note": "Initials text or an icon sized via var(--avatar-icon-size)."
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Avatar.Image and Avatar.Fallback are only valid inside Avatar.Root.",
+      "parents": ["Avatar.Root"]
+    },
+    {
+      "kind": "a11y",
+      "rule": "Pass alt on Avatar.Image; a decorative Avatar needs alt=\"\".",
+      "part": "Avatar.Image"
+    }
+  ],
+  "notSupported": [
+    "sizes other than xs | sm | md | lg | xl | 2xl (no numeric px size).",
+    "variant values other than associate | entity.",
+    "a single-component form (<Avatar src=...>); compose Root + Image + Fallback."
+  ]
+}

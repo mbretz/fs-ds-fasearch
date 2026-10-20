@@ -1,0 +1,269 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "SearchInput",
+  "summary": "Search field with optional suggestions popover and submit button (Radix Popover).",
+  "spec": "SearchInput.spec.md",
+  "exports": {
+    "component": "SearchInput",
+    "variants": ["searchInputFieldVariants"]
+  },
+  "parts": [
+    {
+      "usage": "SearchInput.Root",
+      "typeName": "SearchInputRootProps",
+      "typesFile": "SearchInput.types.ts",
+      "renders": "div wrapper > Radix Popover.Root",
+      "props": [
+        {
+          "name": "className",
+          "type": "string"
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Popover.Root",
+        "note": "open, defaultOpen, onOpenChange, modal."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": [
+          "SearchInput.Label",
+          "SearchInput.InputGroup",
+          "SearchInput.Microcopy",
+          "SearchInput.Suggestions"
+        ]
+      }
+    },
+    {
+      "usage": "SearchInput.Label",
+      "typeName": "LabelProps",
+      "typesFile": "../Label/Label.types.ts",
+      "renders": "label (DS Label, inset)",
+      "props": [
+        {
+          "name": "requirement",
+          "type": "enum",
+          "values": ["required", "optional"]
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Label.Root"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "SearchInput.InputGroup",
+      "typeName": "SearchInputInputGroupProps",
+      "typesFile": "SearchInput.types.ts",
+      "renders": "div",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["SearchInput.Field", "SearchInput.Button"]
+      }
+    },
+    {
+      "usage": "SearchInput.Field",
+      "typeName": "SearchInputFieldProps",
+      "typesFile": "SearchInput.types.ts",
+      "renders": "input",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        },
+        {
+          "name": "iconEnd",
+          "type": "node",
+          "description": "Trailing slot; defaults to SearchInput.ClearButton. Pass null or a node to override."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'input'>",
+        "omit": ["size", "type", "role"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "SearchInput.ClearButton",
+      "typeName": "SearchInputClearButtonProps",
+      "typesFile": "SearchInput.types.ts",
+      "renders": "button",
+      "props": [
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "Overrides the default \"Clear search\" name."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'button'>",
+        "omit": ["type"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "none"
+      }
+    },
+    {
+      "usage": "SearchInput.Button",
+      "typeName": "SearchInputButtonProps",
+      "typesFile": "SearchInput.types.ts",
+      "renders": "button (Button, primary)",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "required": true,
+          "description": "Label content."
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "name": "iconStart",
+          "type": "node"
+        },
+        {
+          "name": "iconEnd",
+          "type": "node"
+        },
+        {
+          "name": "destructive",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "description": "Render the child element instead of the default element (Radix Slot)."
+        },
+        {
+          "name": "aria-label",
+          "type": "string"
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'button'> via Button (variant omitted)"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "SearchInput.Microcopy",
+      "typeName": "MicrocopyProps",
+      "typesFile": "../Microcopy/Microcopy.types.ts",
+      "renders": "p (DS Microcopy)",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'p'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "SearchInput.Suggestions",
+      "typeName": "SearchInputSuggestionsProps",
+      "typesFile": "SearchInput.types.ts",
+      "renders": "Radix Popover.Content in a Portal",
+      "description": "Portal-rendered; density defaults to roomy.",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Popover.Content"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["SearchInput.Option"]
+      }
+    },
+    {
+      "usage": "SearchInput.Option",
+      "typeName": "SearchInputOptionProps",
+      "typesFile": "SearchInput.types.ts",
+      "renders": "button",
+      "props": [
+        {
+          "name": "onSelect",
+          "type": "function",
+          "description": "Fires on click, Enter or Space; the drawer closes and focus returns to the field."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'button'>",
+        "omit": ["type", "role"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Every SearchInput.* part must be inside SearchInput.Root (throws otherwise).",
+      "parents": ["SearchInput.Root"]
+    }
+  ],
+  "notSupported": [
+    "type / size / role props on Field.",
+    "variant on Button (fixed primary)."
+  ]
+}

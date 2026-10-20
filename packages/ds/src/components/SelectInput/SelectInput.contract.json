@@ -1,0 +1,189 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "SelectInput",
+  "summary": "Labelled select (Radix Select) with trigger states, options and microcopy.",
+  "spec": "SelectInput.spec.md",
+  "exports": {
+    "component": "SelectInput",
+    "variants": ["selectInputTriggerVariants"]
+  },
+  "parts": [
+    {
+      "usage": "SelectInput.Root",
+      "typeName": "SelectInputRootProps",
+      "typesFile": "SelectInput.types.ts",
+      "renders": "div wrapper > Radix Select.Root",
+      "props": [
+        {
+          "name": "className",
+          "type": "string"
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Select.Root",
+        "note": "value, defaultValue, onValueChange, open, onOpenChange, name, disabled, required."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": [
+          "SelectInput.Label",
+          "SelectInput.Trigger",
+          "SelectInput.Content",
+          "SelectInput.Microcopy"
+        ]
+      }
+    },
+    {
+      "usage": "SelectInput.Label",
+      "typeName": "LabelProps",
+      "typesFile": "../Label/Label.types.ts",
+      "renders": "label (DS Label)",
+      "props": [
+        {
+          "name": "requirement",
+          "type": "enum",
+          "values": ["required", "optional"],
+          "description": "Omit for no suffix."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Label.Root",
+        "note": "htmlFor etc."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "SelectInput.Trigger",
+      "typeName": "SelectInputTriggerProps",
+      "typesFile": "SelectInput.types.ts",
+      "renders": "Radix Select.Trigger (button)",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error state."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "default": false,
+          "description": "Read-only look (disabled interaction)."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Shown when no value."
+        },
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Select.Trigger"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "SelectInput.Content",
+      "typeName": "SelectInputContentProps",
+      "typesFile": "SelectInput.types.ts",
+      "renders": "Radix Select.Content in a Portal",
+      "description": "Portal-rendered; density defaults to roomy.",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Defaults to roomy."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Select.Content"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["SelectInput.Option"]
+      }
+    },
+    {
+      "usage": "SelectInput.Option",
+      "typeName": "SelectInputOptionProps",
+      "typesFile": "SelectInput.types.ts",
+      "renders": "Radix Select.Item",
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Option value; must be non-empty."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Select.Item"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "SelectInput.Microcopy",
+      "typeName": "MicrocopyProps",
+      "typesFile": "../Microcopy/Microcopy.types.ts",
+      "renders": "p (DS Microcopy)",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'p'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Options go inside Content; Trigger and Content inside Root.",
+      "part": "SelectInput.Option",
+      "parents": ["SelectInput.Content"]
+    }
+  ],
+  "notSupported": ["multi-select.", "Option with an empty-string value."]
+}

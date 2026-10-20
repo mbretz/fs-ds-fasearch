@@ -1,0 +1,117 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "SegmentedControl",
+  "summary": "Pill-shaped single-select control built on Radix Tabs (manual activation by default).",
+  "spec": "SegmentedControl.spec.md",
+  "exports": {
+    "component": "SegmentedControl"
+  },
+  "parts": [
+    {
+      "usage": "SegmentedControl.Root",
+      "typeName": "SegmentedControlRootProps",
+      "typesFile": "SegmentedControl.types.ts",
+      "renders": "div (Radix Tabs.Root)",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        },
+        {
+          "name": "activationMode",
+          "type": "enum",
+          "values": ["automatic", "manual"],
+          "default": "manual",
+          "description": "Differs from Tabs, which is automatic."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Tabs.Root",
+        "note": "value, defaultValue, onValueChange, orientation, dir."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["SegmentedControl.List", "SegmentedControl.Content"]
+      }
+    },
+    {
+      "usage": "SegmentedControl.List",
+      "typeName": "SegmentedControlListProps",
+      "typesFile": "SegmentedControl.types.ts",
+      "renders": "Radix Tabs.List",
+      "description": "Hugs its Triggers; for full width pass className=\"flex w-full\" here and \"grow basis-0\" on each Trigger.",
+      "props": [],
+      "passthrough": {
+        "from": "Radix Tabs.List"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["SegmentedControl.Trigger"]
+      }
+    },
+    {
+      "usage": "SegmentedControl.Trigger",
+      "typeName": "SegmentedControlTriggerProps",
+      "typesFile": "SegmentedControl.types.ts",
+      "renders": "Radix Tabs.Trigger",
+      "props": [
+        {
+          "name": "icon",
+          "type": "node",
+          "description": "Leading icon."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Tab value."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Tabs.Trigger"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "SegmentedControl.Content",
+      "typeName": "SegmentedControlContentProps",
+      "typesFile": "SegmentedControl.types.ts",
+      "renders": "Radix Tabs.Content",
+      "description": "Unstyled panel.",
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Matches a Trigger value."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Tabs.Content"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Triggers go inside List; Content is a sibling of List inside Root.",
+      "part": "SegmentedControl.Trigger",
+      "parents": ["SegmentedControl.List"]
+    }
+  ],
+  "notSupported": ["size / variant props."]
+}

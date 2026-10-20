@@ -1,0 +1,166 @@
+{
+  "$schema": "../../../contracts/contract.schema.json",
+  "contractVersion": 1,
+  "name": "ChecklistGroup",
+  "summary": "Vertical grouping of Checkbox items with optional error state and nested sub-groups.",
+  "exports": {
+    "component": "ChecklistGroup"
+  },
+  "parts": [
+    {
+      "usage": "ChecklistGroup.Root",
+      "typeName": "ChecklistGroupRootProps",
+      "typesFile": "ChecklistGroup.types.ts",
+      "renders": "div",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["ChecklistGroup.Group", "Label", "Microcopy"]
+      }
+    },
+    {
+      "usage": "ChecklistGroup.Group",
+      "typeName": "ChecklistGroupGroupProps",
+      "typesFile": "ChecklistGroup.types.ts",
+      "renders": "div",
+      "props": [
+        {
+          "name": "density",
+          "type": "enum",
+          "values": ["roomy", "condensed"],
+          "description": "Sets data-density on the element; omit to inherit from the nearest ancestor."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error styling for the group field."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Checkbox", "ChecklistGroup.NestedGroup"]
+      }
+    },
+    {
+      "usage": "ChecklistGroup.Label",
+      "typeName": "LabelProps",
+      "typesFile": "../Label/Label.types.ts",
+      "renders": "label (DS Label)",
+      "props": [
+        {
+          "name": "requirement",
+          "type": "enum",
+          "values": ["required", "optional"],
+          "description": "Omit for no suffix."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Label.Root",
+        "note": "htmlFor etc."
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "ChecklistGroup.Item",
+      "typeName": "CheckboxProps",
+      "typesFile": "../Checkbox/Checkbox.types.ts",
+      "renders": "label > Radix Checkbox.Root (the Checkbox component)",
+      "description": "Alias of Checkbox.",
+      "props": [
+        {
+          "name": "children",
+          "type": "node",
+          "description": "Row label text."
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Recolors the label text only."
+        }
+      ],
+      "passthrough": {
+        "from": "Radix Checkbox.Root",
+        "omit": ["children"]
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "ChecklistGroup.Microcopy",
+      "typeName": "MicrocopyProps",
+      "typesFile": "../Microcopy/Microcopy.types.ts",
+      "renders": "p (DS Microcopy)",
+      "props": [
+        {
+          "name": "error",
+          "type": "boolean",
+          "default": false,
+          "description": "Error color."
+        }
+      ],
+      "passthrough": {
+        "from": "ComponentProps<'p'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": "any"
+      }
+    },
+    {
+      "usage": "ChecklistGroup.NestedGroup",
+      "typeName": "ChecklistGroupNestedGroupProps",
+      "typesFile": "ChecklistGroup.types.ts",
+      "renders": "div",
+      "description": "40px inline indent for sub-items under a parent Checkbox.",
+      "props": [],
+      "passthrough": {
+        "from": "ComponentProps<'div'>"
+      },
+      "ref": true,
+      "className": "merged",
+      "children": {
+        "allowed": ["Checkbox"]
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "composition",
+      "rule": "Group goes inside Root; NestedGroup goes inside Group, after its parent Checkbox.",
+      "part": "ChecklistGroup.NestedGroup",
+      "parents": ["ChecklistGroup.Group"]
+    }
+  ],
+  "notSupported": ["orientation prop (vertical only)."]
+}
