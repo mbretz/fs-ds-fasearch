@@ -23,7 +23,7 @@ packages/illustrations/  Mirrors Figma Assets "Illustrations" page — DONE. Sam
 packages/ds/         Mirrors Figma "Components" library — IN PROGRESS. Radix Primitives + cva + Tailwind v4. Avatar, Label, TextInput, TextArea, Microcopy, SelectInput, Checkbox, ChecklistGroup, RadioButton, RadioGroup, Button, Link, LinkHelp, LinkNavigation, Tag, Card, CloseButton, Separator, Scrim, Dialog, Chip, SegmentedControl, FilterMenu, SearchInput, Tabs, Box, Stack, Grid, ScrollArea shipped; all original-scope Primitives/Layout/Data-display plus several scope extensions now done — next up is `apps/locator`, see RESUME_NOTES.txt / docs/PLAN.md §1.6
 ```
 
-Workspace deps: `ds` depends on `tokens` (declared in `packages/ds/package.json`); `icons`/`illustrations` are currently dependency-free siblings. Consumers import each package directly (`tokens`, `icons`, `illustrations`, `ds`) — the DS package does not re-export icons or illustrations.
+Workspace deps: `ds` depends on `tokens` and `icons` (declared in `packages/ds/package.json`); `illustrations` is currently a dependency-free sibling. Consumers import each package directly (`tokens`, `icons`, `illustrations`, `ds`) — the DS package does not re-export icons or illustrations.
 
 ## Commands
 
@@ -49,6 +49,7 @@ pnpm --filter illustrations typecheck
 
 # Design system (packages/ds)
 pnpm --filter ds theme:check       # compiles src/theme.css standalone via @tailwindcss/cli as a smoke test
+pnpm --filter ds contracts:build  # regenerates every <Name>.contract.md + contracts/contracts.json from the .contract.json files
 pnpm --filter ds test:browser       # runs Storybook's .stories.tsx as real-Chromium Vitest tests via @storybook/addon-vitest
 pnpm --filter ds test:browser:setup # one-time local Playwright chromium binary install
 ```
